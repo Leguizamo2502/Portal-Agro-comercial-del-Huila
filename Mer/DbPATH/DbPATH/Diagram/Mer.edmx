@@ -1,0 +1,819 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Namespace="Model1.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005">
+        <EntityContainer Name="Model1TargetContainer" >
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Model1" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="Model1Container" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="UserSet" EntityType="Model1.User" />
+          <EntitySet Name="ProducerSet" EntityType="Model1.Producer" />
+          <EntitySet Name="ConsumerSet" EntityType="Model1.Consumer" />
+          <EntitySet Name="FarmSet" EntityType="Model1.Farm" />
+          <EntitySet Name="OrderSet" EntityType="Model1.Order" />
+          <AssociationSet Name="ConsumerOrder" Association="Model1.ConsumerOrder">
+            <End Role="Consumer" EntitySet="ConsumerSet" />
+            <End Role="Order" EntitySet="OrderSet" />
+          </AssociationSet>
+          <EntitySet Name="ModuleSet" EntityType="Model1.Module" />
+          <EntitySet Name="FormSet" EntityType="Model1.Form" />
+          <EntitySet Name="RolSet" EntityType="Model1.Rol" />
+          <EntitySet Name="PermissionSet" EntityType="Model1.Permission" />
+          <EntitySet Name="FormModuleSet" EntityType="Model1.FormModule" />
+          <EntitySet Name="RolFormPermissionSet" EntityType="Model1.RolFormPermission" />
+          <EntitySet Name="RolUserSet" EntityType="Model1.RolUser" />
+          <AssociationSet Name="ModuleFormModule" Association="Model1.ModuleFormModule">
+            <End Role="Module" EntitySet="ModuleSet" />
+            <End Role="FormModule" EntitySet="FormModuleSet" />
+          </AssociationSet>
+          <AssociationSet Name="FormFormModule" Association="Model1.FormFormModule">
+            <End Role="Form" EntitySet="FormSet" />
+            <End Role="FormModule" EntitySet="FormModuleSet" />
+          </AssociationSet>
+          <AssociationSet Name="FormRolFormPermission" Association="Model1.FormRolFormPermission">
+            <End Role="Form" EntitySet="FormSet" />
+            <End Role="RolFormPermission" EntitySet="RolFormPermissionSet" />
+          </AssociationSet>
+          <AssociationSet Name="PermissionRolFormPermission" Association="Model1.PermissionRolFormPermission">
+            <End Role="Permission" EntitySet="PermissionSet" />
+            <End Role="RolFormPermission" EntitySet="RolFormPermissionSet" />
+          </AssociationSet>
+          <AssociationSet Name="RolRolFormPermission" Association="Model1.RolRolFormPermission">
+            <End Role="Rol" EntitySet="RolSet" />
+            <End Role="RolFormPermission" EntitySet="RolFormPermissionSet" />
+          </AssociationSet>
+          <AssociationSet Name="RolRolUser" Association="Model1.RolRolUser">
+            <End Role="Rol" EntitySet="RolSet" />
+            <End Role="RolUser" EntitySet="RolUserSet" />
+          </AssociationSet>
+          <EntitySet Name="PersonSet" EntityType="Model1.Person" />
+          <AssociationSet Name="PersonUser" Association="Model1.PersonUser">
+            <End Role="Person" EntitySet="PersonSet" />
+            <End Role="User" EntitySet="UserSet" />
+          </AssociationSet>
+          <AssociationSet Name="UserRolUser" Association="Model1.UserRolUser">
+            <End Role="User" EntitySet="UserSet" />
+            <End Role="RolUser" EntitySet="RolUserSet" />
+          </AssociationSet>
+          <EntitySet Name="CategorySet" EntityType="Model1.Category" />
+          <EntitySet Name="ProductCategorySet" EntityType="Model1.ProductCategory" />
+          <EntitySet Name="ProductSet" EntityType="Model1.Product" />
+          <AssociationSet Name="ProductProductCategory" Association="Model1.ProductProductCategory">
+            <End Role="Product" EntitySet="ProductSet" />
+            <End Role="ProductCategory" EntitySet="ProductCategorySet" />
+          </AssociationSet>
+          <EntitySet Name="FavoriteSet" EntityType="Model1.Favorite" />
+          <EntitySet Name="ReviewSet" EntityType="Model1.Review" />
+          <AssociationSet Name="ProductReview1" Association="Model1.ProductReview1">
+            <End Role="Product" EntitySet="ProductSet" />
+            <End Role="Review" EntitySet="ReviewSet" />
+          </AssociationSet>
+          <AssociationSet Name="ConsumerReview1" Association="Model1.ConsumerReview1">
+            <End Role="Consumer" EntitySet="ConsumerSet" />
+            <End Role="Review" EntitySet="ReviewSet" />
+          </AssociationSet>
+          <AssociationSet Name="ConsumerReview" Association="Model1.ConsumerReview">
+            <End Role="Consumer" EntitySet="ConsumerSet" />
+            <End Role="Review" EntitySet="ReviewSet" />
+          </AssociationSet>
+          <AssociationSet Name="ProductReview" Association="Model1.ProductReview">
+            <End EntitySet="ProductSet" Role="Product" />
+            <End EntitySet="ReviewSet" Role="Review" />
+          </AssociationSet>
+          <AssociationSet Name="ConsumerFavorite" Association="Model1.ConsumerFavorite">
+            <End Role="Consumer" EntitySet="ConsumerSet" />
+            <End Role="Favorite" EntitySet="FavoriteSet" />
+          </AssociationSet>
+          <AssociationSet Name="ProductFavorite" Association="Model1.ProductFavorite">
+            <End Role="Product" EntitySet="ProductSet" />
+            <End Role="Favorite" EntitySet="FavoriteSet" />
+          </AssociationSet>
+          <EntitySet Name="DepartmentSet" EntityType="Model1.Department" />
+          <EntitySet Name="CitySet" EntityType="Model1.City" />
+          <AssociationSet Name="DepartmentCity" Association="Model1.DepartmentCity">
+            <End Role="Department" EntitySet="DepartmentSet" />
+            <End Role="City" EntitySet="CitySet" />
+          </AssociationSet>
+          <AssociationSet Name="CityPerson" Association="Model1.CityPerson">
+            <End Role="City" EntitySet="CitySet" />
+            <End Role="Person" EntitySet="PersonSet" />
+          </AssociationSet>
+          <AssociationSet Name="ProducerFarm" Association="Model1.ProducerFarm">
+            <End Role="Producer" EntitySet="ProducerSet" />
+            <End Role="Farm" EntitySet="FarmSet" />
+          </AssociationSet>
+          <EntitySet Name="OrderDetailSet" EntityType="Model1.OrderDetail" />
+          <AssociationSet Name="ProductOrderDetail" Association="Model1.ProductOrderDetail">
+            <End Role="Product" EntitySet="ProductSet" />
+            <End Role="OrderDetail" EntitySet="OrderDetailSet" />
+          </AssociationSet>
+          <AssociationSet Name="OrderOrderDetail" Association="Model1.OrderOrderDetail">
+            <End Role="Order" EntitySet="OrderSet" />
+            <End Role="OrderDetail" EntitySet="OrderDetailSet" />
+          </AssociationSet>
+          <AssociationSet Name="UserConsumer" Association="Model1.UserConsumer">
+            <End Role="User" EntitySet="UserSet" />
+            <End Role="Consumer" EntitySet="ConsumerSet" />
+          </AssociationSet>
+          <AssociationSet Name="UserProducer" Association="Model1.UserProducer">
+            <End Role="User" EntitySet="UserSet" />
+            <End Role="Producer" EntitySet="ProducerSet" />
+          </AssociationSet>
+          <AssociationSet Name="CategoryProductCategory" Association="Model1.CategoryProductCategory">
+            <End Role="Category" EntitySet="CategorySet" />
+            <End Role="ProductCategory" EntitySet="ProductCategorySet" />
+          </AssociationSet>
+          <EntitySet Name="ImagesProductSet" EntityType="Model1.ImagesProduct" />
+          <AssociationSet Name="ProductImagesProduct" Association="Model1.ProductImagesProduct">
+            <End Role="Product" EntitySet="ProductSet" />
+            <End Role="ImagesProduct" EntitySet="ImagesProductSet" />
+          </AssociationSet>
+          <AssociationSet Name="CategoryCategory" Association="Model1.CategoryCategory">
+            <End Role="Category" EntitySet="CategorySet" />
+            <End Role="Category1" EntitySet="CategorySet" />
+          </AssociationSet>
+          <EntitySet Name="ImagesFarmSet" EntityType="Model1.ImagesFarm" />
+          <AssociationSet Name="FarmImagesFarm" Association="Model1.FarmImagesFarm">
+            <End Role="Farm" EntitySet="FarmSet" />
+            <End Role="ImagesFarm" EntitySet="ImagesFarmSet" />
+          </AssociationSet>
+          <AssociationSet Name="FarmProduct" Association="Model1.FarmProduct">
+            <End Role="Farm" EntitySet="FarmSet" />
+            <End Role="Product" EntitySet="ProductSet" />
+          </AssociationSet>
+          <EntitySet Name="OrderFeedbackSet" EntityType="Model1.OrderFeedback" />
+          <AssociationSet Name="OrderOrderFeedback" Association="Model1.OrderOrderFeedback">
+            <End Role="Order" EntitySet="OrderSet" />
+            <End Role="OrderFeedback" EntitySet="OrderFeedbackSet" />
+          </AssociationSet>
+          <EntitySet Name="NotificationSet" EntityType="Model1.Notification" />
+        </EntityContainer>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="Active" Type="String" Nullable="false" />
+          <NavigationProperty Name="Person" Relationship="Model1.PersonUser" FromRole="User" ToRole="Person" />
+          <NavigationProperty Name="RolUser" Relationship="Model1.UserRolUser" FromRole="User" ToRole="RolUser" />
+          <Property Name="Password" Type="String" Nullable="false" />
+          <Property Name="Email" Type="String" Nullable="false" />
+          <NavigationProperty Name="Consumer" Relationship="Model1.UserConsumer" FromRole="User" ToRole="Consumer" />
+          <NavigationProperty Name="Producer" Relationship="Model1.UserProducer" FromRole="User" ToRole="Producer" />
+          <Property Name="CreateAt" Type="String" Nullable="false" />
+          <Property Name="IsDeleted" Type="String" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Producer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" Nullable="false" />
+          <NavigationProperty Name="Farm" Relationship="Model1.ProducerFarm" FromRole="Producer" ToRole="Farm" />
+          <Property Name="Code" Type="String" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Model1.UserProducer" FromRole="Producer" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Consumer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Order" Relationship="Model1.ConsumerOrder" FromRole="Consumer" ToRole="Order" />
+          <Property Name="CreateAt" Type="String" Nullable="false" />
+          <NavigationProperty Name="Review" Relationship="Model1.ConsumerReview" FromRole="Consumer" ToRole="Review" />
+          <NavigationProperty Name="Favorite" Relationship="Model1.ConsumerFavorite" FromRole="Consumer" ToRole="Favorite" />
+          <NavigationProperty Name="User" Relationship="Model1.UserConsumer" FromRole="Consumer" ToRole="User" />
+          <Property Name="Active" Type="String" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Farm">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="Location" Type="String" Nullable="false" />
+          <Property Name="Hectares" Type="Int32" Nullable="false" />
+          <Property Name="Altitude" Type="Int32" Nullable="false" />
+          <Property Name="Latitude" Type="Decimal" Nullable="false" />
+          <Property Name="Longitude" Type="Decimal" Nullable="false" />
+          <NavigationProperty Name="Producer" Relationship="Model1.ProducerFarm" FromRole="Farm" ToRole="Producer" />
+          <Property Name="ProducerId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ImagesFarm" Relationship="Model1.FarmImagesFarm" FromRole="Farm" ToRole="ImagesFarm" />
+          <NavigationProperty Name="Product" Relationship="Model1.FarmProduct" FromRole="Farm" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Consumer" Relationship="Model1.ConsumerOrder" FromRole="Order" ToRole="Consumer" />
+          <Property Name="ConsumerId" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="String" Nullable="false" />
+          <Property Name="Note" Type="String" Nullable="false" />
+          <Property Name="OrderDate" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="OrderDetail" Relationship="Model1.OrderOrderDetail" FromRole="Order" ToRole="OrderDetail" />
+          <Property Name="ShoppingAddress" Type="String" Nullable="false" />
+          <NavigationProperty Name="OrderFeedback" Relationship="Model1.OrderOrderFeedback" FromRole="Order" ToRole="OrderFeedback" />
+        </EntityType>
+        <Association Name="ConsumerOrder">
+          <End Type="Model1.Consumer" Role="Consumer" Multiplicity="1" />
+          <End Type="Model1.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Consumer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="ConsumerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Module">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="FormModule" Relationship="Model1.ModuleFormModule" FromRole="Module" ToRole="FormModule" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" />
+          <Property Name="CreateAt" Type="String" Nullable="false" />
+          <Property Name="Active" Type="String" Nullable="false" />
+          <Property Name="IsDeleted" Type="String" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Form">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="FormModule" Relationship="Model1.FormFormModule" FromRole="Form" ToRole="FormModule" />
+          <NavigationProperty Name="RolFormPermission" Relationship="Model1.FormRolFormPermission" FromRole="Form" ToRole="RolFormPermission" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" />
+          <Property Name="Url" Type="String" Nullable="false" />
+          <Property Name="CreateAt" Type="String" Nullable="false" />
+          <Property Name="Active" Type="String" Nullable="false" />
+          <Property Name="IsDeleted" Type="String" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Rol">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="RolFormPermission" Relationship="Model1.RolRolFormPermission" FromRole="Rol" ToRole="RolFormPermission" />
+          <NavigationProperty Name="RolUser" Relationship="Model1.RolRolUser" FromRole="Rol" ToRole="RolUser" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="Code" Type="String" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="CreateAt" Type="DateTime" Nullable="false" />
+          <Property Name="IsDeleted" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Permission">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="RolFormPermission" Relationship="Model1.PermissionRolFormPermission" FromRole="Permission" ToRole="RolFormPermission" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" />
+          <Property Name="CreateAt" Type="String" Nullable="false" />
+          <Property Name="Active" Type="String" Nullable="false" />
+          <Property Name="IsDeleted" Type="String" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FormModule">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Module" Relationship="Model1.ModuleFormModule" FromRole="FormModule" ToRole="Module" />
+          <Property Name="ModuleId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Form" Relationship="Model1.FormFormModule" FromRole="FormModule" ToRole="Form" />
+          <Property Name="FormId" Type="Int32" Nullable="false" />
+          <Property Name="IsDeleted" Type="String" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RolFormPermission">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Form" Relationship="Model1.FormRolFormPermission" FromRole="RolFormPermission" ToRole="Form" />
+          <Property Name="FormId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Permission" Relationship="Model1.PermissionRolFormPermission" FromRole="RolFormPermission" ToRole="Permission" />
+          <Property Name="PermissionId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Rol" Relationship="Model1.RolRolFormPermission" FromRole="RolFormPermission" ToRole="Rol" />
+          <Property Name="RolId" Type="Int32" Nullable="false" />
+          <Property Name="IsDeleted" Type="String" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RolUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Rol" Relationship="Model1.RolRolUser" FromRole="RolUser" ToRole="Rol" />
+          <Property Name="RolId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Model1.UserRolUser" FromRole="RolUser" ToRole="User" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="IsDeleted" Type="String" Nullable="false" />
+        </EntityType>
+        <Association Name="ModuleFormModule">
+          <End Type="Model1.Module" Role="Module" Multiplicity="1" />
+          <End Type="Model1.FormModule" Role="FormModule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Module">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FormModule">
+              <PropertyRef Name="ModuleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FormFormModule">
+          <End Type="Model1.Form" Role="Form" Multiplicity="1" />
+          <End Type="Model1.FormModule" Role="FormModule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Form">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="FormModule">
+              <PropertyRef Name="FormId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FormRolFormPermission">
+          <End Type="Model1.Form" Role="Form" Multiplicity="1" />
+          <End Type="Model1.RolFormPermission" Role="RolFormPermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Form">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RolFormPermission">
+              <PropertyRef Name="FormId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PermissionRolFormPermission">
+          <End Type="Model1.Permission" Role="Permission" Multiplicity="1" />
+          <End Type="Model1.RolFormPermission" Role="RolFormPermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permission">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RolFormPermission">
+              <PropertyRef Name="PermissionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="RolRolFormPermission">
+          <End Type="Model1.Rol" Role="Rol" Multiplicity="1" />
+          <End Type="Model1.RolFormPermission" Role="RolFormPermission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Rol">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RolFormPermission">
+              <PropertyRef Name="RolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="RolRolUser">
+          <End Type="Model1.Rol" Role="Rol" Multiplicity="1" />
+          <End Type="Model1.RolUser" Role="RolUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Rol">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RolUser">
+              <PropertyRef Name="RolId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" Nullable="false" />
+          <Property Name="PhoneNumber" Type="String" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Model1.PersonUser" FromRole="Person" ToRole="User" />
+          <Property Name="LastName" Type="String" Nullable="false" />
+          <Property Name="Identification" Type="String" Nullable="false" />
+          <Property Name="Address" Type="String" Nullable="false" />
+          <NavigationProperty Name="City" Relationship="Model1.CityPerson" FromRole="Person" ToRole="City" />
+          <Property Name="CityId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="PersonUser">
+          <End Type="Model1.Person" Role="Person" Multiplicity="1" />
+          <End Type="Model1.User" Role="User" Multiplicity="1" />
+        </Association>
+        <Association Name="UserRolUser">
+          <End Type="Model1.User" Role="User" Multiplicity="1" />
+          <End Type="Model1.RolUser" Role="RolUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="RolUser">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <NavigationProperty Name="ProductCategory" Relationship="Model1.CategoryProductCategory" FromRole="Category" ToRole="ProductCategory" />
+          <NavigationProperty Name="Category2" Relationship="Model1.CategoryCategory" FromRole="Category" ToRole="Category1" />
+          <NavigationProperty Name="Category1" Relationship="Model1.CategoryCategory" FromRole="Category1" ToRole="Category" />
+          <Property Name="CategoryId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProductCategory">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Product" Relationship="Model1.ProductProductCategory" FromRole="ProductCategory" ToRole="Product" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Category" Relationship="Model1.CategoryProductCategory" FromRole="ProductCategory" ToRole="Category" />
+          <Property Name="CategoryId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" />
+          <Property Name="Price" Type="Double" Nullable="false" />
+          <Property Name="Unit" Type="String" Nullable="false" />
+          <Property Name="Production" Type="String" Nullable="false" />
+          <Property Name="CreateAt" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="ProductCategory" Relationship="Model1.ProductProductCategory" FromRole="Product" ToRole="ProductCategory" />
+          <NavigationProperty Name="Review" Relationship="Model1.ProductReview" FromRole="Product" ToRole="Review" />
+          <NavigationProperty Name="Favorite" Relationship="Model1.ProductFavorite" FromRole="Product" ToRole="Favorite" />
+          <NavigationProperty Name="OrderDetail" Relationship="Model1.ProductOrderDetail" FromRole="Product" ToRole="OrderDetail" />
+          <Property Name="Stock" Type="String" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ImagesProduct" Relationship="Model1.ProductImagesProduct" FromRole="Product" ToRole="ImagesProduct" />
+          <Property Name="Status" Type="String" Nullable="false" />
+          <NavigationProperty Name="Farm" Relationship="Model1.FarmProduct" FromRole="Product" ToRole="Farm" />
+          <Property Name="FarmId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="ProductProductCategory">
+          <End Type="Model1.Product" Role="Product" Multiplicity="1" />
+          <End Type="Model1.ProductCategory" Role="ProductCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductCategory">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Favorite">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreateAt" Type="String" Nullable="false" />
+          <NavigationProperty Name="Consumer" Relationship="Model1.ConsumerFavorite" FromRole="Favorite" ToRole="Consumer" />
+          <Property Name="ConsumerId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Product" Relationship="Model1.ProductFavorite" FromRole="Favorite" ToRole="Product" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Review">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreateAt" Type="DateTime" Nullable="false" />
+          <Property Name="Rating" Type="Int32" Nullable="false" />
+          <Property Name="Comment" Type="String" Nullable="false" />
+          <NavigationProperty Name="Consumer" Relationship="Model1.ConsumerReview" FromRole="Review" ToRole="Consumer" />
+          <Property Name="ConsumerId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Product" Relationship="Model1.ProductReview" FromRole="Review" ToRole="Product" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="ProductReview1">
+          <End Type="Model1.Product" Role="Product" Multiplicity="1" />
+          <End Type="Model1.Review" Role="Review" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Review">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ConsumerReview1">
+          <End Type="Model1.Consumer" Role="Consumer" Multiplicity="1" />
+          <End Type="Model1.Review" Role="Review" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Consumer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Review">
+              <PropertyRef Name="ConsumerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ConsumerReview">
+          <End Type="Model1.Consumer" Role="Consumer" Multiplicity="1" />
+          <End Type="Model1.Review" Role="Review" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Consumer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Review">
+              <PropertyRef Name="ConsumerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProductReview">
+          <End Type="Model1.Product" Multiplicity="1" Role="Product" />
+          <End Type="Model1.Review" Multiplicity="*" Role="Review" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Review">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ConsumerFavorite">
+          <End Type="Model1.Consumer" Role="Consumer" Multiplicity="1" />
+          <End Type="Model1.Favorite" Role="Favorite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Consumer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Favorite">
+              <PropertyRef Name="ConsumerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProductFavorite">
+          <End Type="Model1.Product" Role="Product" Multiplicity="1" />
+          <End Type="Model1.Favorite" Role="Favorite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Favorite">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Department">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <NavigationProperty Name="City" Relationship="Model1.DepartmentCity" FromRole="Department" ToRole="City" />
+        </EntityType>
+        <EntityType Name="City">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <NavigationProperty Name="Department" Relationship="Model1.DepartmentCity" FromRole="City" ToRole="Department" />
+          <Property Name="DepartmentId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Person" Relationship="Model1.CityPerson" FromRole="City" ToRole="Person" />
+        </EntityType>
+        <Association Name="DepartmentCity">
+          <End Type="Model1.Department" Role="Department" Multiplicity="1" />
+          <End Type="Model1.City" Role="City" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Department">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="City">
+              <PropertyRef Name="DepartmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CityPerson">
+          <End Type="Model1.City" Role="City" Multiplicity="1" />
+          <End Type="Model1.Person" Role="Person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="City">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Person">
+              <PropertyRef Name="CityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProducerFarm">
+          <End Type="Model1.Producer" Role="Producer" Multiplicity="1" />
+          <End Type="Model1.Farm" Role="Farm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Producer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Farm">
+              <PropertyRef Name="ProducerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="OrderDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Quantity" Type="String" Nullable="false" />
+          <Property Name="UnitPrice" Type="Double" Nullable="false" />
+          <NavigationProperty Name="Product" Relationship="Model1.ProductOrderDetail" FromRole="OrderDetail" ToRole="Product" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Order" Relationship="Model1.OrderOrderDetail" FromRole="OrderDetail" ToRole="Order" />
+          <Property Name="OrderId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="ProductOrderDetail">
+          <End Type="Model1.Product" Role="Product" Multiplicity="1" />
+          <End Type="Model1.OrderDetail" Role="OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="OrderOrderDetail">
+          <End Type="Model1.Order" Role="Order" Multiplicity="1" />
+          <End Type="Model1.OrderDetail" Role="OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UserConsumer">
+          <End Type="Model1.User" Role="User" Multiplicity="1" />
+          <End Type="Model1.Consumer" Role="Consumer" Multiplicity="1" />
+        </Association>
+        <Association Name="UserProducer">
+          <End Type="Model1.User" Role="User" Multiplicity="1" />
+          <End Type="Model1.Producer" Role="Producer" Multiplicity="1" />
+        </Association>
+        <Association Name="CategoryProductCategory">
+          <End Type="Model1.Category" Role="Category" Multiplicity="1" />
+          <End Type="Model1.ProductCategory" Role="ProductCategory" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductCategory">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ImagesProduct">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ImageUrl" Type="String" Nullable="false" />
+          <NavigationProperty Name="Product" Relationship="Model1.ProductImagesProduct" FromRole="ImagesProduct" ToRole="Product" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="ProductImagesProduct">
+          <End Type="Model1.Product" Role="Product" Multiplicity="1" />
+          <End Type="Model1.ImagesProduct" Role="ImagesProduct" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Product">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ImagesProduct">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="CategoryCategory">
+          <End Type="Model1.Category" Role="Category" Multiplicity="1" />
+          <End Type="Model1.Category" Role="Category1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Category1">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ImagesFarm">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Farm" Relationship="Model1.FarmImagesFarm" FromRole="ImagesFarm" ToRole="Farm" />
+          <Property Name="FarmId" Type="Int32" Nullable="false" />
+          <Property Name="ImageUrl" Type="String" Nullable="false" />
+        </EntityType>
+        <Association Name="FarmImagesFarm">
+          <End Type="Model1.Farm" Role="Farm" Multiplicity="1" />
+          <End Type="Model1.ImagesFarm" Role="ImagesFarm" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Farm">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ImagesFarm">
+              <PropertyRef Name="FarmId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FarmProduct">
+          <End Type="Model1.Farm" Role="Farm" Multiplicity="1" />
+          <End Type="Model1.Product" Role="Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Farm">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="FarmId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="OrderFeedback">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Rating" Type="String" Nullable="false" />
+          <Property Name="Comment" Type="String" Nullable="false" />
+          <Property Name="DeliveredOnTime" Type="String" Nullable="false" />
+          <Property Name="ProductAsExpected" Type="String" Nullable="false" />
+          <Property Name="WouldRequestAgain" Type="String" Nullable="false" />
+          <Property Name="CreatedAt" Type="String" Nullable="false" />
+          <NavigationProperty Name="Order" Relationship="Model1.OrderOrderFeedback" FromRole="OrderFeedback" ToRole="Order" />
+          <Property Name="OrderId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="OrderOrderFeedback">
+          <End Type="Model1.Order" Role="Order" Multiplicity="1" />
+          <End Type="Model1.OrderFeedback" Role="OrderFeedback" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OrderFeedback">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Notification">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreateAt" Type="String" Nullable="false" />
+          <Property Name="IsDeleted" Type="String" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
+        <Alias Key="Model" Value="Model1" />
+        <Alias Key="Target" Value="Model1.Store" />
+        <EntityContainerMapping CdmEntityContainer="Model1Container" StorageEntityContainer="Model1TargetContainer">
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
