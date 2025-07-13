@@ -1,9 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\NITRO\\Documentos\\PROYECTO\\DbPATH\\DbPATH\\",
+  "WorkspaceRootPath": "C:\\Users\\NITRO\\Documentos\\PROYECTO\\Portal-Agro-comercial-del-Huila\\Mer\\DbPATH\\DbPATH\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{51AD3D74-8251-4CF4-9596-C216193DC408}|Diagram\\Diagram.csproj|c:\\users\\nitro\\documentos\\proyecto\\dbpath\\dbpath\\diagram\\mer.edmx||{C99AEA30-8E36-4515-B76F-496F5A48A6AA}|",
+      "AbsoluteMoniker": "D:0:0:{51AD3D74-8251-4CF4-9596-C216193DC408}|Diagram\\Diagram.csproj|c:\\users\\nitro\\documentos\\proyecto\\portal-agro-comercial-del-huila\\mer\\dbpath\\dbpath\\diagram\\mer.edmx||{C99AEA30-8E36-4515-B76F-496F5A48A6AA}|",
       "RelativeMoniker": "D:0:0:{51AD3D74-8251-4CF4-9596-C216193DC408}|Diagram\\Diagram.csproj|solutionrelative:diagram\\mer.edmx||{C99AEA30-8E36-4515-B76F-496F5A48A6AA}|"
     }
   ],
@@ -28,9 +28,9 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Mer.edmx [Diagram1]",
-              "DocumentMoniker": "C:\\Users\\NITRO\\Documentos\\PROYECTO\\DbPATH\\DbPATH\\Diagram\\Mer.edmx",
+              "DocumentMoniker": "C:\\Users\\NITRO\\Documentos\\PROYECTO\\Portal-Agro-comercial-del-Huila\\Mer\\DbPATH\\DbPATH\\Diagram\\Mer.edmx",
               "RelativeDocumentMoniker": "Diagram\\Mer.edmx",
-              "ToolTip": "C:\\Users\\NITRO\\Documentos\\PROYECTO\\DbPATH\\DbPATH\\Diagram\\Mer.edmx [Diagram1]",
+              "ToolTip": "C:\\Users\\NITRO\\Documentos\\PROYECTO\\Portal-Agro-comercial-del-Huila\\Mer\\DbPATH\\DbPATH\\Diagram\\Mer.edmx [Diagram1]",
               "RelativeToolTip": "Diagram\\Mer.edmx [Diagram1]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001116|",
               "WhenOpened": "2025-05-08T21:02:56.923Z",

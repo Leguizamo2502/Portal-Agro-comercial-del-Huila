@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\NITRO\\Documentos\\PROYECTO\\DbPATH\\DbPATH\\Entity\\Entity.csproj": {}
+    "C:\\Users\\NITRO\\Documentos\\PROYECTO\\Portal-Agro-comercial-del-Huila\\Mer\\DbPATH\\DbPATH\\Entity\\Entity.csproj": {}
   },
   "projects": {
-    "C:\\Users\\NITRO\\Documentos\\PROYECTO\\DbPATH\\DbPATH\\Entity\\Entity.csproj": {
+    "C:\\Users\\NITRO\\Documentos\\PROYECTO\\Portal-Agro-comercial-del-Huila\\Mer\\DbPATH\\DbPATH\\Entity\\Entity.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\NITRO\\Documentos\\PROYECTO\\DbPATH\\DbPATH\\Entity\\Entity.csproj",
+        "projectUniqueName": "C:\\Users\\NITRO\\Documentos\\PROYECTO\\Portal-Agro-comercial-del-Huila\\Mer\\DbPATH\\DbPATH\\Entity\\Entity.csproj",
         "projectName": "Entity",
-        "projectPath": "C:\\Users\\NITRO\\Documentos\\PROYECTO\\DbPATH\\DbPATH\\Entity\\Entity.csproj",
+        "projectPath": "C:\\Users\\NITRO\\Documentos\\PROYECTO\\Portal-Agro-comercial-del-Huila\\Mer\\DbPATH\\DbPATH\\Entity\\Entity.csproj",
         "packagesPath": "C:\\Users\\NITRO\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\NITRO\\Documentos\\PROYECTO\\DbPATH\\DbPATH\\Entity\\obj\\",
+        "outputPath": "C:\\Users\\NITRO\\Documentos\\PROYECTO\\Portal-Agro-comercial-del-Huila\\Mer\\DbPATH\\DbPATH\\Entity\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

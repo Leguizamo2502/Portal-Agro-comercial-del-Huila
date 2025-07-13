@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "hsMDIOTYtaE=",
+  "dgSpecHash": "Pr08ox9nB4g=",
   "success": true,
-  "projectFilePath": "C:\\Users\\NITRO\\Documentos\\PROYECTO\\DbPATH\\DbPATH\\Entity\\Entity.csproj",
+  "projectFilePath": "C:\\Users\\NITRO\\Documentos\\PROYECTO\\Portal-Agro-comercial-del-Huila\\Mer\\DbPATH\\DbPATH\\Entity\\Entity.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\NITRO\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\NITRO\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

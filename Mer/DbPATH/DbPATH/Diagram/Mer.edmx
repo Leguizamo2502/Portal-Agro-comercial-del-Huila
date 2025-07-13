@@ -15,13 +15,8 @@
         <EntityContainer Name="Model1Container" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="UserSet" EntityType="Model1.User" />
           <EntitySet Name="ProducerSet" EntityType="Model1.Producer" />
-          <EntitySet Name="ConsumerSet" EntityType="Model1.Consumer" />
           <EntitySet Name="FarmSet" EntityType="Model1.Farm" />
           <EntitySet Name="OrderSet" EntityType="Model1.Order" />
-          <AssociationSet Name="ConsumerOrder" Association="Model1.ConsumerOrder">
-            <End Role="Consumer" EntitySet="ConsumerSet" />
-            <End Role="Order" EntitySet="OrderSet" />
-          </AssociationSet>
           <EntitySet Name="ModuleSet" EntityType="Model1.Module" />
           <EntitySet Name="FormSet" EntityType="Model1.Form" />
           <EntitySet Name="RolSet" EntityType="Model1.Rol" />
@@ -75,21 +70,9 @@
             <End Role="Product" EntitySet="ProductSet" />
             <End Role="Review" EntitySet="ReviewSet" />
           </AssociationSet>
-          <AssociationSet Name="ConsumerReview1" Association="Model1.ConsumerReview1">
-            <End Role="Consumer" EntitySet="ConsumerSet" />
-            <End Role="Review" EntitySet="ReviewSet" />
-          </AssociationSet>
-          <AssociationSet Name="ConsumerReview" Association="Model1.ConsumerReview">
-            <End Role="Consumer" EntitySet="ConsumerSet" />
-            <End Role="Review" EntitySet="ReviewSet" />
-          </AssociationSet>
           <AssociationSet Name="ProductReview" Association="Model1.ProductReview">
             <End EntitySet="ProductSet" Role="Product" />
             <End EntitySet="ReviewSet" Role="Review" />
-          </AssociationSet>
-          <AssociationSet Name="ConsumerFavorite" Association="Model1.ConsumerFavorite">
-            <End Role="Consumer" EntitySet="ConsumerSet" />
-            <End Role="Favorite" EntitySet="FavoriteSet" />
           </AssociationSet>
           <AssociationSet Name="ProductFavorite" Association="Model1.ProductFavorite">
             <End Role="Product" EntitySet="ProductSet" />
@@ -118,10 +101,6 @@
             <End Role="Order" EntitySet="OrderSet" />
             <End Role="OrderDetail" EntitySet="OrderDetailSet" />
           </AssociationSet>
-          <AssociationSet Name="UserConsumer" Association="Model1.UserConsumer">
-            <End Role="User" EntitySet="UserSet" />
-            <End Role="Consumer" EntitySet="ConsumerSet" />
-          </AssociationSet>
           <AssociationSet Name="UserProducer" Association="Model1.UserProducer">
             <End Role="User" EntitySet="UserSet" />
             <End Role="Producer" EntitySet="ProducerSet" />
@@ -148,12 +127,23 @@
             <End Role="Farm" EntitySet="FarmSet" />
             <End Role="Product" EntitySet="ProductSet" />
           </AssociationSet>
-          <EntitySet Name="OrderFeedbackSet" EntityType="Model1.OrderFeedback" />
-          <AssociationSet Name="OrderOrderFeedback" Association="Model1.OrderOrderFeedback">
-            <End Role="Order" EntitySet="OrderSet" />
-            <End Role="OrderFeedback" EntitySet="OrderFeedbackSet" />
-          </AssociationSet>
           <EntitySet Name="NotificationSet" EntityType="Model1.Notification" />
+          <AssociationSet Name="UserFavorite" Association="Model1.UserFavorite">
+            <End Role="User" EntitySet="UserSet" />
+            <End Role="Favorite" EntitySet="FavoriteSet" />
+          </AssociationSet>
+          <AssociationSet Name="UserReview" Association="Model1.UserReview">
+            <End Role="User" EntitySet="UserSet" />
+            <End Role="Review" EntitySet="ReviewSet" />
+          </AssociationSet>
+          <AssociationSet Name="UserOrder" Association="Model1.UserOrder">
+            <End Role="User" EntitySet="UserSet" />
+            <End Role="Order" EntitySet="OrderSet" />
+          </AssociationSet>
+          <AssociationSet Name="UserNotification" Association="Model1.UserNotification">
+            <End Role="User" EntitySet="UserSet" />
+            <End Role="Notification" EntitySet="NotificationSet" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="User">
           <Key>
@@ -166,10 +156,13 @@
           <NavigationProperty Name="RolUser" Relationship="Model1.UserRolUser" FromRole="User" ToRole="RolUser" />
           <Property Name="Password" Type="String" Nullable="false" />
           <Property Name="Email" Type="String" Nullable="false" />
-          <NavigationProperty Name="Consumer" Relationship="Model1.UserConsumer" FromRole="User" ToRole="Consumer" />
           <NavigationProperty Name="Producer" Relationship="Model1.UserProducer" FromRole="User" ToRole="Producer" />
           <Property Name="CreateAt" Type="String" Nullable="false" />
           <Property Name="IsDeleted" Type="String" Nullable="false" />
+          <NavigationProperty Name="Favorite" Relationship="Model1.UserFavorite" FromRole="User" ToRole="Favorite" />
+          <NavigationProperty Name="Review" Relationship="Model1.UserReview" FromRole="User" ToRole="Review" />
+          <NavigationProperty Name="Order" Relationship="Model1.UserOrder" FromRole="User" ToRole="Order" />
+          <NavigationProperty Name="Notification" Relationship="Model1.UserNotification" FromRole="User" ToRole="Notification" />
         </EntityType>
         <EntityType Name="Producer">
           <Key>
@@ -180,18 +173,6 @@
           <NavigationProperty Name="Farm" Relationship="Model1.ProducerFarm" FromRole="Producer" ToRole="Farm" />
           <Property Name="Code" Type="String" Nullable="false" />
           <NavigationProperty Name="User" Relationship="Model1.UserProducer" FromRole="Producer" ToRole="User" />
-        </EntityType>
-        <EntityType Name="Consumer">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="Order" Relationship="Model1.ConsumerOrder" FromRole="Consumer" ToRole="Order" />
-          <Property Name="CreateAt" Type="String" Nullable="false" />
-          <NavigationProperty Name="Review" Relationship="Model1.ConsumerReview" FromRole="Consumer" ToRole="Review" />
-          <NavigationProperty Name="Favorite" Relationship="Model1.ConsumerFavorite" FromRole="Consumer" ToRole="Favorite" />
-          <NavigationProperty Name="User" Relationship="Model1.UserConsumer" FromRole="Consumer" ToRole="User" />
-          <Property Name="Active" Type="String" Nullable="false" />
         </EntityType>
         <EntityType Name="Farm">
           <Key>
@@ -214,27 +195,14 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="Consumer" Relationship="Model1.ConsumerOrder" FromRole="Order" ToRole="Consumer" />
-          <Property Name="ConsumerId" Type="Int32" Nullable="false" />
           <Property Name="Status" Type="String" Nullable="false" />
           <Property Name="Note" Type="String" Nullable="false" />
           <Property Name="OrderDate" Type="DateTime" Nullable="false" />
           <NavigationProperty Name="OrderDetail" Relationship="Model1.OrderOrderDetail" FromRole="Order" ToRole="OrderDetail" />
           <Property Name="ShoppingAddress" Type="String" Nullable="false" />
-          <NavigationProperty Name="OrderFeedback" Relationship="Model1.OrderOrderFeedback" FromRole="Order" ToRole="OrderFeedback" />
+          <NavigationProperty Name="User" Relationship="Model1.UserOrder" FromRole="Order" ToRole="User" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
         </EntityType>
-        <Association Name="ConsumerOrder">
-          <End Type="Model1.Consumer" Role="Consumer" Multiplicity="1" />
-          <End Type="Model1.Order" Role="Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Consumer">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Order">
-              <PropertyRef Name="ConsumerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="Module">
           <Key>
             <PropertyRef Name="Id" />
@@ -484,10 +452,10 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CreateAt" Type="String" Nullable="false" />
-          <NavigationProperty Name="Consumer" Relationship="Model1.ConsumerFavorite" FromRole="Favorite" ToRole="Consumer" />
-          <Property Name="ConsumerId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Product" Relationship="Model1.ProductFavorite" FromRole="Favorite" ToRole="Product" />
           <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Model1.UserFavorite" FromRole="Favorite" ToRole="User" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Review">
           <Key>
@@ -497,10 +465,10 @@
           <Property Name="CreateAt" Type="DateTime" Nullable="false" />
           <Property Name="Rating" Type="Int32" Nullable="false" />
           <Property Name="Comment" Type="String" Nullable="false" />
-          <NavigationProperty Name="Consumer" Relationship="Model1.ConsumerReview" FromRole="Review" ToRole="Consumer" />
-          <Property Name="ConsumerId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Product" Relationship="Model1.ProductReview" FromRole="Review" ToRole="Product" />
           <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Model1.UserReview" FromRole="Review" ToRole="User" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
         </EntityType>
         <Association Name="ProductReview1">
           <End Type="Model1.Product" Role="Product" Multiplicity="1" />
@@ -514,30 +482,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="ConsumerReview1">
-          <End Type="Model1.Consumer" Role="Consumer" Multiplicity="1" />
-          <End Type="Model1.Review" Role="Review" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Consumer">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Review">
-              <PropertyRef Name="ConsumerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="ConsumerReview">
-          <End Type="Model1.Consumer" Role="Consumer" Multiplicity="1" />
-          <End Type="Model1.Review" Role="Review" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Consumer">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Review">
-              <PropertyRef Name="ConsumerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="ProductReview">
           <End Type="Model1.Product" Multiplicity="1" Role="Product" />
           <End Type="Model1.Review" Multiplicity="*" Role="Review" />
@@ -547,18 +491,6 @@
             </Principal>
             <Dependent Role="Review">
               <PropertyRef Name="ProductId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="ConsumerFavorite">
-          <End Type="Model1.Consumer" Role="Consumer" Multiplicity="1" />
-          <End Type="Model1.Favorite" Role="Favorite" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Consumer">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Favorite">
-              <PropertyRef Name="ConsumerId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -664,10 +596,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="UserConsumer">
-          <End Type="Model1.User" Role="User" Multiplicity="1" />
-          <End Type="Model1.Consumer" Role="Consumer" Multiplicity="1" />
-        </Association>
         <Association Name="UserProducer">
           <End Type="Model1.User" Role="User" Multiplicity="1" />
           <End Type="Model1.Producer" Role="Producer" Multiplicity="1" />
@@ -750,32 +678,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="OrderFeedback">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Rating" Type="String" Nullable="false" />
-          <Property Name="Comment" Type="String" Nullable="false" />
-          <Property Name="DeliveredOnTime" Type="String" Nullable="false" />
-          <Property Name="ProductAsExpected" Type="String" Nullable="false" />
-          <Property Name="WouldRequestAgain" Type="String" Nullable="false" />
-          <Property Name="CreatedAt" Type="String" Nullable="false" />
-          <NavigationProperty Name="Order" Relationship="Model1.OrderOrderFeedback" FromRole="OrderFeedback" ToRole="Order" />
-          <Property Name="OrderId" Type="Int32" Nullable="false" />
-        </EntityType>
-        <Association Name="OrderOrderFeedback">
-          <End Type="Model1.Order" Role="Order" Multiplicity="1" />
-          <End Type="Model1.OrderFeedback" Role="OrderFeedback" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Order">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="OrderFeedback">
-              <PropertyRef Name="OrderId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="Notification">
           <Key>
             <PropertyRef Name="Id" />
@@ -785,7 +687,58 @@
           <Property Name="IsDeleted" Type="String" Nullable="false" />
           <Property Name="Name" Type="String" Nullable="false" />
           <Property Name="Description" Type="String" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Model1.UserNotification" FromRole="Notification" ToRole="User" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="Type" Type="String" Nullable="false" />
         </EntityType>
+        <Association Name="UserFavorite">
+          <End Type="Model1.User" Role="User" Multiplicity="1" />
+          <End Type="Model1.Favorite" Role="Favorite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Favorite">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UserReview">
+          <End Type="Model1.User" Role="User" Multiplicity="1" />
+          <End Type="Model1.Review" Role="Review" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Review">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UserOrder">
+          <End Type="Model1.User" Role="User" Multiplicity="1" />
+          <End Type="Model1.Order" Role="Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Order">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UserNotification">
+          <End Type="Model1.User" Role="User" Multiplicity="1" />
+          <End Type="Model1.Notification" Role="Notification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Notification">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->

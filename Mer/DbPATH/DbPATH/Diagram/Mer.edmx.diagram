@@ -4,13 +4,11 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="e6e10768a500414abc5d0f28f7a65ce7" Name="Diagram1" ZoomLevel="56" >
-        <EntityTypeShape EntityType="Model1.User" Width="1.5" PointX="8.375" PointY="4.625" FillColor="MediumPurple" />
+      <Diagram DiagramId="e6e10768a500414abc5d0f28f7a65ce7" Name="Diagram1" ZoomLevel="85" >
+        <EntityTypeShape EntityType="Model1.User" Width="1.5" PointX="8.375" PointY="5.625" FillColor="MediumPurple" />
         <EntityTypeShape EntityType="Model1.Producer" Width="1.5" PointX="10.625" PointY="2.875" />
-        <EntityTypeShape EntityType="Model1.Consumer" Width="1.5" PointX="10.125" PointY="8.5" />
         <EntityTypeShape EntityType="Model1.Farm" Width="1.5" PointX="13" PointY="2.5" />
         <EntityTypeShape EntityType="Model1.Order" Width="1.5" PointX="22.375" PointY="6.625" />
-        <AssociationConnector Association="Model1.ConsumerOrder" />
         <EntityTypeShape EntityType="Model1.Module" Width="1.5" PointX="0.5" PointY="8.875" FillColor="MediumPurple" />
         <EntityTypeShape EntityType="Model1.Form" Width="1.5" PointX="0.5" PointY="5.25" FillColor="MediumPurple" />
         <EntityTypeShape EntityType="Model1.Rol" Width="1.5" PointX="5.875" PointY="6.875" FillColor="MediumPurple" />
@@ -32,11 +30,9 @@
         <EntityTypeShape EntityType="Model1.ProductCategory" Width="1.5" PointX="17.5" PointY="1.875" />
         <EntityTypeShape EntityType="Model1.Product" Width="1.5" PointX="16.5" PointY="4.875" />
         <AssociationConnector Association="Model1.ProductProductCategory" />
-        <EntityTypeShape EntityType="Model1.Favorite" Width="1.5" PointX="11" PointY="5.375" />
-        <EntityTypeShape EntityType="Model1.Review" Width="1.5" PointX="13.625" PointY="6.5" />
-        <AssociationConnector Association="Model1.ConsumerReview" />
+        <EntityTypeShape EntityType="Model1.Favorite" Width="1.5" PointX="11" PointY="5.75" />
+        <EntityTypeShape EntityType="Model1.Review" Width="1.5" PointX="13.5" PointY="7.125" />
         <AssociationConnector Association="Model1.ProductReview" />
-        <AssociationConnector Association="Model1.ConsumerFavorite" />
         <AssociationConnector Association="Model1.ProductFavorite" />
         <EntityTypeShape EntityType="Model1.Department" Width="1.5" PointX="2.375" PointY="0.5" />
         <EntityTypeShape EntityType="Model1.City" Width="1.5" PointX="4.875" PointY="0.625" />
@@ -46,7 +42,6 @@
         <EntityTypeShape EntityType="Model1.OrderDetail" Width="1.5" PointX="19.875" PointY="4.375" />
         <AssociationConnector Association="Model1.ProductOrderDetail" />
         <AssociationConnector Association="Model1.OrderOrderDetail" />
-        <AssociationConnector Association="Model1.UserConsumer" />
         <AssociationConnector Association="Model1.UserProducer" />
         <AssociationConnector Association="Model1.CategoryProductCategory" />
         <EntityTypeShape EntityType="Model1.ImagesProduct" Width="1.5" PointX="18.75" PointY="7.5" />
@@ -55,10 +50,18 @@
         <EntityTypeShape EntityType="Model1.ImagesFarm" Width="1.5" PointX="10.75" PointY="0.5" />
         <AssociationConnector Association="Model1.FarmImagesFarm" />
         <AssociationConnector Association="Model1.FarmProduct" />
-        <EntityTypeShape EntityType="Model1.OrderFeedback" Width="1.5" PointX="24.75" PointY="6.5" />
-        <AssociationConnector Association="Model1.OrderOrderFeedback" />
-        <EntityTypeShape EntityType="Model1.Notification" Width="1.5" PointX="7.75" PointY="9.625" />
+        <EntityTypeShape EntityType="Model1.Notification" Width="1.5" PointX="8" PointY="9.875" />
         <AssociationConnector Association="Model1.ConsumerNotification" />
+        <AssociationConnector Association="Model1.UserFavorite" />
+        <AssociationConnector Association="Model1.UserReview" />
+        <AssociationConnector Association="Model1.UserOrder" ManuallyRouted="true" >
+          <ConnectorPoint PointX="9.875" PointY="8.92856410363093" />
+          <ConnectorPoint PointX="10.98875" PointY="8.92856410363093" />
+          <ConnectorPoint PointX="10.98875" PointY="10.307190755208333" />
+          <ConnectorPoint PointX="23.125" PointY="10.307190755208333" />
+          <ConnectorPoint PointX="23.125" PointY="9.3744921875" />
+        </AssociationConnector>
+        <AssociationConnector Association="Model1.UserNotification" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
