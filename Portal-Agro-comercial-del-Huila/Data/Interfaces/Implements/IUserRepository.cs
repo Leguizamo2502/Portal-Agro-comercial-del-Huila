@@ -13,7 +13,9 @@ namespace Data.Interfaces.Implements
     {
         Task<bool> ExistsByEmailAsync(string email);
         Task<User?> GetByEmailAsync(string email);
-        Task<User> ValidateUserAsync(LoginUserDto loginDto);
+        Task<User> LoginUser(LoginUserDto loginDto);
+        
+
 
     }
 }

@@ -18,8 +18,16 @@ namespace Data.Service
         {
         }
 
+        public override async Task<User?> GetByIdAsync(int id)
+        {
+            return await _dbSet
+                .Include(u => u.Person)
+                .Include(u => u.RolUsers)
+                    .ThenInclude(ru => ru.Rol)
+                .FirstOrDefaultAsync(u => u.Id == id && u.IsDeleted == false);
+        }
 
-        public async Task<User> ValidateUserAsync(LoginUserDto loginDto)
+        public async Task<User> LoginUser(LoginUserDto loginDto)
         {
             bool suceeded = false;
 
@@ -32,6 +40,9 @@ namespace Data.Service
 
             return user;
         }
+
+
+
         public async Task<bool> ExistsByEmailAsync(string email)
         {
             return await _dbSet.AnyAsync(u => u.Email == email && u.IsDeleted == false);

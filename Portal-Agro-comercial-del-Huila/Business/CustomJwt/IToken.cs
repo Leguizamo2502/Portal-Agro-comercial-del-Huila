@@ -10,6 +10,6 @@ namespace Business.CustomJwt
     public interface IToken
     {
         Task<string> GenerateToken(LoginUserDto dto);
-        bool validarToken(string token);
+        //bool validarToken(string token);
     }
 }

@@ -11,6 +11,8 @@ using Entity.Domain.Models.Implements.Security;
 using Entity.DTOs.Auth;
 using MapsterMapper;
 using Microsoft.Extensions.Logging;
+using Utilities.Custom;
+using Utilities.Exceptions;
 
 namespace Business.Services.AuthService
 {
@@ -20,36 +22,57 @@ namespace Business.Services.AuthService
         private readonly IRolUserRepository _rolUserData;
         private readonly ILogger<AuthService> _logger;
         private readonly IMapper _mapper;
+        private readonly EncriptePassword _utilities;
 
-        public AuthService(IUserRepository userData,ILogger<AuthService> logger, IRolUserRepository rolUserData, IMapper mapper)
+        public AuthService(IUserRepository userData,ILogger<AuthService> logger, IRolUserRepository rolUserData, IMapper mapper, EncriptePassword utilities)
         {
             _logger = logger;
             _userData = userData;
             _rolUserData = rolUserData;
             _mapper = mapper;
+            _utilities = utilities;
         }
 
         public async Task<UserDto> RegisterAsync(RegisterUserDto dto)
         {
-            // Validar que el correo no esté registrado
-            if (await _userData.ExistsByEmailAsync(dto.Email))
-                throw new Exception("Correo ya registrado");
+            try
+            {
+                // Validar que el correo no esté registrado
+                if (await _userData.ExistsByEmailAsync(dto.Email))
+                    throw new Exception("Correo ya registrado");
 
-            // Mapear DTO a entidades
-            var person = _mapper.Map<Person>(dto);
-            var user = _mapper.Map<User>(dto);
-            user.Person = person;
+                // Mapear DTO a entidades
+                var person = _mapper.Map<Person>(dto);
+                var user = _mapper.Map<User>(dto);
 
-            // Guardar usuario
-            await _userData.AddAsync(user);
+                // Encriptar contraseña
+                user.Password = _utilities.EncripteSHA256(user.Password);
 
-            // Asignar rol por defecto
-            //var rolUser = new RolUser { UserId = user.Id, RolId = 2 };
-            //await _rolUserRepo.AddAsync(rolUser);
-            await _rolUserData.AsignateRolDefault(user);
+                // Asignar relación
+                user.Person = person;
 
-            return _mapper.Map<UserDto>(user);
+                // Guardar usuario
+                await _userData.AddAsync(user);
+
+                // Asignar rol por defecto
+                await _rolUserData.AsignateRolDefault(user);
+
+                // Recuperar el usuario con sus relaciones para el mapeo correcto
+                var createduser = await _userData.GetByIdAsync(user.Id);
+                if (createduser == null)
+                    throw new BusinessException("Error interno: el usuario no pudo ser recuperado tras la creación.");
+
+                return _mapper.Map<UserDto>(createduser);
+            }
+            catch (Exception ex)
+            {
+                // Aquí puedes loguear el error si tienes logger inyectado
+                throw new BusinessException($"Error en el registro del usuario: {ex.Message}", ex);
+            }
         }
+
+
+
 
 
     }

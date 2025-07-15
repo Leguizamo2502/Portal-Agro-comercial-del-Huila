@@ -9,6 +9,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//Cors
+builder.Services.AddCustomCors(builder.Configuration);
+
+//Jwt
+builder.Services.AddJwtAuthentication(builder.Configuration);
+
+
 //Services
 builder.Services.AddApplicationServices();
 
@@ -31,6 +38,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();// Usar autentificación de JWT
+
+app.UseCors();
 
 app.UseAuthorization();
 

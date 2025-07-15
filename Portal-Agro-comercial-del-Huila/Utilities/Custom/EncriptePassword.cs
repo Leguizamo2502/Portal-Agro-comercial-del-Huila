@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Utilities.Custom
 {
-    public class EncriptePassword
+    public class EncriptePassword 
     {
 
         public string EncripteSHA256(string text)
