@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Entity.DTOs.Auth
 {
-    internal class LoginUserDto
+    public class LoginUserDto
     {
+        public string Email { get; set; }
+        public string Password { get; set; }
     }
 }

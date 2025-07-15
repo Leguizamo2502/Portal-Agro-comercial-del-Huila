@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Entity.DTOs.Auth
 {
-    internal class ChangePasswordDto
+    public class ChangePasswordDto
     {
+        public string NewPassword { get; set; }
+        public string ConfirmPassword { get; set; }
     }
 }
