@@ -1,3 +1,5 @@
+using Web.ProgramService;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,7 +9,26 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//Cors
+builder.Services.AddCustomCors(builder.Configuration);
+
+//Jwt
+builder.Services.AddJwtAuthentication(builder.Configuration);
+
+
+//Services
+builder.Services.AddApplicationServices();
+
+//Database
+builder.Services.AddDatabase(builder.Configuration);
+
+
+
+
 var app = builder.Build();
+
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -17,6 +38,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();// Usar autentificación de JWT
+
+app.UseCors();
 
 app.UseAuthorization();
 

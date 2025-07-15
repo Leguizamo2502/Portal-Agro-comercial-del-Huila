@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Entity.Domain.Models.Implements.Auth;
 
 namespace Entity.Domain.Models.Implements.Location
 {
-    internal class City
+    public  class City
     {
+        public int Id { get; set; }
+        public string Name { get; set; }
+
+        public int DepartmentId { get; set; }
+        public Department Department { get; set; }
+
+        public List<Person> People { get; set; } = new();
     }
 }
