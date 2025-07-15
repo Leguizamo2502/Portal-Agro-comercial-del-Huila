@@ -17,7 +17,7 @@ namespace Entity.Infrastructure.DataInit.Location
                 new City
                 {
                     Id = 1,
-                    Name = "Huila",
+                    Name = "Teruel",
                     DepartmentId = 1
                 }
 
