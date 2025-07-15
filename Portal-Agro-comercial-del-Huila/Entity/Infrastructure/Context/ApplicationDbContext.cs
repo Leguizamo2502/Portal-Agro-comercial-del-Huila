@@ -31,5 +31,6 @@ namespace Entity.Infrastructure.Context
         public DbSet<User> Users { get; set; }
         public DbSet<Rol> Rols { get; set; }
         public DbSet<RolUser> RolUsers { get; set; }
+        public DbSet<PasswordResetCode> PasswordResetCodes { get; set; }
     }
 }

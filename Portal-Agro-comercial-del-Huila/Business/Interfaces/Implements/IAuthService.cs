@@ -10,5 +10,7 @@ namespace Business.Interfaces.Implements
     public interface IAuthService
     {
         Task<UserDto> RegisterAsync(RegisterUserDto dto);
+        Task RequestPasswordResetAsync(string email);
+        Task ResetPasswordAsync(ConfirmResetDto dto);
     }
 }

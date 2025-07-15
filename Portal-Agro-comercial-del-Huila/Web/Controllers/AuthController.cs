@@ -1,7 +1,6 @@
 ﻿using Business.CustomJwt;
 using Business.Interfaces.Implements;
 using Entity.DTOs.Auth;
-using Entity.Infrastructure.Context;
 using Microsoft.AspNetCore.Mvc;
 using Utilities.Custom;
 using Utilities.Exceptions;
@@ -97,6 +96,33 @@ namespace Web.Controllers
         //    return StatusCode(StatusCodes.Status200OK, new { isSuccess = respuesta });
 
         //}
+
+        [HttpPost("recuperar/enviar-codigo")]
+        public IActionResult EnviarCodigo([FromBody] RequestResetDto dto)
+        {
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await _authService.RequestPasswordResetAsync(dto.Email);
+                }
+                catch (Exception ex)
+                {
+                    // Log del error si falla en segundo plano
+                    _logger.LogError(ex, "Error al enviar el código de recuperación");
+                }
+            });
+
+            return Ok(new { message = "Código enviado al correo (si el email es válido)" });
+        }
+
+
+        [HttpPost("recuperar/confirmar")]
+        public async Task<IActionResult> ConfirmarCodigo([FromBody] ConfirmResetDto dto)
+        {
+            await _authService.ResetPasswordAsync(dto);
+            return Ok(new { message = "Contraseña actualizada" });
+        }
 
     }
 }

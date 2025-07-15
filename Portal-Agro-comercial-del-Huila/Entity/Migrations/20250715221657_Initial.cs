@@ -27,6 +27,24 @@ namespace Entity.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PasswordResetCodes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Expiration = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsUsed = table.Column<bool>(type: "bit", nullable: false),
+                    CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PasswordResetCodes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Rols",
                 columns: table => new
                 {
@@ -160,7 +178,7 @@ namespace Entity.Migrations
             migrationBuilder.InsertData(
                 table: "City",
                 columns: new[] { "Id", "DepartmentId", "Name" },
-                values: new object[] { 1, 1, "Huila" });
+                values: new object[] { 1, 1, "Teruel" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_City_DepartmentId",
@@ -192,6 +210,9 @@ namespace Entity.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "PasswordResetCodes");
+
             migrationBuilder.DropTable(
                 name: "RolUsers");
 

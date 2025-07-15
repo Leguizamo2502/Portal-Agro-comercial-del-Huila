@@ -8,6 +8,8 @@ using Data.Service;
 using Mapster;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Utilities.Custom;
+using Utilities.Messaging.Implements;
+using Utilities.Messaging.Interfaces;
 
 namespace Web.ProgramService
 {
@@ -15,13 +17,21 @@ namespace Web.ProgramService
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            //Email
+            services.AddTransient<ISendCode, EmailService>();
+
+            //Auth
+            services.AddScoped<IPasswordResetCodeRepository, PasswordResetCodeRepository>();
+            services.AddScoped<EncriptePassword>();
+            services.AddScoped<IAuthService, AuthService>();
+
+
             //Mapping
             services.AddMapster();
             MapsterConfig.Register();
 
             //services
-            services.AddScoped<EncriptePassword>();
-            services.AddScoped<IAuthService, AuthService>();
+           
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRolUserRepository, RolUserRepository>();
 
