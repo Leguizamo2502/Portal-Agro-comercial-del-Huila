@@ -1,2 +1,12 @@
-# Ignorar archivos temporales de Visual Studio
+# Archivos de compilación
+bin/
+obj/
+*.cache
+*.log
+
+# Archivos temporales
+*.user
+*.suo
+
+# Visual Studio
 .vs/
