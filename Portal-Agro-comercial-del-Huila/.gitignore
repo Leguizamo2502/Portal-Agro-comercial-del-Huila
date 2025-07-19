@@ -1,0 +1,64 @@
+# Archivos de compilación y dependencias
+bin/
+obj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]og/
+*.log
+
+# Archivos temporales de Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Archivos de depuración
+*.pdb
+*.cache
+*.ilk
+
+# Paquetes descargados
+packages/
+*.nupkg
+project.lock.json
+project.fragment.lock.json
+
+# Archivos de publicación
+publish/
+*.Publish.xml
+
+# Configuraciones locales
+# *.local.json
+# appsettings.Development.json
+
+# Archivos de Rider/ReSharper
+.idea/
+*.DotSettings.user
+
+# Archivos de VSCode si usas también VSCode
+.vscode/
+
+# Archivos del sistema
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.bak
+*.tmp
+
+# Archivos de Git que podrían estorbar
+*.orig
+*.rej
+
+# Archivos de cobertura de pruebas
+coverage/
+*.coverage
+*.coveragexml
+
+# Archivos de test results
+TestResults/
+*.trx
+
+# Archivos de docker si generas cache o salidas
+docker-compose.override.yml
