@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Entity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250715221657_Initial")]
+    [Migration("20250719172327_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -166,8 +166,224 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 1,
-                            DepartmentId = 1,
+                            DepartmentId = 17,
+                            Name = "Acevedo"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DepartmentId = 17,
+                            Name = "Agrado"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DepartmentId = 17,
+                            Name = "Aipe"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            DepartmentId = 17,
+                            Name = "Algeciras"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            DepartmentId = 17,
+                            Name = "Altamira"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            DepartmentId = 17,
+                            Name = "Baraya"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            DepartmentId = 17,
+                            Name = "Campoalegre"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            DepartmentId = 17,
+                            Name = "Colombia"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            DepartmentId = 17,
+                            Name = "Elías"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            DepartmentId = 17,
+                            Name = "Garzón"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            DepartmentId = 17,
+                            Name = "Gigante"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            DepartmentId = 17,
+                            Name = "Guadalupe"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            DepartmentId = 17,
+                            Name = "Hobo"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            DepartmentId = 17,
+                            Name = "Iquira"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            DepartmentId = 17,
+                            Name = "Isnos"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            DepartmentId = 17,
+                            Name = "La Argentina"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            DepartmentId = 17,
+                            Name = "La Plata"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            DepartmentId = 17,
+                            Name = "Nátaga"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            DepartmentId = 17,
+                            Name = "Neiva"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            DepartmentId = 17,
+                            Name = "Oporapa"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            DepartmentId = 17,
+                            Name = "Paicol"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            DepartmentId = 17,
+                            Name = "Palermo"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            DepartmentId = 17,
+                            Name = "Palestina"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            DepartmentId = 17,
+                            Name = "Pital"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            DepartmentId = 17,
+                            Name = "Pitalito"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            DepartmentId = 17,
+                            Name = "Rivera"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            DepartmentId = 17,
+                            Name = "Saladoblanco"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            DepartmentId = 17,
+                            Name = "San Agustín"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            DepartmentId = 17,
+                            Name = "Santa María"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            DepartmentId = 17,
+                            Name = "Suaza"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            DepartmentId = 17,
+                            Name = "Tarqui"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            DepartmentId = 17,
+                            Name = "Tello"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            DepartmentId = 17,
                             Name = "Teruel"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            DepartmentId = 17,
+                            Name = "Tesalia"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            DepartmentId = 17,
+                            Name = "Timaná"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            DepartmentId = 17,
+                            Name = "Villavieja"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            DepartmentId = 17,
+                            Name = "Yaguará"
                         });
                 });
 
@@ -191,7 +407,162 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 1,
+                            Name = "Amazonas"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Antioquia"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Arauca"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Atlántico"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Bolívar"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Boyacá"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Caldas"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Caquetá"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Casanare"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Cauca"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "Cesar"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "Chocó"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Name = "Córdoba"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Name = "Cundinamarca"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Name = "Guainía"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Name = "Guaviare"
+                        },
+                        new
+                        {
+                            Id = 17,
                             Name = "Huila"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Name = "La Guajira"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Name = "Magdalena"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Name = "Meta"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Name = "Nariño"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Name = "Norte de Santander"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Name = "Putumayo"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Name = "Quindío"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Name = "Risaralda"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Name = "San Andrés y Providencia"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Name = "Santander"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Name = "Sucre"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Name = "Tolima"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Name = "Valle del Cauca"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Name = "Vaupés"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Name = "Vichada"
                         });
                 });
 

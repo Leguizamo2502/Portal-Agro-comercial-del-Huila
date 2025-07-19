@@ -163,7 +163,41 @@ namespace Entity.Migrations
             migrationBuilder.InsertData(
                 table: "Department",
                 columns: new[] { "Id", "Name" },
-                values: new object[] { 1, "Huila" });
+                values: new object[,]
+                {
+                    { 1, "Amazonas" },
+                    { 2, "Antioquia" },
+                    { 3, "Arauca" },
+                    { 4, "Atlántico" },
+                    { 5, "Bolívar" },
+                    { 6, "Boyacá" },
+                    { 7, "Caldas" },
+                    { 8, "Caquetá" },
+                    { 9, "Casanare" },
+                    { 10, "Cauca" },
+                    { 11, "Cesar" },
+                    { 12, "Chocó" },
+                    { 13, "Córdoba" },
+                    { 14, "Cundinamarca" },
+                    { 15, "Guainía" },
+                    { 16, "Guaviare" },
+                    { 17, "Huila" },
+                    { 18, "La Guajira" },
+                    { 19, "Magdalena" },
+                    { 20, "Meta" },
+                    { 21, "Nariño" },
+                    { 22, "Norte de Santander" },
+                    { 23, "Putumayo" },
+                    { 24, "Quindío" },
+                    { 25, "Risaralda" },
+                    { 26, "San Andrés y Providencia" },
+                    { 27, "Santander" },
+                    { 28, "Sucre" },
+                    { 29, "Tolima" },
+                    { 30, "Valle del Cauca" },
+                    { 31, "Vaupés" },
+                    { 32, "Vichada" }
+                });
 
             migrationBuilder.InsertData(
                 table: "Rols",
@@ -178,7 +212,46 @@ namespace Entity.Migrations
             migrationBuilder.InsertData(
                 table: "City",
                 columns: new[] { "Id", "DepartmentId", "Name" },
-                values: new object[] { 1, 1, "Teruel" });
+                values: new object[,]
+                {
+                    { 1, 17, "Acevedo" },
+                    { 2, 17, "Agrado" },
+                    { 3, 17, "Aipe" },
+                    { 4, 17, "Algeciras" },
+                    { 5, 17, "Altamira" },
+                    { 6, 17, "Baraya" },
+                    { 7, 17, "Campoalegre" },
+                    { 8, 17, "Colombia" },
+                    { 9, 17, "Elías" },
+                    { 10, 17, "Garzón" },
+                    { 11, 17, "Gigante" },
+                    { 12, 17, "Guadalupe" },
+                    { 13, 17, "Hobo" },
+                    { 14, 17, "Iquira" },
+                    { 15, 17, "Isnos" },
+                    { 16, 17, "La Argentina" },
+                    { 17, 17, "La Plata" },
+                    { 18, 17, "Nátaga" },
+                    { 19, 17, "Neiva" },
+                    { 20, 17, "Oporapa" },
+                    { 21, 17, "Paicol" },
+                    { 22, 17, "Palermo" },
+                    { 23, 17, "Palestina" },
+                    { 24, 17, "Pital" },
+                    { 25, 17, "Pitalito" },
+                    { 26, 17, "Rivera" },
+                    { 27, 17, "Saladoblanco" },
+                    { 28, 17, "San Agustín" },
+                    { 29, 17, "Santa María" },
+                    { 30, 17, "Suaza" },
+                    { 31, 17, "Tarqui" },
+                    { 32, 17, "Tello" },
+                    { 33, 17, "Teruel" },
+                    { 34, 17, "Tesalia" },
+                    { 35, 17, "Timaná" },
+                    { 36, 17, "Villavieja" },
+                    { 37, 17, "Yaguará" }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_City_DepartmentId",

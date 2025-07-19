@@ -57,6 +57,7 @@ namespace Business.Services.AuthService
 
                 // Asignar relación
                 user.Person = person;
+                
 
                 // Guardar usuario
                 await _userData.AddAsync(user);
