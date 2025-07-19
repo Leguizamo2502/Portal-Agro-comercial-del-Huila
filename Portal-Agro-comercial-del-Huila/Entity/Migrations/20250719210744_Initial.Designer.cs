@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Entity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250719172327_Initial")]
+    [Migration("20250719210744_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -149,8 +149,14 @@ namespace Entity.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -166,223 +172,297 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 1,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Acevedo"
                         },
                         new
                         {
                             Id = 2,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Agrado"
                         },
                         new
                         {
                             Id = 3,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Aipe"
                         },
                         new
                         {
                             Id = 4,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Algeciras"
                         },
                         new
                         {
                             Id = 5,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Altamira"
                         },
                         new
                         {
                             Id = 6,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Baraya"
                         },
                         new
                         {
                             Id = 7,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Campoalegre"
                         },
                         new
                         {
                             Id = 8,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Colombia"
                         },
                         new
                         {
                             Id = 9,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Elías"
                         },
                         new
                         {
                             Id = 10,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Garzón"
                         },
                         new
                         {
                             Id = 11,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Gigante"
                         },
                         new
                         {
                             Id = 12,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Guadalupe"
                         },
                         new
                         {
                             Id = 13,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Hobo"
                         },
                         new
                         {
                             Id = 14,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Iquira"
                         },
                         new
                         {
                             Id = 15,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Isnos"
                         },
                         new
                         {
                             Id = 16,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "La Argentina"
                         },
                         new
                         {
                             Id = 17,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "La Plata"
                         },
                         new
                         {
                             Id = 18,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Nátaga"
                         },
                         new
                         {
                             Id = 19,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Neiva"
                         },
                         new
                         {
                             Id = 20,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Oporapa"
                         },
                         new
                         {
                             Id = 21,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Paicol"
                         },
                         new
                         {
                             Id = 22,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Palermo"
                         },
                         new
                         {
                             Id = 23,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Palestina"
                         },
                         new
                         {
                             Id = 24,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Pital"
                         },
                         new
                         {
                             Id = 25,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Pitalito"
                         },
                         new
                         {
                             Id = 26,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Rivera"
                         },
                         new
                         {
                             Id = 27,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Saladoblanco"
                         },
                         new
                         {
                             Id = 28,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "San Agustín"
                         },
                         new
                         {
                             Id = 29,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Santa María"
                         },
                         new
                         {
                             Id = 30,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Suaza"
                         },
                         new
                         {
                             Id = 31,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Tarqui"
                         },
                         new
                         {
                             Id = 32,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Tello"
                         },
                         new
                         {
                             Id = 33,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Teruel"
                         },
                         new
                         {
                             Id = 34,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Tesalia"
                         },
                         new
                         {
                             Id = 35,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Timaná"
                         },
                         new
                         {
                             Id = 36,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Villavieja"
                         },
                         new
                         {
                             Id = 37,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
+                            IsDeleted = false,
                             Name = "Yaguará"
                         });
                 });
@@ -394,6 +474,12 @@ namespace Entity.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -407,161 +493,225 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 1,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Amazonas"
                         },
                         new
                         {
                             Id = 2,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Antioquia"
                         },
                         new
                         {
                             Id = 3,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Arauca"
                         },
                         new
                         {
                             Id = 4,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Atlántico"
                         },
                         new
                         {
                             Id = 5,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Bolívar"
                         },
                         new
                         {
                             Id = 6,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Boyacá"
                         },
                         new
                         {
                             Id = 7,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Caldas"
                         },
                         new
                         {
                             Id = 8,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Caquetá"
                         },
                         new
                         {
                             Id = 9,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Casanare"
                         },
                         new
                         {
                             Id = 10,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Cauca"
                         },
                         new
                         {
                             Id = 11,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Cesar"
                         },
                         new
                         {
                             Id = 12,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Chocó"
                         },
                         new
                         {
                             Id = 13,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Córdoba"
                         },
                         new
                         {
                             Id = 14,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Cundinamarca"
                         },
                         new
                         {
                             Id = 15,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Guainía"
                         },
                         new
                         {
                             Id = 16,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Guaviare"
                         },
                         new
                         {
                             Id = 17,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Huila"
                         },
                         new
                         {
                             Id = 18,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "La Guajira"
                         },
                         new
                         {
                             Id = 19,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Magdalena"
                         },
                         new
                         {
                             Id = 20,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Meta"
                         },
                         new
                         {
                             Id = 21,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Nariño"
                         },
                         new
                         {
                             Id = 22,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Norte de Santander"
                         },
                         new
                         {
                             Id = 23,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Putumayo"
                         },
                         new
                         {
                             Id = 24,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Quindío"
                         },
                         new
                         {
                             Id = 25,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Risaralda"
                         },
                         new
                         {
                             Id = 26,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "San Andrés y Providencia"
                         },
                         new
                         {
                             Id = 27,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Santander"
                         },
                         new
                         {
                             Id = 28,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Sucre"
                         },
                         new
                         {
                             Id = 29,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Tolima"
                         },
                         new
                         {
                             Id = 30,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Valle del Cauca"
                         },
                         new
                         {
                             Id = 31,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Vaupés"
                         },
                         new
                         {
                             Id = 32,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
                             Name = "Vichada"
                         });
                 });

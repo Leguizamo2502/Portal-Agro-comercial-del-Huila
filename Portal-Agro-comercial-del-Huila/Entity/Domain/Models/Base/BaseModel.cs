@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Entity.Domain.Models.Base
 {
-    public class BaseModel
+    public abstract class BaseModel
     {
         public int Id { get; set; }
         public DateTime CreateAt { get; set; } = DateTime.UtcNow;
