@@ -1,4 +1,5 @@
-﻿using Business.Interfaces.Implements;
+﻿using Business.CustomJwt;
+using Business.Interfaces.Implements;
 using Business.Interfaces.Implements.Location;
 using Business.Mapping;
 using Business.Services.AuthService;
@@ -28,6 +29,7 @@ namespace Web.ProgramService
             services.AddScoped<IPasswordResetCodeRepository, PasswordResetCodeRepository>();
             services.AddScoped<EncriptePassword>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IToken, Token>();
 
 
             //Mapping

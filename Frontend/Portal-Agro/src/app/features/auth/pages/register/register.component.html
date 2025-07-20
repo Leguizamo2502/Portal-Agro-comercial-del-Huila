@@ -1,0 +1,28 @@
+<ng-container>
+    <form [formGroup]="formRegister" (ngSubmit)="register()">
+        <label for="">Primer nombre</label>
+        <input type="text" formControlName="firstName" placeholder="Primer nombre">
+
+        <label for="">Apellido</label>
+        <input type="text" formControlName="lastName" placeholder="Apellido">
+
+        <label for="">Identificación</label>
+        <input type="text" formControlName="identification" placeholder="Identificación">
+        <label for="">Teléfono</label>
+        <input type="text" formControlName="phoneNumber" placeholder="Teléfono">
+        <label for="">Dirección</label>
+        <input type="text" formControlName="address" placeholder="Dirección">
+        <label for="">Ciudad</label>
+        <input type="text" formControlName="cityId" placeholder="Ciudad">
+        <label for="">Correo electrónico</label>
+        <input type="email" formControlName="email" placeholder="Correo electrónico">
+        <label for="">Contraseña</label>
+        <input type="password" formControlName="password" placeholder="Contraseña">
+
+        <button type="submit" [disabled]="formRegister.invalid">Registrarse</button>
+
+
+
+    </form>
+</ng-container>
+

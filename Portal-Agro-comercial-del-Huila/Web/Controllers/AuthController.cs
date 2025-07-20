@@ -20,10 +20,12 @@ namespace Web.Controllers
         private readonly IToken _token;
         private readonly IDepartmentService _departmentService;
         private readonly ICityService _cityService;
+        private readonly IConfiguration _configuration;
 
 
         public AuthController(EncriptePassword utilities, ILogger<AuthController> logger, EncriptePassword utilidades, 
-            IAuthService authService, IToken token, IDepartmentService departmentService, ICityService cityService)
+            IAuthService authService, IToken token, IDepartmentService departmentService, ICityService cityService,
+            IConfiguration configuration)
         {
            
             _logger = logger;
@@ -32,7 +34,7 @@ namespace Web.Controllers
             _token = token;
             _departmentService = departmentService;
             _cityService = cityService;
-
+            _configuration = configuration;
         }
 
         [HttpPost]
@@ -66,7 +68,17 @@ namespace Web.Controllers
             {
                 var token = await _token.GenerateToken(login);
 
-                return StatusCode(StatusCodes.Status200OK, new { isSuccess = true, token });
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true, // solo si usas HTTPS
+                    SameSite = SameSiteMode.Strict, // o Lax si usas redirecciones
+                    Expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration["Jwt:exp"]))
+                };
+
+                Response.Cookies.Append("jwt", token, cookieOptions);
+
+                return Ok(new { isSuccess = true });
             }
             catch (UnauthorizedAccessException ex)
             {

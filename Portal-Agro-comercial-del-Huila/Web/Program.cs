@@ -13,7 +13,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCustomCors(builder.Configuration);
 
 //Jwt
-builder.Services.AddJwtAuthentication(builder.Configuration);
+//builder.Services.AddJwtAuthentication(builder.Configuration);
+
+
+
 
 
 //Services
@@ -23,7 +26,7 @@ builder.Services.AddApplicationServices();
 builder.Services.AddDatabase(builder.Configuration);
 
 
-
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -39,10 +42,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();// Usar autentificación de JWT
+//app.UseAuthentication();// Usar autentificación de JWT
 
 app.UseCors();
 
+app.UseMiddleware<JwtCookieMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();
