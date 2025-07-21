@@ -1,7 +1,9 @@
-﻿using Business.CustomJwt;
+﻿using System.Security.Claims;
+using Business.CustomJwt;
 using Business.Interfaces.Implements;
 using Business.Interfaces.Implements.Location;
 using Entity.DTOs.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Utilities.Custom;
 using Utilities.Exceptions;
@@ -13,19 +15,17 @@ namespace Web.Controllers
     [Route("api/v1/[controller]")]
     public class AuthController : ControllerBase
     {
-        //private readonly IToken _token;
+        
         private readonly ILogger<AuthController> _logger;
         private readonly IAuthService _authService;
         private readonly EncriptePassword _utilities;
         private readonly IToken _token;
         private readonly IDepartmentService _departmentService;
         private readonly ICityService _cityService;
-        private readonly IConfiguration _configuration;
 
 
         public AuthController(EncriptePassword utilities, ILogger<AuthController> logger, EncriptePassword utilidades, 
-            IAuthService authService, IToken token, IDepartmentService departmentService, ICityService cityService,
-            IConfiguration configuration)
+            IAuthService authService, IToken token, IDepartmentService departmentService, ICityService cityService)
         {
            
             _logger = logger;
@@ -34,7 +34,7 @@ namespace Web.Controllers
             _token = token;
             _departmentService = departmentService;
             _cityService = cityService;
-            _configuration = configuration;
+
         }
 
         [HttpPost]
@@ -58,7 +58,7 @@ namespace Web.Controllers
 
 
         [HttpPost]
-        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [ProducesResponseType(500)]
@@ -71,14 +71,14 @@ namespace Web.Controllers
                 var cookieOptions = new CookieOptions
                 {
                     HttpOnly = true,
-                    Secure = true, // solo si usas HTTPS
-                    SameSite = SameSiteMode.Strict, // o Lax si usas redirecciones
-                    Expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration["Jwt:exp"]))
+                    Secure = false, // asegúrate que esto se respete en producción
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.UtcNow.AddHours(1)
                 };
 
                 Response.Cookies.Append("jwt", token, cookieOptions);
 
-                return Ok(new { isSuccess = true });
+                return Ok(new { isSuccess = true }); // ya no mandes el token
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -101,6 +101,39 @@ namespace Web.Controllers
                 return StatusCode(500, new { message = "Error interno del servidor" });
             }
         }
+
+        [HttpGet("me")]
+        [Authorize]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(401)]
+        public IActionResult GetProfile()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+            if (identity == null || !identity.IsAuthenticated)
+                return Unauthorized();
+
+            var email = identity.FindFirst(ClaimTypes.Email)?.Value;
+            var roles = identity.FindAll(ClaimTypes.Role).Select(r => r.Value).ToList();
+            var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var dto = new 
+            {
+                Id = userId,
+                Email = email,
+                Roles = roles
+            };
+
+            return Ok(dto);
+        }
+
+        [HttpPost("logout")]
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("jwt");
+            return Ok(new { message = "Sesión cerrada" });
+        }
+
 
 
         //[HttpGet]
@@ -184,6 +217,7 @@ namespace Web.Controllers
 
 
         [HttpGet("Department")]
+        [Authorize]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
         public virtual async Task<IActionResult> Get()

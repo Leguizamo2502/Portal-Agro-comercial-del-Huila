@@ -12,5 +12,6 @@ namespace Data.Interfaces.Implements
     public interface IRolUserRepository : IDataGeneric<RolUser>
     {
         Task<RolUser> AsignateRolDefault(User user);
+        Task<IEnumerable<string>> GetRolesUserAsync(int userId);
     }
 }

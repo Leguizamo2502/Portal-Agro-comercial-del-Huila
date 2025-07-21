@@ -40,6 +40,20 @@ namespace Business.Services.AuthService
             _passwordResetRepo = passwordResetRepo;
         }
 
+        public async Task<IEnumerable<string>> GetRolesUserAsync(int idUser)
+        {
+            try
+            {
+                var roles = await _rolUserData.GetRolesUserAsync(idUser);
+                return roles;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al obtener roles del usuario con ID {UserId}", idUser);
+                throw new BusinessException("Error al obtener roles del usuario", ex);
+            }
+        }
+
         public async Task<UserDto> RegisterAsync(RegisterUserDto dto)
         {
             try

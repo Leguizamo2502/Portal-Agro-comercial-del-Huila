@@ -4,6 +4,7 @@ using Data.Repository;
 using Entity.Domain.Models.Implements.Auth;
 using Entity.Domain.Models.Implements.Security;
 using Entity.Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data.Service
 {
@@ -26,6 +27,17 @@ namespace Data.Service
             await _context.SaveChangesAsync();
 
             return rolUser;
+        }
+
+        public async Task<IEnumerable<string>> GetRolesUserAsync(int userId)
+        {
+            var roles = await _dbSet
+                    .Where(ru => ru.UserId == userId && !string.IsNullOrWhiteSpace(ru.Rol.Name))
+                    .Select(ru => ru.Rol.Name)
+                    .Distinct()
+                    .ToListAsync();
+
+            return roles;
         }
     }
 }

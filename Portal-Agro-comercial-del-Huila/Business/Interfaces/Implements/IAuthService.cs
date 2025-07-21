@@ -12,5 +12,7 @@ namespace Business.Interfaces.Implements
         Task<UserDto> RegisterAsync(RegisterUserDto dto);
         Task RequestPasswordResetAsync(string email);
         Task ResetPasswordAsync(ConfirmResetDto dto);
+
+        Task<IEnumerable<string>> GetRolesUserAsync(int idUser);
     }
 }
