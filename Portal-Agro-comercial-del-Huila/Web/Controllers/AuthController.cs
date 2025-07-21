@@ -71,8 +71,8 @@ namespace Web.Controllers
                 var cookieOptions = new CookieOptions
                 {
                     HttpOnly = true,
-                    Secure = false, // asegúrate que esto se respete en producción
-                    SameSite = SameSiteMode.Strict,
+                    Secure = true, // asegúrate que esto se respete en producción
+                    SameSite = SameSiteMode.None,
                     Expires = DateTime.UtcNow.AddHours(1)
                 };
 
@@ -217,7 +217,6 @@ namespace Web.Controllers
 
 
         [HttpGet("Department")]
-        [Authorize]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
         public virtual async Task<IActionResult> Get()

@@ -1,1 +1,15 @@
-<p>login works!</p>
+<ng-container>
+    <form [formGroup]="formLogin" (ngSubmit)="login()">
+        <label for="">Correo electrónico</label>
+        <input type="email" formControlName="email" placeholder="Correo electrónico">
+
+        <label for="">Contraseña</label>
+        <input type="password" formControlName="password" placeholder="Contraseña">
+
+        <button type="submit" [disabled]="formLogin.invalid">Iniciar sesión</button>
+</form>
+
+
+<button (click)="me()">Datos</button>
+</ng-container>
+

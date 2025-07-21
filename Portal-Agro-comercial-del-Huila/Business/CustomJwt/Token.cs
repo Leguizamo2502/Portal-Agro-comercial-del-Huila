@@ -41,7 +41,7 @@ namespace Business.CustomJwt
 
             var userClaims = new List<Claim>
             {
-                new Claim("Id", user.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, dto.Email!)
             };
 
