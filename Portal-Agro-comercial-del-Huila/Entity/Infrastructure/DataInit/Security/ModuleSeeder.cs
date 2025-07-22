@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entity.DTOs.Roles
+namespace Entity.Infrastructure.DataInit.Security
 {
-    internal class RolDto
+    internal class ModuleSeeder
     {
     }
 }

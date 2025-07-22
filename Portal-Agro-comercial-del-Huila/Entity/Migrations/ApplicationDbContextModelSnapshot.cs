@@ -30,6 +30,9 @@ namespace Entity.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -100,6 +103,47 @@ namespace Entity.Migrations
                     b.HasIndex("CityId");
 
                     b.ToTable("Persons");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Active = true,
+                            Address = "Calle 1 # 1-1",
+                            CityId = 33,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "Persona1",
+                            Identification = "000000000",
+                            IsDeleted = false,
+                            LastName = "Persona1",
+                            PhoneNumber = "3000000000"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Active = true,
+                            Address = "Carrera 10 # 20-15",
+                            CityId = 34,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "Persona2",
+                            Identification = "000000001",
+                            IsDeleted = false,
+                            LastName = "Persona2",
+                            PhoneNumber = "3000000001"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Active = true,
+                            Address = "Avenida 3 # 5-30",
+                            CityId = 35,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FirstName = "Persona3",
+                            Identification = "000000002",
+                            IsDeleted = false,
+                            LastName = "Persona3",
+                            PhoneNumber = "3000000003"
+                        });
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Auth.User", b =>
@@ -136,6 +180,38 @@ namespace Entity.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Active = true,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "admin@example.com",
+                            IsDeleted = false,
+                            Password = "3b612c75a7b5048a435fb6ec81e52ff92d6d795a8b5a9c17070f6a63c97a53b2",
+                            PersonId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Active = true,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "user@example.com",
+                            IsDeleted = false,
+                            Password = "a61a8adf60038792a2cb88e670b20540a9d6c2ca204ab754fc768950e79e7d36",
+                            PersonId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Active = true,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "producer@example.com",
+                            IsDeleted = false,
+                            Password = "f4156105c167be3a85ad995b661a701a54aaec63c12af53a146d57183aad4fa2",
+                            PersonId = 3
+                        });
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Location.City", b =>
@@ -145,6 +221,9 @@ namespace Entity.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
@@ -169,6 +248,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 1,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -177,6 +257,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 2,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -185,6 +266,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 3,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -193,6 +275,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 4,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -201,6 +284,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 5,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -209,6 +293,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 6,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -217,6 +302,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 7,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -225,6 +311,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 8,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -233,6 +320,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 9,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -241,6 +329,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 10,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -249,6 +338,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 11,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -257,6 +347,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 12,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -265,6 +356,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 13,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -273,6 +365,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 14,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -281,6 +374,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 15,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -289,6 +383,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 16,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -297,6 +392,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 17,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -305,6 +401,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 18,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -313,6 +410,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 19,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -321,6 +419,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 20,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -329,6 +428,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 21,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -337,6 +437,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 22,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -345,6 +446,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 23,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -353,6 +455,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 24,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -361,6 +464,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 25,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -369,6 +473,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 26,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -377,6 +482,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 27,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -385,6 +491,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 28,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -393,6 +500,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 29,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -401,6 +509,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 30,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -409,6 +518,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 31,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -417,6 +527,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 32,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -425,6 +536,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 33,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -433,6 +545,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 34,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -441,6 +554,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 35,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -449,6 +563,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 36,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -457,6 +572,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 37,
+                            Active = true,
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DepartmentId = 17,
                             IsDeleted = false,
@@ -471,6 +587,9 @@ namespace Entity.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
@@ -490,6 +609,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 1,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Amazonas"
@@ -497,6 +617,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 2,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Antioquia"
@@ -504,6 +625,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 3,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Arauca"
@@ -511,6 +633,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 4,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Atlántico"
@@ -518,6 +641,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 5,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Bolívar"
@@ -525,6 +649,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 6,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Boyacá"
@@ -532,6 +657,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 7,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Caldas"
@@ -539,6 +665,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 8,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Caquetá"
@@ -546,6 +673,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 9,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Casanare"
@@ -553,6 +681,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 10,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Cauca"
@@ -560,6 +689,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 11,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Cesar"
@@ -567,6 +697,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 12,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Chocó"
@@ -574,6 +705,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 13,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Córdoba"
@@ -581,6 +713,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 14,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Cundinamarca"
@@ -588,6 +721,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 15,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Guainía"
@@ -595,6 +729,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 16,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Guaviare"
@@ -602,6 +737,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 17,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Huila"
@@ -609,6 +745,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 18,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "La Guajira"
@@ -616,6 +753,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 19,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Magdalena"
@@ -623,6 +761,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 20,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Meta"
@@ -630,6 +769,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 21,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Nariño"
@@ -637,6 +777,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 22,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Norte de Santander"
@@ -644,6 +785,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 23,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Putumayo"
@@ -651,6 +793,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 24,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Quindío"
@@ -658,6 +801,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 25,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Risaralda"
@@ -665,6 +809,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 26,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "San Andrés y Providencia"
@@ -672,6 +817,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 27,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Santander"
@@ -679,6 +825,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 28,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Sucre"
@@ -686,6 +833,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 29,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Tolima"
@@ -693,6 +841,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 30,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Valle del Cauca"
@@ -700,6 +849,7 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 31,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Vaupés"
@@ -707,10 +857,137 @@ namespace Entity.Migrations
                         new
                         {
                             Id = 32,
+                            Active = true,
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
                             Name = "Vichada"
                         });
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Security.Form", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Forms");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Security.FormModule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FormId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ModuleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FormId");
+
+                    b.HasIndex("ModuleId");
+
+                    b.ToTable("FormModules");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Security.Module", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Modules");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Security.Permission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Permissions");
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Security.Rol", b =>
@@ -772,6 +1049,43 @@ namespace Entity.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Security.RolFormPermission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FormId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RolId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FormId");
+
+                    b.HasIndex("PermissionId");
+
+                    b.HasIndex("RolId");
+
+                    b.ToTable("RolFormPermissions");
+                });
+
             modelBuilder.Entity("Entity.Domain.Models.Implements.Security.RolUser", b =>
                 {
                     b.Property<int>("Id")
@@ -779,6 +1093,9 @@ namespace Entity.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
@@ -799,6 +1116,62 @@ namespace Entity.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("RolUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Active = true,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RolId = 1,
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Active = true,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RolId = 2,
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Active = true,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RolId = 3,
+                            UserId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Active = true,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RolId = 3,
+                            UserId = 3
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Active = true,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RolId = 2,
+                            UserId = 3
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Active = true,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            RolId = 2,
+                            UserId = 2
+                        });
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Auth.Person", b =>
@@ -830,6 +1203,52 @@ namespace Entity.Migrations
                         .IsRequired();
 
                     b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Security.FormModule", b =>
+                {
+                    b.HasOne("Entity.Domain.Models.Implements.Security.Form", "Form")
+                        .WithMany("FormModules")
+                        .HasForeignKey("FormId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entity.Domain.Models.Implements.Security.Module", "Module")
+                        .WithMany("FormModules")
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Form");
+
+                    b.Navigation("Module");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Security.RolFormPermission", b =>
+                {
+                    b.HasOne("Entity.Domain.Models.Implements.Security.Form", "Form")
+                        .WithMany("RolFormPermissions")
+                        .HasForeignKey("FormId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entity.Domain.Models.Implements.Security.Permission", "Permission")
+                        .WithMany("RolFormPermissions")
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entity.Domain.Models.Implements.Security.Rol", "Rol")
+                        .WithMany("RolFormPermissions")
+                        .HasForeignKey("RolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Form");
+
+                    b.Navigation("Permission");
+
+                    b.Navigation("Rol");
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Security.RolUser", b =>
@@ -872,8 +1291,27 @@ namespace Entity.Migrations
                     b.Navigation("Cities");
                 });
 
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Security.Form", b =>
+                {
+                    b.Navigation("FormModules");
+
+                    b.Navigation("RolFormPermissions");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Security.Module", b =>
+                {
+                    b.Navigation("FormModules");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Security.Permission", b =>
+                {
+                    b.Navigation("RolFormPermissions");
+                });
+
             modelBuilder.Entity("Entity.Domain.Models.Implements.Security.Rol", b =>
                 {
+                    b.Navigation("RolFormPermissions");
+
                     b.Navigation("RolUsers");
                 });
 #pragma warning restore 612, 618

@@ -12,12 +12,12 @@ namespace Entity.Domain.Models.Implements.Auth
     {
         public string Email { get; set; }
         public string Password { get; set; }
-        public bool Active { get; set; } = true;
+        //public bool Active { get; set; } = true;
 
         // Clave foránea obligatoria
         public int PersonId { get; set; }
         public Person Person { get; set; }
 
-        public List<RolUser> RolUsers { get; set; } = new();
+        public ICollection<RolUser> RolUsers { get; set; } = [];
     }
 }

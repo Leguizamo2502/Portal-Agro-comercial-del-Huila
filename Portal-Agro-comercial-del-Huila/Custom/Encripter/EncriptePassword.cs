@@ -5,12 +5,12 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Utilities.Custom
+namespace Custom.Encripter
 {
-    public class EncriptePassword 
+    public static class EncriptePassword
     {
 
-        public string EncripteSHA256(string text)
+        public static string EncripteSHA256(string text)
         {
             // Computar el hash 
             using (SHA256 sha256Hash = SHA256.Create())

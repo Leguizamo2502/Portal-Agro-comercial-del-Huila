@@ -1,9 +1,9 @@
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Component, inject } from '@angular/core';
 import { RegisterUserModel } from '../../Models/registeruser.model';
-import { AuthService } from '../../services/auth.service';
 import Swal from 'sweetalert2';
 import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../../Core/services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -47,14 +47,14 @@ export class RegisterComponent {
           this._router.navigate([""])
           Swal.fire({
             icon: "success",
-            title: "Oops...",
-            text: "User Create!",
+            title: "Usuario Creado!",
+            text: "Usuario Creado Exitosamente!",
           })
         } else {
           Swal.fire({
             icon: "error",
             title: "Oops...",
-            text: "Error create User!",
+            text: "Error al Crear Usuario!",
           })
         }
       }, error(err) {

@@ -27,10 +27,22 @@ namespace Entity.Infrastructure.Context
 
         }
 
+        //Auth
         public DbSet<Person> Persons { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<PasswordResetCode> PasswordResetCodes { get; set; }
+
+        //Security
         public DbSet<Rol> Rols { get; set; }
         public DbSet<RolUser> RolUsers { get; set; }
-        public DbSet<PasswordResetCode> PasswordResetCodes { get; set; }
+
+        public DbSet<Permission> Permissions { get; set; }
+        public DbSet<RolFormPermission> RolFormPermissions { get; set; }
+        public DbSet<Form> Forms { get; set; }
+        public DbSet<Domain.Models.Implements.Security.Module> Modules { get; set; }
+        public DbSet<FormModule> FormModules { get; set; }
+
+
+
     }
 }

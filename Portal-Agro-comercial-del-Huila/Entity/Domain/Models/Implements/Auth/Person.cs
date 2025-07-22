@@ -10,7 +10,7 @@ namespace Entity.Domain.Models.Implements.Auth
         public string PhoneNumber { get; set; }
         public int CityId { get; set; }
         public string Address { get; set; }
-        public bool Active { get; set; }
+        //public bool Active { get; set; }
 
         // Navegación inversa
         public User User { get; set; }

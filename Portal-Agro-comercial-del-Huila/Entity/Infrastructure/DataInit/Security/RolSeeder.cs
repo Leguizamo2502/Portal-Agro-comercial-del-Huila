@@ -7,7 +7,7 @@ using Entity.Domain.Models.Implements.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Entity.Infrastructure.DataInit.Location
+namespace Entity.Infrastructure.DataInit.Security
 {
     public class RolSeeder : IEntityTypeConfiguration<Rol>
     {
@@ -31,6 +31,7 @@ namespace Entity.Infrastructure.DataInit.Location
                     Active = true,
                     IsDeleted = false,
                     CreateAt = new DateTime(2024, 1, 1)
+
                 },
                  new Rol
                  {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Business.Interfaces.Implements;
+using Custom.Encripter;
 using Data.Interfaces.Implements;
 using Data.Service;
 using Entity.Domain.Models.Implements.Auth;
@@ -11,7 +12,6 @@ using Entity.Domain.Models.Implements.Security;
 using Entity.DTOs.Auth;
 using MapsterMapper;
 using Microsoft.Extensions.Logging;
-using Utilities.Custom;
 using Utilities.Exceptions;
 using Utilities.Messaging.Implements;
 using Utilities.Messaging.Interfaces;
@@ -24,18 +24,17 @@ namespace Business.Services.AuthService
         private readonly IRolUserRepository _rolUserData;
         private readonly ILogger<AuthService> _logger;
         private readonly IMapper _mapper;
-        private readonly EncriptePassword _utilities;
         private readonly ISendCode _emailService;
         private readonly IPasswordResetCodeRepository _passwordResetRepo;
 
-        public AuthService(IUserRepository userData,ILogger<AuthService> logger, IRolUserRepository rolUserData, IMapper mapper, EncriptePassword utilities,
+        public AuthService(IUserRepository userData,ILogger<AuthService> logger, IRolUserRepository rolUserData, IMapper mapper,
             ISendCode emailService, IPasswordResetCodeRepository passwordResetRepo)
         {
             _logger = logger;
             _userData = userData;
             _rolUserData = rolUserData;
             _mapper = mapper;
-            _utilities = utilities;
+
             _emailService = emailService;
             _passwordResetRepo = passwordResetRepo;
         }
@@ -67,7 +66,7 @@ namespace Business.Services.AuthService
                 var user = _mapper.Map<User>(dto);
 
                 // Encriptar contraseña
-                user.Password = _utilities.EncripteSHA256(user.Password);
+                user.Password = EncriptePassword.EncripteSHA256(user.Password);
 
                 // Asignar relación
                 user.Person = person;
@@ -120,7 +119,7 @@ namespace Business.Services.AuthService
             var user = await _userData.GetByEmailAsync(dto.Email)
                 ?? throw new ValidationException("Usuario no encontrado");
 
-            user.Password = _utilities.EncripteSHA256(dto.NewPassword);
+            user.Password = EncriptePassword.EncripteSHA256(dto.NewPassword);
             await _userData.UpdateAsync(user);
 
             record.IsUsed = true;

@@ -23,4 +23,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Custom\Custom.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -5,12 +5,12 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Custom.Encripter;
 using Data.Interfaces.Implements;
 using Entity.DTOs.Auth;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Utilities.Custom;
 using Utilities.Exceptions;
 
 namespace Business.CustomJwt
@@ -21,20 +21,18 @@ namespace Business.CustomJwt
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userData;
         private readonly IRolUserRepository _rolUserData;
-        private readonly EncriptePassword _utilities;
         private readonly ILogger<Token> _logger;
-        public Token(IConfiguration configuration, IUserRepository userData, IRolUserRepository rolUserData, EncriptePassword utilities,
+        public Token(IConfiguration configuration, IUserRepository userData, IRolUserRepository rolUserData,
             ILogger<Token> logger)
         {
             _configuration = configuration;
             _userData = userData;
             _rolUserData = rolUserData;
-            _utilities = utilities;
             _logger = logger;
         }
         public async Task<string> GenerateToken(LoginUserDto dto)
         {
-            dto.Password = _utilities.EncripteSHA256(dto.Password);
+            dto.Password = EncriptePassword.EncripteSHA256(dto.Password);
             var user =  await _userData.LoginUser(dto);
             var roles = await GetRolesUserAsync(user.Id);
 

@@ -2,10 +2,10 @@
 using Business.CustomJwt;
 using Business.Interfaces.Implements;
 using Business.Interfaces.Implements.Location;
+using Business.Interfaces.Implements.Security;
 using Entity.DTOs.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Utilities.Custom;
 using Utilities.Exceptions;
 
 namespace Web.Controllers
@@ -18,22 +18,23 @@ namespace Web.Controllers
         
         private readonly ILogger<AuthController> _logger;
         private readonly IAuthService _authService;
-        private readonly EncriptePassword _utilities;
         private readonly IToken _token;
         private readonly IDepartmentService _departmentService;
         private readonly ICityService _cityService;
+        private readonly IMeService _me;
 
 
-        public AuthController(EncriptePassword utilities, ILogger<AuthController> logger, EncriptePassword utilidades, 
-            IAuthService authService, IToken token, IDepartmentService departmentService, ICityService cityService)
+        public AuthController(ILogger<AuthController> logger, 
+            IAuthService authService, IToken token, IDepartmentService departmentService, ICityService cityService,
+            IMeService me)
         {
            
             _logger = logger;
-            _utilities = utilities;
             _authService = authService;
             _token = token;
             _departmentService = departmentService;
             _cityService = cityService;
+            _me = me;
 
         }
 
@@ -102,30 +103,45 @@ namespace Web.Controllers
             }
         }
 
-        [HttpGet("me")]
+        //[HttpGet("me")]
+        //[Authorize]
+        //[ProducesResponseType(200)]
+        //[ProducesResponseType(401)]
+        //public IActionResult GetProfile()
+        //{
+        //    var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+        //    if (identity == null || !identity.IsAuthenticated)
+        //        return Unauthorized();
+
+        //    var email = identity.FindFirst(ClaimTypes.Email)?.Value;
+        //    var roles = identity.FindAll(ClaimTypes.Role).Select(r => r.Value).ToList();
+        //    var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        //    var dto = new 
+        //    {
+        //        Id = userId,
+        //        Email = email,
+        //        Roles = roles
+        //    };
+
+        //    return Ok(dto);
+        //}
+
         [Authorize]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
-        public IActionResult GetProfile()
+        [HttpGet("me")]
+        public async Task<IActionResult> GetCurrentUser()
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (identity == null || !identity.IsAuthenticated)
-                return Unauthorized();
+            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+                return Unauthorized("El token no contiene un Claim 'sub' (NameIdentifier) válido o no es un GUID.");
 
-            var email = identity.FindFirst(ClaimTypes.Email)?.Value;
-            var roles = identity.FindAll(ClaimTypes.Role).Select(r => r.Value).ToList();
-            var userId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var currentUserDto = await _me.GetCurrentUserInfoAsync(userId);
 
-            var dto = new 
-            {
-                Id = userId,
-                Email = email,
-                Roles = roles
-            };
-
-            return Ok(dto);
+            return Ok(currentUserDto);
         }
+
 
         [HttpPost("logout")]
         public IActionResult Logout()
@@ -268,6 +284,10 @@ namespace Web.Controllers
                 return StatusCode(500, new { message = "Error interno del servidor." });
             }
         }
+
+        
+
+
 
     }
 }

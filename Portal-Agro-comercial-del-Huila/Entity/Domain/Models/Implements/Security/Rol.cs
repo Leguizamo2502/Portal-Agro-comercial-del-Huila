@@ -7,13 +7,11 @@ using Entity.Domain.Models.Base;
 
 namespace Entity.Domain.Models.Implements.Security
 {
-    public class Rol : BaseModel
+    public class Rol : BaseSecurity
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public bool Active { get; set; }
 
-        public List<RolUser> RolUsers { get; set; } = new();
-        
+        public ICollection<RolUser> RolUsers { get; set; } = [];
+        public ICollection<RolFormPermission> RolFormPermissions { get; set; } = [];
+
     }
 }

@@ -1,16 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { environment } from '../../../../environments/environment';
-import { RegisterUserModel } from '../Models/registeruser.model';
 import { Observable } from 'rxjs';
-import { LoginModel, LoginResponseModel } from '../Models/login.model';
+import { environment } from '../../../environments/environment';
+import { LoginModel, LoginResponseModel } from '../../features/auth/Models/login.model';
+import { RegisterUserModel } from '../../features/auth/Models/registeruser.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
-  private http = inject(HttpClient);
+private http = inject(HttpClient);
   private urlBase = environment.apiUrl + 'Auth/';
   constructor() { }
 
@@ -26,5 +25,4 @@ export class AuthService {
   GetMe(): Observable<LoginResponseModel>{
     return this.http.get<LoginResponseModel>(this.urlBase + 'me');
   }
-
 }
