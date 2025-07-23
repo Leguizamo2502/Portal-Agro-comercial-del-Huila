@@ -3,6 +3,7 @@ using Entity.Domain.Models.Implements.Producers;
 using Entity.Domain.Models.Implements.Security;
 using Entity.DTOs.Auth;
 using Entity.DTOs.Producer.Farm.Create;
+using Entity.DTOs.Producer.Farm.Select;
 using Entity.DTOs.Producer.Producer.Create;
 using Entity.DTOs.Security.Me;
 using Mapster;
@@ -42,8 +43,12 @@ namespace Business.Mapping
             config.NewConfig<ProducerWithFarmRegisterDto, Producer>();
             config.NewConfig<ProducerWithFarmRegisterDto, Farm>();
             config.NewConfig<ProducerWithFarmRegisterDto, FarmRegisterDto>();
-                
-             
+
+            config.NewConfig<FarmRegisterDto, Farm>();
+            config.NewConfig<Farm, FarmSelectDto>();
+
+
+
 
 
 

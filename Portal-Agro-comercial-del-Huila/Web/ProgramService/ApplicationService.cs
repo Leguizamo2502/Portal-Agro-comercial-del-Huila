@@ -1,12 +1,12 @@
 ﻿using Business.CustomJwt;
 using Business.Interfaces.Implements.Auth;
 using Business.Interfaces.Implements.Location;
-using Business.Interfaces.Implements.Producers;
+using Business.Interfaces.Implements.Producers.Farms;
 using Business.Interfaces.Implements.Security;
 using Business.Mapping;
 using Business.Services.AuthService;
 using Business.Services.Location;
-using Business.Services.Producers;
+using Business.Services.Producers.Farms;
 using Custom.Encripter;
 using Data.Interfaces.Implements.Auth;
 using Data.Interfaces.Implements.Location;

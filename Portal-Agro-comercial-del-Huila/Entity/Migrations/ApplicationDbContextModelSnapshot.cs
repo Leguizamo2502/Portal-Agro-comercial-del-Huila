@@ -912,6 +912,37 @@ namespace Entity.Migrations
                     b.ToTable("Farms");
                 });
 
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.FarmImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FarmId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FarmId");
+
+                    b.ToTable("FarmImages");
+                });
+
             modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.Producer", b =>
                 {
                     b.Property<int>("Id")
@@ -1310,6 +1341,17 @@ namespace Entity.Migrations
                     b.Navigation("Producer");
                 });
 
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.FarmImage", b =>
+                {
+                    b.HasOne("Entity.Domain.Models.Implements.Producers.Farm", "Farm")
+                        .WithMany("FarmImages")
+                        .HasForeignKey("FarmId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Farm");
+                });
+
             modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.Producer", b =>
                 {
                     b.HasOne("Entity.Domain.Models.Implements.Auth.User", "User")
@@ -1409,6 +1451,11 @@ namespace Entity.Migrations
             modelBuilder.Entity("Entity.Domain.Models.Implements.Location.Department", b =>
                 {
                     b.Navigation("Cities");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.Farm", b =>
+                {
+                    b.Navigation("FarmImages");
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.Producer", b =>
