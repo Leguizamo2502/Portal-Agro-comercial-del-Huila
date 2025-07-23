@@ -864,6 +864,121 @@ namespace Entity.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.Farm", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<double>("Altitude")
+                        .HasColumnType("float");
+
+                    b.Property<int>("CityId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("Hectares")
+                        .HasColumnType("float");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProducerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("ProducerId");
+
+                    b.ToTable("Farms");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.FarmImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FarmId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FarmId");
+
+                    b.ToTable("FarmImages");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.Producer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Producers");
+                });
+
             modelBuilder.Entity("Entity.Domain.Models.Implements.Security.Form", b =>
                 {
                     b.Property<int>("Id")
@@ -1176,11 +1291,13 @@ namespace Entity.Migrations
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Auth.Person", b =>
                 {
-                    b.HasOne("Entity.Domain.Models.Implements.Location.City", null)
+                    b.HasOne("Entity.Domain.Models.Implements.Location.City", "City")
                         .WithMany("People")
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("City");
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Auth.User", b =>
@@ -1203,6 +1320,47 @@ namespace Entity.Migrations
                         .IsRequired();
 
                     b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.Farm", b =>
+                {
+                    b.HasOne("Entity.Domain.Models.Implements.Location.City", "City")
+                        .WithMany("Farms")
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entity.Domain.Models.Implements.Producers.Producer", "Producer")
+                        .WithMany("Farms")
+                        .HasForeignKey("ProducerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("City");
+
+                    b.Navigation("Producer");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.FarmImage", b =>
+                {
+                    b.HasOne("Entity.Domain.Models.Implements.Producers.Farm", "Farm")
+                        .WithMany("FarmImages")
+                        .HasForeignKey("FarmId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Farm");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.Producer", b =>
+                {
+                    b.HasOne("Entity.Domain.Models.Implements.Auth.User", "User")
+                        .WithOne("Producer")
+                        .HasForeignKey("Entity.Domain.Models.Implements.Producers.Producer", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Security.FormModule", b =>
@@ -1278,17 +1436,31 @@ namespace Entity.Migrations
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Auth.User", b =>
                 {
+                    b.Navigation("Producer");
+
                     b.Navigation("RolUsers");
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Location.City", b =>
                 {
+                    b.Navigation("Farms");
+
                     b.Navigation("People");
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Location.Department", b =>
                 {
                     b.Navigation("Cities");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.Farm", b =>
+                {
+                    b.Navigation("FarmImages");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.Producer", b =>
+                {
+                    b.Navigation("Farms");
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Security.Form", b =>

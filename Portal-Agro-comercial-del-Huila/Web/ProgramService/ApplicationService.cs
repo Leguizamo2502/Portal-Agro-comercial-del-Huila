@@ -1,18 +1,22 @@
 ﻿using Business.CustomJwt;
-using Business.Interfaces.Implements;
+using Business.Interfaces.Implements.Auth;
 using Business.Interfaces.Implements.Location;
+using Business.Interfaces.Implements.Producers.Farms;
 using Business.Interfaces.Implements.Security;
 using Business.Mapping;
 using Business.Services.AuthService;
 using Business.Services.Location;
+using Business.Services.Producers.Farms;
 using Custom.Encripter;
-using Data.Interfaces.Implements;
+using Data.Interfaces.Implements.Auth;
 using Data.Interfaces.Implements.Location;
+using Data.Interfaces.Implements.Producers;
 using Data.Interfaces.Implements.Security;
 using Data.Interfaces.IRepository;
 using Data.Repository;
-using Data.Service;
+using Data.Service.Auth;
 using Data.Service.Location;
+using Data.Service.Producers;
 using Data.Service.Security;
 using Mapster;
 using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -51,6 +55,13 @@ namespace Web.ProgramService
 
             services.AddScoped<IMeRepository, MeRepository>();
             services.AddScoped<IMeService, MeService>();
+
+            services.AddScoped<IFarmRepository, FarmRepository>();
+            services.AddScoped<IFarmService, FarmService>();
+
+            services.AddScoped<IProducerRepository, ProducerRepository>();
+
+
 
 
 

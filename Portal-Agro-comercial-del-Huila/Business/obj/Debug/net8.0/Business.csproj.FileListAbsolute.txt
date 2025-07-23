@@ -21,9 +21,11 @@ C:\Users\NITRO\Documentos\PROYECTO\Portal-Agro-comercial-del-Huila\Portal-Agro-c
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Business\bin\Debug\net8.0\Business.deps.json
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Business\bin\Debug\net8.0\Business.dll
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Business\bin\Debug\net8.0\Business.pdb
+C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Business\bin\Debug\net8.0\Custom.dll
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Business\bin\Debug\net8.0\Data.dll
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Business\bin\Debug\net8.0\Entity.dll
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Business\bin\Debug\net8.0\Utilities.dll
+C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Business\bin\Debug\net8.0\Custom.pdb
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Business\bin\Debug\net8.0\Data.pdb
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Business\bin\Debug\net8.0\Entity.pdb
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Business\bin\Debug\net8.0\Utilities.pdb
