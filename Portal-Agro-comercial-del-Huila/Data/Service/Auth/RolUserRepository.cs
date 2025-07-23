@@ -1,12 +1,11 @@
-﻿
-using Data.Interfaces.Implements;
+﻿using Data.Interfaces.Implements.Auth;
 using Data.Repository;
 using Entity.Domain.Models.Implements.Auth;
 using Entity.Domain.Models.Implements.Security;
 using Entity.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.Service
+namespace Data.Service.Auth
 {
     public class RolUserRepository : DataGeneric<RolUser>, IRolUserRepository
     {
@@ -19,7 +18,22 @@ namespace Data.Service
             var rolUser = new RolUser
             {
                 UserId = user.Id,
-                RolId = 2,
+                RolId = 2, //Consumer
+
+            };
+
+            _context.RolUsers.Add(rolUser);
+            await _context.SaveChangesAsync();
+
+            return rolUser;
+        }
+
+        public async Task<RolUser> AsignateRolProducer(User user)
+        {
+            var rolUser = new RolUser
+            {
+                UserId = user.Id,
+                RolId = 3, //Producer
 
             };
 

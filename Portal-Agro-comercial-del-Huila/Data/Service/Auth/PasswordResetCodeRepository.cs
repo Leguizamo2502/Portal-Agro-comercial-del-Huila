@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Data.Interfaces.Implements;
+using Data.Interfaces.Implements.Auth;
 using Data.Repository;
 using Entity.Domain.Models.Implements.Auth;
 using Entity.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.Service
+namespace Data.Service.Auth
 {
     public class PasswordResetCodeRepository : DataGeneric<PasswordResetCode>, IPasswordResetCodeRepository
     {

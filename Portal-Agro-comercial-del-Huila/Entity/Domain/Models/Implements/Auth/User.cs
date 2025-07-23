@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Entity.Domain.Models.Base;
+using Entity.Domain.Models.Implements.Producers;
 using Entity.Domain.Models.Implements.Security;
 
 namespace Entity.Domain.Models.Implements.Auth
@@ -17,6 +18,8 @@ namespace Entity.Domain.Models.Implements.Auth
         // Clave foránea obligatoria
         public int PersonId { get; set; }
         public Person Person { get; set; }
+
+        public Producer? Producer { get; set; }
 
         public ICollection<RolUser> RolUsers { get; set; } = [];
     }

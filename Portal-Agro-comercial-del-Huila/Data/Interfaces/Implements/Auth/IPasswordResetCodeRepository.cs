@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Data.Interfaces.IRepository;
 using Entity.Domain.Models.Implements.Auth;
 
-namespace Data.Interfaces.Implements
+namespace Data.Interfaces.Implements.Auth
 {
     public interface IPasswordResetCodeRepository : IDataGeneric<PasswordResetCode>
     {

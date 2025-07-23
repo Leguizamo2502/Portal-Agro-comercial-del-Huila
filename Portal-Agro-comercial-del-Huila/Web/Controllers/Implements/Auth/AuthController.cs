@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 using Business.CustomJwt;
-using Business.Interfaces.Implements;
+using Business.Interfaces.Implements.Auth;
 using Business.Interfaces.Implements.Location;
 using Business.Interfaces.Implements.Security;
 using Entity.DTOs.Auth;
@@ -19,21 +19,16 @@ namespace Web.Controllers.Implements.Auth
         private readonly ILogger<AuthController> _logger;
         private readonly IAuthService _authService;
         private readonly IToken _token;
-        private readonly IDepartmentService _departmentService;
-        private readonly ICityService _cityService;
         private readonly IMeService _meService;
 
 
         public AuthController(ILogger<AuthController> logger, 
-            IAuthService authService, IToken token, IDepartmentService departmentService, ICityService cityService,
-            IMeService me)
+            IAuthService authService, IToken token, IMeService me)
         {
            
             _logger = logger;
             _authService = authService;
             _token = token;
-            _departmentService = departmentService;
-            _cityService = cityService;
             _meService = me;
 
         }
@@ -113,7 +108,7 @@ namespace Web.Controllers.Implements.Auth
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
-                return Unauthorized("El token no contiene un Claim 'sub' (NameIdentifier) válido o no es un GUID.");
+                return Unauthorized("El token no contiene un Claim 'sub' (NameIdentifier) válido o no es un ID.");
 
             var currentUserDto = await _meService.GetAllDataMeAsync(userId);
 
@@ -210,58 +205,7 @@ namespace Web.Controllers.Implements.Auth
         }
 
 
-        [HttpGet("Department")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(500)]
-        public virtual async Task<IActionResult> Get()
-        {
-            try
-            {
-                var result = await _departmentService.GetAllAsync();
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error obteniendo datos");
-                return StatusCode(500, new { message = "Error interno del servidor." });
-            }
-
-            //var result = await DeleteAsync(id, deleteType);
-
-            //if (!result)
-            //    return NotFound(new { message = "No se pudo eliminar el recurso." });
-
-            //return Ok(new { message = $"Eliminación {deleteType} realizada correctamente." });
-        }
-
-
-        [HttpGet("City/{id}")]
-        //[ProducesResponseType(typeof(TDto), 200)]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
-        public virtual async Task<IActionResult> GetById(int id)
-        {
-            try
-            {
-                var result = await _cityService.GetCityByDepartment(id);
-                if (result == null)
-                    return NotFound(new { message = $"No se encontró el elemento con ID {id}" });
-
-                return Ok(result);
-            }
-            catch (ValidationException ex)
-            {
-                _logger.LogWarning(ex, "Validación fallida con ID: {Id}", id);
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al obtener el ID {Id}", id);
-                return StatusCode(500, new { message = "Error interno del servidor." });
-            }
-        }
+        
 
         
 

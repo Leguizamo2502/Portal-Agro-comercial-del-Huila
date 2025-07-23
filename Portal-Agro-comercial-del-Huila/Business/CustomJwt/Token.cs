@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Custom.Encripter;
-using Data.Interfaces.Implements;
+using Data.Interfaces.Implements.Auth;
 using Entity.DTOs.Auth;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Data.Interfaces.Implements;
+using Data.Interfaces.Implements.Auth;
 using Data.Repository;
 using Entity.Domain.Models.Implements.Auth;
 using Entity.DTOs.Auth;
 using Entity.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.Service
+namespace Data.Service.Auth
 {
     public class UserRepository : DataGeneric<User>, IUserRepository
     {
@@ -34,9 +34,9 @@ namespace Data.Service
             var user = await _dbSet
                 .FirstOrDefaultAsync(u =>
                             u.Email == loginDto.Email &&
-                            u.Password == (loginDto.Password));
+                            u.Password == loginDto.Password);
 
-            suceeded = (user != null) ? true : throw new UnauthorizedAccessException("Credenciales inválidas");
+            suceeded = user != null ? true : throw new UnauthorizedAccessException("Credenciales inválidas");
 
             return user;
         }

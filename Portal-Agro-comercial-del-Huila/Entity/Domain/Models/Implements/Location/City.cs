@@ -1,6 +1,7 @@
 ﻿
 using Entity.Domain.Models.Base;
 using Entity.Domain.Models.Implements.Auth;
+using Entity.Domain.Models.Implements.Producers;
 
 namespace Entity.Domain.Models.Implements.Location
 {
@@ -12,6 +13,9 @@ namespace Entity.Domain.Models.Implements.Location
         public int DepartmentId { get; set; }
         public Department Department { get; set; }
 
-        public List<Person>? People { get; set; } = new();
+        public ICollection<Person>? People { get; set; } = [];
+        public ICollection<Farm>? Farms { get; set; } = [];
+
+
     }
 }

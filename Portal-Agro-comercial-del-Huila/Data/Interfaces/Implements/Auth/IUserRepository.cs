@@ -7,7 +7,7 @@ using Data.Interfaces.IRepository;
 using Entity.Domain.Models.Implements.Auth;
 using Entity.DTOs.Auth;
 
-namespace Data.Interfaces.Implements
+namespace Data.Interfaces.Implements.Auth
 {
     public interface IUserRepository : IDataGeneric<User>
     {

@@ -1,6 +1,9 @@
 ﻿using Entity.Domain.Models.Implements.Auth;
+using Entity.Domain.Models.Implements.Producers;
 using Entity.Domain.Models.Implements.Security;
 using Entity.DTOs.Auth;
+using Entity.DTOs.Producer.Farm.Create;
+using Entity.DTOs.Producer.Producer.Create;
 using Entity.DTOs.Security.Me;
 using Mapster;
 using System.Linq;
@@ -34,7 +37,15 @@ namespace Business.Mapping
                 .Map(dest => dest.Person, src => src.Person)
                 .Map(dest => dest.Roles, src => src.RolUsers.Select(r => r.Rol.Name).ToList());
 
-            
+
+            //FarmWith PRoducer a producer y famr
+            config.NewConfig<ProducerWithFarmRegisterDto, Producer>();
+            config.NewConfig<ProducerWithFarmRegisterDto, Farm>();
+            config.NewConfig<ProducerWithFarmRegisterDto, FarmRegisterDto>();
+                
+             
+
+
 
             return config;
         }

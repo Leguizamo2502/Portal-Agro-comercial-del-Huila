@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Entity.Domain.Models.Implements.Auth;
+using Entity.Domain.Models.Implements.Producers;
 using Entity.Domain.Models.Implements.Security;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,21 @@ namespace Entity.Infrastructure.Context
              .WithOne(p => p.User)
              .HasForeignKey<User>(u => u.PersonId)
              .OnDelete(DeleteBehavior.Cascade); // o Restrict si no quieres borrado en cascada
+
+            // Farm → Producer (sin cascada)
+            modelBuilder.Entity<Farm>()
+                .HasOne(f => f.Producer)
+                .WithMany(p => p.Farms)
+                .HasForeignKey(f => f.ProducerId)
+                .OnDelete(DeleteBehavior.Restrict); // ⚠️ No cascade
+
+            // Farm → City (con cascada)
+            modelBuilder.Entity<Farm>()
+                .HasOne(f => f.City)
+                .WithMany(c => c.Farms)
+                .HasForeignKey(f => f.CityId)
+                .OnDelete(DeleteBehavior.Cascade); // ✅ Permitido
+
 
 
             //Data init
@@ -42,6 +58,10 @@ namespace Entity.Infrastructure.Context
         public DbSet<Domain.Models.Implements.Security.Module> Modules { get; set; }
         public DbSet<FormModule> FormModules { get; set; }
 
+
+        //Producer
+        public DbSet<Producer> Producers { get; set; }
+        public DbSet<Farm> Farms { get; set; }
 
 
     }
