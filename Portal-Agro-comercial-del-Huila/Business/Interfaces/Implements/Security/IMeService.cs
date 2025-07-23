@@ -11,7 +11,7 @@ namespace Business.Interfaces.Implements.Security
 {
     public interface IMeService 
     {
-        Task<UserMeDto> GetCurrentUserInfoAsync(int userId);
+        Task<UserMeDto> GetAllDataMeAsync(int userId);
 
 
     }

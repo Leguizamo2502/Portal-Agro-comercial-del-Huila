@@ -11,9 +11,15 @@ namespace Entity.DTOs.Security.Me
     public class UserMeDto
     {
         public int Id { get; set; }
+        public string FullName { get; set; }
         public string Email { get; set; }
-        public PersonDto Person { get; set; }
-        public List<RolUserMeDto> Roles { get; set; }
-        public List<FormMeDto> Forms { get; set; }
+
+
+
+        public IEnumerable<string> Roles { get; set; } = [];
+        public IEnumerable<string> Permissions { get; set; } = [];
+
+        public IEnumerable<MenuModuleDto> Menu { get; set; } = [];
+
     }
 }

@@ -20,49 +20,38 @@ namespace Data.Service.Security
             _context = context;   
         }
 
-        public async Task<User> GetUserAsync(int userId)
+        public async Task<User?> GetUserWithPersonAsync(int userId)
         {
             return await _context.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Id == userId);
+                .Include(u => u.Person)
+                .FirstOrDefaultAsync(u => u.Id == userId && !u.IsDeleted);
         }
 
-        public async Task<Person> GetPersonByUserAsync(int userId)
-        {
-            return await _context.Users
-                .Where(u => u.Id == userId)
-                .Select(u => u.Person)
-                .AsNoTracking()
-                .FirstOrDefaultAsync();
-        }
 
-        public async Task<List<Rol>> GetRolesByUserAsync(int userId)
+
+
+        public async Task<IEnumerable<RolUser>> GetUserRolesWithPermissionsAsync(int userId)
         {
             return await _context.RolUsers
-               .Where(ru => ru.UserId == userId && !ru.IsDeleted)
-               .Select(ru => ru.Rol)
-               .Include(r => r.RolFormPermissions.Where(rfp => !rfp.IsDeleted))
-                   .ThenInclude(rfp => rfp.Permission)
-               .Include(r => r.RolFormPermissions)
-                   .ThenInclude(rfp => rfp.Form)
-                       .ThenInclude(f => f.FormModules)
-                           .ThenInclude(fm => fm.Module)
-               .AsNoTracking()
-               .ToListAsync();
+                                .Include(ur => ur.Rol)
+                                    .ThenInclude(r => r.RolFormPermissions)
+                                        .ThenInclude(rfp => rfp.Permission)
+                                .Include(ur => ur.Rol)
+                                    .ThenInclude(r => r.RolFormPermissions)
+                                        .ThenInclude(rfp => rfp.Form)
+                                .Where(ur => ur.UserId == userId && !ur.IsDeleted)
+                                .ToListAsync();
         }
 
-        public async Task<List<RolFormPermission>> GetPermissionsByUserAsync(int userId)
+
+        public async Task<IEnumerable<Form>> GetFormsWithModulesByIdsAsync(List<int> formIds)
         {
-            return await _context.RolUsers
-                .Where(ru => ru.UserId == userId && !ru.IsDeleted)
-                .SelectMany(ru => ru.Rol.RolFormPermissions)
-                .Where(rfp => !rfp.IsDeleted)
-                .Include(rfp => rfp.Permission)
-                .Include(rfp => rfp.Form)
-                    .ThenInclude(f => f.FormModules)
-                        .ThenInclude(fm => fm.Module)
-                .AsNoTracking()
-                .ToListAsync();
+            return await _context.Forms
+                    .Include(f => f.FormModules)
+                        .ThenInclude(mf => mf.Module)
+                    .Where(f => formIds.Contains(f.Id) && !f.IsDeleted)
+                    .ToListAsync();
         }
+
     }
 }

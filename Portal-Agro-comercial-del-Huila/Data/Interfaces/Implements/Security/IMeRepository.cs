@@ -10,10 +10,9 @@ namespace Data.Interfaces.Implements.Security
 {
     public interface IMeRepository
     {
-        Task<User> GetUserAsync(int userId);
-        Task<Person> GetPersonByUserAsync(int userId);
-        Task<List<Rol>> GetRolesByUserAsync(int userId);
-        Task<List<RolFormPermission>> GetPermissionsByUserAsync(int userId);
+        Task<User?> GetUserWithPersonAsync(int userId);
+        Task<IEnumerable<RolUser>> GetUserRolesWithPermissionsAsync(int userId);
+        Task<IEnumerable<Form>> GetFormsWithModulesByIdsAsync(List<int> formIds);
 
     }
 }

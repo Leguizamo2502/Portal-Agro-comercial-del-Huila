@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="DTOs\Security\Me\NewFolder\" />
     <Folder Include="Infrastructure\LogService\" />
   </ItemGroup>
 
