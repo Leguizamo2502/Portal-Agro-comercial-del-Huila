@@ -12,5 +12,6 @@ namespace Data.Interfaces.Implements.Producers
 {
     public interface IFarmRepository : IDataGeneric<Farm>
     {
+
     }
 }

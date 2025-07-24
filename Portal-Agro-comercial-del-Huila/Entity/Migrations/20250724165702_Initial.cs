@@ -480,6 +480,11 @@ namespace Entity.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Producers",
+                columns: new[] { "Id", "Active", "Code", "CreateAt", "Description", "IsDeleted", "UserId" },
+                values: new object[] { 1, true, "PENDIENTE", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hola vendo papa", true, 3 });
+
+            migrationBuilder.InsertData(
                 table: "RolUsers",
                 columns: new[] { "Id", "Active", "CreateAt", "IsDeleted", "RolId", "UserId" },
                 values: new object[,]

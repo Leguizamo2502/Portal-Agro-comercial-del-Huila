@@ -13,9 +13,11 @@ namespace Web.Controllers.Implements.Producer.Farm
     public class FarmController : ControllerBase
     {
         private readonly IFarmService _farmService;
-        public FarmController(IFarmService farmService)
+        private readonly ILogger<FarmController> _logger;
+        public FarmController(IFarmService farmService, ILogger<FarmController> logger)
         {
             _farmService = farmService;
+            _logger = logger;
         }
 
 
@@ -54,8 +56,8 @@ namespace Web.Controllers.Implements.Producer.Farm
 
             try
             {
-                var result = await _farmService.CreateFarm(dto);
-                if(result)
+                var result = await _farmService.CreateAsync(dto);
+                if(result !=null)
                     return Ok(new { IsSuccess = true, message = "Finca creada correctamente"});
                 else
                     return BadRequest(ModelState);
@@ -67,6 +69,30 @@ namespace Web.Controllers.Implements.Producer.Farm
 
                 return StatusCode(500, new { IsSuccess = false, message = "Ocurrió un error al registrar la finca", error = ex.Message });
             }
+        }
+
+        [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public virtual async Task<IActionResult> Get()
+        {
+            try
+            {
+                var result = await _farmService.GetAllAsync();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error obteniendo datos");
+                return StatusCode(500, new { message = "Error interno del servidor." });
+            }
+
+            //var result = await DeleteAsync(id, deleteType);
+
+            //if (!result)
+            //    return NotFound(new { message = "No se pudo eliminar el recurso." });
+
+            //return Ok(new { message = $"Eliminación {deleteType} realizada correctamente." });
         }
     }
 

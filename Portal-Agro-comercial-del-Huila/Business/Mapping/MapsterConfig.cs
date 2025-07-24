@@ -45,7 +45,15 @@ namespace Business.Mapping
             config.NewConfig<ProducerWithFarmRegisterDto, FarmRegisterDto>();
 
             config.NewConfig<FarmRegisterDto, Farm>().Ignore(des => des.FarmImages);
-            config.NewConfig<Farm, FarmSelectDto>();
+
+            config.NewConfig<FarmImage, FarmImageDto>();
+            config.NewConfig<Farm, FarmSelectDto>()
+                .Map(dest => dest.CityName, src => src.City.Name)
+                .Map(dest => dest.DepartmentName, src => src.City.Department.Name)
+                .Map(dest => dest.ProducerName, src => src.Producer.User.Person.FirstName) // o ajusta según tu modelo
+                .Map(dest => dest.Images, src => src.FarmImages.Adapt<List<FarmImageDto>>());
+
+
 
 
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Entity.DTOs.Producer.Producer.Create
 {
@@ -17,6 +18,8 @@ namespace Entity.DTOs.Producer.Producer.Create
         public double Altitude { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
+
+        public List<IFormFile> Images { get; set; }
 
         // Datos clave
         public int CityId { get; set; }

@@ -22,7 +22,7 @@ namespace Entity.Domain.Models.Implements.Producers
         public int CityId { get; set; }
         public City City { get; set; }
 
-        public ICollection<FarmImage> FarmImages { get; set; } = [];
+        public List<FarmImage> FarmImages { get; set; } = new();
 
     }
 }

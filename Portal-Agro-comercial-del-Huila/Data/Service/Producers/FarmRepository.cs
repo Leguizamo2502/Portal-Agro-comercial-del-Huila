@@ -7,6 +7,7 @@ using Data.Interfaces.Implements.Producers;
 using Data.Repository;
 using Entity.Domain.Models.Implements.Producers;
 using Entity.Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data.Service.Producers
 {
@@ -14,6 +15,18 @@ namespace Data.Service.Producers
     {
         public FarmRepository(ApplicationDbContext context) : base(context)
         {
+
         }
+
+        public override async Task<IEnumerable<Farm>> GetAllAsync()
+        {
+            return await _dbSet
+                .Include(f => f.City)
+                    .ThenInclude(c => c.Department)
+                .Include(f => f.Producer)
+                .Include(f => f.FarmImages)
+                .ToListAsync();
+        }
+
     }
 }

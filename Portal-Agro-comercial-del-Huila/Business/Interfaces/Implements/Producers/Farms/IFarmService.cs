@@ -13,7 +13,7 @@ namespace Business.Interfaces.Implements.Producers.Farms
     public interface IFarmService : IBusiness<FarmRegisterDto, FarmSelectDto>
     {
         Task<FarmSelectDto> RegisterWithProducer(ProducerWithFarmRegisterDto dto, int userId);
-        Task<bool> CreateFarm(FarmRegisterDto dto);
+        //Task<bool> CreateFarm(FarmRegisterDto dto);
 
     }
 }
