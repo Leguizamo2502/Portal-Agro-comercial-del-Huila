@@ -1,10 +1,12 @@
 ﻿using System.Security.Claims;
 using Business.Interfaces.Implements.Producers.Farms;
+using Business.Services.Producers.Farms;
 using Entity.Domain.Models.Implements.Auth;
 using Entity.DTOs.Producer.Farm.Create;
 using Entity.DTOs.Producer.Producer.Create;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Utilities.Exceptions;
 
 namespace Web.Controllers.Implements.Producer.Farm
 {
@@ -14,10 +16,12 @@ namespace Web.Controllers.Implements.Producer.Farm
     {
         private readonly IFarmService _farmService;
         private readonly ILogger<FarmController> _logger;
-        public FarmController(IFarmService farmService, ILogger<FarmController> logger)
+        private readonly IFarmImageService _farmImageService;
+        public FarmController(IFarmService farmService, ILogger<FarmController> logger, IFarmImageService farmImageService)
         {
             _farmService = farmService;
             _logger = logger;
+            _farmImageService = farmImageService;
         }
 
 
@@ -87,13 +91,27 @@ namespace Web.Controllers.Implements.Producer.Farm
                 return StatusCode(500, new { message = "Error interno del servidor." });
             }
 
-            //var result = await DeleteAsync(id, deleteType);
-
-            //if (!result)
-            //    return NotFound(new { message = "No se pudo eliminar el recurso." });
-
-            //return Ok(new { message = $"Eliminación {deleteType} realizada correctamente." });
         }
+
+        [HttpDelete("{imageId}")]
+        public async Task<IActionResult> Delete(int imageId)
+        {
+            try
+            {
+                await _farmImageService.DeleteImageAsync(imageId);
+                return NoContent(); // 204
+            }
+            catch (BusinessException ex)
+            {
+                return BadRequest(new { message = ex.Message }); // 400
+            }
+            catch (Exception ex)
+            {
+                // Puedes loguear el error si tienes un logger aquí
+                return StatusCode(500, new { message = "Error interno al eliminar la imagen." });
+            }
+        }
+
     }
 
 }
