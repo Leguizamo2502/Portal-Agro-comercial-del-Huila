@@ -1,3 +1,4 @@
+using CloudinaryDotNet;
 using Microsoft.Extensions.FileProviders;
 using Web.ProgramService;
 
@@ -15,6 +16,18 @@ builder.Services.AddCustomCors(builder.Configuration);
 
 //Jwt
 builder.Services.AddJwtAuthentication(builder.Configuration);
+
+//Cloudinary
+var cloudinaryConfig = builder.Configuration.GetSection("Cloudinary");
+
+var cloudinary = new Cloudinary(new Account(
+    cloudinaryConfig["CloudName"],
+    cloudinaryConfig["ApiKey"],
+    cloudinaryConfig["ApiSecret"]
+
+));
+
+builder.Services.AddSingleton(cloudinary);
 
 
 //Services
@@ -34,7 +47,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseStaticFiles();
+
 
 app.UseHttpsRedirection();
 

@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Business.Interfaces.Implements.Producers.Farms;
 using Business.Repository;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using Data.Interfaces.Implements.Auth;
 using Data.Interfaces.Implements.Producers;
 using Data.Interfaces.IRepository;
@@ -25,19 +27,22 @@ namespace Business.Services.Producers.Farms
         private readonly IRolUserRepository _rolUserRepository;
         private readonly IUserRepository _userRepository;
         private readonly IProducerRepository _producerRepository;
-        private readonly IWebHostEnvironment _env;
+        private readonly Cloudinary _cloudinary;
         public FarmService(IDataGeneric<Farm> data,
                            IMapper mapper,
                            IFarmRepository farmRepository,
                            IRolUserRepository rolUserRepository,
                            IUserRepository userRepository,
-                           IProducerRepository producerRepository, IWebHostEnvironment env) : base(data, mapper)
+                           IProducerRepository producerRepository,
+                           Cloudinary cloudinary
+                            ) : base(data, mapper)
         {
             _farmRepository = farmRepository;
             _rolUserRepository = rolUserRepository;
             _userRepository = userRepository;
             _producerRepository = producerRepository;
-            _env = env;
+            _cloudinary = cloudinary;
+
         }
 
         public async Task<FarmSelectDto> RegisterWithProducer(ProducerWithFarmRegisterDto dto,int userId)
@@ -75,38 +80,47 @@ namespace Business.Services.Producers.Farms
         }
 
 
-        public async Task<int> CreateFarm(FarmRegisterDto dto)
+        public async Task<bool> CreateFarm(FarmRegisterDto dto)
         {
-            var farm = _mapper.Map<Farm>(dto);
-            string uploadPath = Path.Combine(_env.WebRootPath, "uploads", "farms");
-
-            if (!Directory.Exists(uploadPath))
-                Directory.CreateDirectory(uploadPath);
-
-            foreach (var image in dto.Images)
+            try
             {
-                if (image.Length > 0)
-                {
-                    var ext = Path.GetExtension(image.FileName).ToLowerInvariant();
-                    var fileName = $"{Guid.NewGuid()}{ext}";
-                    var fullPath = Path.Combine(uploadPath, fileName);
+                if (dto.Images == null || dto.Images.Count == 0)
+                    return false;
 
-                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                var farm = _mapper.Map<Farm>(dto);
+                farm.FarmImages = new List<FarmImage>();
+
+                foreach (var file in dto.Images)
+                {
+                    if (file.Length <= 0)
+                        continue;
+
+                    var uploadParams = new ImageUploadParams
                     {
-                        await image.CopyToAsync(stream);
-                    }
+                        File = new FileDescription(file.FileName, file.OpenReadStream()),
+                        Folder = "aspimage" // Cambia si querés organizar por carpetas dinámicas
+                    };
+
+                    var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+                    if (uploadResult.Error != null)
+                        throw new Exception($"Error al subir la imagen: {uploadResult.Error.Message}");
 
                     farm.FarmImages.Add(new FarmImage
                     {
-                        ImageUrl = $"/uploads/farms/{fileName}"
+                        ImageUrl = uploadResult.SecureUrl.ToString()
                     });
                 }
+
+                await _farmRepository.AddAsync(farm);
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                throw new BusinessException("No se pudo crear la finca. Verifica los archivos o la conexión con Cloudinary.", ex);
             }
 
-            await _farmRepository.AddAsync(farm);
-
-            //return _mapper.Map<FarmSelectDto>(farm);
-            return farm.Id;
         }
 
     }

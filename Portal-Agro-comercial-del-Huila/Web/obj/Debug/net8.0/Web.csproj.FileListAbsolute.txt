@@ -188,6 +188,7 @@ C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-d
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Web\bin\Debug\net8.0\Web.pdb
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Web\bin\Debug\net8.0\Azure.Core.dll
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Web\bin\Debug\net8.0\Azure.Identity.dll
+C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Web\bin\Debug\net8.0\CloudinaryDotNet.dll
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Web\bin\Debug\net8.0\Dapper.dll
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Web\bin\Debug\net8.0\Humanizer.dll
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Web\bin\Debug\net8.0\Mapster.dll
@@ -230,6 +231,7 @@ C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-d
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Web\bin\Debug\net8.0\Microsoft.SqlServer.Server.dll
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Web\bin\Debug\net8.0\Microsoft.Win32.SystemEvents.dll
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Web\bin\Debug\net8.0\Mono.TextTemplating.dll
+C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Web\bin\Debug\net8.0\Newtonsoft.Json.dll
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Web\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Web\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Web\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -361,4 +363,3 @@ C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-d
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Web\obj\Debug\net8.0\Web.pdb
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Web\obj\Debug\net8.0\Web.genruntimeconfig.cache
 C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Web\obj\Debug\net8.0\ref\Web.dll
-C:\Users\NITRO\Downloads\Portal-Agro-comercial-del-Huila\Portal-Agro-comercial-del-Huila\Web\bin\Debug\net8.0\Web.staticwebassets.runtime.json
