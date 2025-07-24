@@ -85,7 +85,10 @@ namespace Business.Services.Producers.Farms
             try
             {
                 if (dto.Images == null || dto.Images.Count == 0)
-                    return false;
+                    throw new BusinessException("Debe subir al menos una imagen.");
+
+                if (dto.Images.Count > 5)
+                    throw new BusinessException("Solo se permiten hasta 5 imágenes por finca.");
 
                 var farm = _mapper.Map<Farm>(dto);
                 farm.FarmImages = new List<FarmImage>();
@@ -95,10 +98,11 @@ namespace Business.Services.Producers.Farms
                     if (file.Length <= 0)
                         continue;
 
+                    var fileName = $"farm_{farm.Id}_{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
                     var uploadParams = new ImageUploadParams
                     {
-                        File = new FileDescription(file.FileName, file.OpenReadStream()),
-                        Folder = "aspimage" // Cambia si querés organizar por carpetas dinámicas
+                        PublicId = $"aspimage/{fileName}",
+                        File = new FileDescription(file.FileName, file.OpenReadStream())
                     };
 
                     var uploadResult = await _cloudinary.UploadAsync(uploadParams);

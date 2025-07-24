@@ -1,14 +1,23 @@
-import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-button',
-  standalone: true,
+  imports: [CommonModule],
   templateUrl: './button.component.html',
-  styleUrls: ['./button.component.css']
+  styleUrl: './button.component.css'
 })
 export class ButtonComponent {
+  @Input() text: string = 'Botón';
   @Input() type: 'button' | 'submit' | 'reset' = 'button';
-  @Input() disabled = false;
-  @Input() class = '';
-  @Input() variant: 'primary' | 'danger' | 'success' = 'primary';
+  @Input() disabled: boolean = false;
+  @Input() color: 'primary' | 'secondary' | 'danger' = 'primary';
+
+  @Output() clicked = new EventEmitter<void>();
+
+  onClick() {
+    if (!this.disabled) {
+      this.clicked.emit();
+    }
+  }
 }
