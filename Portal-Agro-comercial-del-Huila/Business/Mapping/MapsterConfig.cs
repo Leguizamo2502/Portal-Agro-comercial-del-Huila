@@ -44,7 +44,7 @@ namespace Business.Mapping
             config.NewConfig<ProducerWithFarmRegisterDto, Farm>();
             config.NewConfig<ProducerWithFarmRegisterDto, FarmRegisterDto>();
 
-            config.NewConfig<FarmRegisterDto, Farm>();
+            config.NewConfig<FarmRegisterDto, Farm>().Ignore(des => des.FarmImages);
             config.NewConfig<Farm, FarmSelectDto>();
 
 

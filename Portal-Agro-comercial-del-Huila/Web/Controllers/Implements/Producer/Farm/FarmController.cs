@@ -46,7 +46,7 @@ namespace Web.Controllers.Implements.Producer.Farm
 
 
         [HttpPost("register/farm")]
-        [RequestSizeLimit(10_000_000)] // 10MB, opcional
+    
         public async Task<IActionResult> Register([FromForm] FarmRegisterDto dto)
         {
             if (!ModelState.IsValid)
@@ -54,8 +54,11 @@ namespace Web.Controllers.Implements.Producer.Farm
 
             try
             {
-                var id = await _farmService.CreateFarm(dto);
-                return Ok(new { IsSuccess = true, message = "Finca creada correctamente", farmId = id });
+                var result = await _farmService.CreateFarm(dto);
+                if(result)
+                    return Ok(new { IsSuccess = true, message = "Finca creada correctamente"});
+                else
+                    return BadRequest(ModelState);
             }
             catch (Exception ex)
             {
