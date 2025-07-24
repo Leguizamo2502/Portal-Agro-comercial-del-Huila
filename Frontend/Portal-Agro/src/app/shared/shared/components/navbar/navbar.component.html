@@ -1,1 +1,104 @@
-<p>navbar works!</p>
+<mat-toolbar class="navbar-toolbar">
+  <div class="navbar-container">
+    <!-- Logo -->
+    <div class="logo-container">
+      <div class="logo-badge">AGRO</div>
+      <span class="logo-text">Portal Agro-comercial del Huila</span>
+    </div>
+
+    <!-- Categorías -->
+    <button mat-button [matMenuTriggerFor]="categoriesMenu" class="categories-button">
+      <span>Categorías</span>
+      <mat-icon>expand_more</mat-icon>
+    </button>
+    <mat-menu #categoriesMenu="matMenu">
+      <button mat-menu-item *ngFor="let category of categories" (click)="onCategoryClick(category)">
+        {{ category }}
+      </button>
+    </mat-menu>
+
+    <!-- Buscador -->
+    <div class="search-container">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-icon matPrefix>search</mat-icon>
+        <input 
+          matInput 
+          placeholder="Buscar..." 
+          [(ngModel)]="searchTerm"
+          (keyup)="onKeyUp($event)" />
+      </mat-form-field>
+    </div>
+
+    <!-- Navegación -->
+    <div class="nav-menu">
+      <button 
+        mat-button 
+        *ngFor="let item of navigationItems"
+        (click)="onNavigationClick(item)"
+        class="nav-item">
+        {{ item.label }}
+      </button>
+    </div>
+
+    <!-- Acciones de usuario -->
+    <div class="user-actions">
+      <!-- Notificaciones con menú -->
+      <button 
+        mat-icon-button 
+        [matMenuTriggerFor]="notificationsMenu"
+        [matBadge]="notificationCount"
+        matBadgeColor="warn"
+        [matBadgeHidden]="notificationCount === 0"
+        class="action-button">
+        <mat-icon>notifications</mat-icon>
+      </button>
+      <mat-menu #notificationsMenu="matMenu">
+        <button mat-menu-item>Notificación 1</button>
+        <button mat-menu-item>Notificación 2</button>
+      </mat-menu>
+
+      <!-- Carrito -->
+      <button 
+        mat-icon-button 
+        (click)="onCartClick()"
+        [matBadge]="cartCount"
+        matBadgeColor="warn"
+        [matBadgeHidden]="cartCount === 0"
+        class="action-button">
+        <mat-icon>shopping_cart</mat-icon>
+      </button>
+
+      <!-- Usuario con menú -->
+      <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-button">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item (click)="onUserOptionClick('Perfil')">Perfil</button>
+        <button mat-menu-item (click)="onUserOptionClick('Configuración')">Configuración</button>
+        <button mat-menu-item (click)="onUserOptionClick('Cerrar sesión')">Cerrar sesión</button>
+      </mat-menu>
+    </div>
+  </div>
+</mat-toolbar>
+
+<!-- Sidebar lateral izquierda -->
+<div class="user-sidebar">
+  <div class="user-info-sidebar">
+    <h3 class="user-name">{{ user.name }}</h3>
+    <p class="user-email">{{ user.email }}</p>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="user-menu-items">
+    <button 
+      mat-button 
+      *ngFor="let item of userMenuItems"
+      (click)="onUserMenuItemClick(item)"
+      [class.active-menu-item]="item.active"
+      class="sidebar-menu-item">
+      <mat-icon>{{ item.icon }}</mat-icon>
+      <span>{{ item.label }}</span>
+    </button>
+  </div>
+</div>
