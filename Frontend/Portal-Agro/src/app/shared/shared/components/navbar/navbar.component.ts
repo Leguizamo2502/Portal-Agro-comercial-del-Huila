@@ -25,6 +25,18 @@ interface UserMenuItem {
 interface User {
   name: string;
   email: string;
+  phone: string;
+  avatar?: string;
+}
+
+interface Notification {
+  id: number;
+  title: string;
+  description: string;
+  time: string;
+  read: boolean;
+  type: 'accepted' | 'info' | 'warning';
+  icon: string;
 }
 
 @Component({
@@ -47,12 +59,28 @@ interface User {
 })
 export class NavbarComponent {
   searchTerm = '';
-  notificationCount = 3;
   cartCount = 2;
+  showSuggestions = false;
+
+  // Sugerencias mejoradas de búsqueda
+  allSuggestions = [
+    'Semillas de maíz híbrido',
+    'Fertilizante orgánico compost',
+    'Herramientas de jardín podadoras',
+    'Abono para cultivos ecológico',
+    'Pesticidas naturales bio',
+    'Maquinaria agrícola tractores',
+    'Semillas de tomate cherry',
+    'Fertilizante NPK completo',
+    'Sistema de riego goteo'
+  ];
+
+  searchSuggestions: string[] = [];
 
   user: User = {
     name: 'Vanessa Ortiz',
-    email: 'vanessaortiz@gmail.com'
+    email: 'vanessaortiz@gmail.com',
+    phone: '310 000 0000'
   };
 
   categories = ['Semillas', 'Fertilizantes', 'Herramientas', 'Maquinaria', 'Productos Orgánicos'];
@@ -63,44 +91,119 @@ export class NavbarComponent {
   ];
 
   userMenuItems: UserMenuItem[] = [
-    { label: 'Mi Información', icon: 'person', active: false },
+    { label: 'Mi Información', icon: 'person', active: true },
     { label: 'Favoritos', icon: 'favorite', active: false },
     { label: 'Pedidos', icon: 'inventory_2', active: false },
-    { label: 'Productor', icon: 'agriculture', active: true },
+    { label: 'Productor', icon: 'agriculture', active: false },
     { label: 'Soporte', icon: 'headset_mic', active: false }
   ];
+
+  notifications: Notification[] = [
+    {
+      id: 1,
+      title: 'Pedido Aceptado',
+      description: 'Tu pedido por $450,000 ha sido aceptado',
+      time: 'Hace 5 minutos',
+      read: false,
+      type: 'accepted',
+      icon: 'check_circle'
+    },
+    {
+      id: 2,
+      title: 'Nuevo Mensaje',
+      description: 'Tienes un mensaje del proveedor',
+      time: 'Hace 2 horas',
+      read: false,
+      type: 'info',
+      icon: 'message'
+    }
+  ];
+
+  get unreadNotifications(): number {
+    return this.notifications.filter(n => !n.read).length;
+  }
 
   onSearch() {
     if (this.searchTerm.trim()) {
       console.log('Buscando:', this.searchTerm);
+      this.showSuggestions = false;
     }
   }
 
   onKeyUp(event: KeyboardEvent) {
-    if (event.key === 'Enter') this.onSearch();
+    if (event.key === 'Enter') {
+      this.onSearch();
+    } else if (event.key === 'Escape') {
+      this.showSuggestions = false;
+    } else {
+      this.updateSuggestions();
+    }
+  }
+
+  updateSuggestions() {
+    if (this.searchTerm.trim().length > 0) {
+      this.searchSuggestions = this.allSuggestions
+        .filter(suggestion => 
+          suggestion.toLowerCase().includes(this.searchTerm.toLowerCase())
+        )
+        .slice(0, 5);
+      this.showSuggestions = this.searchSuggestions.length > 0;
+    } else {
+      this.searchSuggestions = [];
+      this.showSuggestions = false;
+    }
+  }
+
+  onSearchFocus() {
+    this.updateSuggestions();
+  }
+
+  onSearchBlur() {
+    // Delay para permitir click en sugerencias
+    setTimeout(() => {
+      this.showSuggestions = false;
+    }, 200);
+  }
+
+  clearSearch() {
+    this.searchTerm = '';
+    this.searchSuggestions = [];
+    this.showSuggestions = false;
+  }
+
+  selectSuggestion(suggestion: string) {
+    this.searchTerm = suggestion;
+    this.showSuggestions = false;
+    this.onSearch();
   }
 
   onNavigationClick(item: MenuItem) {
-    console.log('Ir a:', item.route);
+    console.log('Navegando a:', item.route);
   }
 
   onCategoryClick(category: string) {
     console.log('Categoría seleccionada:', category);
   }
 
-  onNotificationClick() {
-    console.log('Ver notificaciones');
-  }
-
   onCartClick() {
-    console.log('Ir al carrito');
+    console.log('Abriendo carrito');
   }
 
   onUserMenuItemClick(item: UserMenuItem) {
-    console.log('Menú usuario:', item.label);
+    this.userMenuItems.forEach(menuItem => menuItem.active = false);
+    item.active = true;
+    console.log('Sección seleccionada:', item.label);
   }
 
   onUserOptionClick(option: string) {
-    console.log('Opción usuario:', option);
+    console.log('Opción seleccionada:', option);
+    if (option === 'Cerrar Sesión') {
+      console.log('Cerrando sesión...');
+    }
+  }
+
+  markAsRead(notification: Notification) {
+    notification.read = true;
+    console.log('Notificación leída:', notification.title);
   }
 }
