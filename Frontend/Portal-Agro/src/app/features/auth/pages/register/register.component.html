@@ -1,28 +1,224 @@
-<ng-container>
-    <form [formGroup]="formRegister" (ngSubmit)="register()">
-        <label for="">Primer nombre</label>
-        <input type="text" formControlName="firstName" placeholder="Primer nombre">
+<!-- Contenedor principal con fondo difuminado como en las imágenes -->
+<div class="register-container">
+  
+  <!-- Logo y título - PUEDES CAMBIAR EL LOGO Y TÍTULO AQUÍ -->
+  <div class="header-section">
+    <div class="logo-container">
+      <!-- Iconos del logo - REEMPLAZA CON TU LOGO -->
+      <div class="logo-icons">
+        <img src="/logos/logo.png" alt="Logo Portal Agro-comercial" class="logo">
+        
+      </div>
+    </div>
+    <h1 class="portal-title">Portal Agro-comercial del Huila</h1>
+  </div>
 
-        <label for="">Apellido</label>
-        <input type="text" formControlName="lastName" placeholder="Apellido">
+  <!-- Card del formulario -->
+  <mat-card class="register-card">
+    <mat-card-header>
+      <mat-card-title>Regístrate</mat-card-title>
+      <mat-card-subtitle>
+        ¿Ya tienes cuenta? 
+        <a routerLink="/login" class="login-link">Inicia Sesión</a>
+      </mat-card-subtitle>
+    </mat-card-header>
 
-        <label for="">Identificación</label>
-        <input type="text" formControlName="identification" placeholder="Identificación">
-        <label for="">Teléfono</label>
-        <input type="text" formControlName="phoneNumber" placeholder="Teléfono">
-        <label for="">Dirección</label>
-        <input type="text" formControlName="address" placeholder="Dirección">
-        <label for="">Ciudad</label>
-        <input type="text" formControlName="cityId" placeholder="Ciudad">
-        <label for="">Correo electrónico</label>
-        <input type="email" formControlName="email" placeholder="Correo electrónico">
-        <label for="">Contraseña</label>
-        <input type="password" formControlName="password" placeholder="Contraseña">
+    <mat-card-content>
+      <!-- Stepper principal - PUEDES CAMBIAR isLinear A false PARA NAVEGACIÓN LIBRE -->
+      <mat-stepper [linear]="isLinear" #stepper orientation="horizontal">
+        
+        <!-- PASO 1: Información Personal -->
+        <mat-step [stepControl]="firstFormGroup" label="Información Personal">
+          <form [formGroup]="firstFormGroup" class="step-form">
+            
+            <!-- Fila de nombre y apellido - PUEDES CAMBIAR EL LAYOUT AQUÍ -->
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Nombre</mat-label>
+                <input 
+                  matInput 
+                  formControlName="firstName" 
+                  placeholder="Ingresa tu nombre"
+                  required>
+                <mat-error *ngIf="firstFormGroup.get('firstName')?.hasError('required')">
+                  {{ getErrorMessage(firstFormGroup, 'firstName') }}
+                </mat-error>
+              </mat-form-field>
 
-        <button type="submit" [disabled]="formRegister.invalid">Registrarse</button>
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Apellido</mat-label>
+                <input 
+                  matInput 
+                  formControlName="lastName" 
+                  placeholder="Ingresa tu apellido"
+                  required>
+                <mat-error *ngIf="firstFormGroup.get('lastName')?.hasError('required')">
+                  {{ getErrorMessage(firstFormGroup, 'lastName') }}
+                </mat-error>
+              </mat-form-field>
+            </div>
 
+            <!-- Identificación -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Número de Identidad</mat-label>
+              <input 
+                matInput 
+                formControlName="identification" 
+                placeholder="Ingresa tu número de identificación"
+                required>
+              <mat-error *ngIf="firstFormGroup.get('identification')?.invalid">
+                {{ getErrorMessage(firstFormGroup, 'identification') }}
+              </mat-error>
+            </mat-form-field>
 
+            <!-- Teléfono -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Número de Teléfono</mat-label>
+              <input 
+                matInput 
+                formControlName="phoneNumber" 
+                placeholder="Ingresa tu número de teléfono"
+                required>
+              <mat-error *ngIf="firstFormGroup.get('phoneNumber')?.invalid">
+                {{ getErrorMessage(firstFormGroup, 'phoneNumber') }}
+              </mat-error>
+            </mat-form-field>
 
-    </form>
-</ng-container>
+            <!-- Dirección -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Dirección</mat-label>
+              <input 
+                matInput 
+                formControlName="address" 
+                placeholder="Ingresa tu dirección"
+                required>
+              <mat-error *ngIf="firstFormGroup.get('address')?.hasError('required')">
+                {{ getErrorMessage(firstFormGroup, 'address') }}
+              </mat-error>
+            </mat-form-field>
 
+            <!-- Selects de ubicación - PUEDES CAMBIAR EL LAYOUT A UNA SOLA FILA -->
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Departamento</mat-label>
+                <mat-select formControlName="departmentId" required>
+                  <mat-option value="">Selecciona departamento</mat-option>
+                  <mat-option 
+                    *ngFor="let dept of departments" 
+                    [value]="dept.id">
+                    {{ dept.name }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="firstFormGroup.get('departmentId')?.hasError('required')">
+                  {{ getErrorMessage(firstFormGroup, 'departmentId') }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Ciudad</mat-label>
+                <mat-select formControlName="cityId" required>
+                  <mat-option value="">Selecciona ciudad</mat-option>
+                  <mat-option 
+                    *ngFor="let city of cities" 
+                    [value]="city.id">
+                    {{ city.name }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="firstFormGroup.get('cityId')?.hasError('required')">
+                  {{ getErrorMessage(firstFormGroup, 'cityId') }}
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Botón siguiente - PUEDES CAMBIAR EL ESTILO DEL BOTÓN -->
+            <div class="button-container">
+              <button 
+                mat-raised-button 
+                color="primary" 
+                matStepperNext
+                [disabled]="firstFormGroup.invalid"
+                class="next-button">
+                Siguiente
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </form>
+        </mat-step>
+
+        <!-- PASO 2: Credenciales de Acceso -->
+        <mat-step [stepControl]="secondFormGroup" label="Credenciales">
+          <form [formGroup]="secondFormGroup" class="step-form">
+            
+            <!-- Email -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Correo Electrónico</mat-label>
+              <input 
+                matInput 
+                formControlName="email" 
+                placeholder="Ingresa tu correo electrónico"
+                type="email"
+                required>
+              <mat-icon matSuffix>email</mat-icon>
+              <mat-error *ngIf="secondFormGroup.get('email')?.invalid">
+                {{ getErrorMessage(secondFormGroup, 'email') }}
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Contraseña -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Contraseña</mat-label>
+              <input 
+                matInput 
+                formControlName="password" 
+                placeholder="Ingresa tu contraseña"
+                type="password"
+                required>
+              <mat-icon matSuffix>lock</mat-icon>
+              <mat-error *ngIf="secondFormGroup.get('password')?.invalid">
+                {{ getErrorMessage(secondFormGroup, 'password') }}
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Confirmar contraseña -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Confirmar Contraseña</mat-label>
+              <input 
+                matInput 
+                formControlName="confirmPassword" 
+                placeholder="Confirma tu contraseña"
+                type="password"
+                required>
+              <mat-icon matSuffix>lock_outline</mat-icon>
+              <mat-error *ngIf="secondFormGroup.get('confirmPassword')?.invalid">
+                {{ getErrorMessage(secondFormGroup, 'confirmPassword') }}
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Botones de navegación -->
+            <div class="button-container">
+              <!-- Botón atrás - PUEDES OCULTAR SI NO QUIERES NAVEGACIÓN HACIA ATRÁS -->
+              <button 
+                mat-button 
+                matStepperPrevious
+                class="back-button">
+                <mat-icon>arrow_back</mat-icon>
+                Atrás
+              </button>
+
+              <!-- Botón registrarse - PUEDES CAMBIAR EL TEXTO Y ESTILO -->
+              <button 
+                mat-raised-button 
+                color="primary" 
+                (click)="register()"
+                [disabled]="secondFormGroup.invalid"
+                class="register-button">
+                Registrarse
+                <mat-icon>person_add</mat-icon>
+              </button>
+            </div>
+          </form>
+        </mat-step>
+      </mat-stepper>
+    </mat-card-content>
+  </mat-card>
+</div>

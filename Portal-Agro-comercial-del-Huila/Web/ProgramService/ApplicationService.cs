@@ -9,7 +9,6 @@ using Business.Services.AuthService;
 using Business.Services.Location;
 using Business.Services.Producers.Cloudinary;
 using Business.Services.Producers.Farms;
-using Custom.Encripter;
 using Data.Interfaces.Implements.Auth;
 using Data.Interfaces.Implements.Location;
 using Data.Interfaces.Implements.Producers;
@@ -22,7 +21,6 @@ using Data.Service.Producers;
 using Data.Service.Producers.Farms;
 using Data.Service.Security;
 using Mapster;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Utilities.Messaging.Implements;
 using Utilities.Messaging.Interfaces;
 
@@ -37,7 +35,6 @@ namespace Web.ProgramService
 
             //Auth
             services.AddScoped<IPasswordResetCodeRepository, PasswordResetCodeRepository>();
-            //services.AddScoped<EncriptePassword>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IToken, Token>();
 
@@ -74,9 +71,7 @@ namespace Web.ProgramService
             services.AddScoped<IProducerRepository, ProducerRepository>();
 
 
-
-
-
+            //Data Generica
             services.AddScoped(typeof(IDataGeneric<>), typeof(DataGeneric<>));
 
 
