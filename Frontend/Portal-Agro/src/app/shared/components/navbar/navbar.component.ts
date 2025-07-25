@@ -41,7 +41,6 @@ interface Notification {
 
 @Component({
   selector: 'app-navbar',
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
@@ -55,7 +54,7 @@ interface Notification {
     MatDividerModule
   ],
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
   searchTerm = '';

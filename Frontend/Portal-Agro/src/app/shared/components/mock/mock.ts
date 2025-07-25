@@ -1,4 +1,5 @@
-import { Card } from '../card/card.model';
+import { Card } from "../card/card.model";
+
 
 export const MOCK_CARDS: Card[] = [
   {

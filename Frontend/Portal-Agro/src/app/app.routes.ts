@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
-import { NavbarComponent } from './shared/shared/components/navbar/navbar.component';
-import { ButtonComponent } from './shared/shared/components/button/button.component';
-import { CardComponent } from './shared/shared/components/card/card.component';
+import { ButtonComponent } from './shared/components/button/button.component';
+import { CardComponent } from './shared/components/card/card.component';
+import { NavbarComponent } from './shared/components/navbar/navbar.component';
 
 export const routes: Routes = [
   {
