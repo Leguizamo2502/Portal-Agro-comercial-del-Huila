@@ -977,6 +977,18 @@ namespace Entity.Migrations
                         .IsUnique();
 
                     b.ToTable("Producers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Active = true,
+                            Code = "PENDIENTE",
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Hola vendo papa",
+                            IsDeleted = true,
+                            UserId = 3
+                        });
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Security.Form", b =>

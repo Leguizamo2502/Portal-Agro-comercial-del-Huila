@@ -1,0 +1,325 @@
+/* Contenedor principal con fondo difuminado - TAMAÑO REDUCIDO */
+.register-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  overflow: hidden;
+  /* PUEDES CAMBIAR LA IMAGEN DE FONDO AQUÍ */
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+              url('/backgrounds/fondologin.jpg') center/cover;
+  /* Fallback si no tienes imagen */
+  background-color: #2e7d32;
+}
+
+/* Sección del header con logo y título - COMPACTO */
+.header-section {
+  text-align: center;
+  margin-bottom: 15px;
+  color: white;
+}
+
+/* Contenedor del logo - PUEDES PERSONALIZAR LA DISPOSICIÓN DE ICONOS */
+.logo-container {
+  margin-bottom: 10px;
+}
+
+.logo-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
+  .logo {
+
+      max-width: 120px;
+      max-height: 120px;
+      width: auto;
+      height: auto;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
+}
+
+/* Estilos individuales de iconos del logo - CAMBIA LOS COLORES AQUÍ - REDUCIDOS */
+.leaf-icon {
+  background-color: rgba(76, 175, 80, 0.9);
+  color: white;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 18px;
+  width: 34px;
+  height: 34px;
+}
+
+.grain-icon {
+  background-color: rgba(255, 152, 0, 0.9);
+  color: white;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 18px;
+  width: 34px;
+  height: 34px;
+}
+
+.home-icon {
+  background-color: rgba(121, 85, 72, 0.9);
+  color: white;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 18px;
+  width: 34px;
+  height: 34px;
+}
+
+/* Título del portal - PUEDES CAMBIAR LA TIPOGRAFÍA AQUÍ - REDUCIDO */
+.portal-title {
+  font-size: 1.5em;
+  font-weight: 300;
+  margin: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Card principal del formulario - AJUSTA EL TAMAÑO AQUÍ - COMPACTA */
+.register-card {
+  width: 100%;
+  max-width: 480px;
+  min-width: 320px;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* Header de la card - REDUCIDO */
+.register-card mat-card-header {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.register-card mat-card-title {
+  font-size: 1.5em;
+  font-weight: 500;
+  color: #2e7d32;
+  margin-bottom: 4px;
+}
+
+.register-card mat-card-subtitle {
+  font-size: 0.9em;
+  color: #666;
+}
+
+/* Link de inicio de sesión - PUEDES CAMBIAR EL COLOR */
+.login-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}
+
+/* Contenido de la card - COMPACTO */
+.register-card mat-card-content {
+  padding: 0 16px 16px 16px;
+}
+
+/* Formulario de cada paso - ESPACIADO REDUCIDO */
+.step-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+/* Filas del formulario - PUEDES CAMBIAR EL GAP ENTRE ELEMENTOS - REDUCIDO */
+.form-row {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+/* Campos de formulario */
+.full-width {
+  width: 100%;
+}
+
+.half-width {
+  flex: 1;
+}
+
+/* Personalización de campos Material - CAMBIA COLORES AQUÍ */
+.mat-mdc-form-field-appearance-outline .mat-mdc-form-field-outline {
+  color: rgba(0, 0, 0, 0.12);
+}
+
+.mat-mdc-form-field-appearance-outline.mat-focused .mat-mdc-form-field-outline-thick {
+  color: #2e7d32;
+}
+
+.mat-mdc-form-field-appearance-outline .mat-mdc-form-field-label {
+  color: #666;
+}
+
+.mat-mdc-form-field-appearance-outline.mat-focused .mat-mdc-form-field-label {
+  color: #2e7d32;
+}
+
+/* Contenedor de botones - COMPACTO */
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  gap: 12px;
+}
+
+/* Botón siguiente - PERSONALIZA EL ESTILO AQUÍ - COMPACTO */
+.next-button {
+  background-color: #4caf50 !important;
+  color: white !important;
+  padding: 8px 24px;
+  font-size: 1em;
+  border-radius: 20px;
+  box-shadow: 0 3px 8px rgba(76, 175, 80, 0.3);
+  margin-left: auto;
+}
+
+.next-button:hover:not(:disabled) {
+  background-color: #45a049 !important;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.next-button:disabled {
+  background-color: #ccc !important;
+  color: #666 !important;
+  box-shadow: none;
+}
+
+/* Botón atrás - COMPACTO */
+.back-button {
+  color: #666;
+  padding: 8px 16px;
+}
+
+.back-button:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* Botón registrarse - PERSONALIZA EL COLOR Y ESTILO - COMPACTO */
+.register-button {
+  background-color: #4caf50 !important;
+  color: white !important;
+  padding: 8px 24px;
+  font-size: 1em;
+  border-radius: 20px;
+  box-shadow: 0 3px 8px rgba(76, 175, 80, 0.3);
+}
+
+.register-button:hover:not(:disabled) {
+  background-color: #45a049 !important;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+}
+
+.register-button:disabled {
+  background-color: #ccc !important;
+  color: #666 !important;
+  box-shadow: none;
+}
+
+/* Personalización del stepper - CAMBIA COLORES DE LOS PASOS AQUÍ */
+::ng-deep .mat-step-header .mat-step-icon-selected {
+  background-color: #4caf50;
+}
+
+::ng-deep .mat-step-header .mat-step-icon-state-edit {
+  background-color: #4caf50;
+}
+
+::ng-deep .mat-step-header .mat-step-label.mat-step-label-selected {
+  color: #2e7d32;
+}
+
+/* Iconos en los campos */
+::ng-deep .mat-mdc-form-field-icon-suffix {
+  color: #666;
+}
+
+/* Responsive design - AJUSTA LOS BREAKPOINTS SEGÚN NECESITES - COMPACTO */
+@media (max-width: 768px) {
+  .register-container {
+    padding: 5px;
+  }
+  
+  .register-card {
+    min-width: 280px;
+    max-width: 95vw;
+    max-height: calc(100vh - 40px);
+  }
+  
+  .portal-title {
+    font-size: 1.3em;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .half-width {
+    width: 100%;
+  }
+  
+  .button-container {
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  
+  .next-button,
+  .register-button {
+    width: 100%;
+    order: 2;
+  }
+  
+  .back-button {
+    width: 100%;
+    order: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-card mat-card-content {
+    padding: 0 12px 12px 12px;
+  }
+  
+  .step-form {
+    padding: 8px 0;
+    gap: 8px;
+  }
+  
+  .logo-icons {
+    gap: 8px;
+  }
+  
+  .leaf-icon,
+  .grain-icon,
+  .home-icon {
+    width: 28px;
+    height: 28px;
+    padding: 6px;
+    font-size: 16px;
+  }
+  
+  .portal-title {
+    font-size: 1.1em;
+  }
+  
+  .register-card mat-card-title {
+    font-size: 1.3em;
+  }
+}

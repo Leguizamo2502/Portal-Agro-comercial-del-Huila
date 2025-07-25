@@ -1,13 +1,14 @@
 ﻿using Business.CustomJwt;
 using Business.Interfaces.Implements.Auth;
 using Business.Interfaces.Implements.Location;
+using Business.Interfaces.Implements.Producers.Cloudinary;
 using Business.Interfaces.Implements.Producers.Farms;
 using Business.Interfaces.Implements.Security;
 using Business.Mapping;
 using Business.Services.AuthService;
 using Business.Services.Location;
+using Business.Services.Producers.Cloudinary;
 using Business.Services.Producers.Farms;
-using Custom.Encripter;
 using Data.Interfaces.Implements.Auth;
 using Data.Interfaces.Implements.Location;
 using Data.Interfaces.Implements.Producers;
@@ -17,9 +18,9 @@ using Data.Repository;
 using Data.Service.Auth;
 using Data.Service.Location;
 using Data.Service.Producers;
+using Data.Service.Producers.Farms;
 using Data.Service.Security;
 using Mapster;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 using Utilities.Messaging.Implements;
 using Utilities.Messaging.Interfaces;
 
@@ -34,10 +35,11 @@ namespace Web.ProgramService
 
             //Auth
             services.AddScoped<IPasswordResetCodeRepository, PasswordResetCodeRepository>();
-            //services.AddScoped<EncriptePassword>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IToken, Token>();
 
+            //Cloudinary
+            services.AddScoped<ICloudinaryService, CloudinaryService>();
 
             //Mapping
             services.AddMapster();
@@ -59,12 +61,17 @@ namespace Web.ProgramService
             services.AddScoped<IFarmRepository, FarmRepository>();
             services.AddScoped<IFarmService, FarmService>();
 
+            services.AddScoped<IFarmImageService, FarmImageService>();
+            services.AddScoped<IFarmImageRepository, FarmImageRepository>();
+
+
+
+
+
             services.AddScoped<IProducerRepository, ProducerRepository>();
 
 
-
-
-
+            //Data Generica
             services.AddScoped(typeof(IDataGeneric<>), typeof(DataGeneric<>));
 
 

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Business.Interfaces.Implements.Producers.Cloudinary;
 using Business.Interfaces.Implements.Producers.Farms;
 using Business.Repository;
 using CloudinaryDotNet;
-using CloudinaryDotNet.Actions;
 using Data.Interfaces.Implements.Auth;
 using Data.Interfaces.Implements.Producers;
 using Data.Interfaces.IRepository;
@@ -15,7 +11,6 @@ using Entity.DTOs.Producer.Farm.Create;
 using Entity.DTOs.Producer.Farm.Select;
 using Entity.DTOs.Producer.Producer.Create;
 using MapsterMapper;
-using Microsoft.AspNetCore.Hosting;
 using Utilities.Exceptions;
 
 namespace Business.Services.Producers.Farms
@@ -27,51 +22,57 @@ namespace Business.Services.Producers.Farms
         private readonly IRolUserRepository _rolUserRepository;
         private readonly IUserRepository _userRepository;
         private readonly IProducerRepository _producerRepository;
-        private readonly Cloudinary _cloudinary;
+        private readonly ICloudinaryService _cloudinaryService;
         public FarmService(IDataGeneric<Farm> data,
                            IMapper mapper,
                            IFarmRepository farmRepository,
                            IRolUserRepository rolUserRepository,
                            IUserRepository userRepository,
                            IProducerRepository producerRepository,
-                           Cloudinary cloudinary
+                           ICloudinaryService cloudinaryService
                             ) : base(data, mapper)
         {
             _farmRepository = farmRepository;
             _rolUserRepository = rolUserRepository;
             _userRepository = userRepository;
             _producerRepository = producerRepository;
-            _cloudinary = cloudinary;
-
+            _cloudinaryService = cloudinaryService;
         }
 
         public async Task<FarmSelectDto> RegisterWithProducer(ProducerWithFarmRegisterDto dto,int userId)
         {
             try
             {
+                // 1. Verificación del usuario
                 var user = await _userRepository.GetByIdAsync(userId);
                 if (user == null)
                     throw new BusinessException("Usuario no encontrado");
 
                 if (user.Producer != null)
-                    throw new BusinessException("El usuario ya es Prodcutor");
+                    throw new BusinessException("El usuario ya es productor");
 
+                // 2. Crear y persistir el productor
                 var producer = _mapper.Map<Producer>(dto);
                 producer.User = user;
-                producer.Code = "PENDIENTE"; // Generar código temporal
+                producer.Code = "PENDIENTE";
 
-                await _producerRepository.AddAsync(producer); // Aquí se debe generar el Id
-
+                producer = await _producerRepository.AddAsync(producer);
                 await _rolUserRepository.AsignateRolProducer(user);
 
+                // 3. Crear y guardar finca (sin imágenes aún)
                 var farm = _mapper.Map<Farm>(dto);
-                farm.Producer = producer;
                 farm.ProducerId = producer.Id;
-                await _farmRepository.AddAsync(farm);
-                
 
-                var farmCreated = _mapper.Map<FarmSelectDto>(farm);
-                return farmCreated;
+                farm = await _farmRepository.AddAsync(farm); // farm.Id ya tiene valor
+
+                // 4. Subir imágenes y asignarlas
+                var images = await _cloudinaryService.UploadFarmImagesAsync(dto.Images, farm.Id);
+                farm.FarmImages = images;
+
+                await _farmRepository.UpdateAsync(farm); // para persistir las imágenes
+
+                // 5. Retornar DTO final
+                return _mapper.Map<FarmSelectDto>(farm);
             }
             catch (Exception ex)
             {
@@ -80,44 +81,24 @@ namespace Business.Services.Producers.Farms
         }
 
 
-        public async Task<bool> CreateFarm(FarmRegisterDto dto)
+        public override async Task<FarmRegisterDto> CreateAsync(FarmRegisterDto dto)
         {
             try
             {
-                if (dto.Images == null || dto.Images.Count == 0)
-                    throw new BusinessException("Debe subir al menos una imagen.");
-
-                if (dto.Images.Count > 5)
-                    throw new BusinessException("Solo se permiten hasta 5 imágenes por finca.");
 
                 var farm = _mapper.Map<Farm>(dto);
-                farm.FarmImages = new List<FarmImage>();
 
-                foreach (var file in dto.Images)
-                {
-                    if (file.Length <= 0)
-                        continue;
+                // Guardar primero para obtener el Id
+                farm = await _farmRepository.AddAsync(farm);
 
-                    var fileName = $"farm_{farm.Id}_{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-                    var uploadParams = new ImageUploadParams
-                    {
-                        PublicId = $"aspimage/{fileName}",
-                        File = new FileDescription(file.FileName, file.OpenReadStream())
-                    };
+                // Subir imágenes y asignarlas directamente
+                var images = await _cloudinaryService.UploadFarmImagesAsync(dto.Images, farm.Id);
+                farm.FarmImages = images;
 
-                    var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+                // Guardar las imágenes: solo necesario si AddAsync no tiene tracking de colección
+                await _farmRepository.UpdateAsync(farm); // ← Si usas EF con tracking automático, esta puede ser innecesaria
 
-                    if (uploadResult.Error != null)
-                        throw new Exception($"Error al subir la imagen: {uploadResult.Error.Message}");
-
-                    farm.FarmImages.Add(new FarmImage
-                    {
-                        ImageUrl = uploadResult.SecureUrl.ToString()
-                    });
-                }
-
-                await _farmRepository.AddAsync(farm);
-                return true;
+                return _mapper.Map<FarmRegisterDto>(farm);
             }
             catch (Exception ex)
             {
@@ -126,6 +107,17 @@ namespace Business.Services.Producers.Farms
             }
 
         }
+
+
+
+        public override async Task<IEnumerable<FarmSelectDto>> GetAllAsync()
+        {
+            var farms = await _farmRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<FarmSelectDto>>(farms);
+        }
+
+
+
 
     }
 }

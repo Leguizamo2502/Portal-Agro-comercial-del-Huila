@@ -8,11 +8,11 @@ using Data.Repository;
 using Entity.Domain.Models.Implements.Producers;
 using Entity.Infrastructure.Context;
 
-namespace Data.Service.Producers
+namespace Data.Service.Producers.Farms
 {
-    public class FarmRepository : DataGeneric<Farm>, IFarmRepository
+    public class FarmImageRepository : DataGeneric<FarmImage>, IFarmImageRepository
     {
-        public FarmRepository(ApplicationDbContext context) : base(context)
+        public FarmImageRepository(ApplicationDbContext context) : base(context)
         {
         }
     }
