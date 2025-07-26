@@ -28,8 +28,8 @@ import { MatCardModule } from '@angular/material/card';
 @Component({
   selector: 'app-register',
   imports: [
-    ReactiveFormsModule, 
-    RouterLink, 
+    ReactiveFormsModule,
+    RouterLink,
     CommonModule,
     // Imports de Angular Material - NECESARIOS PARA EL FUNCIONAMIENTO
     MatStepperModule,
@@ -38,7 +38,7 @@ import { MatCardModule } from '@angular/material/card';
     MatSelectModule,
     MatButtonModule,
     MatIconModule,
-    MatCardModule
+    MatCardModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
@@ -64,14 +64,17 @@ export class RegisterComponent implements OnInit {
   });
 
   // PASO 2: Credenciales de acceso - PUEDES CAMBIAR LOS VALIDATORS AQUÍ
-  public secondFormGroup: FormGroup = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
-    confirmPassword: ['', Validators.required]
-  }, { 
-    // Validator personalizado para confirmar contraseña - PUEDES MODIFICAR LA LÓGICA AQUÍ
-    validators: this.passwordMatchValidator 
-  });
+  public secondFormGroup: FormGroup = this.fb.group(
+    {
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', Validators.required],
+    },
+    {
+      // Validator personalizado para confirmar contraseña - PUEDES MODIFICAR LA LÓGICA AQUÍ
+      validators: this.passwordMatchValidator,
+    }
+  );
 
   // Variable para controlar si el stepper es lineal - CAMBIA A false SI QUIERES NAVEGACIÓN LIBRE
   isLinear = true;
@@ -85,16 +88,30 @@ export class RegisterComponent implements OnInit {
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password');
     const confirmPassword = form.get('confirmPassword');
-    
-    if (password && confirmPassword && password.value !== confirmPassword.value) {
+
+    if (
+      password &&
+      confirmPassword &&
+      password.value !== confirmPassword.value
+    ) {
       confirmPassword.setErrors({ passwordMismatch: true });
       return { passwordMismatch: true };
     }
-    
+
     return null;
   }
+  currentStep = 1;
 
-  selectDepartment(){
+  nextStep() {
+    if (this.firstFormGroup.valid) {
+      this.currentStep = 2;
+    }
+  }
+
+  prevStep() {
+    this.currentStep = 1;
+  }
+  selectDepartment() {
     this.firstFormGroup
       .get('departmentId')
       ?.valueChanges.subscribe((id: number) => {
@@ -124,7 +141,7 @@ export class RegisterComponent implements OnInit {
   // Método para obtener mensajes de error - PUEDES PERSONALIZAR LOS MENSAJES AQUÍ
   getErrorMessage(formGroup: FormGroup, fieldName: string): string {
     const field = formGroup.get(fieldName);
-    
+
     if (field?.hasError('required')) {
       return 'Este campo es requerido';
     }
@@ -140,7 +157,7 @@ export class RegisterComponent implements OnInit {
     if (field?.hasError('passwordMismatch')) {
       return 'Las contraseñas no coinciden';
     }
-    
+
     return '';
   }
 
@@ -172,6 +189,7 @@ export class RegisterComponent implements OnInit {
             title: 'Usuario Creado!',
             text: 'Usuario Creado Exitosamente!',
           });
+          this._router.navigate(['/Auth/login'])
         } else {
           Swal.fire({
             icon: 'error',

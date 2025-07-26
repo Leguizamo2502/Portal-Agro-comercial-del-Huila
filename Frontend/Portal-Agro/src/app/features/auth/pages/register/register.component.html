@@ -1,224 +1,109 @@
-<!-- Contenedor principal con fondo difuminado como en las imágenes -->
-<div class="register-container">
-  
-  <!-- Logo y título - PUEDES CAMBIAR EL LOGO Y TÍTULO AQUÍ -->
-  <div class="header-section">
-    <div class="logo-container">
-      <!-- Iconos del logo - REEMPLAZA CON TU LOGO -->
-      <div class="logo-icons">
-        <img src="/logos/logo.png" alt="Logo Portal Agro-comercial" class="logo">
-        
+<div class="container-fluid vh-100 fondo-auth">
+  <div class="row h-100">
+
+    <!-- Columna izquierda -->
+    <div class="col-md-6 d-none d-md-flex flex-column justify-content-center align-items-center text-white">
+      <img src="logos/logo.png" alt="Logo" class="mb-4" style="width: 200px;">
+      <h2 class="text-center">Portal Agro-comercial del Huila</h2>
+    </div>
+
+    <!-- Columna derecha -->
+    <div class="col-md-6 d-flex justify-content-center align-items-center">
+      <div class="w-75 w-md-75 w-lg-50 p-4 shadow bg-white formaForm">
+
+        <h3 class="text-center mb-3 titleForm">Regístrate</h3>
+        <div class="mt-2 text-center">
+          ¿Ya tienes cuenta? <a routerLink="../login" class="text-primary">Inicia Sesión</a>
+        </div>
+
+        <!-- Paso 1 -->
+        <form [formGroup]="firstFormGroup" *ngIf="currentStep === 1">
+          <div class="mb-2">
+            <label for="firstName" class="form-label">Nombre</label>
+            <input id="firstName" type="text" class="form-control input-custom" formControlName="firstName"
+              placeholder="Nombre">
+          </div>
+
+          <div class="mb-2">
+            <label for="lastName" class="form-label">Apellido</label>
+            <input id="lastName" type="text" class="form-control input-custom" formControlName="lastName"
+              placeholder="Apellido">
+          </div>
+
+          <div class="mb-2">
+            <label for="identification" class="form-label">Número de Identidad</label>
+            <input id="identification" type="text" class="form-control input-custom" formControlName="identification"
+              placeholder="Número de Identidad">
+          </div>
+
+          <div class="mb-2">
+            <label for="phoneNumber" class="form-label">Número de Teléfono</label>
+            <input id="phoneNumber" type="tel" class="form-control input-custom" formControlName="phoneNumber"
+              placeholder="Número de Teléfono">
+          </div>
+
+          <div class="mb-2">
+            <label for="address" class="form-label">Dirección</label>
+            <input id="address" type="text" class="form-control input-custom" formControlName="address"
+              placeholder="Dirección">
+          </div>
+
+          <div class="mb-2 d-flex gap-2">
+            <div class="flex-fill">
+              <label for="departmentId" class="form-label">Departamento</label>
+              <select id="departmentId" class="form-select input-custom" formControlName="departmentId">
+                <option value="">Selecciona un departamento</option>
+                <option *ngFor="let dept of departments" [value]="dept.id">{{ dept.name }}</option>
+              </select>
+            </div>
+            <div class="flex-fill">
+              <label for="cityId" class="form-label">Ciudad</label>
+              <select id="cityId" class="form-select input-custom" formControlName="cityId">
+                <option value="">Selecciona una ciudad</option>
+                <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="d-grid mt-3">
+            <button type="button" class="btn btn-success btn-custom" (click)="nextStep()"
+              [disabled]="firstFormGroup.invalid">
+              Siguiente
+            </button>
+          </div>
+        </form>
+
+        <!-- Paso 2 -->
+        <form [formGroup]="secondFormGroup" *ngIf="currentStep === 2">
+          <div class="mb-2">
+            <label for="email" class="form-label">Correo Electrónico</label>
+            <input id="email" type="email" class="form-control input-custom" formControlName="email"
+              placeholder="Correo Electrónico">
+          </div>
+
+          <div class="mb-2">
+            <label for="password" class="form-label">Contraseña</label>
+            <input id="password" type="password" class="form-control input-custom" formControlName="password"
+              placeholder="Contraseña">
+          </div>
+
+          <div class="mb-2">
+            <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+            <input id="confirmPassword" type="password" class="form-control input-custom"
+              formControlName="confirmPassword" placeholder="Confirmar Contraseña">
+          </div>
+
+          <div class="d-flex justify-content-between mt-3">
+            <button type="button" class="btn btn-outline-secondary" (click)="prevStep()">Volver</button>
+            <button type="button" class="btn btn-success btn-custom" (click)="register()"
+              [disabled]="secondFormGroup.invalid">
+              Registrarse
+            </button>
+          </div>
+        </form>
+
+
       </div>
     </div>
-    <h1 class="portal-title">Portal Agro-comercial del Huila</h1>
   </div>
-
-  <!-- Card del formulario -->
-  <mat-card class="register-card">
-    <mat-card-header>
-      <mat-card-title>Regístrate</mat-card-title>
-      <mat-card-subtitle>
-        ¿Ya tienes cuenta? 
-        <a routerLink="/login" class="login-link">Inicia Sesión</a>
-      </mat-card-subtitle>
-    </mat-card-header>
-
-    <mat-card-content>
-      <!-- Stepper principal - PUEDES CAMBIAR isLinear A false PARA NAVEGACIÓN LIBRE -->
-      <mat-stepper [linear]="isLinear" #stepper orientation="horizontal">
-        
-        <!-- PASO 1: Información Personal -->
-        <mat-step [stepControl]="firstFormGroup" label="Información Personal">
-          <form [formGroup]="firstFormGroup" class="step-form">
-            
-            <!-- Fila de nombre y apellido - PUEDES CAMBIAR EL LAYOUT AQUÍ -->
-            <div class="form-row">
-              <mat-form-field appearance="outline" class="half-width">
-                <mat-label>Nombre</mat-label>
-                <input 
-                  matInput 
-                  formControlName="firstName" 
-                  placeholder="Ingresa tu nombre"
-                  required>
-                <mat-error *ngIf="firstFormGroup.get('firstName')?.hasError('required')">
-                  {{ getErrorMessage(firstFormGroup, 'firstName') }}
-                </mat-error>
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="half-width">
-                <mat-label>Apellido</mat-label>
-                <input 
-                  matInput 
-                  formControlName="lastName" 
-                  placeholder="Ingresa tu apellido"
-                  required>
-                <mat-error *ngIf="firstFormGroup.get('lastName')?.hasError('required')">
-                  {{ getErrorMessage(firstFormGroup, 'lastName') }}
-                </mat-error>
-              </mat-form-field>
-            </div>
-
-            <!-- Identificación -->
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Número de Identidad</mat-label>
-              <input 
-                matInput 
-                formControlName="identification" 
-                placeholder="Ingresa tu número de identificación"
-                required>
-              <mat-error *ngIf="firstFormGroup.get('identification')?.invalid">
-                {{ getErrorMessage(firstFormGroup, 'identification') }}
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Teléfono -->
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Número de Teléfono</mat-label>
-              <input 
-                matInput 
-                formControlName="phoneNumber" 
-                placeholder="Ingresa tu número de teléfono"
-                required>
-              <mat-error *ngIf="firstFormGroup.get('phoneNumber')?.invalid">
-                {{ getErrorMessage(firstFormGroup, 'phoneNumber') }}
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Dirección -->
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Dirección</mat-label>
-              <input 
-                matInput 
-                formControlName="address" 
-                placeholder="Ingresa tu dirección"
-                required>
-              <mat-error *ngIf="firstFormGroup.get('address')?.hasError('required')">
-                {{ getErrorMessage(firstFormGroup, 'address') }}
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Selects de ubicación - PUEDES CAMBIAR EL LAYOUT A UNA SOLA FILA -->
-            <div class="form-row">
-              <mat-form-field appearance="outline" class="half-width">
-                <mat-label>Departamento</mat-label>
-                <mat-select formControlName="departmentId" required>
-                  <mat-option value="">Selecciona departamento</mat-option>
-                  <mat-option 
-                    *ngFor="let dept of departments" 
-                    [value]="dept.id">
-                    {{ dept.name }}
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="firstFormGroup.get('departmentId')?.hasError('required')">
-                  {{ getErrorMessage(firstFormGroup, 'departmentId') }}
-                </mat-error>
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="half-width">
-                <mat-label>Ciudad</mat-label>
-                <mat-select formControlName="cityId" required>
-                  <mat-option value="">Selecciona ciudad</mat-option>
-                  <mat-option 
-                    *ngFor="let city of cities" 
-                    [value]="city.id">
-                    {{ city.name }}
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="firstFormGroup.get('cityId')?.hasError('required')">
-                  {{ getErrorMessage(firstFormGroup, 'cityId') }}
-                </mat-error>
-              </mat-form-field>
-            </div>
-
-            <!-- Botón siguiente - PUEDES CAMBIAR EL ESTILO DEL BOTÓN -->
-            <div class="button-container">
-              <button 
-                mat-raised-button 
-                color="primary" 
-                matStepperNext
-                [disabled]="firstFormGroup.invalid"
-                class="next-button">
-                Siguiente
-                <mat-icon>arrow_forward</mat-icon>
-              </button>
-            </div>
-          </form>
-        </mat-step>
-
-        <!-- PASO 2: Credenciales de Acceso -->
-        <mat-step [stepControl]="secondFormGroup" label="Credenciales">
-          <form [formGroup]="secondFormGroup" class="step-form">
-            
-            <!-- Email -->
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Correo Electrónico</mat-label>
-              <input 
-                matInput 
-                formControlName="email" 
-                placeholder="Ingresa tu correo electrónico"
-                type="email"
-                required>
-              <mat-icon matSuffix>email</mat-icon>
-              <mat-error *ngIf="secondFormGroup.get('email')?.invalid">
-                {{ getErrorMessage(secondFormGroup, 'email') }}
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Contraseña -->
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Contraseña</mat-label>
-              <input 
-                matInput 
-                formControlName="password" 
-                placeholder="Ingresa tu contraseña"
-                type="password"
-                required>
-              <mat-icon matSuffix>lock</mat-icon>
-              <mat-error *ngIf="secondFormGroup.get('password')?.invalid">
-                {{ getErrorMessage(secondFormGroup, 'password') }}
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Confirmar contraseña -->
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Confirmar Contraseña</mat-label>
-              <input 
-                matInput 
-                formControlName="confirmPassword" 
-                placeholder="Confirma tu contraseña"
-                type="password"
-                required>
-              <mat-icon matSuffix>lock_outline</mat-icon>
-              <mat-error *ngIf="secondFormGroup.get('confirmPassword')?.invalid">
-                {{ getErrorMessage(secondFormGroup, 'confirmPassword') }}
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Botones de navegación -->
-            <div class="button-container">
-              <!-- Botón atrás - PUEDES OCULTAR SI NO QUIERES NAVEGACIÓN HACIA ATRÁS -->
-              <button 
-                mat-button 
-                matStepperPrevious
-                class="back-button">
-                <mat-icon>arrow_back</mat-icon>
-                Atrás
-              </button>
-
-              <!-- Botón registrarse - PUEDES CAMBIAR EL TEXTO Y ESTILO -->
-              <button 
-                mat-raised-button 
-                color="primary" 
-                (click)="register()"
-                [disabled]="secondFormGroup.invalid"
-                class="register-button">
-                Registrarse
-                <mat-icon>person_add</mat-icon>
-              </button>
-            </div>
-          </form>
-        </mat-step>
-      </mat-stepper>
-    </mat-card-content>
-  </mat-card>
 </div>

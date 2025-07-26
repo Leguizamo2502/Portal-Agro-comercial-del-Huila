@@ -6,11 +6,11 @@ import { NavbarComponent } from './shared/components/navbar/navbar.component';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login', 
+    redirectTo: 'Auth/login', 
     pathMatch: 'full',
   },
   {
-    path: '',
+    path: 'Auth',
     loadChildren: () =>
       import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },
@@ -18,6 +18,11 @@ export const routes: Routes = [
     path: '',
     loadChildren: () =>
       import('./features/products/products.routes').then((m) => m.PRODUCTS_ROUTES),
+  },
+  {
+    path: 'Home',
+    loadChildren: () =>
+      import('./features/home/home.routes').then((m) => m.HOME_ROUTES),
   },
 
 

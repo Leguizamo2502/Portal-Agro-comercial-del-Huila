@@ -1,86 +1,50 @@
-<div class="login-container">
-  <!-- Contenedor principal con fondo -->
-  <div class="background-overlay">
-    <!-- Logo y título del portal -->
-    <div class="logo-section">
-      <!-- AQUÍ VA TU LOGO: Reemplaza 'assets/images/logo.png' con la ruta de tu logo -->
-      <div class="logo-container">
-        <img src="/logos/logo.png" alt="Logo Portal Agro-comercial" class="logo">
-      </div>
-      <h1 class="portal-title">Portal Agro-comercial del Huila</h1>
+<div class="container-fluid vh-100 fondo-auth">
+  <div class="row h-100">
+    
+    <!-- Columna izquierda -->
+    <div class="col-md-6 d-none d-md-flex flex-column justify-content-center align-items-center text-white">
+      <img src="logos/logo.png" alt="Logo" class="mb-4" style="width: 200px;">
+      <h2 class="text-center">Portal Agro-comercial del Huila</h2>
     </div>
 
-    <!-- Formulario de login -->
-    <div class="form-container">
-      <mat-card class="login-card">
-        <mat-card-header>
-          <mat-card-title class="form-title">Iniciar Sesión</mat-card-title>
+    <!-- Columna derecha (formulario) -->
+    <div class="col-md-6 d-flex justify-content-center align-items-center">
+      <div class="w-75 w-md-75 w-lg-50 p-4 shadow bg-white formaForm">
+        <h3 class="text-center mb-4 titleForm">Iniciar Sesión</h3>
+        <div class="mt-3 text-center">
+            ¿No tienes cuenta? <a routerLink="../register" class="text-primary">Regístrate</a>
+          </div>
+
+        <form [formGroup]="formLogin" (ngSubmit)="login()">
+          <div class="mb-3">
+            <label for="email" class="form-label">Correo Electrónico</label>
+            <input id="email" type="email" formControlName="email" class="form-control input-custom" placeholder="Correo Electrónico">
+            <div *ngIf="formLogin.get('email')?.invalid && formLogin.get('email')?.touched" class="text-danger small">
+              {{getErrorMessage('email')}}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input id="password" type="password" formControlName="password" class="form-control input-custom" placeholder="Contraseña">
+            <div *ngIf="formLogin.get('password')?.invalid && formLogin.get('password')?.touched" class="text-danger small">
+              {{getErrorMessage('password')}}
+            </div>
+          </div>
+
+          <div class="mb-3 text-end">
+            <a href="#" class="text-decoration-none">¿Olvidaste tu contraseña?</a>
+          </div>
+
+          <div class="d-grid gap-2">
+            <button type="submit" [disabled]="formLogin.invalid" class="btn btn-success btn-custom ">Iniciar Sesión</button>
+            <button type="button" class="btn btn-outline-secondary " (click)="me()">Ingresar como Invitado</button>
+          </div>
+
           
-        </mat-card-header>
-        
-        <mat-card-content>
-          <form [formGroup]="formLogin" (ngSubmit)="login()" class="login-form">
-             <div class="form-links">
-              <a routerLink="/register" class="register-link">¿No tienes cuenta? Regístrate</a>
-
-            </div>
-            
-            <!-- Campo de email -->
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Correo Electrónico</mat-label>
-              <input 
-                matInput 
-                type="email" 
-                formControlName="email" 
-                placeholder="Correo Electrónico">
-              <mat-icon matSuffix>email</mat-icon>
-              <mat-error *ngIf="formLogin.get('email')?.invalid && formLogin.get('email')?.touched">
-                {{getErrorMessage('email')}}
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Campo de contraseña -->
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Contraseña</mat-label>
-              <input 
-                matInput 
-                type="password" 
-                formControlName="password" 
-                placeholder="Contraseña">
-              <mat-icon matSuffix>lock</mat-icon>
-              <mat-error *ngIf="formLogin.get('password')?.invalid && formLogin.get('password')?.touched">
-                {{getErrorMessage('password')}}
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Enlaces adicionales -->
-            <div class="form-links">
-
-              <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
-            </div>
-
-            <!-- Botón de iniciar sesión -->
-            <button 
-              mat-raised-button 
-              color="primary" 
-              type="submit" 
-              [disabled]="formLogin.invalid"
-              class="login-button full-width">
-              Iniciar Sesión
-            </button>
-
-            <!-- Botón adicional (tu botón "me()") -->
-            <button 
-              mat-stroked-button 
-              type="button" 
-              (click)="me()"
-              class="data-button full-width">
-              Ingresar como invitado
-            </button>
-
-          </form>
-        </mat-card-content>
-      </mat-card>
+        </form>
+      </div>
     </div>
+
   </div>
 </div>

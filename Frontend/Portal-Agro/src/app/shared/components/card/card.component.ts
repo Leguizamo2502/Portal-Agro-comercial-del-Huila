@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { Card } from './card.model';
 import { MOCK_CARDS } from '../mock/mock';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-card',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './card.component.html',
   styleUrl: './card.component.css'
 })
