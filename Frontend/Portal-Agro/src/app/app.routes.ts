@@ -1,8 +1,8 @@
+import { NavbarVerticalComponent } from './shared/components/navbar-vertical/navbar-vertical.component';
 import { Routes } from '@angular/router';
 import { ButtonComponent } from './shared/components/button/button.component';
-import { CardComponent } from './shared/components/card/card.component';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
-
+import { NavbarSinCategoriaComponent } from './shared/components/navbar-sin-categoria/navbar-sin-categoria.component';
 export const routes: Routes = [
   {
     path: '',
@@ -21,7 +21,8 @@ export const routes: Routes = [
   },
 
 
-  { path: 'card', component: CardComponent },
   { path: 'boton', component: ButtonComponent },
   { path: 'navbar', component: NavbarComponent },
+  { path: 'navbar-vertical', component: NavbarVerticalComponent },
+  { path: 'navbar-sinCategoria', component: NavbarSinCategoriaComponent },
 ];

@@ -48,10 +48,10 @@ interface Notification {
     MatBadgeModule,
     MatDividerModule
   ],
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  templateUrl: './navbar-sin-categoria.component.html',
+  styleUrls: ['./navbar-sin-categoria.component.css']
 })
-export class NavbarComponent {
+export class NavbarSinCategoriaComponent {
   searchTerm = '';
   cartCount = 2;
   showSuggestions = false;
@@ -70,49 +70,12 @@ export class NavbarComponent {
 
   searchSuggestions: string[] = [];
 
-  user: User = {
-    name: 'Vanessa Ortiz',
-    email: 'vanessaortiz@gmail.com',
-    phone: '310 000 0000'
-  };
-
-  userOptions = [
-    { label: 'Perfil', icon: 'person' },
-    { label: 'Mis pedidos', icon: 'shopping_bag' },
-    { label: 'Configuración', icon: 'settings' }
-  ];
-
-  categories = ['Semillas', 'Fertilizantes', 'Herramientas', 'Maquinaria', 'Productos Orgánicos'];
-
   navigationItems: MenuItem[] = [
     { label: 'Inicio', route: '/' },
-    { label: 'Productos', route: '/productos' }
+    { label: 'Productos', route: '/productos' },
+    { label: 'Login/Registro', route: '/' }
   ];
 
-  notifications: Notification[] = [
-    {
-      id: 1,
-      title: 'Pedido Aceptado',
-      description: 'Tu pedido por $450,000 ha sido aceptado',
-      time: 'Hace 5 minutos',
-      read: false,
-      type: 'accepted',
-      icon: 'check_circle'
-    },
-    {
-      id: 2,
-      title: 'Nuevo Mensaje',
-      description: 'Tienes un mensaje del proveedor',
-      time: 'Hace 2 horas',
-      read: false,
-      type: 'info',
-      icon: 'message'
-    }
-  ];
-
-  get unreadNotifications(): number {
-    return this.notifications.filter(n => !n.read).length;
-  }
 
   onSearch(): void {
     if (this.searchTerm.trim()) {
@@ -163,25 +126,5 @@ export class NavbarComponent {
 
   onNavigationClick(item: MenuItem): void {
     console.log('Navegando a:', item.route);
-  }
-
-  onCategoryClick(category: string): void {
-    console.log('Categoría seleccionada:', category);
-  }
-
-  onCartClick(): void {
-    console.log('Abriendo carrito');
-  }
-
-  onUserOptionClick(option: string): void {
-    console.log('Opción seleccionada:', option);
-    if (option === 'Cerrar Sesión') {
-      console.log('Cerrando sesión...');
-    }
-  }
-
-  markAsRead(notification: Notification): void {
-    notification.read = true;
-    console.log('Notificación leída:', notification.title);
   }
 }
