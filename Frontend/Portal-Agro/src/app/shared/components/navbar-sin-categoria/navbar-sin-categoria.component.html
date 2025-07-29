@@ -1,0 +1,43 @@
+<p>navbar-sin-categoria works!</p>
+<!-- Versión optimizada del NavbarComponent.html -->
+<mat-toolbar class="navbar-toolbar">
+    <div class="navbar-container">
+        <!-- Logo -->
+        <div class="logo-container">
+            <img src="/logos/logo.png" alt="Logo Agro" class="logo-image" />
+            <span class="logo-text">Portal Agro-comercial del Huila</span>
+        </div>
+
+        <!-- Buscador -->
+        <div class="search-container">
+            <div class="input-group search-field">
+                <span class="input-group-text search-icon">
+                    <i class="bi bi-search"></i>
+                </span>
+                <input type="search" class="form-control" placeholder="Buscar productos, servicios, empresas..."
+                    [(ngModel)]="searchTerm" (keyup)="onKeyUp($event)" (focus)="onSearchFocus()" (blur)="onSearchBlur()"
+                    name="searchTerm" />
+                <button *ngIf="searchTerm" type="button" class="btn btn-outline-secondary clear-button"
+                    (click)="clearSearch()">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="search-suggestions" *ngIf="showSuggestions && searchSuggestions.length > 0">
+                <div class="suggestion-item d-flex align-items-center" *ngFor="let suggestion of searchSuggestions"
+                    (click)="selectSuggestion(suggestion)">
+                    <i class="bi bi-search me-2 text-muted"></i>
+                    <span>{{ suggestion }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navegación -->
+        <div class="nav-menu mt-3">
+            <button mat-button class="categories-button" *ngFor="let item of navigationItems"
+                (click)="onNavigationClick(item)">
+                <span>{{ item.label }}</span>
+            </button>
+        </div>
+    </div>
+
+</mat-toolbar>
