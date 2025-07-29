@@ -1,13 +1,19 @@
 import {
   FormBuilder,
   FormGroup,
+
+
+
   ReactiveFormsModule,
+
+
+
   Validators,
 } from '@angular/forms';
 import { Component, inject, OnInit } from '@angular/core';
 import { RegisterUserModel } from '../../Models/registeruser.model';
 import Swal from 'sweetalert2';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { LocationService } from '../../../../shared/services/location/location.service';
 import {
@@ -27,9 +33,8 @@ import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-register',
-  imports: [
-    ReactiveFormsModule,
-    RouterLink,
+  imports: [ReactiveFormsModule,
+
     CommonModule,
     // Imports de Angular Material - NECESARIOS PARA EL FUNCIONAMIENTO
     MatStepperModule,
