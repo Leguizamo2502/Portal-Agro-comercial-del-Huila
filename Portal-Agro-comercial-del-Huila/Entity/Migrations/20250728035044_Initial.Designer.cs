@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Entity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250724165702_Initial")]
+    [Migration("20250728035044_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -913,6 +913,64 @@ namespace Entity.Migrations
                     b.HasIndex("ProducerId");
 
                     b.ToTable("Farms");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Active = true,
+                            Altitude = 1600.0,
+                            CityId = 33,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Hectares = 4.0,
+                            IsDeleted = false,
+                            Latitude = 1200.0,
+                            Longitude = 600.0,
+                            Name = "Finca el Jardin",
+                            ProducerId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Active = true,
+                            Altitude = 1600.0,
+                            CityId = 33,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Hectares = 4.0,
+                            IsDeleted = false,
+                            Latitude = 1200.0,
+                            Longitude = 600.0,
+                            Name = "Finca el Mirador",
+                            ProducerId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Active = true,
+                            Altitude = 1600.0,
+                            CityId = 33,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Hectares = 4.0,
+                            IsDeleted = false,
+                            Latitude = 1200.0,
+                            Longitude = 600.0,
+                            Name = "Finca los Alpes",
+                            ProducerId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Active = true,
+                            Altitude = 1600.0,
+                            CityId = 33,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Hectares = 4.0,
+                            IsDeleted = false,
+                            Latitude = 1200.0,
+                            Longitude = 600.0,
+                            Name = "Finca los Lulos",
+                            ProducerId = 1
+                        });
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.FarmImage", b =>
@@ -944,6 +1002,44 @@ namespace Entity.Migrations
                     b.HasIndex("FarmId");
 
                     b.ToTable("FarmImages");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FarmId = 1,
+                            ImageUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1753647812/Imagen_de_WhatsApp_2025-07-27_a_las_15.22.45_14c80001_uid9qb.jpg",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FarmId = 2,
+                            ImageUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1753647812/Imagen_de_WhatsApp_2025-07-27_a_las_15.22.45_14c80001_uid9qb.jpg",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FarmId = 3,
+                            ImageUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1753647812/Imagen_de_WhatsApp_2025-07-27_a_las_15.22.45_14c80001_uid9qb.jpg",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FarmId = 4,
+                            ImageUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1753647812/Imagen_de_WhatsApp_2025-07-27_a_las_15.22.45_14c80001_uid9qb.jpg",
+                            IsDeleted = false
+                        });
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.Producer", b =>
@@ -992,6 +1088,205 @@ namespace Entity.Migrations
                             IsDeleted = true,
                             UserId = 3
                         });
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Products.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ParentCategoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentCategoryId");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Active = true,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            Name = "Frutas"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Active = true,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            Name = "Cítricos",
+                            ParentCategoryId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Active = true,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            Name = "Tropicales",
+                            ParentCategoryId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Active = true,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            Name = "Exóticas",
+                            ParentCategoryId = 3
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Active = true,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            Name = "Hortalizas"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Active = true,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            Name = "Tubérculos",
+                            ParentCategoryId = 5
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Active = true,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            Name = "Granos"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Active = true,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            Name = "Café",
+                            ParentCategoryId = 7
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Active = true,
+                            CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            Name = "Cacao",
+                            ParentCategoryId = 7
+                        });
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Products.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FarmId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Production")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Stock")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("FarmId");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Products.ProductImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImages");
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Security.Form", b =>
@@ -1378,6 +1673,45 @@ namespace Entity.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Products.Category", b =>
+                {
+                    b.HasOne("Entity.Domain.Models.Implements.Products.Category", "ParentCategory")
+                        .WithMany("SubCategories")
+                        .HasForeignKey("ParentCategoryId");
+
+                    b.Navigation("ParentCategory");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Products.Product", b =>
+                {
+                    b.HasOne("Entity.Domain.Models.Implements.Products.Category", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entity.Domain.Models.Implements.Producers.Farm", "Farm")
+                        .WithMany("Products")
+                        .HasForeignKey("FarmId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Farm");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Products.ProductImage", b =>
+                {
+                    b.HasOne("Entity.Domain.Models.Implements.Products.Product", "Product")
+                        .WithMany("ProductImages")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Entity.Domain.Models.Implements.Security.FormModule", b =>
                 {
                     b.HasOne("Entity.Domain.Models.Implements.Security.Form", "Form")
@@ -1471,11 +1805,25 @@ namespace Entity.Migrations
             modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.Farm", b =>
                 {
                     b.Navigation("FarmImages");
+
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.Producer", b =>
                 {
                     b.Navigation("Farms");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Products.Category", b =>
+                {
+                    b.Navigation("Products");
+
+                    b.Navigation("SubCategories");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Products.Product", b =>
+                {
+                    b.Navigation("ProductImages");
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Security.Form", b =>

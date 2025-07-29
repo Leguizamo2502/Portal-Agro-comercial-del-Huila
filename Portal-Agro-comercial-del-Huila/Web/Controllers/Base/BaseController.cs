@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Entity.DTOs.BaseDTO;
+using Microsoft.AspNetCore.Mvc;
 using Utilities.Exceptions;
 
 namespace Web.Controllers.Base
@@ -104,7 +105,10 @@ namespace Web.Controllers.Base
         {
             try
             {
+                if (dto is not BaseDto identifiableDto)
+                    return BadRequest(new { message = "El DTO no implementa IHasId." });
 
+                identifiableDto.Id = id;
                 var updated = await UpdateAsync(id, dto);
                 if (updated == null)
                     return NotFound(new { message = $"No se encontró el recurso con ID {id} para actualizar." });

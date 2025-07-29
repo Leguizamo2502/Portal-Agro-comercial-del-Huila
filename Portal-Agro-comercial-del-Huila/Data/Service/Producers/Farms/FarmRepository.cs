@@ -1,4 +1,4 @@
-﻿using Data.Interfaces.Implements.Producers;
+﻿using Data.Interfaces.Implements.Producers.Farms;
 using Data.Repository;
 using Entity.Domain.Models.Implements.Producers;
 using Entity.Infrastructure.Context;

@@ -1,6 +1,7 @@
 ﻿
 using Entity.Domain.Models.Base;
 using Entity.Domain.Models.Implements.Location;
+using Entity.Domain.Models.Implements.Products;
 
 namespace Entity.Domain.Models.Implements.Producers
 {
@@ -23,6 +24,7 @@ namespace Entity.Domain.Models.Implements.Producers
         public City City { get; set; }
 
         public List<FarmImage> FarmImages { get; set; } = new();
+        public ICollection<Product> Products { get; set; } = [];
 
     }
 }

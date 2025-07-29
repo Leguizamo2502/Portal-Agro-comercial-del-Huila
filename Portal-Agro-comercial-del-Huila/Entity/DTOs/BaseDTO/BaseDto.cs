@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entity.Domain.Models.Implements.Products
+namespace Entity.DTOs.BaseDTO
 {
-    internal class ProductCategory
+    public abstract class BaseDto
     {
+        public int Id { get; set; }
     }
 }

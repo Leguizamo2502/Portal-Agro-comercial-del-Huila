@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Entity.Domain.Models.Implements.Auth;
 using Entity.Domain.Models.Implements.Producers;
+using Entity.Domain.Models.Implements.Products;
 using Entity.Domain.Models.Implements.Security;
 using Microsoft.EntityFrameworkCore;
 
@@ -63,6 +64,11 @@ namespace Entity.Infrastructure.Context
         public DbSet<Producer> Producers { get; set; }
         public DbSet<Farm> Farms { get; set; }
         public DbSet<FarmImage> FarmImages { get; set; }
+
+        //Product
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
 
 
     }

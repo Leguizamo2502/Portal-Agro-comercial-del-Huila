@@ -1,10 +1,13 @@
 ﻿using Entity.Domain.Models.Implements.Auth;
 using Entity.Domain.Models.Implements.Producers;
+using Entity.Domain.Models.Implements.Products;
 using Entity.Domain.Models.Implements.Security;
 using Entity.DTOs.Auth;
+using Entity.DTOs.Producer.Categories;
 using Entity.DTOs.Producer.Farm.Create;
 using Entity.DTOs.Producer.Farm.Select;
 using Entity.DTOs.Producer.Producer.Create;
+using Entity.DTOs.Products;
 using Entity.DTOs.Security.Me;
 using Mapster;
 using System.Linq;
@@ -52,6 +55,16 @@ namespace Business.Mapping
                 .Map(dest => dest.DepartmentName, src => src.City.Department.Name)
                 .Map(dest => dest.ProducerName, src => src.Producer.User.Person.FirstName) // o ajusta según tu modelo
                 .Map(dest => dest.Images, src => src.FarmImages.Adapt<List<FarmImageDto>>());
+
+
+            //Products
+            config.NewConfig<ProductCreateDto, Product>().Ignore(des => des.ProductImages);
+            config.NewConfig<ProductImage, ProductImageDto>();
+            config.NewConfig<Product, ProductSelectDto>();
+
+            //Category
+            config.NewConfig<Category, CategorySelectDto>();
+            config.NewConfig<CategoryRegisterDto, Category>();
 
 
 

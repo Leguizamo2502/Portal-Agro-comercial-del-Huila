@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Data.Interfaces.IRepository;
 using Entity.Domain.Models.Implements.Producers;
+using Entity.DTOs.Producer.Farm.Select;
+using Entity.DTOs.Producer.Producer.Create;
 
-namespace Data.Interfaces.Implements.Producers
+namespace Data.Interfaces.Implements.Producers.Farms
 {
-    public interface IFarmImageRepository : IDataGeneric<FarmImage>
+    public interface IFarmRepository : IDataGeneric<Farm>
     {
 
     }

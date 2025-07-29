@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="DTOs\Security\Me\NewFolder\" />
+    <Folder Include="Infrastructure\DataInit\Producers\Products\" />
     <Folder Include="Infrastructure\LogService\" />
   </ItemGroup>
 

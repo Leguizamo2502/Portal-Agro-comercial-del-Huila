@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Entity.DTOs.Products
 {
-    internal class ImageProductDto
+    public class ProductSelectDto
     {
+        public int Id { get; set; }
     }
 }
