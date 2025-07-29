@@ -8,7 +8,9 @@ using Entity.DTOs.Producer.Farm.Create;
 using Entity.DTOs.Producer.Farm.Select;
 using Entity.DTOs.Producer.Producer.Create;
 using Entity.DTOs.Products;
+using Entity.DTOs.Security.Create.Rols;
 using Entity.DTOs.Security.Me;
+using Entity.DTOs.Security.Selects.Rols;
 using Mapster;
 using System.Linq;
 
@@ -65,6 +67,11 @@ namespace Business.Mapping
             //Category
             config.NewConfig<Category, CategorySelectDto>();
             config.NewConfig<CategoryRegisterDto, Category>();
+
+
+            //Security
+            config.NewConfig<Rol, RolSelectDto>();
+            config.NewConfig<RolRegisterDto, Rol>();
 
 
 

@@ -7,7 +7,7 @@ using Entity.Domain.Models.Implements.Auth;
 using Entity.Domain.Models.Implements.Security;
 using Entity.DTOs.Security.Me;
 
-namespace Business.Interfaces.Implements.Security
+namespace Business.Interfaces.Implements.Security.Mes
 {
     public interface IMeService 
     {

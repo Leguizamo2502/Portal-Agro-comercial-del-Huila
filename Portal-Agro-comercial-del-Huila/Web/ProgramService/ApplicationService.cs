@@ -6,6 +6,7 @@ using Business.Interfaces.Implements.Producers.Cloudinary;
 using Business.Interfaces.Implements.Producers.Farms;
 using Business.Interfaces.Implements.Producers.Products;
 using Business.Interfaces.Implements.Security;
+using Business.Interfaces.Implements.Security.Mes;
 using Business.Mapping;
 using Business.Services.AuthService;
 using Business.Services.Location;
@@ -13,6 +14,7 @@ using Business.Services.Producers.Categories;
 using Business.Services.Producers.Cloudinary;
 using Business.Services.Producers.Farms;
 using Business.Services.Producers.Products;
+using Business.Services.Security;
 using Data.Interfaces.Implements.Auth;
 using Data.Interfaces.Implements.Location;
 using Data.Interfaces.Implements.Producers;
@@ -20,6 +22,7 @@ using Data.Interfaces.Implements.Producers.Categories;
 using Data.Interfaces.Implements.Producers.Farms;
 using Data.Interfaces.Implements.Producers.Products;
 using Data.Interfaces.Implements.Security;
+using Data.Interfaces.Implements.Security.Mes;
 using Data.Interfaces.IRepository;
 using Data.Repository;
 using Data.Service.Auth;
@@ -29,6 +32,7 @@ using Data.Service.Producers.Categories;
 using Data.Service.Producers.Farms;
 using Data.Service.Producers.Products;
 using Data.Service.Security;
+using Data.Service.Security.Mes;
 using Mapster;
 using Utilities.Messaging.Implements;
 using Utilities.Messaging.Interfaces;
@@ -78,6 +82,9 @@ namespace Web.ProgramService
 
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();
+
+            services.AddScoped<IRolRepository, RolRepository>();
+            services.AddScoped<IRolService, RolService>();
 
 
 

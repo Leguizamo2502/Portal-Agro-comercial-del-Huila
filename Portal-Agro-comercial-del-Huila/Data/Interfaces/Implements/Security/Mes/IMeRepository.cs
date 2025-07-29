@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Entity.Domain.Models.Implements.Auth;
 using Entity.Domain.Models.Implements.Security;
 
-namespace Data.Interfaces.Implements.Security
+namespace Data.Interfaces.Implements.Security.Mes
 {
     public interface IMeRepository
     {

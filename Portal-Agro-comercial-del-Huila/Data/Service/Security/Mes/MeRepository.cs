@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Data.Interfaces.Implements.Security;
+using Data.Interfaces.Implements.Security.Mes;
 using Entity.Domain.Models.Implements.Auth;
 using Entity.Domain.Models.Implements.Security;
 using Entity.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Utilities.Exceptions;
 
-namespace Data.Service.Security
+namespace Data.Service.Security.Mes
 {
     public class MeRepository : IMeRepository
     {
