@@ -178,25 +178,3 @@
     </div>
   </div>
 </mat-toolbar>
-
-<!-- Sidebar lateral izquierda -->
-<div class="user-sidebar">
-  <div class="user-info-sidebar">
-    <h3 class="user-name">{{ user.name }}</h3>
-    <p class="user-email">{{ user.email }}</p>
-  </div>
-
-  <mat-divider></mat-divider>
-
-  <div class="user-menu-items">
-    <button 
-      mat-button 
-      *ngFor="let item of userMenuItems"
-      (click)="onUserMenuItemClick(item)"
-      [class.active-menu-item]="item.active"
-      class="sidebar-menu-item">
-      <mat-icon>{{ item.icon }}</mat-icon>
-      <span>{{ item.label }}</span>
-    </button>
-  </div>
-</div>

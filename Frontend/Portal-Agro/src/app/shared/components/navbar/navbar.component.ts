@@ -89,13 +89,7 @@ export class NavbarComponent {
     { label: 'Productos', route: '/productos' }
   ];
 
-  userMenuItems: UserMenuItem[] = [
-    { label: 'Mi Información', icon: 'person', active: true },
-    { label: 'Favoritos', icon: 'favorite', active: false },
-    { label: 'Pedidos', icon: 'inventory_2', active: false },
-    { label: 'Productor', icon: 'agriculture', active: false },
-    { label: 'Soporte', icon: 'headset_mic', active: false }
-  ];
+
 
   notifications: Notification[] = [
     {
@@ -186,12 +180,6 @@ export class NavbarComponent {
 
   onCartClick() {
     console.log('Abriendo carrito');
-  }
-
-  onUserMenuItemClick(item: UserMenuItem) {
-    this.userMenuItems.forEach(menuItem => menuItem.active = false);
-    item.active = true;
-    console.log('Sección seleccionada:', item.label);
   }
 
   onUserOptionClick(option: string) {
