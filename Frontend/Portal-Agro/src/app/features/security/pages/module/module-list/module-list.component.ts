@@ -1,23 +1,25 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { TableComponent } from '../../../../../shared/components/table/table.component';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ModuleService } from '../../../services/module/module.service';
 import { ModuleSelectModel } from '../../../models/module/module.model';
-import { TableComponent } from "../../../../../shared/components/table/table.component";
 
 @Component({
-  selector: 'app-module-list',
-  imports: [TableComponent],
+  selector: 'app-form-list',
+  imports: [TableComponent, CommonModule, RouterLink],
   templateUrl: './module-list.component.html',
-  styleUrl: './module-list.component.css'
+  styleUrl: './module-list.component.css',
 })
-export class ModuleListComponent implements OnInit{
+export class ModuleListComponent implements OnInit {
   moduleService = inject(ModuleService);
-  modules: ModuleSelectModel[]=[];
-  
-  ngOnInit(): void {
-    this.loadModules();
-    
-  }
+  modules: ModuleSelectModel[] = [];
+  router = inject(Router);
+  route = inject(ActivatedRoute);
 
+  ngOnInit(): void {
+    this.loadForm();
+  }
 
   columns = [
     { key: 'name', label: 'Nombre' },
@@ -25,22 +27,21 @@ export class ModuleListComponent implements OnInit{
   ];
 
   onEdit(item: any) {
-    console.log('Editar', item);
+    const id = item.id;
+    this.router.navigate(['/account/security/module/update', id]);
+
   }
 
   onDelete(item: any) {
-    this.moduleService.deleteLogic(item.id).subscribe(()=>{
-      this.loadModules();
-    })
+    this.moduleService.deleteLogic(item.id).subscribe(() => {
+      this.loadForm();
+    });
   }
 
-  loadModules(){
-    this.moduleService.getAll().subscribe((data)=>{
+  loadForm() {
+    this.moduleService.getAll().subscribe((data) => {
       this.modules = data;
-      console.log(data);
-    })
+      // console.log(data);
+    });
   }
-  
-
-
 }

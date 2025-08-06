@@ -6,6 +6,8 @@ import { ModuleListComponent } from "../security/pages/module/module-list/module
 import { PermissionListComponent } from "../security/pages/permission/permission-list/permission-list.component";
 import { FomrUpdateComponent } from "../security/pages/form/fomr-update/fomr-update.component";
 import { FormCreateComponent } from "../security/pages/form/form-create/form-create.component";
+import { ModuleUpdateComponent } from "../security/pages/module/module-update/module-update.component";
+import { ModuleCreateComponent } from "../security/pages/module/module-create/module-create.component";
 
 export const ACCOUNT_ROUTES: Routes=[
     // {path:'info', component: LoginComponent},
@@ -17,6 +19,9 @@ export const ACCOUNT_ROUTES: Routes=[
       { path: 'security/form', component: FormListComponent },
       { path: 'security/form/update/:id', component: FomrUpdateComponent },
       { path: 'security/form/create', component: FormCreateComponent },
+
+      { path: 'security/module/update/:id', component: ModuleUpdateComponent },
+      { path: 'security/module/create', component: ModuleCreateComponent },
 
 
       { path: 'security/module', component: ModuleListComponent },
