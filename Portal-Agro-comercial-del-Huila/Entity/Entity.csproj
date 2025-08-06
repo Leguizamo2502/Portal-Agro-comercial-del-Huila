@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\Security\Create\NewFolder\" />
+    <Compile Remove="DTOs\Security\Create\NewFolder\**" />
+    <EmbeddedResource Remove="DTOs\Security\Create\NewFolder\**" />
+    <None Remove="DTOs\Security\Create\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Infrastructure\DataInit\Producers\Products\" />
     <Folder Include="Infrastructure\LogService\" />
   </ItemGroup>

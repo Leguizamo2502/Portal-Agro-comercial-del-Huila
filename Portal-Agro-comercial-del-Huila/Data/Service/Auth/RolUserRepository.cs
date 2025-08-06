@@ -13,6 +13,15 @@ namespace Data.Service.Auth
         {
         }
 
+
+        public override async Task<IEnumerable<RolUser>> GetAllAsync()
+        {
+            return await _dbSet
+                .Include(ru => ru.User.Person)
+                .Include(ru => ru.Rol)
+                .ToListAsync();
+        }
+
         public async Task<RolUser> AsignateRolDefault(User user)
         {
             var rolUser = new RolUser

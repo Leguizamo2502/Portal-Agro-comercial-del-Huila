@@ -98,7 +98,10 @@ namespace Web.ProgramService
             services.AddScoped<IFormModuleRepository, FormModuleRepository>();
             services.AddScoped<IFormModuleService, FormModuleService>();
 
-           
+            services.AddScoped<IRolUserRepository, RolUserRepository>();
+            services.AddScoped<IRolUserService, RolUserService>();
+
+
 
 
 
