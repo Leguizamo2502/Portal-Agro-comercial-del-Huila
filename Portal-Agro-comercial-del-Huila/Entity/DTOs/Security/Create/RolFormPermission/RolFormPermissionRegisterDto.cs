@@ -5,11 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entity.DTOs.Security.Create.RolUser
+namespace Entity.DTOs.Security.Create.RolFormPermission
 {
-    public class RolUserRegisterDto : BaseDto
+    public class RolFormPermissionRegisterDto : BaseDto
     {
         public int RolId { get; set; }
-        public int UserId { get; set; }
+        public int FormId { get; set; }
+        public int PermissionId { get; set; }
     }
 }
+

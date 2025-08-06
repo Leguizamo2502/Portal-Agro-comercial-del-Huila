@@ -1,13 +1,11 @@
-﻿using Entity.Domain.Models.Implements.Auth;
-using Entity.Domain.Models.Implements.Security;
-using Entity.DTOs.BaseDTO;
+﻿using Entity.DTOs.BaseDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entity.DTOs.Security.Selects.RolUserDto
+namespace Entity.DTOs.Security.Selects.RolUser
 {
     public class RolUserSelectDto : BaseDto
     {

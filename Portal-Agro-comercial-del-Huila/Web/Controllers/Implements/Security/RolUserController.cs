@@ -1,6 +1,6 @@
 ﻿using Business.Interfaces.Implements.Security;
 using Entity.DTOs.Security.Create.RolUser;
-using Entity.DTOs.Security.Selects.RolUserDto;
+using Entity.DTOs.Security.Selects.RolUser;
 using Web.Controllers.Base;
 
 namespace Web.Controllers.Implements.Security

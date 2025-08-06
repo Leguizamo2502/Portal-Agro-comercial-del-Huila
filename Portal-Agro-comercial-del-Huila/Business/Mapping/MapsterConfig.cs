@@ -11,7 +11,7 @@ using Entity.DTOs.Products;
 using Entity.DTOs.Security.Create.Rols;
 using Entity.DTOs.Security.Me;
 using Entity.DTOs.Security.Selects.Rols;
-using Entity.DTOs.Security.Selects.RolUserDto;
+using Entity.DTOs.Security.Selects.RolUser;
 using Mapster;
 using System.Linq;
 

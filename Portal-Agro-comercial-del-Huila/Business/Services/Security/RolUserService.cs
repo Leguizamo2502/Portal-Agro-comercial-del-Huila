@@ -4,7 +4,7 @@ using Data.Interfaces.Implements.Auth;
 using Data.Interfaces.IRepository;
 using Entity.Domain.Models.Implements.Security;
 using Entity.DTOs.Security.Create.RolUser;
-using Entity.DTOs.Security.Selects.RolUserDto;
+using Entity.DTOs.Security.Selects.RolUser;
 using MapsterMapper;
 using Utilities.Exceptions;
 
