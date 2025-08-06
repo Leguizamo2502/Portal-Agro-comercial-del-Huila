@@ -1,17 +1,44 @@
-/* Estilo general del contenedor */
-.contenido-principal {
+/* Contenedor general en columnas */
+.layout-container {
   display: flex;
-  flex-direction: column;
-  margin-top: 80px;
-  width: 100%;
+  flex-direction: row;
+  min-height: 100vh;
+  padding-top: 80px; /* Altura navbar superior */
+  background-color: #f9f6ef;
 }
 
-/* Estilo del recuadro blanco */
-.contenido {
+/* Sidebar fijo */
+.sidebar-fixed {
+  width: 250px; /* Ajusta según el ancho de tu sidebar */
+  position: fixed;
+  top: 80px; /* Altura navbar */
+  bottom: 0;
+  left: 0;
+  background-color: white;
+  overflow-y: auto;
+  border-right: 1px solid #ddd;
+  z-index: 1000;
+}
+
+/* Contenido principal (resta el ancho del sidebar) */
+.contenido-principal {
+  margin-left: 250px; /* Debe coincidir con el width del sidebar */
+  width: calc(100% - 250px);
+  padding: 2rem;
   display: flex;
-  justify-content: center;
-  width: 100%; /* Usa 100% del espacio disponible después del sidebar */
-  max-width: 1000px; /* Límite máximo para evitar que se vea muy estirado */
-  margin: 0 auto; /* Centra el contenido si hay espacio */
-  min-height: 600px; /* Opcional: altura mínima */
+  flex-direction: column;
+}
+
+/* Estilo del recuadro blanco que envuelve el contenido */
+.contenido {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
+  min-height: 400px;
+  max-height: 500px;
+  overflow: auto;
 }

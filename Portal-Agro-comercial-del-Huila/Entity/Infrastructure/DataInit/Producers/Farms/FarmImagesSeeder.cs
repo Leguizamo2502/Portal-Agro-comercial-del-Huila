@@ -18,7 +18,7 @@ namespace Entity.Infrastructure.DataInit.Producers.Farms
                new FarmImage
                {
                    Id = 1,
-                   ImageUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1753647812/Imagen_de_WhatsApp_2025-07-27_a_las_15.22.45_14c80001_uid9qb.jpg",
+                   ImageUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1754487968/defaultFarm_xkify3.jpg",
                    FarmId = 1,
                    CreateAt = date,
                    IsDeleted = false,
@@ -27,7 +27,7 @@ namespace Entity.Infrastructure.DataInit.Producers.Farms
                new FarmImage
                {
                    Id = 2,
-                   ImageUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1753647812/Imagen_de_WhatsApp_2025-07-27_a_las_15.22.45_14c80001_uid9qb.jpg",
+                   ImageUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1754487968/defaultFarm_xkify3.jpg",
                    FarmId = 2,
                    CreateAt = date,
                    IsDeleted = false,
@@ -36,7 +36,7 @@ namespace Entity.Infrastructure.DataInit.Producers.Farms
                new FarmImage
                {
                    Id = 3,
-                   ImageUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1753647812/Imagen_de_WhatsApp_2025-07-27_a_las_15.22.45_14c80001_uid9qb.jpg",
+                   ImageUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1754487968/defaultFarm_xkify3.jpg",
                    FarmId = 3,
                    CreateAt = date,
                    IsDeleted = false,
@@ -45,7 +45,7 @@ namespace Entity.Infrastructure.DataInit.Producers.Farms
                new FarmImage
                {
                    Id = 4,
-                   ImageUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1753647812/Imagen_de_WhatsApp_2025-07-27_a_las_15.22.45_14c80001_uid9qb.jpg",
+                   ImageUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1754487968/defaultFarm_xkify3.jpg",
                    FarmId = 4,
                    CreateAt = date,
                    IsDeleted = false,

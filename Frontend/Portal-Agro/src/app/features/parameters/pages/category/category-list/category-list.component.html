@@ -1,0 +1,8 @@
+<button mat-flat-button routerLink="create">Crear Formulario</button>
+
+<app-table
+  [columns]="columns"
+  [data]="categorys"
+  (edit)="onEdit($event)"
+  (delete)="onDelete($event)">
+</app-table>

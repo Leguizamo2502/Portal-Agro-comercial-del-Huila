@@ -6,6 +6,11 @@ import { ModuleListComponent } from "../security/pages/module/module-list/module
 import { PermissionListComponent } from "../security/pages/permission/permission-list/permission-list.component";
 import { FomrUpdateComponent } from "../security/pages/form/fomr-update/fomr-update.component";
 import { FormCreateComponent } from "../security/pages/form/form-create/form-create.component";
+import { PermissionCreateComponent } from "../security/pages/permission/permission-create/permission-create.component";
+import { PermissionUpdateComponent } from "../security/pages/permission/permission-update/permission-update.component";
+import { CategoryListComponent } from "../parameters/pages/category/category-list/category-list.component";
+import { CategoryCreateComponent } from "../parameters/pages/category/category-create/category-create.component";
+import { CategoryUpdateComponent } from "../parameters/pages/category/category-update/category-update.component";
 import { ModuleUpdateComponent } from "../security/pages/module/module-update/module-update.component";
 import { ModuleCreateComponent } from "../security/pages/module/module-create/module-create.component";
 
@@ -16,6 +21,8 @@ export const ACCOUNT_ROUTES: Routes=[
     {path: '',
     component: AccountComponent,
     children: [
+
+      //security
       { path: 'security/form', component: FormListComponent },
       { path: 'security/form/update/:id', component: FomrUpdateComponent },
       { path: 'security/form/create', component: FormCreateComponent },
@@ -26,6 +33,18 @@ export const ACCOUNT_ROUTES: Routes=[
 
       { path: 'security/module', component: ModuleListComponent },
       { path: 'security/permission', component: PermissionListComponent },
+      { path: 'security/permission/create', component: PermissionCreateComponent },
+      { path: 'security/permission/update/:id', component: PermissionUpdateComponent },
+
+
+      //Parameters
+
+      {path:'parameters/category',component:CategoryListComponent},
+      {path:'parameters/category/create',component:CategoryCreateComponent},
+      {path:'parameters/category/update/:id',component:CategoryUpdateComponent},
+
+
+
       
     //   { path: 'security/form', component: FormListComponent },
 

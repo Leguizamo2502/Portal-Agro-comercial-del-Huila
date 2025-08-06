@@ -1,14 +1,15 @@
-<app-navbar></app-navbar>
 
-<div class="d-flex" style="min-height: 100vh; background-color: #f9f6ef;">
-  <!-- Sidebar vertical -->
-  <app-navbar-vertical></app-navbar-vertical>
+<!-- Contenedor principal dividido en sidebar y contenido -->
+<div class="layout-container">
+  
+  <!-- Sidebar fijo a la izquierda -->
+  <app-navbar-vertical class="sidebar-fixed"></app-navbar-vertical>
 
   <!-- Contenido principal -->
-  <div class="contenido-principal flex-grow-1 p-4">
-    <div class="contenido bg-white p-4 rounded shadow">
-        
+  <div class="contenido-principal">
+    <div class="contenido">
       <router-outlet></router-outlet>
     </div>
   </div>
+
 </div>

@@ -2,10 +2,11 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { CommonModule } from '@angular/common';
+import { NavbarBuenoComponent } from "./shared/components/navbar-bueno/navbar-bueno.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,CommonModule],
+  imports: [RouterOutlet, CommonModule, NavbarBuenoComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

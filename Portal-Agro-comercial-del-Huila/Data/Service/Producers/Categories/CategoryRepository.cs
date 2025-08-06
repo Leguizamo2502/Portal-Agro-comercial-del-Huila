@@ -7,6 +7,7 @@ using Data.Interfaces.Implements.Producers.Categories;
 using Data.Repository;
 using Entity.Domain.Models.Implements.Products;
 using Entity.Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data.Service.Producers.Categories
 {
@@ -14,6 +15,13 @@ namespace Data.Service.Producers.Categories
     {
         public CategoryRepository(ApplicationDbContext context) : base(context)
         {
+        }
+
+        public override async Task<IEnumerable<Category>> GetAllAsync()
+        {
+            return await _dbSet
+                .Include(c => c.SubCategories)
+                .ToListAsync();
         }
     }
 }
