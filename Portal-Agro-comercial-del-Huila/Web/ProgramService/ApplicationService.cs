@@ -61,7 +61,7 @@ namespace Web.ProgramService
             //services
            
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IRolUserRepository, RolUserRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddScoped<ICityRepository, CityRepository>();
             services.AddScoped<ICityService, CityService>();
@@ -85,6 +85,20 @@ namespace Web.ProgramService
 
             services.AddScoped<IRolRepository, RolRepository>();
             services.AddScoped<IRolService, RolService>();
+
+            services.AddScoped<IFormRepository, FormRepository>();
+            services.AddScoped<IFormService, FormService>();
+
+            services.AddScoped<IModuleRepository, ModuleRepository>();
+            services.AddScoped<IModuleService, ModuleService>();
+
+            services.AddScoped<IPermissionRepository, PermissionRepository>();
+            services.AddScoped<IPermissionService, PermissionService>();
+
+            services.AddScoped<IFormModuleRepository, FormModuleRepository>();
+            services.AddScoped<IFormModuleService, FormModuleService>();
+
+           
 
 
 

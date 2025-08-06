@@ -27,7 +27,7 @@ export const routes: Routes = [
       import('./features/home/home.routes').then((m) => m.HOME_ROUTES),
   },
 
-
+  
   { path: 'card', component: CardComponent },
   { path: 'boton', component: ButtonComponent },
   { path: 'navbar', component: NavbarComponent },
