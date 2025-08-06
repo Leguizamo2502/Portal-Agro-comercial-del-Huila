@@ -1,0 +1,17 @@
+/* Estilo general del contenedor */
+.contenido-principal {
+  display: flex;
+  flex-direction: column;
+  margin-top: 80px;
+  width: 100%;
+}
+
+/* Estilo del recuadro blanco */
+.contenido {
+  display: flex;
+  justify-content: center;
+  width: 100%; /* Usa 100% del espacio disponible después del sidebar */
+  max-width: 1000px; /* Límite máximo para evitar que se vea muy estirado */
+  margin: 0 auto; /* Centra el contenido si hay espacio */
+  min-height: 600px; /* Opcional: altura mínima */
+}

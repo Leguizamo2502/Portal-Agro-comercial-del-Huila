@@ -2,7 +2,7 @@
   <div class="navbar-container">
     <!-- Logo -->
     <div class="logo-container">
-      <div class="logo-badge">AGRI</div>
+      <img src="/logos/logo.png" alt="Logo Agro" class="logo-image" />
       <span class="logo-text">Portal Agro-comercial del Huila</span>
     </div>
 
@@ -18,45 +18,29 @@
     </mat-menu>
 
     <!-- Buscador mejorado -->
-<div class="search-container">
-  <mat-form-field appearance="outline" class="search-field">
-    <mat-icon matPrefix class="search-icon">search</mat-icon>
-    <input 
-      matInput 
-      placeholder="Buscar productos, servicios, empresas..." 
-      [(ngModel)]="searchTerm"
-      (keyup)="onKeyUp($event)"
-      (focus)="onSearchFocus()"
-      (blur)="onSearchBlur()" />
-    <button 
-      mat-icon-button 
-      matSuffix 
-      *ngIf="searchTerm" 
-      (click)="clearSearch()"
-      class="clear-button">
-      <mat-icon>close</mat-icon>
-    </button>
-  </mat-form-field>
+    <div class="search-container">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-icon matPrefix class="search-icon">search</mat-icon>
+        <input matInput placeholder="Buscar productos, servicios, empresas..." [(ngModel)]="searchTerm"
+          (keyup)="onKeyUp($event)" (focus)="onSearchFocus()" (blur)="onSearchBlur()" />
+        <button mat-icon-button matSuffix *ngIf="searchTerm" (click)="clearSearch()" class="clear-button">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
 
-  <!-- Sugerencias -->
-  <div class="search-suggestions" *ngIf="showSuggestions && searchSuggestions.length > 0">
-    <div 
-      class="suggestion-item" 
-      *ngFor="let suggestion of searchSuggestions"
-      (click)="selectSuggestion(suggestion)">
-      <mat-icon>search</mat-icon>
-      <span>{{ suggestion }}</span>
+      <!-- Sugerencias -->
+      <div class="search-suggestions" *ngIf="showSuggestions && searchSuggestions.length > 0">
+        <div class="suggestion-item" *ngFor="let suggestion of searchSuggestions"
+          (click)="selectSuggestion(suggestion)">
+          <mat-icon>search</mat-icon>
+          <span>{{ suggestion }}</span>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
     <!-- Navegación -->
     <div class="nav-menu">
-      <button 
-        mat-button 
-        *ngFor="let item of navigationItems"
-        (click)="onNavigationClick(item)"
-        class="nav-item">
+      <button mat-button *ngFor="let item of navigationItems" (click)="onNavigationClick(item)" class="nav-item">
         {{ item.label }}
       </button>
     </div>
@@ -64,13 +48,8 @@
     <!-- Acciones de usuario -->
     <div class="user-actions">
       <!-- Notificaciones con menú mejorado -->
-      <button 
-        mat-icon-button 
-        [matMenuTriggerFor]="notificationsMenu"
-        [matBadge]="unreadNotifications"
-        matBadgeColor="warn"
-        [matBadgeHidden]="unreadNotifications === 0"
-        class="action-button">
+      <button mat-icon-button [matMenuTriggerFor]="notificationsMenu" [matBadge]="unreadNotifications"
+        matBadgeColor="warn" [matBadgeHidden]="unreadNotifications === 0" class="action-button">
         <mat-icon>notifications</mat-icon>
       </button>
       <mat-menu #notificationsMenu="matMenu" class="notifications-menu">
@@ -79,12 +58,9 @@
           <span class="notifications-count">Hoy</span>
         </div>
         <mat-divider></mat-divider>
-        
+
         <div class="notifications-content" *ngIf="notifications.length > 0; else noNotifications">
-          <div 
-            class="notification-item" 
-            *ngFor="let notification of notifications"
-            [class.unread]="!notification.read"
+          <div class="notification-item" *ngFor="let notification of notifications" [class.unread]="!notification.read"
             (click)="markAsRead(notification)">
             <div class="notification-avatar">
               <mat-icon [class]="'status-' + notification.type">{{ notification.icon }}</mat-icon>
@@ -97,14 +73,14 @@
             <div class="notification-dot" *ngIf="!notification.read"></div>
           </div>
         </div>
-        
+
         <ng-template #noNotifications>
           <div class="no-notifications">
             <mat-icon>notifications_none</mat-icon>
             <p>No tienes notificaciones</p>
           </div>
         </ng-template>
-        
+
         <mat-divider></mat-divider>
         <button mat-menu-item class="view-all-button">
           <mat-icon>visibility</mat-icon>
@@ -113,13 +89,8 @@
       </mat-menu>
 
       <!-- Carrito -->
-      <button 
-        mat-icon-button 
-        (click)="onCartClick()"
-        [matBadge]="cartCount"
-        matBadgeColor="warn"
-        [matBadgeHidden]="cartCount === 0"
-        class="action-button">
+      <button mat-icon-button (click)="onCartClick()" [matBadge]="cartCount" matBadgeColor="warn"
+        [matBadgeHidden]="cartCount === 0" class="action-button">
         <mat-icon>shopping_cart</mat-icon>
       </button>
 
@@ -133,7 +104,7 @@
         </div>
       </button>
       <mat-menu #userMenu="matMenu" class="user-dropdown-menu">
-        <div class="user-menu-header">
+        <!-- <div class="user-menu-header">
           <div class="user-menu-avatar">
             <img [src]="user.avatar" [alt]="user.name" *ngIf="user.avatar; else defaultMenuAvatar">
             <ng-template #defaultMenuAvatar>
@@ -146,30 +117,30 @@
             <small>{{ user.phone }}</small>
           </div>
         </div>
-        <mat-divider></mat-divider>
-        
+        <mat-divider></mat-divider> -->
+
         <button mat-menu-item (click)="onUserOptionClick('Mi Cuenta')" class="user-menu-option">
           <mat-icon class="menu-icon">person</mat-icon>
           <span>Mi Cuenta</span>
         </button>
-        
+
         <button mat-menu-item (click)="onUserOptionClick('Pedidos')" class="user-menu-option">
           <mat-icon class="menu-icon">receipt_long</mat-icon>
           <span>Pedidos</span>
         </button>
-        
+
         <button mat-menu-item (click)="onUserOptionClick('Favoritos')" class="user-menu-option">
           <mat-icon class="menu-icon">favorite</mat-icon>
           <span>Favoritos</span>
         </button>
-        
+
         <button mat-menu-item (click)="onUserOptionClick('Soporte')" class="user-menu-option">
           <mat-icon class="menu-icon">help_outline</mat-icon>
           <span>Soporte</span>
         </button>
-        
+
         <mat-divider></mat-divider>
-        
+
         <button mat-menu-item (click)="onUserOptionClick('Cerrar Sesión')" class="logout-option">
           <mat-icon class="menu-icon logout-icon">power_settings_new</mat-icon>
           <span>Cerrar Sesión</span>

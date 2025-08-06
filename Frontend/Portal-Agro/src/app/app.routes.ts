@@ -8,11 +8,11 @@ import { NavbarSinCategoriaComponent } from './shared/components/navbar-sin-cate
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'Auth/login', 
+    redirectTo: 'auth/login', 
     pathMatch: 'full',
   },
   {
-    path: 'Auth',
+    path: 'auth',
     loadChildren: () =>
       import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },
@@ -22,9 +22,15 @@ export const routes: Routes = [
       import('./features/products/products.routes').then((m) => m.PRODUCTS_ROUTES),
   },
   {
-    path: 'Home',
+    path: 'home',
     loadChildren: () =>
       import('./features/home/home.routes').then((m) => m.HOME_ROUTES),
+  },
+
+  {
+    path: 'account',
+    loadChildren: ()=>
+      import('./features/account/account.routes').then((r)=>r.ACCOUNT_ROUTES),
   },
 
   

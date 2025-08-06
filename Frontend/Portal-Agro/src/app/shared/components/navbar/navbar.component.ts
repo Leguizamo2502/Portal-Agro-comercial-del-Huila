@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatDividerModule } from '@angular/material/divider';
+import { Router } from '@angular/router';
 
 interface MenuItem {
   label: string;
@@ -51,12 +52,17 @@ interface Notification {
     MatInputModule,
     MatFormFieldModule,
     MatBadgeModule,
-    MatDividerModule
+    MatDividerModule,
+    
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
+  router = inject(Router);
+
+
+
   searchTerm = '';
   cartCount = 2;
   showSuggestions = false;
@@ -184,8 +190,8 @@ export class NavbarComponent {
 
   onUserOptionClick(option: string) {
     console.log('Opción seleccionada:', option);
-    if (option === 'Cerrar Sesión') {
-      console.log('Cerrando sesión...');
+    if (option === 'Mi Cuenta') {
+      this.router.navigate([''])
     }
   }
 

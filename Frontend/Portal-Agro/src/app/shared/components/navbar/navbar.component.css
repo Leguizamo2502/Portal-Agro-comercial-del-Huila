@@ -28,6 +28,12 @@
   gap: 8px;
 }
 
+.logo-image {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
 .logo-badge {
   background-color: white;
   color: #16a34a;

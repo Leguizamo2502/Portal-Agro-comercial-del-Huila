@@ -1,17 +1,63 @@
-<!-- Sidebar lateral izquierda -->
-<div class="user-sidebar">
-    <div class="user-info-sidebar">
-        <h3 class="user-name">{{ user.name }}</h3>
-        <p class="user-email">{{ user.email }}</p>
+<div class="sidebar shadow p-3 bg-light rounded">
+    <!-- Usuario -->
+    <div class="text-center mb-3">
+        <h6 class="fw-bold text-success">{{ user.name }}</h6>
+        <p class="mb-0 text-muted">{{ user.email }}</p>
     </div>
 
-    <mat-divider></mat-divider>
+    <!-- Menú -->
+    <div class="list-group">
+        <a class="list-group-item list-group-item-action" routerLink="/perfil" routerLinkActive="active">
+            <i class="bi bi-person-fill me-2"></i> Mi Información
+        </a>
 
-    <div class="user-menu-items">
-        <button mat-button *ngFor="let item of userMenuItems" (click)="onUserMenuItemClick(item)"
-            [class.active-menu-item]="item.active" class="sidebar-menu-item">
-            <mat-icon>{{ item.icon }}</mat-icon>
-            <span>{{ item.label }}</span>
-        </button>
+        <a class="list-group-item list-group-item-action" routerLink="/favoritos" routerLinkActive="active">
+            <i class="bi bi-heart-fill me-2"></i> Favoritos
+        </a>
+
+        <a class="list-group-item list-group-item-action" routerLink="/pedidos" routerLinkActive="active">
+            <i class="bi bi-bag-fill me-2"></i> Pedidos
+        </a>
+
+        <a class="list-group-item list-group-item-action" routerLink="/productor" routerLinkActive="active">
+            <i class="bi bi-person-workspace me-2"></i> Productor
+        </a>
+
+        <a class="list-group-item list-group-item-action" routerLink="/soporte" routerLinkActive="active">
+            <i class="bi bi-question-circle-fill me-2"></i> Soporte
+        </a>
+
+        <!-- Seguridad con submenú -->
+        <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+            data-bs-toggle="collapse" href="#submenuSeguridad" role="button" aria-expanded="false"
+            aria-controls="submenuSeguridad">
+            <span><i class="bi bi-shield-lock-fill me-2"></i> Seguridad</span>
+            <i class="bi bi-chevron-down small"></i>
+        </a>
+
+        <div class="collapse ps-3" id="submenuSeguridad">
+            <a class="list-group-item list-group-item-action" (click)="navigateTo('security/user')"
+                [ngClass]="{ 'active': activePath === 'security/user' }">
+                <i class="bi bi-people-fill me-2"></i> Usuarios
+            </a>
+
+            <a class="list-group-item list-group-item-action" (click)="navigateTo('security/permission')"
+                [ngClass]="{ 'active': activePath === 'security/permission' }">
+                <i class="bi bi-key-fill me-2"></i> Permisos
+            </a>
+
+            <a class="list-group-item list-group-item-action" (click)="navigateTo('security/form')"
+                [ngClass]="{ 'active': activePath === 'security/form' }">
+                <i class="bi bi-key-fill me-2"></i> Formularios
+            </a>
+
+            <a class="list-group-item list-group-item-action" (click)="navigateTo('security/module')"
+                [ngClass]="{ 'active': activePath === 'security/module' }">
+                <i class="bi bi-key-fill me-2"></i> Modulos
+            </a>
+
+
+        </div>
     </div>
+
 </div>

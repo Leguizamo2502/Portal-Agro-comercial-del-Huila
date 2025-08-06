@@ -5,7 +5,7 @@ using Utilities.Exceptions;
 namespace Web.Controllers.Base
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     public abstract class BaseController<TDto, TSelect, TService> : ControllerBase
         where TDto : class
         where TService : class
