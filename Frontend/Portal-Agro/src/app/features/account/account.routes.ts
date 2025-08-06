@@ -15,7 +15,7 @@ export const ACCOUNT_ROUTES: Routes=[
     component: AccountComponent,
     children: [
       { path: 'security/form', component: FormListComponent },
-      { path: 'security/form/update:id', component: FomrUpdateComponent },
+      { path: 'security/form/update/:id', component: FomrUpdateComponent },
       { path: 'security/form/create', component: FormCreateComponent },
 
 

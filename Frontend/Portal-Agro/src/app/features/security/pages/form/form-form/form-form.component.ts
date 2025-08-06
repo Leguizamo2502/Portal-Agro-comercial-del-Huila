@@ -21,8 +21,19 @@ export class FormFormComponent implements OnInit{
   @Input({ required: true })
   title!: string;
   
+  private _model?: formSelectModel;
+
   @Input()
-  model?: formSelectModel;
+  set model(value: formSelectModel | undefined) {
+    this._model = value;
+    if (value) {
+      this.form.patchValue(value);
+    }
+  }
+
+  get model() {
+    return this._model;
+  }
   
   @Output()
   posteoForm = new EventEmitter<formRegisterModel>()
