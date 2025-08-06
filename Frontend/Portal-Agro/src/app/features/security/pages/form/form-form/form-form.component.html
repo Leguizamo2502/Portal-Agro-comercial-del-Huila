@@ -1,5 +1,5 @@
 <h2>{{title}}</h2>
-<form (submit)="gurdarCambios()" [formGroup]="form" class="form-container">
+<form (submit)="save()" [formGroup]="form" class="form-container">
     <!-- <h2 class="form-title">Formulario</h2> -->
 
     <div class="form-field">
@@ -35,7 +35,7 @@
             <textarea [formControl]="form.controls.url" matInput
                 placeholder="EScriba la url del Formulario" rows="3"></textarea>
             <mat-error *ngIf="form.controls.description.hasError('maxlength')">
-                La descripción no puede exceder los 255 caracteres
+                La Url no puede exceder los 255 caracteres
             </mat-error>
         </mat-form-field>
     </div>

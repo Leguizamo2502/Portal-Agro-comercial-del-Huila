@@ -63,10 +63,18 @@ namespace Business.Mapping
             //Products
             config.NewConfig<ProductCreateDto, Product>().Ignore(des => des.ProductImages);
             config.NewConfig<ProductImage, ProductImageDto>();
-            config.NewConfig<Product, ProductSelectDto>();
+            config.NewConfig<Product, ProductSelectDto>()
+                .Map(dest=>dest.PersonName,src => $"{src.Farm.Producer.User.Person.FirstName} {src.Farm.Producer.User.Person.LastName}")
+                .Map(dest => dest.Images, src => src.ProductImages.Adapt<List<ProductImageDto>>());
 
             //Category
-            config.NewConfig<Category, CategorySelectDto>();
+            // Updated mapping to handle potential null references
+            config.NewConfig<Category, CategorySelectDto>()
+                .Map(dest => dest.Id, src => src.Id) // si no se mapea automáticamente
+                .Map(dest => dest.Name, src => src.Name)
+                .Map(dest => dest.ParentId, src => src.ParentCategoryId)
+                .Map(dest => dest.ParentName, src => src.ParentCategory != null ? src.ParentCategory.Name : null);
+
             config.NewConfig<CategoryRegisterDto, Category>();
 
 

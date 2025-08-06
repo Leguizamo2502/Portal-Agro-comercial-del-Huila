@@ -1,0 +1,22 @@
+.custom-navbar {
+  background-color: #2e7d32; /* color personalizado */
+  /* color: white; */
+}
+
+.custom-text {
+  color: #ffffff !important;
+}
+
+.custom-text:hover {
+  color: #1cc736 !important;
+}
+.color-title{
+  color: #ffffff !important;
+
+}
+
+
+.logo{
+    height: 5vh;
+    width: auto;
+}

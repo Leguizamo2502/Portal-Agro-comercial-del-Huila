@@ -10,7 +10,9 @@ namespace Entity.DTOs.Products
         public string Unit { get; set; }
         public string Production { get; set; }
         public int Stock { get; set; }
-        public string Status { get; set; } = "Disponible";
+        public bool Status { get; set; }
+
+        //public string Status { get; set; } = "Disponible";
         public int CategoryId { get; set; }
         public List<IFormFile> Images { get; set; } = new();
 

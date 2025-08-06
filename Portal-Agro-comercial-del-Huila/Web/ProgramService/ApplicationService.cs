@@ -71,17 +71,7 @@ namespace Web.ProgramService
             services.AddScoped<IMeRepository, MeRepository>();
             services.AddScoped<IMeService, MeService>();
 
-            services.AddScoped<IFarmRepository, FarmRepository>();
-            services.AddScoped<IFarmService, FarmService>();
-
-            services.AddScoped<IFarmImageService, FarmImageService>();
-            services.AddScoped<IFarmImageRepository, FarmImageRepository>();
-
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
-            services.AddScoped<ICategoryService, CategoryService>();
-
-            services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IProductService, ProductService>();
+            
 
             services.AddScoped<IRolRepository, RolRepository>();
             services.AddScoped<IRolService, RolService>();
@@ -103,15 +93,23 @@ namespace Web.ProgramService
 
 
 
-
-
-
-
-
-
-
-
+            //Producer
             services.AddScoped<IProducerRepository, ProducerRepository>();
+
+            services.AddScoped<IFarmRepository, FarmRepository>();
+            services.AddScoped<IFarmService, FarmService>();
+
+            services.AddScoped<IFarmImageService, FarmImageService>();
+            services.AddScoped<IFarmImageRepository, FarmImageRepository>();
+
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ICategoryService, CategoryService>();
+
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IProductService, ProductService>();
+
+            services.AddScoped<IProductImageRepository, ProductImageRepository>();
+            services.AddScoped<IProductImageService, ProductImageService>();
 
 
             //Data Generica
