@@ -1,14 +1,27 @@
-<div class="card-wrapper">
-  <div class="card-container" *ngFor="let card of cards">
-    <img [src]="getImage(card.imageUrl)" [alt]="card.productName" class="card-img" />
-    <div class="card-body">
-      <h3 class="card-title">{{ card.productName }}</h3>
-      <p class="card-producer">Productor demo</p>
-      <div class="card-location">
-        <i class="material-icons">location_on</i>
-        <span>Colombia</span>
-      </div>
-      <button class="card-button" (click)="verMas(card.productName)">Ver más</button>
-    </div>
-  </div>
+<div class="product-container">
+  <mat-card class="product-card" *ngFor="let product of products">
+    <img
+      mat-card-image
+      [src]="product.images.length > 0 ? product.images[0].imageUrl : 'https://via.placeholder.com/300x200?text=No+Image'"
+      alt="Imagen del producto"
+    />
+
+    <mat-card-content>
+      <h3>{{ product.name }}</h3>
+
+      <p class="info-row">
+        <mat-icon fontIcon="person" color="primary"></mat-icon>
+        {{ product.personName }}
+      </p>
+
+      <p class="info-row">
+        <mat-icon fontIcon="place" color="primary"></mat-icon>
+        {{ product.farmName }}
+      </p>
+
+      <p class="price">
+        ${{ product.price | number: '1.0-0' }}
+      </p>
+    </mat-card-content>
+  </mat-card>
 </div>

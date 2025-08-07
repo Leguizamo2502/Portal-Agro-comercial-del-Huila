@@ -1,23 +1,37 @@
-import { Component } from '@angular/core';
-import { Card } from './card.model';
-import { MOCK_CARDS } from '../mock/mock';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ProductService } from '../../services/product/product.service';
+import { ProductSelectModel } from '../../models/product/product.model';
+import {
+  MatCardModule,
+  MatCardContent,
+
+} from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-card',
-  imports: [CommonModule],
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatCardContent,
+    MatButtonModule,
+    MatIconModule
+  ],
   templateUrl: './card.component.html',
-  styleUrl: './card.component.css'
+  styleUrls: ['./card.component.css']
 })
-export class CardComponent {
-  cards: Card[] = MOCK_CARDS;
-  
-    getImage(url: string): string {
-      const defaultImage = 'https://via.placeholder.com/300x200?text=Imagen+no+disponible';
-      return url?.trim() ? url : defaultImage;
-    }
-  
-    verMas(productName: string): void {
-      alert(`Producto: ${productName}`);
-    }
+export class CardComponent implements OnInit {
+  products: ProductSelectModel[] = [];
+
+  constructor(private productService: ProductService) {}
+
+  ngOnInit(): void {
+    this.productService.getProduct().subscribe({
+      next: (data) => this.products = data,
+      error: (err) => console.error('Error al obtener productos', err)
+    });
+  }
 }
