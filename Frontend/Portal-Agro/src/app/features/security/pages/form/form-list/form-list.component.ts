@@ -4,10 +4,11 @@ import { formSelectModel } from '../../../models/form/form.model';
 import { TableComponent } from '../../../../../shared/components/table/table.component';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-form-list',
-  imports: [TableComponent, CommonModule, RouterLink],
+  imports: [TableComponent, CommonModule, RouterLink,MatButton],
   templateUrl: './form-list.component.html',
   styleUrl: './form-list.component.css',
 })

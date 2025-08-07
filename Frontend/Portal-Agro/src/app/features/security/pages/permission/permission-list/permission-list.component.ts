@@ -4,10 +4,11 @@ import { PermissionSelectModel } from '../../../models/permission/permission.mod
 import { TableComponent } from "../../../../../shared/components/table/table.component";
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-permission-list',
-  imports: [TableComponent,RouterLink,CommonModule],
+  imports: [TableComponent,RouterLink,CommonModule,MatButton],
   templateUrl: './permission-list.component.html',
   styleUrl: './permission-list.component.css',
 })

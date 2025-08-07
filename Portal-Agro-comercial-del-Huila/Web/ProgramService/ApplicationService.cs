@@ -51,6 +51,9 @@ namespace Web.ProgramService
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IToken, Token>();
 
+            services.AddScoped<IPersonRepository, PersonRepository>();
+            services.AddScoped<IPersonService, PersonService>();
+
             //Cloudinary
             services.AddScoped<ICloudinaryService, CloudinaryService>();
 

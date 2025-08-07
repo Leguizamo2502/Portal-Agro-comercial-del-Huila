@@ -1,0 +1,14 @@
+/* src/app/sidenav/sidenav.component.css */
+.sidenav-container {
+  height: 100vh;           /* Ocupa toda la altura de la ventana */
+}
+
+mat-sidenav {
+  width: 240px;            /* Ancho fijo de la barra lateral */
+}
+
+mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 2;              /* Para que quede encima del contenido */
+}

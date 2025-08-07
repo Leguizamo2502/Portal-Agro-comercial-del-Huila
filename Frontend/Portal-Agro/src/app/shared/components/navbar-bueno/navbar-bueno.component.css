@@ -1,5 +1,8 @@
 .custom-navbar {
   background-color: #2e7d32; /* color personalizado */
+  position: sticky;
+  top: 0;
+  z-index: 1020;
   /* color: white; */
 }
 
@@ -20,3 +23,4 @@
     height: 5vh;
     width: auto;
 }
+
