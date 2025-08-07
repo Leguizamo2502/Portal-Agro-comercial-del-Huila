@@ -11,6 +11,9 @@ import { PermissionUpdateComponent } from "../security/pages/permission/permissi
 import { CategoryListComponent } from "../parameters/pages/category/category-list/category-list.component";
 import { CategoryCreateComponent } from "../parameters/pages/category/category-create/category-create.component";
 import { CategoryUpdateComponent } from "../parameters/pages/category/category-update/category-update.component";
+import { InfoComponent } from "./components/info/info.component";
+import { DeparmentListComponent } from "../parameters/pages/department/deparment-list/deparment-list.component";
+import { CityListComponent } from "../parameters/pages/city/city-list/city-list.component";
 
 export const ACCOUNT_ROUTES: Routes=[
     // {path:'info', component: LoginComponent},
@@ -19,6 +22,9 @@ export const ACCOUNT_ROUTES: Routes=[
     {path: '',
     component: AccountComponent,
     children: [
+
+      //account
+      {path:'info',component:InfoComponent},
 
       //security
       { path: 'security/form', component: FormListComponent },
@@ -38,6 +44,12 @@ export const ACCOUNT_ROUTES: Routes=[
       {path:'parameters/category/create',component:CategoryCreateComponent},
       {path:'parameters/category/update/:id',component:CategoryUpdateComponent},
 
+      {path:'parameters/department',component:DeparmentListComponent},
+
+      {path:'parameters/city',component:CityListComponent},
+
+
+
 
 
       
@@ -45,6 +57,6 @@ export const ACCOUNT_ROUTES: Routes=[
 
 
 
-    //   { path: '', redirectTo: 'security/form', pathMatch: 'full' }
+      { path: '', redirectTo: 'info', pathMatch: 'full' }
     ]}
 ];

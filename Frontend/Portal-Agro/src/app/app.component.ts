@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { CommonModule } from '@angular/common';
 import { NavbarBuenoComponent } from "./shared/components/navbar-bueno/navbar-bueno.component";
 

@@ -1,44 +1,60 @@
-/* Contenedor general en columnas */
+/* account.component.css */
+
+/* 1. Grid de dos columnas: sidebar + contenido */
 .layout-container {
-  display: flex;
-  flex-direction: row;
-  min-height: 100vh;
-  padding-top: 80px; /* Altura navbar superior */
-  background-color: #f9f6ef;
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) 3fr;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
 }
 
-/* Sidebar fijo */
+/* 2. Sidebar se vuelve sticky en lugar de fixed */
 .sidebar-fixed {
-  width: 250px; /* Ajusta según el ancho de tu sidebar */
-  position: fixed;
-  top: 80px; /* Altura navbar */
-  bottom: 0;
-  left: 0;
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  position: sticky;
+  top: 80px;             /* deja espacio para tu navbar superior */
+  align-self: start;
   background-color: white;
   overflow-y: auto;
   border-right: 1px solid #ddd;
-  z-index: 1000;
+  padding: 1rem;
 }
 
-/* Contenido principal (resta el ancho del sidebar) */
+/* 3. Contenido principal ocupa la 2ª columna */
 .contenido-principal {
-  margin-left: 250px; /* Debe coincidir con el width del sidebar */
-  width: calc(100% - 250px);
+  grid-column: 2;
+  grid-row: 2;
+  overflow: auto;
   padding: 2rem;
-  display: flex;
-  flex-direction: column;
 }
 
-/* Estilo del recuadro blanco que envuelve el contenido */
+/* 4. Caja blanca interior */
 .contenido {
   background-color: white;
   padding: 2rem;
   border-radius: 0.5rem;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  max-width: 1000px;
-  width: 100%;
-  margin: 0 auto;
   min-height: 400px;
-  max-height: 500px;
+  max-height: 80vh;
   overflow: auto;
+}
+@media (max-width: 768px) {
+  .layout-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
+  }
+  .sidebar-fixed {
+    grid-column: 1;
+    grid-row: 2;  /* justo debajo del header */
+    top: 0;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+  .contenido-principal {
+    grid-column: 1;
+    grid-row: 3;
+    margin: 0;
+    padding: 1rem;
+  }
 }

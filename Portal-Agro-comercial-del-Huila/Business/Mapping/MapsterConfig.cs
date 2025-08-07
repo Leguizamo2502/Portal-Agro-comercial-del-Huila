@@ -9,11 +9,9 @@ using Entity.DTOs.Producer.Farm.Select;
 using Entity.DTOs.Producer.Producer.Create;
 using Entity.DTOs.Products;
 using Entity.DTOs.Security.Create.Rols;
-using Entity.DTOs.Security.Me;
 using Entity.DTOs.Security.Selects.Rols;
 using Entity.DTOs.Security.Selects.RolUserDto;
 using Mapster;
-using System.Linq;
 
 namespace Business.Mapping
 {
@@ -38,6 +36,9 @@ namespace Business.Mapping
 
             // Person → PersonDto
             config.NewConfig<Person, PersonDto>();
+            config.NewConfig<Person, PersonSelectDto>()
+                .Map(desr=>desr.FullName,src=>$"{src.FirstName} {src.LastName}")
+                .Map(dest => dest.Email, src => src.User.Email);
 
             // Map User → UserDto
             config.NewConfig<User, UserDto>()

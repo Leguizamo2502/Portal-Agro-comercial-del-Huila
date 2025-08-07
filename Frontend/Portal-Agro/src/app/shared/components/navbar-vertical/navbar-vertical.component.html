@@ -7,9 +7,13 @@
 
     <!-- Menú -->
     <div class="list-group">
-        <a class="list-group-item list-group-item-action" routerLink="/perfil" routerLinkActive="active">
+        <!-- <a class="list-group-item list-group-item-action" routerLink="/perfil" routerLinkActive="active">
             <i class="bi bi-person-fill me-2"></i> Mi Información
-        </a>
+        </a> -->
+        <a class="list-group-item list-group-item-action" (click)="navigateTo('info')"
+                [ngClass]="{ 'active': activePath === 'info' }">
+                <i class="bi bi-key-fill me-2"></i> Mi Informacion
+            </a>
 
         <a class="list-group-item list-group-item-action" routerLink="/favoritos" routerLinkActive="active">
             <i class="bi bi-heart-fill me-2"></i> Favoritos
@@ -70,6 +74,14 @@
             <a class="list-group-item list-group-item-action" (click)="navigateTo('parameters/category')"
                 [ngClass]="{ 'active': activePath === 'parameters/category' }">
                 <i class="bi bi-tags-fill me-2"></i> Categorías
+            </a>
+            <a class="list-group-item list-group-item-action" (click)="navigateTo('parameters/department')"
+                [ngClass]="{ 'active': activePath === 'parameters/category' }">
+                <i class="bi bi-tags-fill me-2"></i> Departamento
+            </a>
+            <a class="list-group-item list-group-item-action" (click)="navigateTo('parameters/city')"
+                [ngClass]="{ 'active': activePath === 'parameters/category' }">
+                <i class="bi bi-tags-fill me-2"></i> Ciudad
             </a>
         </div>
     </div>
