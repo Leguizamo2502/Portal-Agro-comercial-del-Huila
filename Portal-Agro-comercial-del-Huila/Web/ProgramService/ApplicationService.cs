@@ -62,7 +62,7 @@ namespace Web.ProgramService
             MapsterConfig.Register();
 
             //services
-           
+
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
 
@@ -74,7 +74,7 @@ namespace Web.ProgramService
             services.AddScoped<IMeRepository, MeRepository>();
             services.AddScoped<IMeService, MeService>();
 
-            
+
 
             services.AddScoped<IRolRepository, RolRepository>();
             services.AddScoped<IRolService, RolService>();
@@ -93,9 +93,6 @@ namespace Web.ProgramService
 
             services.AddScoped<IRolUserRepository, RolUserRepository>();
             services.AddScoped<IRolUserService, RolUserService>();
-
-            services.AddScoped<IRolFormPermissionRepository, RolFormPermissionRepository>();
-            services.AddScoped<IRolFormPermissionService, RolFormPermissionService>();
 
 
 

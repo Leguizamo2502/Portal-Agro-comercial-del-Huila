@@ -16,6 +16,11 @@ import { ModuleCreateComponent } from "../security/pages/module/module-create/mo
 import { InfoComponent } from "./components/info/info.component";
 import { DeparmentListComponent } from "../parameters/pages/department/deparment-list/deparment-list.component";
 import { CityListComponent } from "../parameters/pages/city/city-list/city-list.component";
+import { DepartmentCreateComponent } from "../parameters/pages/department/deparment-create/deparment-create.component";
+import { DepartmentUpdateComponent } from "../parameters/pages/department/deparment-update/department-updte.component";
+import { CityCreateComponent } from "../parameters/pages/city/city-create/city-create.component";
+import { CityUpdateComponent } from "../parameters/pages/city/city-update/city-update.component";
+
 
 export const ACCOUNT_ROUTES: Routes=[
     // {path:'info', component: LoginComponent},
@@ -49,10 +54,16 @@ export const ACCOUNT_ROUTES: Routes=[
       {path:'parameters/category/create',component:CategoryCreateComponent},
       {path:'parameters/category/update/:id',component:CategoryUpdateComponent},
 
-      {path:'parameters/department',component:DeparmentListComponent},
 
-      {path:'parameters/city',component:CityListComponent},
-
+    //Departament
+    {path:'parameters/department',component:DeparmentListComponent},
+    { path:'parameters/department/create', component: DepartmentCreateComponent },
+    {path:'parameters/department/update/:id',component:DepartmentUpdateComponent},
+    
+    //City
+    {path:'parameters/city',component:CityListComponent},
+     { path:'parameters/city/create', component: CityCreateComponent },
+     {path:'parameters/city/update/:id',component:CityUpdateComponent},
 
 
 

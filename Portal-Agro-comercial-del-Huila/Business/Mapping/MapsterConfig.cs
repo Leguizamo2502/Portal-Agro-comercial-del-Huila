@@ -1,8 +1,10 @@
 ﻿using Entity.Domain.Models.Implements.Auth;
+using Entity.Domain.Models.Implements.Location;
 using Entity.Domain.Models.Implements.Producers;
 using Entity.Domain.Models.Implements.Products;
 using Entity.Domain.Models.Implements.Security;
 using Entity.DTOs.Auth;
+using Entity.DTOs.Location.Select;
 using Entity.DTOs.Producer.Categories;
 using Entity.DTOs.Producer.Farm.Create;
 using Entity.DTOs.Producer.Farm.Select;
@@ -87,6 +89,10 @@ namespace Business.Mapping
                 .Map(dest => dest.UserName, src => src.User.Person.FirstName)
                 .Map(dest => dest.RolName, src => src.Rol.Name);
 
+
+            //LOcation
+            //config.NewConfig<City, CitySelectDto>()
+            //    .Map(dest => dest.DepartmentName, src => src.Department.Name);
 
 
 

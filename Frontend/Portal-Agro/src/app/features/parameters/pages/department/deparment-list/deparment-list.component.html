@@ -1,1 +1,7 @@
-<p>deparment-list works!</p>
+<button mat-flat-button routerLink="create">Crear Ciudad</button>
+<app-table
+  [columns]="columns"
+  [data]="departments"
+  (edit)="onEdit($event)"
+  (delete)="onDelete($event)">
+</app-table>
