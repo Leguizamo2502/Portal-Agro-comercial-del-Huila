@@ -7,7 +7,7 @@ import { CityService } from '../../../services/city/city.service';
 import { CitySelectModel } from '../../../models/city/city.model';
 
 @Component({
-  selector: 'app-form-list',
+  selector: 'app-city-list',
   imports: [TableComponent, CommonModule, RouterLink,MatButton],
   templateUrl: './city-list.component.html',
   styleUrl: './city-list.component.css',
@@ -29,7 +29,7 @@ export class CityListComponent implements OnInit {
 
   onEdit(item: any) {
     const id = item.id;
-    this.router.navigate(['/account/security/city/update', id]);
+    this.router.navigate(['/account/parameters/city/update', id]);
 
   }
 
@@ -42,7 +42,7 @@ export class CityListComponent implements OnInit {
   loadForm() {
     this.cityService.getAll().subscribe((data) => {
       this.citys = data;
-       console.log(data);
+      // console.log(data);
     });
   }
 }

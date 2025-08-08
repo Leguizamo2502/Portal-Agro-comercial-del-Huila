@@ -7,7 +7,7 @@ import { MatButton } from '@angular/material/button';
 import { DepartmentSelectModel } from '../../../models/department/department.model';
 
 @Component({
-  selector: 'app-form-list',
+  selector: 'app-deparment-list',
   imports: [TableComponent, CommonModule, RouterLink,MatButton],
   templateUrl: './deparment-list.component.html',
   styleUrl: './deparment-list.component.css',
@@ -28,7 +28,7 @@ export class DeparmentListComponent implements OnInit {
 
   onEdit(item: any) {
     const id = item.id;
-    this.router.navigate(['/account/security/department/update', id]);
+    this.router.navigate(['/account/parameters/department/update', id]);
 
   }
 

@@ -7,7 +7,7 @@ import { DepartmentFormComponent } from '../deparment-form/deparment-form.compon
 
 
 @Component({
-  selector: 'app-permission-create',
+  selector: 'app-deparment-create',
   imports: [DepartmentFormComponent],
   templateUrl: './deparment-create.component.html',
   styleUrl: './deparment-create.component.css'

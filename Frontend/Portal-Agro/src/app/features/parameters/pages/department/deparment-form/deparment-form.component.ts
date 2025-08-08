@@ -9,7 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { DepartmentRegisterModel, DepartmentSelectModel } from '../../../models/department/department.model';
 
 @Component({
-  selector: 'app-permission-form',
+  selector: 'app-deparment-form',
   imports: [MatFormFieldModule, ReactiveFormsModule, MatInputModule, MatButtonModule, RouterLink, MatIconModule, CommonModule],
   templateUrl: './deparment-form.component.html',
   styleUrl: './deparment-form.component.css'

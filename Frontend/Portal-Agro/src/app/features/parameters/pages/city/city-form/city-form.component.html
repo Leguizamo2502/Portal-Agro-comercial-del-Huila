@@ -18,22 +18,25 @@
         </mat-form-field>
     </div>
 
-    <div class="form-field">
-        <mat-form-field appearance="outline">
-            <mat-label>Departamento</mat-label>
-            <input [formControl]="form.controls.nameDpto" matInput placeholder="Ingrese el nombre del Departamento" required>
-            <mat-error *ngIf="form.controls.name.hasError('required')">
-                El nombre es obligatorio
-            </mat-error>
-        </mat-form-field>
-    </div>
-     
+<div class="form-field">
+  <mat-form-field appearance="outline">
+    <mat-label>Departamento</mat-label>
+    <mat-select formControlName="departmentId" required>
+      <mat-option *ngFor="let dpto of departments" [value]="dpto.id">
+        {{ dpto.name }}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="form.controls.departmentId.hasError('required')">
+      El departamento es obligatorio
+    </mat-error>
+  </mat-form-field>
+</div>
 
     <div class="form-actions">
         <button type="submit" mat-flat-button color="primary" [disabled]="form.invalid">
             <mat-icon>save</mat-icon> Guardar
         </button>
-        <a mat-stroked-button color="warn" routerLink="/account/security/permission">
+        <a mat-stroked-button color="warn" routerLink="/account/parameters/city">
             <mat-icon>cancel</mat-icon> Cancelar
         </a>
     </div>

@@ -1,1 +1,6 @@
-<app-permission-form title="Actualizar Ciudad" [model]="model" (posteoForm)="save($event)"></app-permission-form>
+<app-city-form 
+  title="Actualizar Ciudad" 
+  [model]="model" 
+  [departments]="departments"
+  (posteoForm)="save($event)">
+</app-city-form>

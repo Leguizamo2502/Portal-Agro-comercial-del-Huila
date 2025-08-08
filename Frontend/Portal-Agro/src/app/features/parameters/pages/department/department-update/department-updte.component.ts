@@ -7,7 +7,7 @@ import { DepartmentService } from '../../../services/department/department.servi
 
 
 @Component({
-  selector: 'app-permission-update',
+  selector: 'app-deparment-update',
   imports: [DepartmentFormComponent],
   templateUrl: './department-updte.component.html',
   styleUrl: './department-updte.component.css'

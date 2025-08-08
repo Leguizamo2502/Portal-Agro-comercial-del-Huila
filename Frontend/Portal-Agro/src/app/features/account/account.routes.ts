@@ -17,9 +17,9 @@ import { InfoComponent } from "./components/info/info.component";
 import { DeparmentListComponent } from "../parameters/pages/department/deparment-list/deparment-list.component";
 import { CityListComponent } from "../parameters/pages/city/city-list/city-list.component";
 import { DepartmentCreateComponent } from "../parameters/pages/department/deparment-create/deparment-create.component";
-import { DepartmentUpdateComponent } from "../parameters/pages/department/deparment-update/department-updte.component";
 import { CityCreateComponent } from "../parameters/pages/city/city-create/city-create.component";
 import { CityUpdateComponent } from "../parameters/pages/city/city-update/city-update.component";
+import { DepartmentUpdateComponent } from "../parameters/pages/department/department-update/department-updte.component";
 
 
 export const ACCOUNT_ROUTES: Routes=[
@@ -62,8 +62,8 @@ export const ACCOUNT_ROUTES: Routes=[
     
     //City
     {path:'parameters/city',component:CityListComponent},
-     { path:'parameters/city/create', component: CityCreateComponent },
-     {path:'parameters/city/update/:id',component:CityUpdateComponent},
+    { path:'parameters/city/create', component: CityCreateComponent },
+    {path:'parameters/city/update/:id',component:CityUpdateComponent},
 
 
 

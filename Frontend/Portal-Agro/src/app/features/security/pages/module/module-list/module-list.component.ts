@@ -6,7 +6,7 @@ import { ModuleService } from '../../../services/module/module.service';
 import { ModuleSelectModel } from '../../../models/module/module.model';
 
 @Component({
-  selector: 'app-form-list',
+  selector: 'app-module-list',
   imports: [TableComponent, CommonModule, RouterLink],
   templateUrl: './module-list.component.html',
   styleUrl: './module-list.component.css',
