@@ -1,19 +1,15 @@
 import { Injectable } from '@angular/core';
 import { GenericService } from '../generic/generic.service';
-import {
-  ModuleRegisterModel,
-  ModuleSelectModel,
-} from '../../models/module/module.model';
+import { ModuleSelectModel, ModuleRegisterModel } from '../../models/module/module.model';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class ModuleService extends GenericService<
-  ModuleSelectModel,
-  ModuleRegisterModel
-> {
-  constructor(http: HttpClient) {
+export class ModuleService extends GenericService<ModuleSelectModel, ModuleRegisterModel> {
+
+   constructor(http: HttpClient) {
     super(http, 'module');
+    
   }
 }

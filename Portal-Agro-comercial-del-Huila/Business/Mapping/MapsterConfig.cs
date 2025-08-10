@@ -1,9 +1,11 @@
 ﻿using Entity.Domain.Models.Implements.Auth;
+using Entity.Domain.Models.Implements.Location;
 using Entity.Domain.Models.Implements.Producers;
 using Entity.Domain.Models.Implements.Products;
 using Entity.Domain.Models.Implements.Security;
 using Entity.DTOs.Auth;
 using Entity.DTOs.Auth.User;
+using Entity.DTOs.Location.Select;
 using Entity.DTOs.Producer.Categories;
 using Entity.DTOs.Producer.Farm.Create;
 using Entity.DTOs.Producer.Farm.Select;
@@ -11,7 +13,7 @@ using Entity.DTOs.Producer.Producer.Create;
 using Entity.DTOs.Products;
 using Entity.DTOs.Security.Create.Rols;
 using Entity.DTOs.Security.Selects.Rols;
-using Entity.DTOs.Security.Selects.RolUserDto;
+using Entity.DTOs.Security.Selects.RolUser;
 using Mapster;
 
 namespace Business.Mapping
@@ -95,6 +97,10 @@ namespace Business.Mapping
                 .Map(dest => dest.UserName, src => src.User.Person.FirstName)
                 .Map(dest => dest.RolName, src => src.Rol.Name);
 
+
+            //LOcation
+            //config.NewConfig<City, CitySelectDto>()
+            //    .Map(dest => dest.DepartmentName, src => src.Department.Name);
 
 
 

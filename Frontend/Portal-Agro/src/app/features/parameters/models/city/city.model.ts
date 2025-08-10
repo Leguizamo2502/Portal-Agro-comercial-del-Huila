@@ -1,12 +1,12 @@
 export interface CitySelectModel{
     id:number;
     name:string;
-    DeparmentId:number;
+    DepartmentId:number;
     DepartmentName:string;
 }
 
 export interface CityRegisterModel{
     id:number;
     name:string;
-    DeparmentId:number;
+    DepartmentId:number;
 }
