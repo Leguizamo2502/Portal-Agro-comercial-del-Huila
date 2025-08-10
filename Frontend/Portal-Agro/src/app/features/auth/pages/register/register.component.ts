@@ -1,20 +1,13 @@
 import {
   FormBuilder,
   FormGroup,
-
-
-
   ReactiveFormsModule,
-
-
-
   Validators,
 } from '@angular/forms';
 import { Component, inject, OnInit } from '@angular/core';
-import { RegisterUserModel } from '../../Models/registeruser.model';
+import { RegisterUserModel } from '../../../../Core/Models/registeruser.model';
 import Swal from 'sweetalert2';
-import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { Router, RouterLink } from '@angular/router';
 import { LocationService } from '../../../../shared/services/location/location.service';
 import {
   CityModel,
@@ -30,10 +23,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { AuthService } from '../../../../Core/services/auth/auth.service';
 
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule,
+  imports: [
+    RouterLink,
+    ReactiveFormsModule,
 
     CommonModule,
     // Imports de Angular Material - NECESARIOS PARA EL FUNCIONAMIENTO
@@ -194,7 +190,7 @@ export class RegisterComponent implements OnInit {
             title: 'Usuario Creado!',
             text: 'Usuario Creado Exitosamente!',
           });
-          this._router.navigate(['/Auth/login'])
+          this._router.navigate(['/Auth/login']);
         } else {
           Swal.fire({
             icon: 'error',

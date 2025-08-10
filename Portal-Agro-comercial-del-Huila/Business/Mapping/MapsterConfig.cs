@@ -3,6 +3,7 @@ using Entity.Domain.Models.Implements.Producers;
 using Entity.Domain.Models.Implements.Products;
 using Entity.Domain.Models.Implements.Security;
 using Entity.DTOs.Auth;
+using Entity.DTOs.Auth.User;
 using Entity.DTOs.Producer.Categories;
 using Entity.DTOs.Producer.Farm.Create;
 using Entity.DTOs.Producer.Farm.Select;
@@ -44,6 +45,13 @@ namespace Business.Mapping
             config.NewConfig<User, UserDto>()
                 .Map(dest => dest.Person, src => src.Person)
                 .Map(dest => dest.Roles, src => src.RolUsers.Select(r => r.Rol.Name).ToList());
+
+            config.NewConfig<User, UserSelectDto>()
+                .Map(dest => dest.FullName, src => $"{src.Person.FirstName} {src.Person.LastName}")
+                .Map(dest => dest.PhoneNumber, src => src.Person.PhoneNumber)
+                .Map(dest => dest.Address, src => src.Person.Address)
+                .Map(dest => dest.Identification, src => src.Person.Identification)
+                .Map(dest => dest.CityId, src => src.Person.CityId);
 
 
             //FarmWith PRoducer a producer y famr

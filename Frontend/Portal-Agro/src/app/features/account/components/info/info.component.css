@@ -19,13 +19,16 @@
   display: flex;
   align-items: center;
   margin-bottom: 16px;
-  font-size: 16px;
+  font-size: 1rem;
 }
 
 .icon {
   background-color: #f1f3f4;
   color: #5d4037;
   padding: 8px;
+  width:5.8vh;
+  height:auto;
+  max-width: 55px;
   border-radius: 8px;
   margin-right: 12px;
 }

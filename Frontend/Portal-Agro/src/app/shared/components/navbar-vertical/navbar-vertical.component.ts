@@ -1,24 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../../Core/services/auth/auth.service';
+import { UserSelectModel } from '../../../Core/Models/user.model';
 
-interface UserMenuItem {
-  label: string;
-  icon: string;
-  active: boolean;
-  children?: UserMenuItem[];
-  expanded?: boolean; // solo si tiene hijos
-}
-
-interface User {
-  name: string;
-  email: string;
-  phone: string;
-  avatar?: string;
-}
 
 @Component({
   selector: 'app-navbar-vertical',
@@ -27,17 +15,24 @@ interface User {
   templateUrl: './navbar-vertical.component.html',
   styleUrls: ['./navbar-vertical.component.css'],
 })
-export class NavbarVerticalComponent {
+export class NavbarVerticalComponent  implements OnInit{
+  
+  authService = inject(AuthService);
   router = inject(Router);
   route = inject(ActivatedRoute);
   activePath = '';
+  user?:UserSelectModel
+  
+  ngOnInit(): void {
+    this.loadUser();
+  }
 
-
-  user: User = {
-    name: 'Vanessa Ortiz',
-    email: 'vanessaortiz@gmail.com',
-    phone: '310 000 0000',
-  };
+  loadUser(){
+    this.authService.GetDataBasic().subscribe((data)=>{
+      this.user= data;
+    })
+  }
+  
 
   navigateTo(path: string) {
     this.router.navigate([path], { relativeTo: this.route });

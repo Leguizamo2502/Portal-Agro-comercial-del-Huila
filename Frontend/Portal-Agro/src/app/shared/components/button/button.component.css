@@ -1,0 +1,38 @@
+.custom-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  color: white;
+}
+
+.custom-btn.btn-primary {
+  background-color: #28a745; /* Verde */
+}
+
+.custom-btn.btn-primary:hover {
+  background-color: #218838;
+}
+
+.custom-btn.btn-danger {
+  background-color: #dc3545; /* Rojo */
+}
+
+.custom-btn.btn-danger:hover {
+  background-color: #c82333;
+}
+
+.custom-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.icon{
+    margin-right: 6px;
+}

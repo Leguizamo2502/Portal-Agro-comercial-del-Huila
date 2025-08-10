@@ -1,0 +1,28 @@
+.titleForm {
+  color: #2e7d32; /* Verde del primer formulario */
+  font-size: 2rem;
+  text-align: center;
+}
+
+.form-wrapper-transparent {
+  background-color: transparent; /* Contenedor transparente */
+  padding: 2rem;
+  border-radius: 1rem;
+  max-width: 600px;
+  margin: auto;
+}
+
+.custom-mat-field .mat-mdc-text-field-wrapper {
+  background-color: #f2f5f2; /* Fondo claro como en el login */
+  border-radius: 4px;
+}
+
+.btn-custom {
+  background-color: #1cc736 !important; /* Verde de login */
+  color: white !important;
+  height: 3rem;
+}
+
+.btn-custom:hover {
+  background-color: #17a82c !important;
+}

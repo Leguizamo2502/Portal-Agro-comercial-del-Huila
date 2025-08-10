@@ -125,16 +125,31 @@ namespace Web.Controllers.Implements.Auth
 
 
 
-        //[HttpGet]
-        //[Route("ValidarToken")]
-        //public IActionResult ValidarToken([FromQuery] string token)
+        [Authorize]
+        [HttpGet("DataBasic")]
+        public async Task<IActionResult> GetDataBasic()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrWhiteSpace(userIdClaim)
+                || !int.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized("Token inválido o Claim 'NameIdentifier' ausente.");
+            }
 
-        //{
-
-        //    bool respuesta = _token.validarToken(token);
-        //    return StatusCode(StatusCodes.Status200OK, new { isSuccess = respuesta });
-
-        //}
+            try
+            {
+                var currentUserDto = await _authService.GetDataBasic(userId);
+                return Ok(currentUserDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "GetDataBasic falló para UserId={UserId}", userId);
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    "Ocurrió un error interno al procesar la solicitud."
+                );
+            }
+        }
 
         [HttpPost("recuperar/enviar-codigo")]
         [ProducesResponseType(typeof(string), 200)]

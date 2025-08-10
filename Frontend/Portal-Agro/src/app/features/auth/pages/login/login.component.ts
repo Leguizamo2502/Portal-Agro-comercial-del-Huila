@@ -2,15 +2,15 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
-import { RegisterUserModel } from '../../Models/registeruser.model';
-import { LoginModel } from '../../Models/login.model';
+import { RegisterUserModel } from '../../../../Core/Models/registeruser.model';
+import { LoginModel } from '../../../../Core/Models/login.model';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../../../Core/services/auth/auth.service';
 
 @Component({
   selector: 'app-login',

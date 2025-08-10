@@ -45,31 +45,7 @@ namespace Web.Controllers.Implements.Auth
         }
 
 
-        [Authorize]
-        [HttpGet("DataBasic")]
-        public async Task<IActionResult> GetDataBasic()
-        {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrWhiteSpace(userIdClaim)
-                || !int.TryParse(userIdClaim, out var userId))
-            {
-                return Unauthorized("Token inválido o Claim 'NameIdentifier' ausente.");
-            }
-
-            try
-            {
-                var currentUserDto = await _service.GetDataBasic(userId);
-                return Ok(currentUserDto);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "GetDataBasic falló para UserId={UserId}", userId);
-                return StatusCode(
-                    StatusCodes.Status500InternalServerError,
-                    "Ocurrió un error interno al procesar la solicitud."
-                );
-            }
-        }
+        
 
 
     }

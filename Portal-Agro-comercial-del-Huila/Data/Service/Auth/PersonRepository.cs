@@ -17,11 +17,6 @@ namespace Data.Service.Auth
         {
         }
 
-        public async Task<Person?> GetDataBasic(int personId)
-        {
-            return await _dbSet
-                .Include(p => p.User)
-                .FirstOrDefaultAsync(p => p.Id == personId);
-        }
+    
     }
 }
