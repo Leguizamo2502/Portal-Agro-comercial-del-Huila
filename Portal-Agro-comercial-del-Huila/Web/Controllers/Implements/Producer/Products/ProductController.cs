@@ -10,9 +10,31 @@ namespace Web.Controllers.Implements.Producer.Products
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
-        public ProductController(IProductService productService)
+        private readonly ILogger<ProductController> _logger;
+        private readonly IProductImageService _productImageService;
+        public ProductController(IProductService productService, ILogger<ProductController> logger, IProductImageService productImageService)
         {
             _productService = productService;
+            _logger = logger;
+            _productImageService = productImageService;
+        }
+
+        [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public virtual async Task<IActionResult> Get()
+        {
+            try
+            {
+                var result = await _productService.GetAllAsync();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error obteniendo datos");
+                return StatusCode(500, new { message = "Error interno del servidor." });
+            }
+
         }
 
 

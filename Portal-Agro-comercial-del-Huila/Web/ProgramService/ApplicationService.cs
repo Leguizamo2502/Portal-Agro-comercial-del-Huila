@@ -51,6 +51,9 @@ namespace Web.ProgramService
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IToken, Token>();
 
+            services.AddScoped<IPersonRepository, PersonRepository>();
+            services.AddScoped<IPersonService, PersonService>();
+
             //Cloudinary
             services.AddScoped<ICloudinaryService, CloudinaryService>();
 
@@ -59,7 +62,7 @@ namespace Web.ProgramService
             MapsterConfig.Register();
 
             //services
-           
+
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
 
@@ -71,17 +74,7 @@ namespace Web.ProgramService
             services.AddScoped<IMeRepository, MeRepository>();
             services.AddScoped<IMeService, MeService>();
 
-            services.AddScoped<IFarmRepository, FarmRepository>();
-            services.AddScoped<IFarmService, FarmService>();
 
-            services.AddScoped<IFarmImageService, FarmImageService>();
-            services.AddScoped<IFarmImageRepository, FarmImageRepository>();
-
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
-            services.AddScoped<ICategoryService, CategoryService>();
-
-            services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IProductService, ProductService>();
 
             services.AddScoped<IRolRepository, RolRepository>();
             services.AddScoped<IRolService, RolService>();
@@ -103,15 +96,23 @@ namespace Web.ProgramService
 
 
 
-
-
-
-
-
-
-
-
+            //Producer
             services.AddScoped<IProducerRepository, ProducerRepository>();
+
+            services.AddScoped<IFarmRepository, FarmRepository>();
+            services.AddScoped<IFarmService, FarmService>();
+
+            services.AddScoped<IFarmImageService, FarmImageService>();
+            services.AddScoped<IFarmImageRepository, FarmImageRepository>();
+
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<ICategoryService, CategoryService>();
+
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IProductService, ProductService>();
+
+            services.AddScoped<IProductImageRepository, ProductImageRepository>();
+            services.AddScoped<IProductImageService, ProductImageService>();
 
 
             //Data Generica

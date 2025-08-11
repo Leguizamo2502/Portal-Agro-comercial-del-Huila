@@ -41,10 +41,19 @@ namespace Business.Services.Producers.Products
                 throw new BusinessException("No se puso crear el producto, verefica los datos",ex);
             }
 
+        }
 
-
-
-
+        public override async Task<IEnumerable<ProductSelectDto>> GetAllAsync()
+        {
+            try
+            {
+                var entities = await _productRepository.GetAllAsync();
+                return _mapper.Map<IEnumerable<ProductSelectDto>>(entities);
+            }
+            catch (Exception ex)
+            {
+                throw new BusinessException("Error al obtener todos los registros de productos.", ex);
+            }
         }
 
     }

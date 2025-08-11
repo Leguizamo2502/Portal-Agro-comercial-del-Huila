@@ -74,7 +74,7 @@ export class LoginComponent {
     this._servicio.Login(objeto).subscribe({
       next: (data) => {
         if (data != null) {
-          this._router.navigate(["/Home/inicio"])
+          this._router.navigate(["/home/inicio"])
           Swal.fire({
             icon: "success",
             title: "Exito",

@@ -1,0 +1,42 @@
+<h2>{{title}}</h2>
+<form (submit)="save()" [formGroup]="form" class="form-container">
+    <!-- <h2 class="form-title">permiso</h2> -->
+
+    <div class="form-field">
+        <mat-form-field appearance="outline">
+            <mat-label>Nombre</mat-label>
+            <input [formControl]="form.controls.name" matInput placeholder="Ingrese el nombre del permiso" required>
+            <mat-error *ngIf="form.controls.name.hasError('required')">
+                El nombre es obligatorio
+            </mat-error>
+            <mat-error *ngIf="form.controls.name.hasError('minlength')">
+                El nombre debe tener al menos 3 caracteres
+            </mat-error>
+            <mat-error *ngIf="form.controls.name.hasError('maxlength')">
+                El nombre no puede exceder los 50 caracteres
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <div class="form-field">
+        <mat-form-field appearance="outline">
+            <mat-label>Descripción</mat-label>
+            <textarea [formControl]="form.controls.description" matInput
+                placeholder="Describa el propósito del permiso" rows="3"></textarea>
+            <mat-error *ngIf="form.controls.description.hasError('maxlength')">
+                La descripción no puede exceder los 255 caracteres
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+     
+
+    <div class="form-actions">
+        <button type="submit" mat-flat-button color="primary" [disabled]="form.invalid">
+            <mat-icon>save</mat-icon> Guardar
+        </button>
+        <a mat-stroked-button color="warn" routerLink="/account/security/permission">
+            <mat-icon>cancel</mat-icon> Cancelar
+        </a>
+    </div>
+</form>

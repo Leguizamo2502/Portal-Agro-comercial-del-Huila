@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-form-form',
-  imports: [[MatFormFieldModule, ReactiveFormsModule, MatInputModule, MatButtonModule, RouterLink, MatIconModule, CommonModule]],
+  imports: [MatFormFieldModule, ReactiveFormsModule, MatInputModule, MatButtonModule, RouterLink, MatIconModule, CommonModule],
   templateUrl: './form-form.component.html',
   styleUrl: './form-form.component.css'
 })
@@ -51,7 +51,7 @@ export class FormFormComponent implements OnInit{
       this.form.patchValue(this.model)
     }
   }
-  gurdarCambios() {
+  save() {
     let form = this.form.value as formRegisterModel;
     this.posteoForm.emit(form)
   }

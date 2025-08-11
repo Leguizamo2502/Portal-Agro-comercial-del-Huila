@@ -1,6 +1,4 @@
-﻿using Entity.Domain.Models.Base;
-using Entity.Domain.Models.Implements.Auth;
-using Entity.Domain.Models.Implements.Security;
+﻿using Entity.DTOs.BaseDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +7,9 @@ using System.Threading.Tasks;
 
 namespace Entity.DTOs.Security.Create.RolUser
 {
-    public class RolUserRegisterDto : BaseModel
+    public class RolUserRegisterDto : BaseDto
     {
-        
-        public int UserId { get; set; }
-        public User User { get; set; }
-
         public int RolId { get; set; }
-        public Rol Rol { get; set; }
+        public int UserId { get; set; }
     }
 }

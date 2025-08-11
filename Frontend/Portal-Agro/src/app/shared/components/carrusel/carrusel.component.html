@@ -1,0 +1,21 @@
+<div class="carousel-wrapper">
+  <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
+    <div class="carousel-inner">
+      <div *ngFor="let slide of slides; let i = index" [class.active]="i === 0" class="carousel-item">
+        <img [src]="slide.src" class="d-block w-100 carousel-img" [alt]="slide.title">
+        <div class="carousel-caption d-flex flex-column justify-content-center align-items-center">
+          <h2 class="fw-bold">{{ slide.title }}</h2>
+          <a href="#" class="btn btn-success mt-3">Explorar Productos</a>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Siguiente</span>
+    </button>
+  </div>
+</div>

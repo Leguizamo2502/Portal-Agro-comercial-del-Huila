@@ -9,7 +9,6 @@ namespace Entity.Domain.Models.Implements.Location
     {
         
         public string Name { get; set; }
-
         public int DepartmentId { get; set; }
         public Department Department { get; set; }
 

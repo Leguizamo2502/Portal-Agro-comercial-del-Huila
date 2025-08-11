@@ -1,17 +1,60 @@
-/* Estilo general del contenedor */
-.contenido-principal {
-  display: flex;
-  flex-direction: column;
-  margin-top: 80px;
-  width: 100%;
+/* account.component.css */
+
+/* 1. Grid de dos columnas: sidebar + contenido */
+.layout-container {
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) 3fr;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
 }
 
-/* Estilo del recuadro blanco */
+/* 2. Sidebar se vuelve sticky en lugar de fixed */
+.sidebar-fixed {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  position: sticky;
+  top: 80px;             /* deja espacio para tu navbar superior */
+  align-self: start;
+  background-color: white;
+  overflow-y: auto;
+  border-right: 1px solid #ddd;
+  padding: 1rem;
+}
+
+/* 3. Contenido principal ocupa la 2ª columna */
+.contenido-principal {
+  grid-column: 2;
+  grid-row: 2;
+  overflow: auto;
+  padding: 2rem;
+}
+
+/* 4. Caja blanca interior */
 .contenido {
-  display: flex;
-  justify-content: center;
-  width: 100%; /* Usa 100% del espacio disponible después del sidebar */
-  max-width: 1000px; /* Límite máximo para evitar que se vea muy estirado */
-  margin: 0 auto; /* Centra el contenido si hay espacio */
-  min-height: 600px; /* Opcional: altura mínima */
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  min-height: 400px;
+  max-height: 80vh;
+  overflow: auto;
+}
+@media (max-width: 768px) {
+  .layout-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
+  }
+  .sidebar-fixed {
+    grid-column: 1;
+    grid-row: 2;  /* justo debajo del header */
+    top: 0;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+  .contenido-principal {
+    grid-column: 1;
+    grid-row: 3;
+    margin: 0;
+    padding: 1rem;
+  }
 }

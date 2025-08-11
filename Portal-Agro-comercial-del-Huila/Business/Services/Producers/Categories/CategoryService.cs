@@ -10,6 +10,7 @@ using Data.Interfaces.IRepository;
 using Entity.Domain.Models.Implements.Products;
 using Entity.DTOs.Producer.Categories;
 using MapsterMapper;
+using Utilities.Exceptions;
 
 namespace Business.Services.Producers.Categories
 {
@@ -19,6 +20,19 @@ namespace Business.Services.Producers.Categories
         public CategoryService(IDataGeneric<Category> data, IMapper mapper, ICategoryRepository categoryRepository) : base(data, mapper)
         {
             _categoryRepository = categoryRepository;
+        }
+
+        public override async Task<IEnumerable<CategorySelectDto>> GetAllAsync()
+        {
+            try
+            {
+                var entities = await _categoryRepository.GetAllAsync();
+                return _mapper.Map<IEnumerable<CategorySelectDto>>(entities);
+            }
+            catch (Exception ex)
+            {
+                throw new BusinessException("Error al obtener todos los registros.", ex);
+            }
         }
     }
 }
