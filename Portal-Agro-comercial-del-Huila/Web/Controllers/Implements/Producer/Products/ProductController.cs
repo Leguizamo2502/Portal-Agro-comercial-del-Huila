@@ -37,6 +37,24 @@ namespace Web.Controllers.Implements.Producer.Products
 
         }
 
+        [HttpGet("{producerId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public virtual async Task<IActionResult> GetByProducer(int producerId)
+        {
+            try
+            {
+                var result = await _productService.GetByProducer(producerId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error obteniendo datos");
+                return StatusCode(500, new { message = "Error interno del servidor." });
+            }
+
+        }
+
 
         [HttpPost("register/product")]
         public async Task<IActionResult> Register([FromForm] ProductCreateDto dto)

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Data.Interfaces.Implements.Producers.Products;
 using Data.Repository;
+using Entity.Domain.Models.Implements.Producers;
 using Entity.Domain.Models.Implements.Products;
 using Entity.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,23 @@ namespace Data.Service.Producers.Products
                 .Include(p => p.ProductImages)
                 .ToListAsync();
 
+        }
+
+        public async Task<IEnumerable<Product>> GetByProducer(int producerId)
+        {
+            return await _dbSet
+                .AsNoTracking()
+                .Include(p => p.Category)
+                .Include(p => p.Farm)
+                    .ThenInclude(f => f.City)
+                        .ThenInclude(c => c.Department)
+                .Include(p => p.Farm)
+                    .ThenInclude(f => f.Producer)
+                        .ThenInclude(prod => prod.User)
+                            .ThenInclude(u => u.Person)
+                .Include(p => p.ProductImages)
+                .Where(p=>p.Farm.Producer.Id == producerId)
+                .ToListAsync();
         }
     }
 }

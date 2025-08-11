@@ -10,6 +10,6 @@ namespace Entity.DTOs.Producer.Categories
     public class CategoryRegisterDto : BaseDto
     {
         public string Name { get; set; }
-        public int? ParentId { get; set; } // null si es una categoría padre
+        public int? ParentCategoryId { get; set; } // null si es una categoría padre
     }
 }

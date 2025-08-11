@@ -1,4 +1,9 @@
-<button mat-flat-button routerLink="create">Crear Ciudad</button>
+ <app-button
+  text="Crear Departamento"
+  color="primary"
+  icon="add"
+  redirectTo="/account/parameters/department/create">
+</app-button>
 <app-table
   [columns]="columns"
   [data]="departments"

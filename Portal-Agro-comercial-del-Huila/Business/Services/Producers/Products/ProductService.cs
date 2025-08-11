@@ -56,5 +56,17 @@ namespace Business.Services.Producers.Products
             }
         }
 
+        public async Task<IEnumerable<ProductSelectDto>> GetByProducer(int producerId)
+        {
+            try
+            {
+                var entities = await _productRepository.GetByProducer(producerId);
+                return _mapper.Map<IEnumerable<ProductSelectDto>>(entities);
+            }
+            catch (Exception ex)
+            {
+                throw new BusinessException("Error al obtener todos los registros de productos del productor {producerId}.", ex);
+            }
+        }
     }
 }

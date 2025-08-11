@@ -5,10 +5,11 @@ import { TableComponent } from '../../../../../shared/components/table/table.com
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatButton } from '@angular/material/button';
+import { ButtonComponent } from "../../../../../shared/components/button/button.component";
 
 @Component({
   selector: 'app-form-list',
-  imports: [TableComponent, CommonModule, RouterLink,MatButton],
+  imports: [TableComponent, CommonModule, RouterLink, MatButton, ButtonComponent],
   templateUrl: './form-list.component.html',
   styleUrl: './form-list.component.css',
 })

@@ -7,10 +7,11 @@ import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DepartmentRegisterModel, DepartmentSelectModel } from '../../../models/department/department.model';
+import { ButtonComponent } from "../../../../../shared/components/button/button.component";
 
 @Component({
   selector: 'app-deparment-form',
-  imports: [MatFormFieldModule, ReactiveFormsModule, MatInputModule, MatButtonModule, RouterLink, MatIconModule, CommonModule],
+  imports: [MatFormFieldModule, ReactiveFormsModule, MatInputModule, MatButtonModule, RouterLink, MatIconModule, CommonModule, ButtonComponent],
   templateUrl: './deparment-form.component.html',
   styleUrl: './deparment-form.component.css'
 })

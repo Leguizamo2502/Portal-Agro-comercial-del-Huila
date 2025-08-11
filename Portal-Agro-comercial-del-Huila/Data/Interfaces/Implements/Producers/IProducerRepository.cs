@@ -10,6 +10,5 @@ namespace Data.Interfaces.Implements.Producers
 {
     public interface IProducerRepository : IDataGeneric<Producer>
     {
-
     }
 }

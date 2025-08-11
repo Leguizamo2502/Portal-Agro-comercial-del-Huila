@@ -1,13 +1,15 @@
-<button [type]="type"
-        [disabled]="disabled"
-        (click)="onClick()"
-        [ngClass]="{
-          'btn-primary': color === 'primary',
-          'btn-danger': color === 'danger'
-        }"
-        class="custom-btn">
-        <mat-icon *ngIf="icon" class="icon">{{icon}}</mat-icon>
-
-  <!-- <i *ngIf="icon" class="{{ icon }}" aria-hidden="true" style="margin-right: 6px;"></i> -->
-  {{ text }}
+<button
+  [type]="type"
+  [disabled]="disabled"
+  (click)="onClick()"
+  class="custom-btn"
+  [ngClass]="{
+    'btn-primary': color === 'primary',
+    'btn-secondary': color === 'secondary',
+    'btn-danger': color === 'danger'
+  }"
+  [attr.aria-label]="text"
+>
+  <mat-icon *ngIf="icon" class="icon" aria-hidden="true">{{ icon }}</mat-icon>
+  <span class="label">{{ text }}</span>
 </button>

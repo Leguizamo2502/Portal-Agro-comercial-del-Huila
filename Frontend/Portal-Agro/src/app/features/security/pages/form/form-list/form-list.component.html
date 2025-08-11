@@ -1,4 +1,10 @@
-<button mat-flat-button routerLink="create">Crear Formulario</button>
+<!-- <button mat-flat-button routerLink="create">Crear Formulario</button> -->
+ <app-button
+  text="Crear formulario"
+  color="primary"
+  icon="add"
+  redirectTo="/account/security/form/create">
+</app-button>
 <app-table
   [columns]="columns"
   [data]="forms"

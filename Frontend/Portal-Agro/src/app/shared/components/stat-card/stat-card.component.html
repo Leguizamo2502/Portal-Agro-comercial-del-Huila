@@ -1,0 +1,9 @@
+<!-- src/app/shared/components/stat-card/stat-card.component.html -->
+<div class="stat-card" [attr.aria-label]="text + ' ' + count">
+  <div class="icon-wrap">
+    <mat-icon aria-hidden="true">{{ icon }}</mat-icon>
+  </div>
+
+  <div class="label">{{ text }}</div>
+  <div class="value">{{ count }}</div>
+</div>

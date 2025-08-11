@@ -9,13 +9,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { CityRegisterModel, CitySelectModel } from '../../../models/city/city.model';
 import { DepartmentSelectModel } from '../../../models/department/department.model';
 import { MatSelectModule } from '@angular/material/select';
+import { ButtonComponent } from "../../../../../shared/components/button/button.component";
 
 @Component({
   selector: 'app-city-form',
   imports: [
     MatFormFieldModule, ReactiveFormsModule, MatInputModule, MatButtonModule,
-    RouterLink, MatIconModule, CommonModule, MatSelectModule
-  ],
+    RouterLink, MatIconModule, CommonModule, MatSelectModule,
+    ButtonComponent
+],
   templateUrl: './city-form.component.html',
   styleUrl: './city-form.component.css'
 })

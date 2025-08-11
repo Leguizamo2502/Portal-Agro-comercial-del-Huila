@@ -5,6 +5,8 @@ export interface UserSelectModel{
     phoneNumber:    string;
     email:          string;
     cityId:         number;
+    cityName:       string;
+    active:         boolean;
     roles:          string[];
     id:             number;
 }

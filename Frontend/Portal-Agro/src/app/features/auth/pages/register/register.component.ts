@@ -190,7 +190,7 @@ export class RegisterComponent implements OnInit {
             title: 'Usuario Creado!',
             text: 'Usuario Creado Exitosamente!',
           });
-          this._router.navigate(['/Auth/login']);
+          this._router.navigate(['/auth/login']);
         } else {
           Swal.fire({
             icon: 'error',

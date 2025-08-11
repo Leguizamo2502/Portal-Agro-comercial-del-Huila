@@ -1,0 +1,20 @@
+<section class="management">
+  <h2 class="title-m">Gestión</h2>
+
+  <!-- Tabs internos (rutas hijas) -->
+  <nav mat-tab-nav-bar class="segmented-tabs segmented-tabs--inner">
+    <a
+      mat-tab-link
+      *ngFor="let t of tabs"
+      [routerLink]="t.path"      
+      routerLinkActive
+      #rla="routerLinkActive"
+      [active]="rla.isActive"
+    >
+      {{ t.label }}
+    </a>
+  </nav>
+
+  <!-- Contenido de la ruta hija: product | farm -->
+  <router-outlet></router-outlet>
+</section>

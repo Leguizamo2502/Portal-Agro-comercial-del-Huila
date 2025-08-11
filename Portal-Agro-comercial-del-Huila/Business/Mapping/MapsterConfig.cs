@@ -49,11 +49,14 @@ namespace Business.Mapping
                 .Map(dest => dest.Roles, src => src.RolUsers.Select(r => r.Rol.Name).ToList());
 
             config.NewConfig<User, UserSelectDto>()
+                //.Map(dest=>dest.active,src=>src.Active)
                 .Map(dest => dest.FullName, src => $"{src.Person.FirstName} {src.Person.LastName}")
                 .Map(dest => dest.PhoneNumber, src => src.Person.PhoneNumber)
                 .Map(dest => dest.Address, src => src.Person.Address)
                 .Map(dest => dest.Identification, src => src.Person.Identification)
-                .Map(dest => dest.CityId, src => src.Person.CityId);
+                .Map(dest => dest.CityId, src => src.Person.CityId)
+                .Map(dest => dest.CityName, src => src.Person.City.Name);
+
 
 
             //FarmWith PRoducer a producer y famr
@@ -83,7 +86,7 @@ namespace Business.Mapping
             config.NewConfig<Category, CategorySelectDto>()
                 .Map(dest => dest.Id, src => src.Id) // si no se mapea automáticamente
                 .Map(dest => dest.Name, src => src.Name)
-                .Map(dest => dest.ParentId, src => src.ParentCategoryId)
+                .Map(dest => dest.ParentCategoryId, src => src.ParentCategoryId)
                 .Map(dest => dest.ParentName, src => src.ParentCategory != null ? src.ParentCategory.Name : null);
 
             config.NewConfig<CategoryRegisterDto, Category>();

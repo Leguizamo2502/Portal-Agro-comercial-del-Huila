@@ -41,6 +41,9 @@ namespace Business.Services.AuthService
             _passwordResetRepo = passwordResetRepo;
         }
 
+
+        
+
         public async Task<UserSelectDto?> GetDataBasic(int userId)
         {
             try

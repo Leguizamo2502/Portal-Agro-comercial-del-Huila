@@ -40,13 +40,16 @@
       </mat-form-field>
     </div>
 
-    <div class="form-actions">
-      <button type="submit" mat-flat-button color="primary" [disabled]="form.invalid" class="btn-custom">
+    <div class="form-actions cont-botones">
+      <!-- <button type="submit" mat-flat-button color="primary" [disabled]="form.invalid" class="btn-custom">
         <mat-icon>save</mat-icon> Guardar
-      </button>
-      <a mat-stroked-button color="warn" routerLink="/account/security/form">
+      </button> -->
+      <app-button [text]="'Guardar'" [icon]="'save'" [type]="'submit'" [disabled]="form.invalid"></app-button>
+      <!-- <a mat-stroked-button color="warn" routerLink="/account/security/form">
         <mat-icon>cancel</mat-icon> Cancelar
-      </a>
+      </a> -->
+      <app-button [text]="'Cancelar'" [icon]="'cancel'" [color]="'secondary'" [back]="true"></app-button>
+
     </div>
   </form>
 </div>

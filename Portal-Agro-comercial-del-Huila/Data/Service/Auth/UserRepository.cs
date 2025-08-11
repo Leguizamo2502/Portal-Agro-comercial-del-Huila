@@ -62,6 +62,14 @@ namespace Data.Service.Auth
                 .Include(u => u.Person)
                 .FirstOrDefaultAsync(u=>u.Id == userId);
         }
+
+        public override async Task<IEnumerable<User>> GetAllAsync()
+        {
+            return await _dbSet
+                .Include(u => u.Person)
+                .ThenInclude(p=>p.City)
+                .ToListAsync();
+        }
     }
  
 }

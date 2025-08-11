@@ -3,10 +3,11 @@ import { CategoryService } from '../../../services/category/category.service';
 import { Router } from '@angular/router';
 import { CategorySelectModel } from '../../../models/category/category.model';
 import { TableComponent } from "../../../../../shared/components/table/table.component";
+import { ButtonComponent } from "../../../../../shared/components/button/button.component";
 
 @Component({
   selector: 'app-category-list',
-  imports: [TableComponent],
+  imports: [TableComponent, ButtonComponent],
   templateUrl: './category-list.component.html',
   styleUrl: './category-list.component.css'
 })
@@ -27,7 +28,7 @@ export class CategoryListComponent implements OnInit{
 
   onEdit(item: any) {
     const id = item.id;
-    this.router.navigate(['/account/security/category/update', id]);
+    this.router.navigate(['/account/parameters/category/update', id]);
 
   }
 

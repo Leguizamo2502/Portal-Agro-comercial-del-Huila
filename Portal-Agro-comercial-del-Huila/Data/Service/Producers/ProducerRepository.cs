@@ -15,5 +15,7 @@ namespace Data.Service.Producers
         public ProducerRepository(ApplicationDbContext context) : base(context)
         {
         }
+
+       
     }
 }

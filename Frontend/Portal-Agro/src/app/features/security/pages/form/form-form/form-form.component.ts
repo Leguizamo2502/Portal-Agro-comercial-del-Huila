@@ -7,10 +7,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
+import { ButtonComponent } from "../../../../../shared/components/button/button.component";
 
 @Component({
   selector: 'app-form-form',
-  imports: [MatFormFieldModule, ReactiveFormsModule, MatInputModule, MatButtonModule, RouterLink, MatIconModule, CommonModule],
+  imports: [MatFormFieldModule, ReactiveFormsModule, MatInputModule, MatButtonModule, RouterLink, MatIconModule, CommonModule, ButtonComponent],
   templateUrl: './form-form.component.html',
   styleUrl: './form-form.component.css'
 })
