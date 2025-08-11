@@ -18,5 +18,15 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrls: ['./card.component.css']
 })
 export class CardComponent {
-  @Input() products: ProductSelectModel[] = [];
+  private _products: ProductSelectModel[] = [];
+
+  @Input()
+  set products(value: ProductSelectModel[]) {
+    this._products = value || [];
+    console.log('CardComponent - productos recibidos en setter:', this._products);
+  }
+
+  get products(): ProductSelectModel[] {
+    return this._products;
+  }
 }

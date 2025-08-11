@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ProductService } from '../../../../shared/services/product/product.service';
 import { ProductSelectModel } from '../../../../shared/models/product/product.model';
 import { CardComponent } from '../../../../shared/components/card/card.component';
+import { CarruselComponent } from '../../../../shared/components/carrusel/carrusel.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, CardComponent],
+  imports: [CommonModule, CardComponent, CarruselComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -20,13 +21,9 @@ export class HomeComponent implements OnInit {
   }
 
   loadProduct() {
-    this.productService.getProduct().subscribe({
-      next: (data) => {
-        this.products = data;
-      },
-      error: (err) => {
-        console.error('Error cargando productos', err);
-      }
+    this.productService.getProduct().subscribe(data => {
+      this.products = data;
+      console.log('HomeComponent - productos cargados:', this.products);
     });
   }
 }
