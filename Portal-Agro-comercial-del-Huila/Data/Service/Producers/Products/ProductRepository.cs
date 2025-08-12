@@ -9,6 +9,7 @@ using Entity.Domain.Models.Implements.Producers;
 using Entity.Domain.Models.Implements.Products;
 using Entity.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Data.Service.Producers.Products
 {
@@ -17,6 +18,49 @@ namespace Data.Service.Producers.Products
         public ProductRepository(ApplicationDbContext context) : base(context)
         {
         }
+
+
+
+        public override async Task<Product> AddAsync(Product entity)
+        {
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+
+            _dbSet.Add(entity);
+            // No SaveChanges aquí
+
+            return await Task.FromResult(entity);
+        }
+
+
+        public override async Task<bool> UpdateAsync(Product entity)
+        {
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+
+            var existing = await _dbSet
+                .Include(e => e.ProductImages)
+                .FirstOrDefaultAsync(e => e.Id == entity.Id && !e.IsDeleted);
+
+            if (existing == null)
+                throw new InvalidOperationException($"No se encontró el  con ID {entity.Id}.");
+
+            _context.Entry(existing).CurrentValues.SetValues(entity);
+
+            // Sincronización imágenes
+            var imagesToRemove = existing.ProductImages.Where(img => !entity.ProductImages.Any(eImg => eImg.Id == img.Id)).ToList();
+            foreach (var img in imagesToRemove)
+                _context.Set<ProductImage>().Remove(img);
+
+            var imagesToAdd = entity.ProductImages.Where(img => img.Id == 0).ToList();
+            foreach (var img in imagesToAdd)
+            {
+                img.ProductId = existing.Id;
+                existing.ProductImages.Add(img);
+            }
+
+            // No SaveChanges aquí
+            return existing != null;
+        }
+
 
         public override async Task<IEnumerable<Product>> GetAllAsync()
         {

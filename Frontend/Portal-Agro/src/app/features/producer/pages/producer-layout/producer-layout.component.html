@@ -3,8 +3,7 @@
     <h1 class="title-p">Productor</h1>
   </header>
 
-  <!-- Tabs superiores enlazadas a rutas -->
-  <nav mat-tab-nav-bar>
+  <nav mat-tab-nav-bar [tabPanel]="mainPanel">
     <a
       mat-tab-link
       *ngFor="let t of tabs"
@@ -17,6 +16,7 @@
     </a>
   </nav>
 
-  <!-- Contenido de la ruta hija -->
-  <router-outlet></router-outlet>
+  <mat-tab-nav-panel #mainPanel>
+    <router-outlet></router-outlet>
+  </mat-tab-nav-panel>
 </section>

@@ -7,6 +7,7 @@ using Entity.DTOs.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Utilities.Exceptions;
+using Utilities.Helpers.Auth;
 
 namespace Web.Controllers.Implements.Auth
 {
@@ -129,12 +130,13 @@ namespace Web.Controllers.Implements.Auth
         [HttpGet("DataBasic")]
         public async Task<IActionResult> GetDataBasic()
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrWhiteSpace(userIdClaim)
-                || !int.TryParse(userIdClaim, out var userId))
-            {
-                return Unauthorized("Token inválido o Claim 'NameIdentifier' ausente.");
-            }
+            //var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //if (string.IsNullOrWhiteSpace(userIdClaim)
+            //    || !int.TryParse(userIdClaim, out var userId))
+            //{
+            //    return Unauthorized("Token inválido o Claim 'NameIdentifier' ausente.");
+            //}
+            var userId = HttpContext.GetUserId();
 
             try
             {

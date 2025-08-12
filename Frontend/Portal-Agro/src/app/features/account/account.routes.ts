@@ -8,10 +8,10 @@ export const ACCOUNT_ROUTES: Routes = [
     path: '',
     component: AccountComponent,
     children: [
-      // Home info
-      { path: 'info', component: InfoComponent },
       // default
       { path: '', redirectTo: 'info', pathMatch: 'full' },
+      // Home info
+      { path: 'info', component: InfoComponent },
 
       // --- PRODUCER ---
      {

@@ -5,14 +5,19 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProductService {
   private http = inject(HttpClient);
   private urlBase = environment.apiUrl + 'Product';
 
-  public getProduct():Observable<ProductSelectModel[]>{
-    return this.http.get<ProductSelectModel[]>(this.urlBase)
+  public getProduct(): Observable<ProductSelectModel[]> {
+    return this.http.get<ProductSelectModel[]>(this.urlBase);
   }
-
+  registerProduct(Objeto: FormData): Observable<any> {
+    return this.http.post<any>(
+      this.urlBase + '/register/product',
+      Objeto
+    );
+  }
 }

@@ -44,13 +44,13 @@ export const PRODUCER_ROUTES: Routes = [
                   import('./pages/product/product-create/product-create.component')
                     .then(m => m.ProductCreateComponent),
               },
-              {
-                path: 'update/:id',
-                title: 'Editar producto',
-                loadComponent: () =>
-                  import('./pages/product/product-update/product-update.component')
-                    .then(m => m.ProductUpdateComponent),
-              },
+              // {
+              //   path: 'update/:id',
+              //   title: 'Editar producto',
+              //   loadComponent: () =>
+              //     import('./pages/product/product-update/product-update.component')
+              //       .then(m => m.ProductUpdateComponent),
+              // },
             ],
           },
 
