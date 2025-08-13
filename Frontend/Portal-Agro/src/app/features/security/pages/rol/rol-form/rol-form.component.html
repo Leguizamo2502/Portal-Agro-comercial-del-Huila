@@ -1,0 +1,65 @@
+<div class="form-wrapper-transparent">
+  <h2 class="titleForm">{{ title }}</h2>
+
+  <form (submit)="save()" [formGroup]="form" class="form-container">
+    <div class="form-field">
+      <mat-form-field appearance="outline" class="custom-mat-field">
+        <mat-label>Nombre</mat-label>
+        <input
+          matInput
+          [formControl]="form.controls.name"
+          placeholder="Ingrese el nombre del rol"
+          required
+        />
+        <mat-error *ngIf="form.controls.name.hasError('required')">
+          El nombre es obligatorio
+        </mat-error>
+        <mat-error *ngIf="form.controls.name.hasError('minlength')">
+          El nombre debe tener al menos 3 caracteres
+        </mat-error>
+        <mat-error *ngIf="form.controls.name.hasError('maxlength')">
+          El nombre no puede exceder los 50 caracteres
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-field">
+      <mat-form-field appearance="outline" class="custom-mat-field">
+        <mat-label>Descripción</mat-label>
+        <textarea
+          matInput
+          [formControl]="form.controls.description"
+          placeholder="Describa el propósito del rol"
+          rows="3"
+        ></textarea>
+        <mat-error *ngIf="form.controls.description.hasError('maxlength')">
+          La descripción no puede exceder los 255 caracteres
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-actions cont-botones">
+      <app-button
+        [text]="'Guardar'"
+        [icon]="'save'"
+        [type]="'submit'"
+        [disabled]="form.invalid">
+      </app-button>
+
+      <app-button
+        [text]="'Cancelar'"
+        [icon]="'cancel'"
+        [color]="'secondary'"
+        [back]="true">
+      </app-button>
+      <!-- Si prefieres ir fijo a la lista en lugar de back:
+      <app-button
+        [text]="'Cancelar'"
+        [icon]="'cancel'"
+        [color]="'secondary'"
+        redirectTo="/account/security/permission">
+      </app-button>
+      -->
+    </div>
+  </form>
+</div>

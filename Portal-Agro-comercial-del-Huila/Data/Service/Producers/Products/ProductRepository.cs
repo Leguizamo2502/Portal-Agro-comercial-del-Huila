@@ -80,6 +80,22 @@ namespace Data.Service.Producers.Products
 
         }
 
+        public override async Task<Product?> GetByIdAsync(int id)
+        {
+            return await _dbSet
+                .AsNoTracking()
+                .Include(p => p.Category)
+                .Include(p => p.Farm)
+                    .ThenInclude(f => f.City)
+                        .ThenInclude(c => c.Department)
+                .Include(p => p.Farm)
+                    .ThenInclude(f => f.Producer)
+                        .ThenInclude(prod => prod.User)
+                            .ThenInclude(u => u.Person)
+                .Include(p => p.ProductImages)
+                .FirstOrDefaultAsync(p=>p.Id == id);
+        }
+
         public async Task<IEnumerable<Product>> GetByProducer(int producerId)
         {
             return await _dbSet

@@ -22,7 +22,7 @@ export class HomeComponent implements OnInit {
   }
 
   loadProduct() {
-    this.productService.getProduct().subscribe(data => {
+    this.productService.getAll().subscribe(data => {
       this.products = data;
       console.log('HomeComponent - productos cargados:', this.products);
     });

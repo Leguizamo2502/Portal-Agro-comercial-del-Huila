@@ -1,0 +1,168 @@
+<mat-horizontal-stepper [linear]="true">
+  <!-- Paso 1: Datos generales -->
+  <mat-step [stepControl]="generalGroup">
+    <form [formGroup]="generalGroup">
+      <ng-template matStepLabel>Datos del producto</ng-template>
+
+      <div class="info">
+        <h3>{{ isEdit ? 'Editar producto' : 'Nuevo producto' }}</h3>
+        <span>Complete la información general</span>
+      </div>
+
+      <div class="row-2">
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="name" required maxlength="120">
+          <mat-error *ngIf="generalGroup.get('name')?.hasError('required')">Obligatorio</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Precio</mat-label>
+          <input matInput type="number" formControlName="price" required min="0">
+          <mat-error *ngIf="generalGroup.get('price')?.hasError('required')">Obligatorio</mat-error>
+          <mat-error *ngIf="generalGroup.get('price')?.hasError('min')">No negativo</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="row-2">
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Unidad</mat-label>
+          <input matInput formControlName="unit" required maxlength="50" placeholder="kg, lb, arroba, etc.">
+          <mat-error *ngIf="generalGroup.get('unit')?.hasError('required')">Obligatorio</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Producción</mat-label>
+          <input matInput formControlName="production" required maxlength="100" placeholder="Orgánico, convencional, etc.">
+          <mat-error *ngIf="generalGroup.get('production')?.hasError('required')">Obligatorio</mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="fill" class="w-100">
+        <mat-label>Descripción</mat-label>
+        <textarea matInput rows="3" formControlName="description" required maxlength="1000"></textarea>
+        <mat-error *ngIf="generalGroup.get('description')?.hasError('required')">Obligatorio</mat-error>
+      </mat-form-field>
+
+      <div class="actions">
+        <button mat-button matStepperNext [disabled]="generalGroup.invalid">Siguiente</button>
+      </div>
+    </form>
+  </mat-step>
+
+  <!-- Paso 2: Detalles -->
+  <mat-step [stepControl]="detallesGroup">
+    <form [formGroup]="detallesGroup">
+      <ng-template matStepLabel>Detalles</ng-template>
+
+      <div class="row-2">
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Stock</mat-label>
+          <input matInput type="number" formControlName="stock" required min="0">
+          <mat-error *ngIf="detallesGroup.get('stock')?.hasError('required')">Obligatorio</mat-error>
+          <mat-error *ngIf="detallesGroup.get('stock')?.hasError('min')">No negativo</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Estado</mat-label>
+          <mat-select formControlName="status" required>
+            <mat-option [value]="true">Activo</mat-option>
+            <mat-option [value]="false">Inactivo</mat-option>
+          </mat-select>
+          <mat-error *ngIf="detallesGroup.get('status')?.hasError('required')">Obligatorio</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="row-2">
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Categoría</mat-label>
+          <mat-select formControlName="categoryId" required>
+            <mat-option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="detallesGroup.get('categoryId')?.hasError('required')">Obligatorio</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Finca</mat-label>
+          <mat-select formControlName="farmId" required>
+            <mat-option *ngFor="let f of farms" [value]="f.id">{{ f.name }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="detallesGroup.get('farmId')?.hasError('required')">Obligatorio</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="actions space-between">
+        <button mat-button matStepperPrevious>Anterior</button>
+        <button mat-button matStepperNext [disabled]="detallesGroup.invalid">Siguiente</button>
+      </div>
+    </form>
+  </mat-step>
+
+  <!-- Paso 3: Imágenes -->
+  <mat-step>
+    <ng-template matStepLabel>Imágenes</ng-template>
+
+    <div class="info">
+      <h3>Imágenes del producto</h3>
+      <span>Máximo {{ MAX_IMAGES }} imágenes. Tamaño ≤ {{ MAX_FILE_SIZE_MB }} MB.</span>
+    </div>
+
+    <div class="drop-zone"
+         (dragover)="onDragOver($event)"
+         (dragleave)="onDragLeave($event)"
+         (drop)="onDropOrInput($event.dataTransfer?.files || null)"
+         [class.dragover]="isDragging"
+         (click)="fileInput.click()">
+
+      <mat-icon>cloud_upload</mat-icon>
+      <p>Arrastra aquí o haz clic para seleccionar</p>
+      <small>Formatos: JPG, PNG, WEBP</small>
+
+      <input #fileInput type="file" accept="image/*" multiple hidden
+             (change)="onDropOrInput(fileInput.files)" />
+    </div>
+
+    <div class="image-counter">
+      {{ selectedFiles.length + existingImages.length }}/{{ MAX_IMAGES }} imágenes
+    </div>
+
+    <div class="compact-image-grid">
+      <!-- existentes -->
+      <div class="compact-image-container" *ngFor="let img of existingImages; let i = index">
+        <img [src]="img.imageUrl" alt="Imagen existente" class="compact-image">
+        <div class="compact-image-actions">
+          <button mat-icon-button color="warn" (click)="removeImage(i, true)" matTooltip="Eliminar">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+        <span class="compact-image-label">Existente</span>
+      </div>
+
+      <!-- nuevas -->
+      <div class="compact-image-container" *ngFor="let prev of imagesPreview; let i = index">
+        <img [src]="prev" alt="Vista previa" class="compact-image">
+        <div class="compact-image-actions">
+          <button mat-icon-button color="warn" (click)="removeImage(i, false)" matTooltip="Quitar">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+        <span class="compact-image-label">Nueva</span>
+      </div>
+    </div>
+
+    <div class="actions space-between">
+      <button mat-button matStepperPrevious>Anterior</button>
+
+      <button mat-raised-button color="primary"
+              (click)="submit()"
+              [disabled]="isLoading || (selectedFiles.length + existingImages.length) === 0">
+        <span *ngIf="!isLoading">{{ isEdit ? 'Actualizar' : 'Crear' }}</span>
+        <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+      </button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>
+
+<div class="footer-actions">
+  <button mat-stroked-button color="warn" (click)="cancel()">Cancelar</button>
+</div>

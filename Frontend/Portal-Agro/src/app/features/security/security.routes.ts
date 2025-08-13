@@ -26,6 +26,7 @@ export const SECURITY_ROUTES: Routes = [
       },
     ],
   },
+  
 
   {
     path: 'user',
@@ -47,6 +48,30 @@ export const SECURITY_ROUTES: Routes = [
         title: 'Editar usuario',
         loadComponent: () =>
           import('./pages/user/user-update/user-update.component').then(m => m.UserUpdateComponent),
+      },
+    ],
+  },
+
+  {
+    path: 'rol',
+    children: [
+      {
+        path: '',
+        title: 'Roles',
+        loadComponent: () =>
+          import('./pages/rol/rol-list/rol-list.component').then(m => m.RolListComponent),
+      },
+      {
+        path: 'create',
+        title: 'Crear rol',
+        loadComponent: () =>
+          import('./pages/rol/rol-create/rol-create.component').then(m => m.RolCreateComponent),
+      },
+      {
+        path: 'update/:id',
+        title: 'Editar rol',
+        loadComponent: () =>
+          import('./pages/rol/rol-update/rol-update.component').then(m => m.RolUpdateComponent),
       },
     ],
   },

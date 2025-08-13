@@ -96,44 +96,44 @@ export class ProductCreateComponent implements OnInit {
     }
   }
 
-  registerProduct() {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
+  // registerProduct() {
+  //   if (this.form.invalid) {
+  //     this.form.markAllAsTouched();
+  //     return;
+  //   }
 
-    const v = this.form.value;
+  //   const v = this.form.value;
 
-    // Alinear keys con el DTO del backend: ProductCreateDto
-    const fd = new FormData();
-    fd.append('Name', String(v.name));
-    fd.append('Description', String(v.description));
-    fd.append('Price', String(v.price));          // número a string
-    fd.append('Unit', String(v.unit));
-    fd.append('Production', String(v.production));
-    fd.append('FarmId', String(v.farmId));        // número a string
-    fd.append('Stock', String(v.stock));
-    fd.append('Status', String(v.status));        // boolean a string
-    fd.append('CategoryId', String(v.categoryId));
+  //   // Alinear keys con el DTO del backend: ProductCreateDto
+  //   const fd = new FormData();
+  //   fd.append('Name', String(v.name));
+  //   fd.append('Description', String(v.description));
+  //   fd.append('Price', String(v.price));          // número a string
+  //   fd.append('Unit', String(v.unit));
+  //   fd.append('Production', String(v.production));
+  //   fd.append('FarmId', String(v.farmId));        // número a string
+  //   fd.append('Stock', String(v.stock));
+  //   fd.append('Status', String(v.status));        // boolean a string
+  //   fd.append('CategoryId', String(v.categoryId));
 
-    // Imágenes (propiedad 'Images' del DTO)
-    for (const file of this.selectedFiles) {
-      fd.append('Images', file, file.name);
-    }
+  //   // Imágenes (propiedad 'Images' del DTO)
+  //   for (const file of this.selectedFiles) {
+  //     fd.append('Images', file, file.name);
+  //   }
 
-    this.productService.registerProduct(fd).subscribe({
-      next: (resp) => {
-        if (resp?.isSuccess) {
-          Swal.fire({ icon: 'success', title: 'Producto creado', text: 'Registro exitoso.' });
-          this.router.navigate(['/account/producer/management/product']); // Ajusta ruta de destino
-        } else {
-          Swal.fire({ icon: 'error', title: 'Error', text: resp?.message ?? 'No se pudo crear el producto.' });
-        }
-      },
-      error: (err) => {
-        Swal.fire({ icon: 'error', title: 'Error', text: err?.message ?? 'Error inesperado.' });
-      }
-    });
-  }
+  //   this.productService.create(fd).subscribe({
+  //     next: (resp) => {
+  //       if (resp) {
+  //         Swal.fire({ icon: 'success', title: 'Producto creado', text: 'Registro exitoso.' });
+  //         this.router.navigate(['/account/producer/management/product']); // Ajusta ruta de destino
+  //       } else {
+  //         Swal.fire({ icon: 'error', title: 'Error', text: resp ?? 'No se pudo crear el producto.' });
+  //       }
+  //     },
+  //     error: (err) => {
+  //       Swal.fire({ icon: 'error', title: 'Error', text: err?.message ?? 'Error inesperado.' });
+  //     }
+  //   });
+  // }
   
 }

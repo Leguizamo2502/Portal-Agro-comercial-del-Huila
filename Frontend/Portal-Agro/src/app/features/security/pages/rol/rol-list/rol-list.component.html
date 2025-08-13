@@ -1,1 +1,14 @@
-<p>rol-list works!</p>
+<!-- <button mat-flat-button routerLink="create">Crear Permiso</button> -->
+<app-button
+  text="Crear Permiso"
+  color="primary"
+  icon="add"
+  redirectTo="/account/security/rol/create">
+</app-button>
+
+<app-table
+  [columns]="columns"
+  [data]="rols"
+  (edit)="onEdit($event)"
+  (delete)="onDelete($event)">
+</app-table>

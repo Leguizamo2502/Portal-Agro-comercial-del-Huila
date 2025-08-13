@@ -41,8 +41,8 @@ export const PRODUCER_ROUTES: Routes = [
                 path: 'create',
                 title: 'Nuevo producto',
                 loadComponent: () =>
-                  import('./pages/product/product-create/product-create.component')
-                    .then(m => m.ProductCreateComponent),
+                  import('./pages/product/product-form/product-form.component')
+                    .then(m => m.ProductFormComponent),
               },
               // {
               //   path: 'update/:id',

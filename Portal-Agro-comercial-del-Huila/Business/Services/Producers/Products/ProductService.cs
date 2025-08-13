@@ -11,6 +11,7 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Utilities.Exceptions;
+using Utilities.Helpers.Business;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Business.Services.Producers.Products
@@ -35,6 +36,21 @@ namespace Business.Services.Producers.Products
             _productImageRepository = productImageRepository;
             _context = context;
             _logger = logger;
+        }
+
+        public override async Task<ProductSelectDto?> GetByIdAsync(int id)
+        {
+            try
+            {
+                BusinessValidationHelper.ThrowIfZeroOrLess(id, "El ID debe ser mayor que cero.");
+
+                var entity = await _productRepository.GetByIdAsync(id);
+                return entity == null ? default : _mapper.Map<ProductSelectDto>(entity);
+            }
+            catch (Exception ex)
+            {
+                throw new BusinessException($"Error al obtener el rproducto con ID {id}.", ex);
+            }
         }
 
 
@@ -114,122 +130,6 @@ namespace Business.Services.Producers.Products
         }
 
 
-        //public async Task<ProductSelectDto> UpdateProductAsync(ProductUpdateDto dto)
-        //{
-        //    // 0) Cargar entidad
-        //    var entity = await _productRepository.GetByIdAsync(dto.Id);
-        //    if (entity == null)
-        //        throw new BusinessException($"No se encontró el producto {dto.Id}");
-
-        //    // 1) Leer imágenes actuales (solo activas)
-        //    var currentImages = await _productImageRepository.GetByProductIdAsync(dto.Id);
-        //    // Si tu repo trae eliminadas lógicamente, descomenta la siguiente línea:
-        //    // currentImages = currentImages.Where(i => !i.IsDeleted).ToList();
-
-        //    // 2) Normalizar entradas del DTO
-        //    const int MAX_IMAGES = 5;
-
-        //    var toDelete = (dto.ImagesToDelete ?? new List<string>())
-        //        .Where(s => !string.IsNullOrWhiteSpace(s))
-        //        .Select(s => s.Trim())
-        //        .ToHashSet(StringComparer.OrdinalIgnoreCase);
-
-        //    var validFiles = (dto.Images ?? new List<IFormFile>())
-        //        .Where(f => f is { Length: > 0 })
-        //        .ToList();
-
-        //    // 3) Calcular capacidad efectiva (considerando borrados de esta solicitud)
-        //    var currentPublicIds = new HashSet<string>(
-        //        currentImages
-        //            .Where(i => !string.IsNullOrWhiteSpace(i.PublicId))
-        //            .Select(i => i.PublicId.Trim()),
-        //        StringComparer.OrdinalIgnoreCase
-        //    );
-
-        //    var deletionsAffectingCount = currentPublicIds.Intersect(toDelete).Count();
-        //    var plannedAfter = currentImages.Count - deletionsAffectingCount;
-        //    if (plannedAfter < 0) plannedAfter = 0;
-
-        //    var spaceAvailable = Math.Max(0, MAX_IMAGES - plannedAfter);
-
-        //    _logger.LogInformation(
-        //        "UpdateProduct Images: current={Current}, toDelete={ToDelete}, matchDeletes={Match}, plannedAfter={After}, spaceAvailable={Space}, toUpload={Upload}",
-        //        currentImages.Count, toDelete.Count, deletionsAffectingCount, plannedAfter, spaceAvailable, validFiles.Count
-        //    );
-
-        //    if (validFiles.Count > spaceAvailable)
-        //        throw new BusinessException(
-        //            $"Solo puede subir {spaceAvailable} imagen(es) adicional(es). Máximo {MAX_IMAGES} por producto."
-        //        );
-
-        //    // 4) Cloudinary FUERA de la transacción
-        //    // 4.1) Borrar en Cloudinary
-        //    if (toDelete.Count > 0)
-        //    {
-        //        foreach (var publicId in toDelete)
-        //            await _cloudinaryService.DeleteAsync(publicId);
-        //    }
-
-        //    // 4.2) Subir nuevas
-        //    var newImages = new List<ProductImage>();
-        //    if (validFiles.Count > 0)
-        //        newImages = await UploadAndMapImagesAsync(validFiles, entity.Id);
-
-        //    // 5) Persistencia BD en transacción CORTA
-        //    await using var tx = await _context.Database.BeginTransactionAsync();
-        //    try
-        //    {
-        //        // 5.1) Actualizar campos escalares (DTO con nullables)
-        //        entity.Name = dto.Name ?? entity.Name;
-        //        entity.Description = dto.Description ?? entity.Description;
-        //        entity.Price = dto.Price ?? entity.Price;
-        //        entity.Stock = dto.Stock ?? entity.Stock;
-        //        entity.Production = dto.Production ?? entity.Production;
-        //        entity.CategoryId = dto.CategoryId ?? entity.CategoryId;
-        //        entity.Status = dto.Status ?? entity.Status;
-        //        entity.FarmId = dto.FarmId ?? entity.FarmId;
-
-        //        await _productRepository.UpdateAsync(entity); // sin SaveChanges/tx internas
-
-        //        // 5.2) Marcar borrados en BD por PublicId
-        //        if (toDelete.Count > 0)
-        //        {
-        //            foreach (var publicId in toDelete)
-        //                await _productImageRepository.DeleteLogicalByPublicIdAsync(publicId);
-        //        }
-
-        //        // 5.3) Insertar nuevas imágenes en BD
-        //        if (newImages.Count > 0)
-        //            await _productImageRepository.AddImages(newImages);
-
-        //        await _context.SaveChangesAsync();
-        //        await tx.CommitAsync();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Error actualizando producto ID {Id}", dto.Id);
-        //        // Sin RollbackAsync: el Dispose del await using hará rollback automático
-        //        throw;
-        //    }
-
-        //    // 6) Leer actualizado y devolver
-        //    var updated = await _productRepository.GetByIdAsync(dto.Id);
-
-        //    // Si tu configuración Mapster ya mapea Images, usa:
-        //    return _mapper.Map<ProductSelectDto>(updated!);
-
-        //    // Si prefieres asignar Images manualmente, usa este bloque en su lugar:
-        //    /*
-        //    var resultDto = _mapper.Map<ProductSelectDto>(updated!);
-        //    if (updated?.ProductImages != null)
-        //    {
-        //        resultDto.Images = updated.ProductImages
-        //            .Select(i => new ProductImageSelectDto(i.Id, i.FileName, i.ImageUrl, i.PublicId, i.ProductId))
-        //            .ToList();
-        //    }
-        //    return resultDto;
-        //    */
-        //}
 
 
 
