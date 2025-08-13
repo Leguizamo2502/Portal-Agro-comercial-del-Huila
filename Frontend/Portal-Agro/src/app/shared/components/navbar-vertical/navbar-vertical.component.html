@@ -11,9 +11,9 @@
             <i class="bi bi-person-fill me-2"></i> Mi Información
         </a> -->
         <a class="list-group-item list-group-item-action" (click)="navigateTo('info')"
-                [ngClass]="{ 'active': activePath === 'info' }">
-                <i class="bi bi-key-fill me-2"></i> Mi Informacion
-            </a>
+            [ngClass]="{ 'active': activePath === 'info' }">
+            <i class="bi bi-key-fill me-2"></i> Mi Informacion
+        </a>
 
         <a class="list-group-item list-group-item-action" routerLink="/favoritos" routerLinkActive="active">
             <i class="bi bi-heart-fill me-2"></i> Favoritos
@@ -24,7 +24,7 @@
         </a>
 
         <a class="list-group-item list-group-item-action" (click)="navigateTo('producer')"
-                [ngClass]="{ 'active': activePath === 'producer' }">
+            [ngClass]="{ 'active': activePath === 'producer' }">
             <i class="bi bi-person-workspace me-2"></i> Productor
         </a>
 
@@ -69,9 +69,14 @@
                 [ngClass]="{ 'active': activePath === 'security/module' }">
                 <i class="bi bi-key-fill me-2"></i> Modulos
             </a>
-             <a class="list-group-item list-group-item-action" (click)="navigateTo('security/formModule')"
+            <a class="list-group-item list-group-item-action" (click)="navigateTo('security/formModule')"
                 [ngClass]="{ 'active': activePath === 'security/formModule' }">
                 <i class="bi bi-people-fill me-2"></i> Modulos y Formularios
+            </a>
+
+            <a class="list-group-item list-group-item-action" (click)="navigateTo('security/rolFormPermission')"
+                [ngClass]="{ 'active': activePath === 'security/rolFormPermission' }">
+                <i class="bi bi-people-fill me-2"></i> Rol, Formularios y Permisos
             </a>
 
         </div>

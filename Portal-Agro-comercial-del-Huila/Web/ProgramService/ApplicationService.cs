@@ -96,6 +96,8 @@ namespace Web.ProgramService
             services.AddScoped<IRolUserRepository, RolUserRepository>();
             services.AddScoped<IRolUserService, RolUserService>();
 
+            services.AddScoped<IRolFormPermissionRepository, RolFormPermissionRepository>();   
+            services.AddScoped<IRolFormPermissionService,RolFormPermissionService>();
 
 
             //Producer

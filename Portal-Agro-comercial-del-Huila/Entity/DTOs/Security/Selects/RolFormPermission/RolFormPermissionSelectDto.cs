@@ -11,9 +11,9 @@ namespace Entity.DTOs.Security.Selects.RolFormPermission
     {
         public int RolId { get; set; }
         public string RolName { get; set; }
-        public string FormId { get; set; }
-        public int FormName { get; set; }
-        public string PermissionId { get; set; }
-        public int PermissionName { get; set; }
+        public int FormId { get; set; }
+        public string FormName { get; set; }
+        public int PermissionId { get; set; }
+        public string PermissionName { get; set; }
     }
 }

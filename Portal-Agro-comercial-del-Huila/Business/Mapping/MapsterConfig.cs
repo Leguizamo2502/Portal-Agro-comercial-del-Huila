@@ -12,6 +12,7 @@ using Entity.DTOs.Producer.Farm.Select;
 using Entity.DTOs.Producer.Producer.Create;
 using Entity.DTOs.Products;
 using Entity.DTOs.Security.Create.Rols;
+using Entity.DTOs.Security.Selects.RolFormPermission;
 using Entity.DTOs.Security.Selects.Rols;
 using Entity.DTOs.Security.Selects.RolUser;
 using Mapster;
@@ -119,6 +120,12 @@ namespace Business.Mapping
             config.NewConfig<RolUser, RolUserSelectDto>()
                 .Map(dest => dest.UserName, src => src.User.Person.FirstName)
                 .Map(dest => dest.RolName, src => src.Rol.Name);
+
+            config.NewConfig<RolFormPermission, RolFormPermissionSelectDto>()
+                .Map(dest => dest.RolName, src => src.Rol.Name)
+                .Map(dest => dest.FormName, src => src.Form.Name)
+                .Map(dest => dest.PermissionName, src => src.Permission.Name);
+                
 
 
             //LOcation
