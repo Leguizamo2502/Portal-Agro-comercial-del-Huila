@@ -1,0 +1,85 @@
+<div 
+  class="sidebar" 
+  [class.collapsed]="isCollapsed"
+  (mouseenter)="expandSidebar()" 
+  (mouseleave)="collapseSidebar()"
+>
+  <!-- Perfil -->
+  <div class="profile">
+    <img src="assets/profile.jpg" alt="Perfil">
+    <div class="profile-info" [class.hide-text]="isCollapsed">
+      <h5>Zongbin</h5>
+      <small>nzb329&#64;163.com</small>
+    </div>
+  </div>
+
+  <!-- Menú -->
+  <ul class="nav flex-column">
+
+    <!-- Opción normal -->
+    <li class="nav-item">
+      <a href="#" class="nav-link">
+        <i class="bi bi-grid"></i>
+        <span class="link-text" [class.hide-text]="isCollapsed">Dashboard</span>
+      </a>
+    </li>
+
+    <!-- Submenú 1 -->
+    <li class="nav-item">
+      <div class="nav-link submenu-toggle" (click)="toggleSubmenu('material')">
+        <i class="bi bi-heart"></i>
+        <span class="link-text" [class.hide-text]="isCollapsed">Material</span>
+        <i *ngIf="!isCollapsed" class="bi" 
+           [ngClass]="{'bi-chevron-down': openSubmenus['material'], 'bi-chevron-right': !openSubmenus['material']}"></i>
+      </div>
+      <ul class="submenu" *ngIf="!isCollapsed && openSubmenus['material']">
+        <li><a href="#">Form Controls</a></li>
+        <li><a href="#">Navigation</a></li>
+        <li><a href="#">Layout</a></li>
+      </ul>
+    </li>
+
+    <!-- Submenú 2 -->
+    <li class="nav-item">
+      <div class="nav-link submenu-toggle" (click)="toggleSubmenu('users')">
+        <i class="bi bi-people"></i>
+        <span class="link-text" [class.hide-text]="isCollapsed">Users</span>
+        <i *ngIf="!isCollapsed" class="bi" 
+           [ngClass]="{'bi-chevron-down': openSubmenus['users'], 'bi-chevron-right': !openSubmenus['users']}"></i>
+      </div>
+      <ul class="submenu" *ngIf="!isCollapsed && openSubmenus['users']">
+        <li><a href="#">User List</a></li>
+        <li><a href="#">Roles</a></li>
+      </ul>
+    </li>
+
+    <!-- Submenú 3 -->
+    <li class="nav-item">
+      <div class="nav-link submenu-toggle" (click)="toggleSubmenu('reports')">
+        <i class="bi bi-file-earmark-text"></i>
+        <span class="link-text" [class.hide-text]="isCollapsed">Reports</span>
+        <i *ngIf="!isCollapsed" class="bi" 
+           [ngClass]="{'bi-chevron-down': openSubmenus['reports'], 'bi-chevron-right': !openSubmenus['reports']}"></i>
+      </div>
+      <ul class="submenu" *ngIf="!isCollapsed && openSubmenus['reports']">
+        <li><a href="#">Monthly</a></li>
+        <li><a href="#">Annual</a></li>
+      </ul>
+    </li>
+
+    <!-- Submenú 4 -->
+    <li class="nav-item">
+      <div class="nav-link submenu-toggle" (click)="toggleSubmenu('settings')">
+        <i class="bi bi-gear"></i>
+        <span class="link-text" [class.hide-text]="isCollapsed">Settings</span>
+        <i *ngIf="!isCollapsed" class="bi" 
+           [ngClass]="{'bi-chevron-down': openSubmenus['settings'], 'bi-chevron-right': !openSubmenus['settings']}"></i>
+      </div>
+      <ul class="submenu" *ngIf="!isCollapsed && openSubmenus['settings']">
+        <li><a href="#">General</a></li>
+        <li><a href="#">Security</a></li>
+      </ul>
+    </li>
+
+  </ul>
+</div>

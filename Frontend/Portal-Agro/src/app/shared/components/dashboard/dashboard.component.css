@@ -1,0 +1,75 @@
+.sidebar {
+  background: #fff;
+  height: 100vh;
+  width: 250px;
+  border-right: 1px solid #ddd;
+  transition: width 0.3s;
+  overflow-x: hidden;
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+}
+
+.profile img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.profile-info {
+  margin-left: 10px;
+  white-space: nowrap;
+  transition: opacity 0.3s, margin-left 0.3s;
+}
+
+.hide-text {
+  opacity: 0;
+  width: 0;
+  margin-left: 0;
+  overflow: hidden;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  cursor: pointer;
+  color: #333;
+}
+
+.nav-link i {
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.link-text {
+  margin-left: 10px;
+  white-space: nowrap;
+}
+
+.submenu {
+  list-style: none;
+  padding-left: 50px;
+  margin: 0;
+}
+
+.submenu li {
+  padding: 5px 0;
+}
+
+.submenu a {
+  text-decoration: none;
+  color: #555;
+  font-size: 14px;
+}
+
+.submenu a:hover {
+  color: #000;
+}
