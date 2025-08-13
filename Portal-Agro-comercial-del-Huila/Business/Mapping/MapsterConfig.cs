@@ -76,10 +76,30 @@ namespace Business.Mapping
 
             //Products
             config.NewConfig<ProductCreateDto, Product>().Ignore(des => des.ProductImages);
-            config.NewConfig<ProductImage, ProductImageDto>();
+            config.NewConfig<ProductImage, ProductImageSelectDto>()
+                  .MapWith(src => new ProductImageSelectDto(
+                      src.Id,
+                      src.FileName ?? string.Empty,
+                      src.ImageUrl ?? string.Empty,
+                      src.PublicId ?? string.Empty,
+                      src.ProductId
+                  ));
+            // DTO de actualización → Entidad (ignorar nulos y valores por defecto)
+            config.NewConfig<ProductUpdateDto, Product>()
+                .Ignore(dest => dest.ProductImages)   // Se manejan aparte
+                .Ignore(dest => dest.Active)   // No se actualiza desde DTO
+                .IgnoreNullValues(true);
+
+
             config.NewConfig<Product, ProductSelectDto>()
-                .Map(dest=>dest.PersonName,src => $"{src.Farm.Producer.User.Person.FirstName} {src.Farm.Producer.User.Person.LastName}")
-                .Map(dest => dest.Images, src => src.ProductImages.Adapt<List<ProductImageDto>>());
+                  .Map(dest => dest.PersonName,
+                       src => (src.Farm != null && src.Farm.Producer != null &&
+                               src.Farm.Producer.User != null && src.Farm.Producer.User.Person != null)
+                            ? (src.Farm.Producer.User.Person.FirstName + " " +
+                               src.Farm.Producer.User.Person.LastName)
+                            : string.Empty)
+                  // Mapear la colección usando el mapeo ProductImage -> ProductImageSelectDto
+                  .Map(dest => dest.Images, src => src.ProductImages ?? new List<ProductImage>());
 
             //Category
             // Updated mapping to handle potential null references

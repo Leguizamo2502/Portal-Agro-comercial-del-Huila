@@ -65,15 +65,26 @@ namespace Business.Services.Producers.Cloudinary
         }
 
 
-        public async Task DeleteImageAsync(string publicId)
+        //public async Task DeleteImageAsync(string publicId)
+        //{
+        //    var deletionParams = new DeletionParams(publicId);
+        //    var result = await _cloudinary.DestroyAsync(deletionParams);
+
+        //    if (result.Result != "ok")
+        //        throw new BusinessException("No se pudo eliminar la imagen de Cloudinary.");
+        //}
+
+        public async Task DeleteAsync(string publicId)
         {
+            if (string.IsNullOrWhiteSpace(publicId))
+                throw new BusinessException("PublicId no puede estar vacío.");
+
             var deletionParams = new DeletionParams(publicId);
             var result = await _cloudinary.DestroyAsync(deletionParams);
 
-            if (result.Result != "ok")
-                throw new BusinessException("No se pudo eliminar la imagen de Cloudinary.");
+            if (result.Result != "ok" && result.Result != "not_found")
+                throw new BusinessException($"Error al eliminar imagen: {result.Error?.Message ?? result.Result}");
         }
-
 
 
 
@@ -83,23 +94,25 @@ namespace Business.Services.Producers.Cloudinary
 
             ValidateImage(file);
 
-            await using var stream = file.OpenReadStream();
+ 
 
                 //var safeName = name.Replace(" ", "_").ToLowerInvariant();
                 var fileName = $"product_{productid}_{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
                 var folder = $"products/{productid}";
 
-                var uploadParams = new ImageUploadParams
-                {
-                    PublicId = $"img_{Guid.NewGuid()}",
-                    File = new FileDescription(file.FileName, file.OpenReadStream()),
-                    Folder = folder,
-                    Transformation = new Transformation()
-                    .Quality("auto")            // Ajusta calidad automáticamente
-                    .FetchFormat("auto")        // Cambia el formato a WebP/AVIF si el cliente lo soporta
-                    .Width(1200)                // Escala la imagen a 1200px de ancho (ajusta si quieres menos)
-                    .Crop("limit")              // No agranda, solo reduce si es necesario
-                };
+            await using var stream = file.OpenReadStream();
+
+            var uploadParams = new ImageUploadParams
+            {
+                PublicId = $"img_{Guid.NewGuid()}",
+                File = new FileDescription(file.FileName, stream),
+                Folder = folder,
+                Transformation = new Transformation()
+                    .Quality("auto")
+                    .FetchFormat("auto")
+                    .Width(1200)
+                    .Crop("limit")
+            };
 
             var result = await _cloudinary.UploadAsync(uploadParams);
 

@@ -10,7 +10,7 @@ using Utilities.Exceptions;
 
 namespace Business.Services.Producers.Products
 {
-    public class ProductImageService : BusinessGeneric<ProductImageDto,ProductImageDto,ProductImage>,IProductImageService
+    public class ProductImageService : BusinessGeneric<ProductImageSelectDto,ProductImageSelectDto,ProductImage>,IProductImageService
     {
         private readonly IProductImageRepository _productImageRepository;
         private readonly ICloudinaryService _cloudinaryService;
@@ -21,15 +21,15 @@ namespace Business.Services.Producers.Products
             _cloudinaryService = cloudinaryService;
         }
 
-        public async Task DeleteImageAsync(int imageId)
+        /// <summary>
+        /// Eliminar una imagen por ID
+        /// </summary>
+        public async Task DeleteImageByIdAsync(int imageId)
         {
-            var image = await _productImageRepository.GetByIdAsync(imageId);
-            if (image == null)
-                throw new BusinessException("La imagen no existe.");
+            var image = await _productImageRepository.GetByIdAsync(imageId)
+                ?? throw new KeyNotFoundException("Imagen no encontrada");
 
-            var publicId = _cloudinaryService.ExtractPublicId(image.ImageUrl);
-            await _cloudinaryService.DeleteImageAsync(publicId);
-
+            await _cloudinaryService.DeleteAsync(image.PublicId);
             await _productImageRepository.DeleteAsync(image.Id);
         }
     }

@@ -5,10 +5,11 @@ import { ButtonComponent } from "../../../../../shared/components/button/button.
 import { ProductService } from '../../../../../shared/services/product/product.service';
 import { ProductSelectModel } from '../../../../../shared/models/product/product.model';
 import { CardComponent } from "../../../../../shared/components/card/card.component";
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-product-list',
-  imports: [ButtonComponent, CardComponent],
+  imports: [ButtonComponent, CardComponent,CommonModule],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })
@@ -19,6 +20,7 @@ export class ProductListComponent implements OnInit{
   ngOnInit(): void {
     this.loadProduct();
   }
+  trackById = (_: number, p: ProductSelectModel) => p.id;
 
 
   loadProduct(){

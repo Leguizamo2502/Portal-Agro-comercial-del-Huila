@@ -3,8 +3,9 @@ using Entity.DTOs.Products;
 
 namespace Business.Interfaces.Implements.Producers.Products
 {
-    public interface IProductImageService : IBusiness<ProductImageDto,ProductImageDto>
+    public interface IProductImageService : IBusiness<ProductImageSelectDto,ProductImageSelectDto>
     {
-        Task DeleteImageAsync(int imageId);
+        //Task DeleteImageAsync(int imageId);
+        Task DeleteImageByIdAsync(int imageId);
     }
 }

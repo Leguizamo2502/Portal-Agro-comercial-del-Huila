@@ -18,6 +18,6 @@ namespace Entity.DTOs.Products
         public List<IFormFile> Images { get; set; } = new();
 
         public int FarmId { get; set; }
-        public List<string> ImageToDelete { get; set; }
+        public List<string>? ImagesToDelete { get; set; }
     }
 }
