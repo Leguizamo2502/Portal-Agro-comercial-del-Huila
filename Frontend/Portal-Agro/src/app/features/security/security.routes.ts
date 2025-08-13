@@ -101,6 +101,54 @@ export const SECURITY_ROUTES: Routes = [
   },
 
   {
+    path: 'rolUser',
+    children: [
+      {
+        path: '',
+        title: 'Roles y Usuarios',
+        loadComponent: () =>
+          import('./pages/rolUser/rol-user-list/rol-user-list.component').then(m => m.RolUserListComponent),
+      },
+      {
+        path: 'create',
+        title: 'Crear Roles y Usuarios',
+        loadComponent: () =>
+          import('./pages/rolUser/rol-user-create/rol-user-create.component').then(m => m.RolUserCreateComponent),
+      },
+      {
+        path: 'update/:id',
+        title: 'Editar Roles y Usuarios',
+        loadComponent: () =>
+          import('./pages/rolUser/rol-user-update/rol-user-update.component').then(m => m.RolUserUpdateComponent),
+      },
+    ],
+  },
+
+    {
+    path: 'formModule',
+    children: [
+      {
+        path: '',
+        title: 'Roles y Usuarios',
+        loadComponent: () =>
+          import('./pages/formModule/form-module-list/form-module-list.component').then(m => m.FormModuleListComponent),
+      },
+      {
+        path: 'create',
+        title: 'Crear Roles y Usuarios',
+        loadComponent: () =>
+          import('./pages/formModule/form-module-create/form-module-create.component').then(m => m.FormModuleCreateComponent),
+      },
+      {
+        path: 'update/:id',
+        title: 'Editar Roles y Usuarios',
+        loadComponent: () =>
+          import('./pages/formModule/form-module-update/form-module-update.component').then(m => m.FormModuleUpdateComponent),
+      },
+    ],
+  },
+
+  {
     path: 'permission',
     children: [
       {

@@ -9,6 +9,7 @@
 <app-table
   [columns]="columns"
   [data]="permissions"
+  [searchableKeys]="['name']"
   (edit)="onEdit($event)"
   (delete)="onDelete($event)">
 </app-table>

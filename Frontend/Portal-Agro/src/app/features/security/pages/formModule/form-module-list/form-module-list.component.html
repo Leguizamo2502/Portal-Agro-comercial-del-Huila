@@ -1,15 +1,15 @@
 <!-- <button mat-flat-button routerLink="create">Crear Permiso</button> -->
 <app-button
-  text="Crear Rol y Usuario"
+  text="Crear Modulo y Formulario"
   color="primary"
   icon="add"
-  redirectTo="/account/security/rolUser/create">
+  redirectTo="/account/security/formModule/create">
 </app-button>
 
 <app-table
   [columns]="columns"
-  [data]="rolUsers"
-  [searchableKeys]="['userName']"
+  [data]="formodules"
+  [searchableKeys]="['moduleName']"
   (edit)="onEdit($event)"
   (delete)="onDelete($event)">
 </app-table>

@@ -1,1 +1,9 @@
-<p>rol-user-update works!</p>
+
+<app-rol-user-form
+  title="Actualizar Rol y Usuario" 
+  [model]="model" 
+  [users]="users"
+  [rols]="rols"
+
+  (posteoForm)="save($event)">
+</app-rol-user-form>

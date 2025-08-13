@@ -1,5 +1,4 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
-import { formRegisterModel, formSelectModel } from '../../../models/form/form.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from "@angular/material/input";
 import { CommonModule } from '@angular/common';
@@ -8,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { ButtonComponent } from "../../../../../shared/components/button/button.component";
+import { FormRegisterModel, FormSelectModel } from '../../../models/form/form.model';
 
 @Component({
   selector: 'app-form-form',
@@ -22,10 +22,10 @@ export class FormFormComponent implements OnInit{
   @Input({ required: true })
   title!: string;
   
-  private _model?: formSelectModel;
+  private _model?: FormSelectModel;
 
   @Input()
-  set model(value: formSelectModel | undefined) {
+  set model(value: FormSelectModel | undefined) {
     this._model = value;
     if (value) {
       this.form.patchValue(value);
@@ -37,7 +37,7 @@ export class FormFormComponent implements OnInit{
   }
   
   @Output()
-  posteoForm = new EventEmitter<formRegisterModel>()
+  posteoForm = new EventEmitter<FormRegisterModel>()
   
   
   form = this.formBuilder.group({
@@ -53,7 +53,7 @@ export class FormFormComponent implements OnInit{
     }
   }
   save() {
-    let form = this.form.value as formRegisterModel;
+    let form = this.form.value as FormRegisterModel;
     this.posteoForm.emit(form)
   }
 

@@ -50,6 +50,10 @@
                 [ngClass]="{ 'active': activePath === 'security/rol' }">
                 <i class="bi bi-people-fill me-2"></i> Roles
             </a>
+            <a class="list-group-item list-group-item-action" (click)="navigateTo('security/rolUser')"
+                [ngClass]="{ 'active': activePath === 'security/rolUser' }">
+                <i class="bi bi-people-fill me-2"></i> Roles y Usuarios
+            </a>
 
             <a class="list-group-item list-group-item-action" (click)="navigateTo('security/permission')"
                 [ngClass]="{ 'active': activePath === 'security/permission' }">
@@ -64,6 +68,10 @@
             <a class="list-group-item list-group-item-action" (click)="navigateTo('security/module')"
                 [ngClass]="{ 'active': activePath === 'security/module' }">
                 <i class="bi bi-key-fill me-2"></i> Modulos
+            </a>
+             <a class="list-group-item list-group-item-action" (click)="navigateTo('security/formModule')"
+                [ngClass]="{ 'active': activePath === 'security/formModule' }">
+                <i class="bi bi-people-fill me-2"></i> Modulos y Formularios
             </a>
 
         </div>

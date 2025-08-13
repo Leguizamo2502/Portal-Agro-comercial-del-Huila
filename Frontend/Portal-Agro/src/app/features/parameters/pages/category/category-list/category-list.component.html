@@ -6,6 +6,7 @@
 <app-table
   [columns]="columns"
   [data]="categorys"
+  [searchableKeys]="['name']"
   (edit)="onEdit($event)"
   (delete)="onDelete($event)">
 </app-table>
