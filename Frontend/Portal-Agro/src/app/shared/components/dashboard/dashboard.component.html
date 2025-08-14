@@ -1,0 +1,113 @@
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg custom-navbar">
+  <div class="container-fluid">
+    <!-- Logo -->
+    <div class="navbar-left d-flex align-items-center">
+      <img src="logos/logo.png" alt="" class="logo">
+      <a class="navbar-brand color-title ms-2" routerLink="/home/inicio">
+        Portal Agro-comercial del Huila
+      </a>
+    </div>
+
+    <!-- Botón hamburguesa solo en móviles -->
+    <button class="navbar-toggler d-lg-none" type="button" (click)="toggleSidebar()">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
+</nav>
+
+<!-- CONTENEDOR PRINCIPAL -->
+<div class="layout">
+  <!-- SIDEBAR -->
+  <div class="sidebar shadow p-3 bg-light rounded" [class.open]="isSidebarOpen">
+    
+    <!-- Usuario -->
+    <div class="text-center mb-3">
+      <h6 class="fw-bold text-success">{{ user.name }}</h6>
+      <p class="mb-0 text-muted">{{ user.email }}</p>
+    </div>
+
+    <!-- Menú -->
+    <div class="list-group">
+      <a class="list-group-item list-group-item-action" (click)="navigateTo('info')"
+         [ngClass]="{ 'active': activePath === 'info' }">
+        <i class="bi bi-key-fill me-2"></i> Mi Información
+      </a>
+
+      <a class="list-group-item list-group-item-action" routerLink="/favoritos" routerLinkActive="active">
+        <i class="bi bi-heart-fill me-2"></i> Favoritos
+      </a>
+
+      <a class="list-group-item list-group-item-action" routerLink="/pedidos" routerLinkActive="active">
+        <i class="bi bi-bag-fill me-2"></i> Pedidos
+      </a>
+
+      <a class="list-group-item list-group-item-action" routerLink="/productor" routerLinkActive="active">
+        <i class="bi bi-person-workspace me-2"></i> Productor
+      </a>
+
+      <a class="list-group-item list-group-item-action" routerLink="/soporte" routerLinkActive="active">
+        <i class="bi bi-question-circle-fill me-2"></i> Soporte
+      </a>
+
+      <!-- Seguridad con submenú -->
+      <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+         data-bs-toggle="collapse" href="#submenuSeguridad" role="button" aria-expanded="false"
+         aria-controls="submenuSeguridad">
+        <span><i class="bi bi-shield-lock-fill me-2"></i> Seguridad</span>
+        <i class="bi bi-chevron-down small"></i>
+      </a>
+
+      <div class="collapse ps-3" id="submenuSeguridad">
+        <a class="list-group-item list-group-item-action" (click)="navigateTo('security/user')"
+           [ngClass]="{ 'active': activePath === 'security/user' }">
+          <i class="bi bi-people-fill me-2"></i> Usuarios
+        </a>
+
+        <a class="list-group-item list-group-item-action" (click)="navigateTo('security/permission')"
+           [ngClass]="{ 'active': activePath === 'security/permission' }">
+          <i class="bi bi-key-fill me-2"></i> Permisos
+        </a>
+
+        <a class="list-group-item list-group-item-action" (click)="navigateTo('security/form')"
+           [ngClass]="{ 'active': activePath === 'security/form' }">
+          <i class="bi bi-key-fill me-2"></i> Formularios
+        </a>
+
+        <a class="list-group-item list-group-item-action" (click)="navigateTo('security/module')"
+           [ngClass]="{ 'active': activePath === 'security/module' }">
+          <i class="bi bi-key-fill me-2"></i> Módulos
+        </a>
+      </div>
+
+      <!-- Parámetros -->
+      <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+         data-bs-toggle="collapse" href="#submenuParameters" role="button" aria-expanded="false"
+         aria-controls="submenuParameters">
+        <span><i class="bi bi-sliders2 me-2"></i> Parámetros</span>
+        <i class="bi bi-chevron-down small"></i>
+      </a>
+
+      <div class="collapse ps-3" id="submenuParameters">
+        <a class="list-group-item list-group-item-action" (click)="navigateTo('parameters/category')"
+           [ngClass]="{ 'active': activePath === 'parameters/category' }">
+          <i class="bi bi-tags-fill me-2"></i> Categorías
+        </a>
+        <a class="list-group-item list-group-item-action" (click)="navigateTo('parameters/department')"
+           [ngClass]="{ 'active': activePath === 'parameters/department' }">
+          <i class="bi bi-tags-fill me-2"></i> Departamento
+        </a>
+        <a class="list-group-item list-group-item-action" (click)="navigateTo('parameters/city')"
+           [ngClass]="{ 'active': activePath === 'parameters/city' }">
+          <i class="bi bi-tags-fill me-2"></i> Ciudad
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div class="content">
+    <h1>Contenido principal</h1>
+    <p>Aquí va el resto de tu página...</p>
+  </div>
+</div>
