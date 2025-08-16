@@ -6,6 +6,9 @@ import { NavbarVerticalComponent } from './shared/components/navbar-vertical/nav
 import { NavbarSinCategoriaComponent } from './shared/components/navbar-sin-categoria/navbar-sin-categoria.component';
 import { CarruselComponent } from './shared/components/carrusel/carrusel.component';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
+import { OrderHistoryComponent } from './shared/components/order-history/order-history.component';
+import { ProductDetailComponent } from './shared/components/product-detail/product-detail.component';
+
 
 export const routes: Routes = [
   {
@@ -43,4 +46,9 @@ export const routes: Routes = [
   { path: 'navbar', component: NavbarComponent },
   { path: 'navbar-vertical', component: NavbarVerticalComponent},
   { path: 'navbar-sin-categoria', component: NavbarSinCategoriaComponent},
+  { path: 'carrusel', component: CarruselComponent},
+  { path: 'order-history', component: OrderHistoryComponent},
+  { path: 'dashboard', component: DashboardComponent},
+  { path: 'product-detail', component:ProductDetailComponent},
+
 ];

@@ -1,0 +1,24 @@
+.container-history{
+    width: 40rem;
+    height: 20rem;
+    padding:10px;
+    background-color: #F8F8F8;
+    border-radius: 16px;
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-size: 1rem;
+}
+
+.card.bg-success {
+    background-color: #04b80d !important;
+}
+.badge{
+    color: black;
+    font-weight: 500;
+}
