@@ -32,7 +32,7 @@ export class RolUserListComponent implements OnInit{
   }
 
   onDelete(item: any) {
-    this.rolUserService.deleteLogic(item.id).subscribe(()=>{
+    this.rolUserService.delete(item.id).subscribe(()=>{
       this.loadRolUsers();
       // console.log("borrado")
     })

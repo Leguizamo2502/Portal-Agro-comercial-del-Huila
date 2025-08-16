@@ -9,17 +9,17 @@
 }
 
 /* 2. Sidebar se vuelve sticky en lugar de fixed */
-.sidebar-fixed {
+/* .sidebar-fixed {
   grid-column: 1;
   grid-row: 1 / span 2;
   position: sticky;
-  top: 80px;             /* deja espacio para tu navbar superior */
+  top: 80px;             
   align-self: start;
   background-color: white;
   overflow-y: auto;
   border-right: 1px solid #ddd;
   padding: 1rem;
-}
+} */
 
 /* 3. Contenido principal ocupa la 2ª columna */
 .contenido-principal {

@@ -9,11 +9,24 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Entity.Infrastructure.DataInit.Security
 {
-    //public class FormModuleSeeder : IEntityTypeConfiguration<FormModuleSeeder>
-    //{
-    //    public void Configure(EntityTypeBuilder<FormModuleSeeder> builder)
-    //    {
-    //        //builder.HasData();
-    //    }
-    //}
+    public class FormModuleSeeder : IEntityTypeConfiguration<FormModule>
+    {
+        public void Configure(EntityTypeBuilder<FormModule> builder)
+        {
+            var created = new DateTime(2024, 1, 1);
+
+            //builder.HasIndex(x => new { x.FormId, x.ModuleId }).IsUnique();
+
+            builder.HasData(
+                new FormModule { Id = 1, ModuleId = 1, FormId = 1, Active = true, IsDeleted = false, CreateAt = created },
+                new FormModule { Id = 2, ModuleId = 1, FormId = 2, Active = true, IsDeleted = false, CreateAt = created },
+                new FormModule { Id = 3, ModuleId = 1, FormId = 3, Active = true, IsDeleted = false, CreateAt = created },
+                new FormModule { Id = 4, ModuleId = 1, FormId = 4, Active = true, IsDeleted = false, CreateAt = created },
+                new FormModule { Id = 5, ModuleId = 1, FormId = 5, Active = true, IsDeleted = false, CreateAt = created },
+                new FormModule { Id = 6, ModuleId = 1, FormId = 6, Active = true, IsDeleted = false, CreateAt = created },
+                new FormModule { Id = 7, ModuleId = 1, FormId = 7, Active = true, IsDeleted = false, CreateAt = created },
+                new FormModule { Id = 8, ModuleId = 1, FormId = 8, Active = true, IsDeleted = false, CreateAt = created }
+            );
+        }
+    }
 }

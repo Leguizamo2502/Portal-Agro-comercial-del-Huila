@@ -5,8 +5,10 @@ import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { NavbarVerticalComponent } from './shared/components/navbar-vertical/navbar-vertical.component';
 import { NavbarSinCategoriaComponent } from './shared/components/navbar-sin-categoria/navbar-sin-categoria.component';
 import { CarruselComponent } from './shared/components/carrusel/carrusel.component';
+import { ForbiddenComponent } from './Core/page/forbidden/forbidden.component';
 
 export const routes: Routes = [
+
   {
     path: '',
     redirectTo: 'auth/login', 
@@ -33,6 +35,8 @@ export const routes: Routes = [
     loadChildren: ()=>
       import('./features/account/account.routes').then((r)=>r.ACCOUNT_ROUTES),
   },
+
+  {path:'forbidden',component:ForbiddenComponent},
 
   
   { path: 'card', component: CardComponent },

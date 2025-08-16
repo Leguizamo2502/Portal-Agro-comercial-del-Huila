@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Entity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250816163243_Inicial")]
+    [Migration("20250816205646_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -1927,6 +1927,88 @@ namespace Entity.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Forms");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Gestión de formularios",
+                            IsDeleted = false,
+                            Name = "Formularios",
+                            Url = "/account/security/form"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Gestión de usuarios",
+                            IsDeleted = false,
+                            Name = "Usuarios",
+                            Url = "/account/security/user"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Gestión de roles",
+                            IsDeleted = false,
+                            Name = "Roles",
+                            Url = "/account/security/rol"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Gestión de módulos",
+                            IsDeleted = false,
+                            Name = "Módulos",
+                            Url = "/account/security/module"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Asignación rol-usuario",
+                            IsDeleted = false,
+                            Name = "Rol-Usuario",
+                            Url = "/account/security/rolUser"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Asignación módulo-form",
+                            IsDeleted = false,
+                            Name = "Módulo-Formulario",
+                            Url = "/account/security/formModule"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Asignación R-F-P",
+                            IsDeleted = false,
+                            Name = "Rol-Formulario-Permiso",
+                            Url = "/account/security/rolFormPermission"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Catálogo de permisos",
+                            IsDeleted = false,
+                            Name = "Permisos",
+                            Url = "/account/security/permission"
+                        });
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Security.FormModule", b =>
@@ -1959,6 +2041,80 @@ namespace Entity.Migrations
                     b.HasIndex("ModuleId");
 
                     b.ToTable("FormModules");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 1,
+                            IsDeleted = false,
+                            ModuleId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 2,
+                            IsDeleted = false,
+                            ModuleId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 3,
+                            IsDeleted = false,
+                            ModuleId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 4,
+                            IsDeleted = false,
+                            ModuleId = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 5,
+                            IsDeleted = false,
+                            ModuleId = 1
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 6,
+                            IsDeleted = false,
+                            ModuleId = 1
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 7,
+                            IsDeleted = false,
+                            ModuleId = 1
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 8,
+                            IsDeleted = false,
+                            ModuleId = 1
+                        });
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Security.Module", b =>
@@ -1989,6 +2145,26 @@ namespace Entity.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Modules");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Administración de seguridad",
+                            IsDeleted = false,
+                            Name = "Seguridad"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Parámetros del sistema",
+                            IsDeleted = false,
+                            Name = "Parámetros"
+                        });
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Security.Permission", b =>
@@ -2019,6 +2195,44 @@ namespace Entity.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Permissions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Puede ver",
+                            IsDeleted = false,
+                            Name = "leer"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Puede crear",
+                            IsDeleted = false,
+                            Name = "crear"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Puede editar",
+                            IsDeleted = false,
+                            Name = "actualizar"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Puede eliminar",
+                            IsDeleted = false,
+                            Name = "eliminar"
+                        });
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Security.Rol", b =>
@@ -2115,6 +2329,328 @@ namespace Entity.Migrations
                     b.HasIndex("RolId");
 
                     b.ToTable("RolFormPermissions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 1,
+                            IsDeleted = false,
+                            PermissionId = 1,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 1,
+                            IsDeleted = false,
+                            PermissionId = 2,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 1,
+                            IsDeleted = false,
+                            PermissionId = 3,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 1,
+                            IsDeleted = false,
+                            PermissionId = 4,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 2,
+                            IsDeleted = false,
+                            PermissionId = 1,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 2,
+                            IsDeleted = false,
+                            PermissionId = 2,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 2,
+                            IsDeleted = false,
+                            PermissionId = 3,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 2,
+                            IsDeleted = false,
+                            PermissionId = 4,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 3,
+                            IsDeleted = false,
+                            PermissionId = 1,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 3,
+                            IsDeleted = false,
+                            PermissionId = 2,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 3,
+                            IsDeleted = false,
+                            PermissionId = 3,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 3,
+                            IsDeleted = false,
+                            PermissionId = 4,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 4,
+                            IsDeleted = false,
+                            PermissionId = 1,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 4,
+                            IsDeleted = false,
+                            PermissionId = 2,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 4,
+                            IsDeleted = false,
+                            PermissionId = 3,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 4,
+                            IsDeleted = false,
+                            PermissionId = 4,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 5,
+                            IsDeleted = false,
+                            PermissionId = 1,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 5,
+                            IsDeleted = false,
+                            PermissionId = 2,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 5,
+                            IsDeleted = false,
+                            PermissionId = 3,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 5,
+                            IsDeleted = false,
+                            PermissionId = 4,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 6,
+                            IsDeleted = false,
+                            PermissionId = 1,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 6,
+                            IsDeleted = false,
+                            PermissionId = 2,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 6,
+                            IsDeleted = false,
+                            PermissionId = 3,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 6,
+                            IsDeleted = false,
+                            PermissionId = 4,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 7,
+                            IsDeleted = false,
+                            PermissionId = 1,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 7,
+                            IsDeleted = false,
+                            PermissionId = 2,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 7,
+                            IsDeleted = false,
+                            PermissionId = 3,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 7,
+                            IsDeleted = false,
+                            PermissionId = 4,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 8,
+                            IsDeleted = false,
+                            PermissionId = 1,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 8,
+                            IsDeleted = false,
+                            PermissionId = 2,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 8,
+                            IsDeleted = false,
+                            PermissionId = 3,
+                            RolId = 1
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Active = true,
+                            CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            FormId = 8,
+                            IsDeleted = false,
+                            PermissionId = 4,
+                            RolId = 1
+                        });
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Security.RolUser", b =>

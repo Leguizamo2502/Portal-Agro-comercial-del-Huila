@@ -106,10 +106,12 @@ namespace Web.Controllers.Implements.Auth
         [HttpGet("me")]
         public async Task<IActionResult> GetCurrentUser()
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
-                return Unauthorized("El token no contiene un Claim 'sub' (NameIdentifier) válido o no es un ID.");
+            //if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+            //    return Unauthorized("El token no contiene un Claim 'sub' (NameIdentifier) válido o no es un ID.");
+            var userId = HttpContext.GetUserId();
+
 
             var currentUserDto = await _meService.GetAllDataMeAsync(userId);
 

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment.development';
-import { LoginModel, LoginResponseModel } from '../../Models/login.model';
+import { LoginModel, LoginResponseModel, UserMeDto } from '../../Models/login.model';
 import { RegisterUserModel } from '../../Models/registeruser.model';
 import { UserSelectModel } from '../../Models/user.model';
 
@@ -27,8 +27,8 @@ export class AuthService {
     return this.http.post<any>(this.urlBase+"logout",[])
   }
 
-  GetMe(): Observable<LoginResponseModel> {
-    return this.http.get<LoginResponseModel>(this.urlBase + 'me');
+  GetMe(): Observable<UserMeDto> {
+    return this.http.get<UserMeDto>(this.urlBase + 'me');
   }
 
   GetDataBasic():Observable<UserSelectModel>{

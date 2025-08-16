@@ -66,17 +66,19 @@ namespace Data.Service.Producers.Products
         {
 
             return await _dbSet
-             .AsNoTracking()
-             .Include(p => p.Category)
-             .Include(p => p.Farm)
-                 .ThenInclude(f => f.City)
-                     .ThenInclude(c => c.Department)
-             .Include(p => p.Farm)
-                 .ThenInclude(f => f.Producer)
-                     .ThenInclude(prod => prod.User)
-                         .ThenInclude(u => u.Person)
-             .Include(p => p.ProductImages.Where(pi => !pi.IsDeleted))
-             .ToListAsync();
+               .AsNoTracking()
+               .OrderByDescending(p => p.CreateAt)          // último creado primero
+               .ThenByDescending(p => p.Id)                  // desempate estable
+               .Include(p => p.Category)
+               .Include(p => p.Farm)
+                   .ThenInclude(f => f.City)
+                       .ThenInclude(c => c.Department)
+               .Include(p => p.Farm)
+                   .ThenInclude(f => f.Producer)
+                       .ThenInclude(prod => prod.User)
+                           .ThenInclude(u => u.Person)
+               .Include(p => p.ProductImages.Where(pi => !pi.IsDeleted))
+               .ToListAsync();
 
         }
 

@@ -1,7 +1,8 @@
-import { Routes } from '@angular/router';
+import { Routes, CanActivateFn } from '@angular/router';
 import { InfoComponent } from './components/info/info.component';
 import { SummaryComponent } from '../producer/pages/summary/summary.component';
 import { AccountComponent } from './pages/account/account.component';
+import { roleMatchGuard } from '../../Core/guards/role-match/role-match.guard';
 
 export const ACCOUNT_ROUTES: Routes = [
   {
