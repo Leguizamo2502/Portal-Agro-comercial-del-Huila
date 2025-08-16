@@ -36,7 +36,7 @@ namespace Web.Controllers.Implements.Producer.Products
 
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
         public virtual async Task<IActionResult> GetById(int id)
@@ -54,7 +54,7 @@ namespace Web.Controllers.Implements.Producer.Products
 
         }
 
-        [HttpGet("{producerId}")]
+        [HttpGet("by-producer/{producerId}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
         public virtual async Task<IActionResult> GetByProducer(int producerId)

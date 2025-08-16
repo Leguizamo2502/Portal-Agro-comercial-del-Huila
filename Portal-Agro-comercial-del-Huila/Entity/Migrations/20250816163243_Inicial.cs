@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Entity.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Inicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Categories",
+                name: "Category",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -27,11 +27,11 @@ namespace Entity.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.PrimaryKey("PK_Category", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Categories_Categories_ParentCategoryId",
+                        name: "FK_Category_Category_ParentCategoryId",
                         column: x => x.ParentCategoryId,
-                        principalTable: "Categories",
+                        principalTable: "Category",
                         principalColumn: "Id");
                 });
 
@@ -411,9 +411,9 @@ namespace Entity.Migrations
                 {
                     table.PrimaryKey("PK_Products", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Products_Categories_CategoryId",
+                        name: "FK_Products_Category_CategoryId",
                         column: x => x.CategoryId,
-                        principalTable: "Categories",
+                        principalTable: "Category",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -450,7 +450,7 @@ namespace Entity.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Categories",
+                table: "Category",
                 columns: new[] { "Id", "Active", "CreateAt", "IsDeleted", "Name", "ParentCategoryId" },
                 values: new object[,]
                 {
@@ -509,7 +509,7 @@ namespace Entity.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Categories",
+                table: "Category",
                 columns: new[] { "Id", "Active", "CreateAt", "IsDeleted", "Name", "ParentCategoryId" },
                 values: new object[,]
                 {
@@ -565,7 +565,7 @@ namespace Entity.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Categories",
+                table: "Category",
                 columns: new[] { "Id", "Active", "CreateAt", "IsDeleted", "Name", "ParentCategoryId" },
                 values: new object[] { 4, true, new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, "Exóticas", 3 });
 
@@ -688,8 +688,8 @@ namespace Entity.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categories_ParentCategoryId",
-                table: "Categories",
+                name: "IX_Category_ParentCategoryId",
+                table: "Category",
                 column: "ParentCategoryId");
 
             migrationBuilder.CreateIndex(
@@ -817,7 +817,7 @@ namespace Entity.Migrations
                 name: "Rols");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "Category");
 
             migrationBuilder.DropTable(
                 name: "Farms");

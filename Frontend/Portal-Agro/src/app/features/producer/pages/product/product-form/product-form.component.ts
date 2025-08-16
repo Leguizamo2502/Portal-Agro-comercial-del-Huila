@@ -1,7 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  inject,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,19 +23,32 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ProductSelectModel, ProductImageSelectModel } from '../../../../../shared/models/product/product.model';
+import {
+  ProductSelectModel,
+  ProductImageSelectModel,
+} from '../../../../../shared/models/product/product.model';
 import { ProductService } from '../../../../../shared/services/product/product.service';
-import { ProductUpdateModel, ProductRegisterModel } from '../../../../products/Models/product.model';
+import {
+  ProductUpdateModel,
+  ProductRegisterModel,
+} from '../../../../products/Models/product.model';
 import { ProductImageService } from '../../../../products/services/productImage/product-image.service';
 import { FarmService } from '../../../../../shared/services/farm/farm.service';
 import { CategoryService } from '../../../../parameters/services/category/category.service';
 import { FarmSelectModel } from '../../../../../shared/models/farm/farm.model';
 import { CategorySelectModel } from '../../../../parameters/models/category/category.model';
-
+import { ButtonComponent } from '../../../../../shared/components/button/button.component';
+import Swal from 'sweetalert2';
 
 /** Modelos simples para selects */
-export interface CategoryOption { id: number; name: string; }
-export interface FarmOption { id: number; name: string; }
+export interface CategoryOption {
+  id: number;
+  name: string;
+}
+export interface FarmOption {
+  id: number;
+  name: string;
+}
 
 @Component({
   selector: 'app-product-form',
@@ -38,7 +63,8 @@ export interface FarmOption { id: number; name: string; }
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatTooltipModule
+    MatTooltipModule,
+    ButtonComponent,
   ],
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.css'],
@@ -46,29 +72,28 @@ export interface FarmOption { id: number; name: string; }
 export class ProductFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private productSrv = inject(ProductService);
   private imageSrv = inject(ProductImageService);
   private farmService = inject(FarmService);
-  farms:FarmSelectModel[] =[]
-  private categoryService = inject(CategoryService)
-  categories:CategorySelectModel[] =[]
+  farms: FarmSelectModel[] = [];
+  private categoryService = inject(CategoryService);
+  categories: CategorySelectModel[] = [];
 
-
-  loadFarm(){
-    this.farmService.getFarms().subscribe((dara)=>{
+  loadFarm() {
+    this.farmService.getFarms().subscribe((dara) => {
       this.farms = dara;
-    })
+    });
   }
-  loadCategories(){
-    this.categoryService.getAll().subscribe((data)=>{
+  loadCategories() {
+    this.categoryService.getAll().subscribe((data) => {
       this.categories = data;
-    })
+    });
   }
-
 
   /** Modo edición si llega productId o initialData */
-  @Input() productId?: number;
-  @Input() initialData?: ProductSelectModel;
+  // @Input() productId?: number;
+  // @Input() initialData?: ProductSelectModel;
 
   /** Listas externas para selects */
   // @Input({ required: true }) categories: CategoryOption[] = [];
@@ -98,18 +123,44 @@ export class ProductFormComponent implements OnInit {
   existingImages: ProductImageSelectModel[] = [];
   imagesToDelete: string[] = []; // publicId a borrar en UPDATE
 
+  productId?: number;
+
   ngOnInit(): void {
     this.initForms();
     this.loadCategories();
-    this.loadFarm()
+    this.loadFarm();
 
-    if (this.initialData) {
-      this.isEdit = true;
-      this.patchFromSelect(this.initialData);
-    } else if (this.productId) {
-      this.isEdit = true;
-      this.loadProduct(this.productId);
-    }
+    // Escucha cambios del :id (soporta navegar de update/5 a update/6 sin destruir componente)
+    this.route.paramMap.subscribe((params) => {
+      const idParam = params.get('id');
+
+      if (idParam) {
+        // ---- MODO EDICIÓN ----
+        this.productId = Number(idParam);
+        this.isEdit = true;
+
+        // Limpia estados previos por si venías de 'create' o de otro 'id'
+        this.resetForm();
+        this.existingImages = [];
+        this.imagesToDelete = [];
+        this.selectedFiles = [];
+        this.imagesPreview = [];
+
+        // Carga el producto y sus imágenes
+        this.loadProduct(this.productId);
+      } else {
+        // ---- MODO CREACIÓN ----
+        this.productId = undefined;
+        this.isEdit = false;
+
+        // Deja el form listo para crear
+        this.resetForm();
+        this.existingImages = [];
+        this.imagesToDelete = [];
+        this.selectedFiles = [];
+        this.imagesPreview = [];
+      }
+    });
   }
 
   private initForms(): void {
@@ -208,7 +259,8 @@ export class ProductFormComponent implements OnInit {
     newFiles.forEach((file) => {
       const reader = new FileReader();
       reader.onload = (ev) => {
-        if (ev.target?.result) this.imagesPreview.push(ev.target.result as string);
+        if (ev.target?.result)
+          this.imagesPreview.push(ev.target.result as string);
       };
       reader.readAsDataURL(file);
     });
@@ -229,7 +281,7 @@ export class ProductFormComponent implements OnInit {
         next: () => {
           this.existingImages.splice(index, 1);
           // Registrar para el update por si prefieres delegar borrado en PUT
-          this.imagesToDelete.push(img.publicId);
+          // this.imagesToDelete.push(img.publicId);
         },
         complete: () => (this.isDeletingImage = false),
         error: () => (this.isDeletingImage = false),
@@ -259,7 +311,7 @@ export class ProductFormComponent implements OnInit {
 
     if (this.isEdit) {
       const dto: ProductUpdateModel = {
-        id: this.initialData?.id ?? this.productId!,
+        id: this.productId!,
         name: g.name,
         description: g.description,
         price: Number(g.price),
@@ -270,15 +322,34 @@ export class ProductFormComponent implements OnInit {
         categoryId: Number(d.categoryId),
         farmId: Number(d.farmId),
         images: this.selectedFiles.length ? this.selectedFiles : undefined,
-        imagesToDelete: this.imagesToDelete.length ? this.imagesToDelete : undefined,
+        imagesToDelete: this.imagesToDelete.length
+          ? this.imagesToDelete
+          : undefined,
       };
 
       this.productSrv.update(dto).subscribe({
         next: (resp) => {
-          this.saved.emit(resp);
-          this.resetAfterSave();
+          Swal.fire({
+            icon: 'success',
+            title: '¡Actualizado!',
+            text: 'El producto se actualizó con éxito',
+            confirmButtonText: 'Aceptar',
+          }).then(() => {
+            this.saved.emit(resp);
+            this.resetAfterSave();
+            // Redirigir al dashboard (ajusta la ruta real)
+            this.router.navigateByUrl('/account/producer/management/product');
+          });
         },
-        error: () => (this.isLoading = false),
+        error: (err) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo actualizar el producto',
+            confirmButtonText: 'Cerrar',
+          });
+          this.isLoading = false;
+        },
       });
     } else {
       const dto: ProductRegisterModel = {
@@ -296,10 +367,27 @@ export class ProductFormComponent implements OnInit {
 
       this.productSrv.create(dto).subscribe({
         next: (resp) => {
-          this.saved.emit(resp);
-          this.resetAfterSave();
+          Swal.fire({
+            icon: 'success',
+            title: '¡Creado!',
+            text: 'El producto se registró con éxito',
+            confirmButtonText: 'Aceptar',
+          }).then(() => {
+            this.saved.emit(resp);
+            this.resetAfterSave();
+            // Redirigir al dashboard (ajusta la ruta real)
+            this.router.navigateByUrl('/account/producer/management/product');
+          });
         },
-        error: () => (this.isLoading = false),
+        error: (err) => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo registrar el producto',
+            confirmButtonText: 'Cerrar',
+          });
+          this.isLoading = false;
+        },
       });
     }
   }

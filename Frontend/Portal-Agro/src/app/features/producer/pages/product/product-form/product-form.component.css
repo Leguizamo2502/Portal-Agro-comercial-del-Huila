@@ -1,0 +1,64 @@
+/* Contenedor de previews (grilla responsiva y compacta) */
+.compact-image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* ajusta 120–160px a gusto */
+  gap: 12px;
+}
+
+/* Cada celda mantiene relación 1:1 para que no crezca en altura */
+.compact-image-container {
+  position: relative;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;              /* Hace que la celda sea cuadrada */
+  background: #f8f8f8;
+}
+
+/* La imagen ocupa toda la celda y se recorta si sobra */
+.compact-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;                 /* recorta sin deformar */
+  object-position: center;
+}
+
+/* Botonera flotante sobre la imagen */
+.compact-image-actions {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(255,255,255,0.85);
+  border-radius: 999px;
+}
+
+/* Etiqueta “Existente / Nueva” */
+.compact-image-label {
+  position: absolute;
+  left: 8px;
+  bottom: 6px;
+  font-size: 11px;
+  color: #fff;
+  background: rgba(0,0,0,0.55);
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+/* Zona de drop: evita que crezca de más */
+.drop-zone {
+  border: 2px dashed #bdbdbd;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+  max-width: 100%;
+}
+.drop-zone.dragover { background: #fafafa; border-color: #757575; }
+.drop-zone mat-icon { font-size: 40px; width: 40px; height: 40px; display: block; margin: 0 auto 8px; }
+
+/* Ajustes responsive */
+@media (max-width: 768px) {
+  .compact-image-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+}

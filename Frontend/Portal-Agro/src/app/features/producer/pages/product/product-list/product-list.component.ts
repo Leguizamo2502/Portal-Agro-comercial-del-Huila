@@ -6,6 +6,8 @@ import { ProductService } from '../../../../../shared/services/product/product.s
 import { ProductSelectModel } from '../../../../../shared/models/product/product.model';
 import { CardComponent } from "../../../../../shared/components/card/card.component";
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
@@ -15,6 +17,7 @@ import { CommonModule } from '@angular/common';
 })
 export class ProductListComponent implements OnInit{
   private productService = inject(ProductService);
+  private router = inject(Router);
   
   products: ProductSelectModel[] =[];
   ngOnInit(): void {
@@ -27,6 +30,34 @@ export class ProductListComponent implements OnInit{
     this.productService.getAll().subscribe((data)=>{
       this.products = data;
     })
+  }
+
+  onEdit(p: ProductSelectModel) {
+    this.router.navigate(['/account/producer/management/product/update', p.id]);
+  }
+
+  onDelete(p: ProductSelectModel) {
+    Swal.fire({
+      title: '¿Eliminar producto?',
+      text: `Se eliminará "${p.name}". Esta acción no se puede deshacer.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then(result => {
+      if (!result.isConfirmed) return;
+
+      this.productService.delete(p.id).subscribe({
+        next: () => {
+          // Remueve localmente sin recargar toda la lista
+          this.products = this.products.filter(x => x.id !== p.id);
+          Swal.fire('Eliminado', 'El producto fue eliminado.', 'success');
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo eliminar el producto.', 'error');
+        }
+      });
+    });
   }
 
   

@@ -7,6 +7,7 @@ using Entity.Domain.Models.Implements.Products;
 using Entity.DTOs.Products;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Utilities.Exceptions;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -16,11 +17,13 @@ namespace Business.Services.Producers.Products
     {
         private readonly IProductImageRepository _productImageRepository;
         private readonly ICloudinaryService _cloudinaryService;
+        private readonly ILogger<ProductImageService> _logger;
         public ProductImageService(IDataGeneric<ProductImage> data, IMapper mapper, IProductImageRepository productImageRepository,
-            ICloudinaryService cloudinaryService) : base(data, mapper)
+            ICloudinaryService cloudinaryService, ILogger<ProductImageService> logger) : base(data, mapper)
         {
             _productImageRepository = productImageRepository;
             _cloudinaryService = cloudinaryService;
+            _logger  = logger;
         }
 
 
@@ -101,8 +104,23 @@ namespace Business.Services.Producers.Products
 
         public async Task<bool> DeleteLogicalByPublicIdAsync(string publicId)
         {
-            // Simplemente delega la llamada a la capa Data
-            return await _productImageRepository.DeleteLogicalByPublicIdAsync(publicId);
+            await _productImageRepository.DeleteLogicalByPublicIdAsync(publicId);
+
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await _cloudinaryService.DeleteAsync(publicId);
+                }
+                catch (Exception ex)
+                {
+                    // Loggear error para diagnóstico
+                    _logger.LogError(ex, $"Error al eliminar de Cloudinary: {publicId}");
+                }
+            });
+
+            return true;
         }
+
     }
 }

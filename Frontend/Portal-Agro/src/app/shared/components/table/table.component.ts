@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, startWith } from 'rxjs/operators';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-table',
@@ -81,7 +82,22 @@ export class TableComponent implements OnChanges {
   }
 
   onEdit(row: any) { this.edit.emit(row); }
-  onDelete(row: any) { this.delete.emit(row); }
+  onDelete(row: any) {
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: 'Esta acción no se puede deshacer',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.delete.emit(row);
+    }
+  });
+}
 }
 
 /* Helpers */
