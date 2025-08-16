@@ -1,39 +1,57 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
+import { Router, ActivatedRoute } from '@angular/router';
+import { SidebarService } from '../../services/sidebar/sidebar.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent {
-  isSidebarOpen = false;
-  activePath = 'info';
-
-  user = {
-    name: 'Daniel Bata',
-    email: 'daniel@example.com'
-  };
+export class DashboardComponent implements OnInit, OnDestroy {
+  sidebarService = inject(SidebarService);
+  router = inject(Router);
+  route = inject(ActivatedRoute);
+  
+  isOpen = this.sidebarService.isOpen;
+  activePath = '';
 
   openSubmenus: { [key: string]: boolean } = {
-    material: false,
-    users: false,
-    reports: false,
-    settings: false
+    security: false,
+    parameters: false
+  };
+  
+  private resizeListener?: () => void;
+
+  user = {
+    name: 'Vanessa Ortiz',
+    email: 'vanessaortiz@gmail.com'
   };
 
-  toggleSidebar() {
-    this.isSidebarOpen = !this.isSidebarOpen;
+  ngOnInit() {
+    this.sidebarService.initializeBasedOnScreenSize();
+    
+    this.resizeListener = () => {
+      this.sidebarService.initializeBasedOnScreenSize();
+    };
+    window.addEventListener('resize', this.resizeListener);
+  }
+
+  ngOnDestroy() {
+    if (this.resizeListener) {
+      window.removeEventListener('resize', this.resizeListener);
+    }
+  }
+
+  navigateTo(path: string) {
+    this.router.navigate([path], { relativeTo: this.route });
+    this.activePath = path;
+    console.log("Navegando a:", path);
   }
 
   toggleSubmenu(menu: string) {
     this.openSubmenus[menu] = !this.openSubmenus[menu];
-  }
-
-  navigateTo(path: string) {
-    this.activePath = path;
   }
 }
