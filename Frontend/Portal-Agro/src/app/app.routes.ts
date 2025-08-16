@@ -7,6 +7,8 @@ import { NavbarSinCategoriaComponent } from './shared/components/navbar-sin-cate
 import { CarruselComponent } from './shared/components/carrusel/carrusel.component';
 import { OrderHistoryComponent } from './shared/components/order-history/order-history.component';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
+import { ProductDetailComponent } from './shared/components/product-detail/product-detail.component';
+import { ProducerProfileComponent } from './shared/components/producer-profile/producer-profile.component';
 
 export const routes: Routes = [
   {
@@ -45,4 +47,6 @@ export const routes: Routes = [
   { path: 'carrusel', component: CarruselComponent},
   { path: 'order-history', component: OrderHistoryComponent},
   { path: 'dashboard', component: DashboardComponent},
+  { path: 'product-detail', component:ProductDetailComponent},
+  { path: 'producer-profile', component:ProducerProfileComponent}
 ];

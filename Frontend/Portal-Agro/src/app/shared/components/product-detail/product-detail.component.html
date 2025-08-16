@@ -1,0 +1,79 @@
+<div *ngIf="loading" class="text-center my-5">
+  <div class="spinner-border text-success"></div>
+</div>
+
+<div *ngIf="!loading" class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+
+      <div class="d-flex flex-wrap justify-content-center gap-4 mb-4">
+
+        <div *ngIf="product?.thumbnails?.length" class="d-flex flex-column gap-2">
+          <img *ngFor="let img of product.thumbnails"
+              [src]="img"
+              (click)="changeMainImage(img)"
+              class="img-thumbnail"
+              style="width: 60px; height: 60px; object-fit: cover; cursor: pointer;">
+        </div>
+
+        <div class="flex-fill d-flex align-items-center justify-content-center" style="max-width: 400px;">
+          <img [src]="selectedImage || product.image"
+              class="img-fluid rounded shadow"
+              style="max-height: 350px; object-fit: cover;">
+        </div>
+
+        <div class="border rounded p-3 shadow-sm" style="width: 260px;">
+          <p class="mb-1">+{{ product.orders }} Pedidos</p>
+          <p class="mb-1">Productor:
+            <a href="#" class="text-success">{{ product.producer }}</a>
+          </p>
+          <p class="mb-1">Categorías:</p>
+          <div class="d-flex flex-wrap gap-1 mb-2">
+            <span *ngFor="let cat of product.categories"
+                  class="badge bg-light text-dark border">
+              {{ cat }}
+            </span>
+          </div>
+          <p class="mb-1">Stock: {{ product.stock }} canastas</p>
+          <p class="mb-2">Precio: {{ product.price | currency:'COP' }}</p>
+          <button class="btn btn-success w-100">Añadir al Pedido</button>
+        </div>
+
+      </div>
+
+      <div class="mb-3">
+        <h5>Descripción</h5>
+        <p>{{ product.description }}</p>
+      </div>
+
+      <div class="mb-3">
+        <h5>Más Información</h5>
+        <p>{{ product.moreInfo }}</p>
+        <p><strong>Ubicación:</strong> {{ product.location }}</p>
+      </div>
+
+      <div class="mb-3">
+        <h5>Reseñas</h5>
+        <div *ngFor="let review of product.reviews" class="border-bottom pb-2 mb-2">
+          <div class="d-flex align-items-center">
+            <img [src]="review.avatar" class="rounded-circle me-2" width="40" height="40">
+            <div>
+              <strong>{{ review.user }}</strong>
+              <small class="text-muted ms-2">{{ review.date | date }}</small>
+              <div>
+                
+              </div>
+            </div>
+          </div>
+          <p class="mb-1">{{ review.comment }}</p>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <textarea [(ngModel)]="newReview" class="form-control mb-2" placeholder="Escribe tu reseña"></textarea>
+        <button (click)="submitReview()" class="btn btn-success">Enviar reseña</button>
+      </div>
+
+    </div>
+  </div>
+</div>
