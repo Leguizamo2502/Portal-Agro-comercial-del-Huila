@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { CanMatchFn } from '@angular/router';
 
-import { roleMatchGuard } from './role-match.guard';
+import { producerMatchGuard } from './producer-match.guard';
 
-describe('roleMatchGuard', () => {
+describe('producerMatchGuard', () => {
   const executeGuard: CanMatchFn = (...guardParameters) => 
-      TestBed.runInInjectionContext(() => roleMatchGuard(...guardParameters));
+      TestBed.runInInjectionContext(() => producerMatchGuard(...guardParameters));
 
   beforeEach(() => {
     TestBed.configureTestingModule({});

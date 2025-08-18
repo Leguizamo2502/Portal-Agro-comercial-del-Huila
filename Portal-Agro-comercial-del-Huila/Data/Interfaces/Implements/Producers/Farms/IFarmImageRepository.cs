@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Data.Interfaces.IRepository;
+﻿using Data.Interfaces.IRepository;
 using Entity.Domain.Models.Implements.Producers;
 
 namespace Data.Interfaces.Implements.Producers.Farms
 {
     public interface IFarmImageRepository : IDataGeneric<FarmImage>
     {
-
+        Task AddImages(List<FarmImage> images);
+        Task<List<FarmImage>> GetByFarmIdAsync(int farmId);
+        Task<bool> DeleteByPublicIdAsync(string publicId);
+        Task<bool> DeleteLogicalByPublicIdAsync(string publicId);
     }
 }

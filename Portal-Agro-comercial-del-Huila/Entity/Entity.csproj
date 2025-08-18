@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DTOs\Producer\Producer\Create\" />
     <Folder Include="Infrastructure\LogService\" />
   </ItemGroup>
 

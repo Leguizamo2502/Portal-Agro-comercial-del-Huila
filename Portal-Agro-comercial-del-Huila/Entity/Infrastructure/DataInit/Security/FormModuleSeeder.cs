@@ -18,6 +18,7 @@ namespace Entity.Infrastructure.DataInit.Security
             //builder.HasIndex(x => new { x.FormId, x.ModuleId }).IsUnique();
 
             builder.HasData(
+                //Security
                 new FormModule { Id = 1, ModuleId = 1, FormId = 1, Active = true, IsDeleted = false, CreateAt = created },
                 new FormModule { Id = 2, ModuleId = 1, FormId = 2, Active = true, IsDeleted = false, CreateAt = created },
                 new FormModule { Id = 3, ModuleId = 1, FormId = 3, Active = true, IsDeleted = false, CreateAt = created },
@@ -25,7 +26,17 @@ namespace Entity.Infrastructure.DataInit.Security
                 new FormModule { Id = 5, ModuleId = 1, FormId = 5, Active = true, IsDeleted = false, CreateAt = created },
                 new FormModule { Id = 6, ModuleId = 1, FormId = 6, Active = true, IsDeleted = false, CreateAt = created },
                 new FormModule { Id = 7, ModuleId = 1, FormId = 7, Active = true, IsDeleted = false, CreateAt = created },
-                new FormModule { Id = 8, ModuleId = 1, FormId = 8, Active = true, IsDeleted = false, CreateAt = created }
+                new FormModule { Id = 8, ModuleId = 1, FormId = 8, Active = true, IsDeleted = false, CreateAt = created },
+                //Producer
+                new FormModule
+                {
+                    Id = 9,
+                    ModuleId = 3,   // Productor
+                    FormId = 9,   // /account/producer
+                    Active = true,
+                    IsDeleted = false,
+                    CreateAt = created
+                }
             );
         }
     }

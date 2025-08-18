@@ -78,6 +78,7 @@ namespace Data.Service.Producers.Products
                        .ThenInclude(prod => prod.User)
                            .ThenInclude(u => u.Person)
                .Include(p => p.ProductImages.Where(pi => !pi.IsDeleted))
+               .Where(p=>p.IsDeleted == false)
                .ToListAsync();
 
         }
@@ -94,8 +95,8 @@ namespace Data.Service.Producers.Products
                  .ThenInclude(f => f.Producer)
                      .ThenInclude(prod => prod.User)
                          .ThenInclude(u => u.Person)
-             .Include(p => p.ProductImages)
-             .FirstOrDefaultAsync(p => p.Id == id);
+             .Include(p => p.ProductImages.Where(pi => !pi.IsDeleted))
+             .FirstOrDefaultAsync(p => p.Id == id && p.IsDeleted == false);
 
                     if (product != null)
                     {
@@ -108,21 +109,23 @@ namespace Data.Service.Producers.Products
 
         }
 
-        public async Task<IEnumerable<Product>> GetByProducer(int producerId)
+        public async Task<IEnumerable<Product>> GetByProducer(int? producerId)
         {
             return await _dbSet
-                .AsNoTracking()
-                .Include(p => p.Category)
-                .Include(p => p.Farm)
-                    .ThenInclude(f => f.City)
-                        .ThenInclude(c => c.Department)
-                .Include(p => p.Farm)
-                    .ThenInclude(f => f.Producer)
-                        .ThenInclude(prod => prod.User)
-                            .ThenInclude(u => u.Person)
-                .Include(p => p.ProductImages)
-                .Where(p=>p.Farm.Producer.Id == producerId)
-                .ToListAsync();
+               .AsNoTracking()
+               .OrderByDescending(p => p.CreateAt)          // último creado primero
+               .ThenByDescending(p => p.Id)                  // desempate estable
+               .Include(p => p.Category)
+               .Include(p => p.Farm)
+                   .ThenInclude(f => f.City)
+                       .ThenInclude(c => c.Department)
+               .Include(p => p.Farm)
+                   .ThenInclude(f => f.Producer)
+                       .ThenInclude(prod => prod.User)
+                           .ThenInclude(u => u.Person)
+               .Include(p => p.ProductImages.Where(pi => !pi.IsDeleted))
+               .Where(p=>p.Farm.ProducerId == producerId && p.IsDeleted == false)
+               .ToListAsync();
         }
     }
 }

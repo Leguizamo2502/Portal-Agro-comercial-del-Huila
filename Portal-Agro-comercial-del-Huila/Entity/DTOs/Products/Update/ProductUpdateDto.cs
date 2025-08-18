@@ -1,7 +1,7 @@
 ﻿using Entity.DTOs.BaseDTO;
 using Microsoft.AspNetCore.Http;
 
-namespace Entity.DTOs.Products
+namespace Entity.DTOs.Products.Update
 {
     public class ProductUpdateDto : BaseDto
     {

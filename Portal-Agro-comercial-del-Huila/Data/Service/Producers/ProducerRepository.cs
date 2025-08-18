@@ -7,6 +7,7 @@ using Data.Interfaces.Implements.Producers;
 using Data.Repository;
 using Entity.Domain.Models.Implements.Producers;
 using Entity.Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data.Service.Producers
 {
@@ -15,7 +16,15 @@ namespace Data.Service.Producers
         public ProducerRepository(ApplicationDbContext context) : base(context)
         {
         }
+        public async Task<int?> GetIdProducer(int userId)
+        {
+            return await _dbSet
+                .Where(p => p.UserId == userId)
+                .Select(p => p.Id)
+                .FirstOrDefaultAsync();
 
-       
+        }
+
+
     }
 }

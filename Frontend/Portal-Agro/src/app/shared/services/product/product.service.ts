@@ -3,7 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ProductSelectModel } from './../../models/product/product.model';
-import { ProductRegisterModel, ProductUpdateModel } from '../../../features/products/Models/product.model';
+import {
+  ProductRegisterModel,
+  ProductUpdateModel,
+} from '../../../features/products/Models/product.model';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +22,10 @@ export class ProductService {
   getAll(): Observable<ProductSelectModel[]> {
     return this.http.get<ProductSelectModel[]>(this.urlBase);
   }
+   /** Obtener productos por productor (requiere endpoint GET /Product/by-producer */
+  getByProducerId(): Observable<ProductSelectModel[]> {
+    return this.http.get<ProductSelectModel[]>(this.urlBase + '/by-producer');
+  }
 
   /** Obtener un producto por ID */
   getById(id: number): Observable<ProductSelectModel> {
@@ -26,9 +33,11 @@ export class ProductService {
   }
 
   /** Obtener productos por productor (requiere endpoint GET /Product/by-producer/{producerId:int}) */
-  getByProducer(producerId: number): Observable<ProductSelectModel[]> {
-    return this.http.get<ProductSelectModel[]>(`${this.urlBase}/by-producer/${producerId}`);
-  }
+  // getByProducer(producerId: number): Observable<ProductSelectModel[]> {
+  //   return this.http.get<ProductSelectModel[]>(
+  //     `${this.urlBase}/by-producer/${producerId}`
+  //   );
+  // }
 
   /** Eliminar un producto por ID */
   delete(id: number): Observable<void> {
@@ -39,7 +48,10 @@ export class ProductService {
   /** POST /Product/register/product  (FromForm ProductCreateDto) */
   create(dto: ProductRegisterModel): Observable<ProductSelectModel> {
     const fd = this.buildFormData(dto);
-    return this.http.post<ProductSelectModel>(`${this.urlBase}/register/product`, fd);
+    return this.http.post<ProductSelectModel>(
+      `${this.urlBase}/register/product`,
+      fd
+    );
   }
 
   /** ------------------------  UPDATE  ------------------------- */
@@ -75,7 +87,9 @@ export class ProductService {
    * • En *CREATE* y *UPDATE* los archivos se envían en la clave `images` (coincide con tu DTO).<br>
    * • En *UPDATE* además se envían `imagesToDelete` como claves repetidas para List<string>.
    */
-  private buildFormData(dto: ProductRegisterModel | ProductUpdateModel): FormData {
+  private buildFormData(
+    dto: ProductRegisterModel | ProductUpdateModel
+  ): FormData {
     const data = new FormData();
 
     /* ---------------------------------  Campos básicos  -------------------------------- */
@@ -95,13 +109,15 @@ export class ProductService {
 
     /* ---------------------------------  Imágenes nuevas  -------------------------------- */
     if (dto.images?.length) {
-      dto.images.forEach(file => data.append('images', file, file.name));
+      dto.images.forEach((file) => data.append('images', file, file.name));
     }
 
     /* -------  Lista de publicId a borrar (solo en Update; List<string> en ASP.NET Core)  ------- */
     if ('imagesToDelete' in dto && dto.imagesToDelete?.length) {
       // Enviar como claves repetidas permite el binding directo a List<string>
-      dto.imagesToDelete.forEach(pubId => data.append('imagesToDelete', pubId));
+      dto.imagesToDelete.forEach((pubId) =>
+        data.append('imagesToDelete', pubId)
+      );
 
       // Si prefieres JSON, cambia la línea anterior por:
       // data.append('imagesToDelete', JSON.stringify(dto.imagesToDelete));

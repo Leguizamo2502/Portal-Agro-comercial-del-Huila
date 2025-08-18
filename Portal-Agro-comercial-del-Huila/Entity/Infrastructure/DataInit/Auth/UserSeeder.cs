@@ -37,7 +37,7 @@ namespace Entity.Infrastructure.DataInit.Auth
                 {
                     Id = 3,
                     Email = "producer@example.com",
-                    Password = EncriptePassword.EncripteSHA256("producer123"),
+                    Password = EncriptePassword.EncripteSHA256("Producer123"),
                     PersonId = 3,
                     Active = true,
                     IsDeleted = false,

@@ -1,5 +1,5 @@
 ﻿using Business.Interfaces.IBusiness;
-using Entity.DTOs.Products;
+using Entity.DTOs.Products.Select;
 using Microsoft.AspNetCore.Http;
 
 namespace Business.Interfaces.Implements.Producers.Products

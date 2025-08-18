@@ -1,19 +1,18 @@
-﻿using Business.Interfaces.Implements.Producers.Products;
+﻿using Business.Interfaces.Implements.Producers.Farms;
 using Entity.DTOs.Products.Select;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Web.Controllers.Implements.Producer.Products
+namespace Web.Controllers.Implements.Producer.Farm
 {
-    [ApiController]
-    [Route("api/v1/[controller]")]
-    public class ProductImageController : ControllerBase
+    public class FarmImageController : ControllerBase
     {
-        private readonly IProductImageService _productImageService;
-        private readonly ILogger<ProductImageController> _logger;
-        public ProductImageController(IProductImageService productImageService, ILogger<ProductImageController> logger)
+        private readonly IFarmImageService _farmImageService;
+        private readonly ILogger<FarmImageController> _logger;
+
+        public FarmImageController(IFarmImageService farmImageService, ILogger<FarmImageController> logger)
         {
-            _productImageService = productImageService;
             _logger = logger;
+            _farmImageService = farmImageService;
             
         }
 
@@ -26,7 +25,7 @@ namespace Web.Controllers.Implements.Producer.Products
             if (files == null || files.Count == 0)
                 return BadRequest("No se han proporcionado archivos.");
 
-            var result = await _productImageService.AddImagesAsync(productId, files);
+            var result = await _farmImageService.AddImagesAsync(productId, files);
             return Ok(result);
         }
 
@@ -38,7 +37,7 @@ namespace Web.Controllers.Implements.Producer.Products
         [HttpDelete("{imageId}")]
         public async Task<IActionResult> DeleteImage(int imageId)
         {
-            await _productImageService.DeleteImageByIdAsync(imageId);
+            await _farmImageService.DeleteImageByIdAsync(imageId);
             return NoContent();
         }
 
@@ -51,7 +50,7 @@ namespace Web.Controllers.Implements.Producer.Products
             if (publicIds == null || !publicIds.Any())
                 return BadRequest("Debe proporcionar al menos un PublicId.");
 
-            await _productImageService.DeleteImagesByPublicIdsAsync(publicIds);
+            await _farmImageService.DeleteImagesByPublicIdsAsync(publicIds);
             return NoContent();
         }
 
@@ -61,7 +60,7 @@ namespace Web.Controllers.Implements.Producer.Products
             if (string.IsNullOrWhiteSpace(publicId))
                 return BadRequest("El publicId es obligatorio.");
 
-            var result = await _productImageService.DeleteLogicalByPublicIdAsync(publicId);
+            var result = await _farmImageService.DeleteLogicalByPublicIdAsync(publicId);
 
             if (!result)
                 return NotFound($"No se encontró la imagen con publicId '{publicId}'.");
@@ -77,10 +76,9 @@ namespace Web.Controllers.Implements.Producer.Products
         [HttpGet("{productId}")]
         public async Task<ActionResult<List<ProductImageSelectDto>>> GetByEstablishment(int productId)
         {
-            var images = await _productImageService.GetImagesByProductIdAsync(productId);
+            var images = await _farmImageService.GetImagesByFarmIdAsync(productId);
             return Ok(images);
         }
-
 
     }
 }

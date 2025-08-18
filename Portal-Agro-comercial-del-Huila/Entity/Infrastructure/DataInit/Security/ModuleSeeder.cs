@@ -12,7 +12,16 @@ namespace Entity.Infrastructure.DataInit.Security
 
             builder.HasData(
                 new Module { Id = 1, Name = "Seguridad", Description = "Administración de seguridad", Active = true, IsDeleted = false, CreateAt = created },
-                new Module { Id = 2, Name = "Parámetros", Description = "Parámetros del sistema", Active = true, IsDeleted = false, CreateAt = created }
+                new Module { Id = 2, Name = "Parámetros", Description = "Parámetros del sistema", Active = true, IsDeleted = false, CreateAt = created },
+                new Module
+                {
+                    Id = 3,
+                    Name = "Productor",
+                    Description = "Gestión del productor",
+                    Active = true,
+                    IsDeleted = false,
+                    CreateAt = created
+                }
             );
         }
     }

@@ -2,11 +2,15 @@
 using Business.Interfaces.Implements.Producers.Farms;
 using Business.Services.Producers.Farms;
 using Entity.Domain.Models.Implements.Auth;
+using Entity.DTOs.BaseDTO;
 using Entity.DTOs.Producer.Farm.Create;
-using Entity.DTOs.Producer.Producer.Create;
+using Entity.DTOs.Producer.Farm.Update;
+using Entity.DTOs.Products.Select;
+using Entity.DTOs.Products.Update;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Utilities.Exceptions;
+using Utilities.Helpers.Auth;
 
 namespace Web.Controllers.Implements.Producer.Farm
 {
@@ -16,12 +20,10 @@ namespace Web.Controllers.Implements.Producer.Farm
     {
         private readonly IFarmService _farmService;
         private readonly ILogger<FarmController> _logger;
-        private readonly IFarmImageService _farmImageService;
-        public FarmController(IFarmService farmService, ILogger<FarmController> logger, IFarmImageService farmImageService)
+        public FarmController(IFarmService farmService, ILogger<FarmController> logger)
         {
             _farmService = farmService;
             _logger = logger;
-            _farmImageService = farmImageService;
         }
 
 
@@ -31,15 +33,11 @@ namespace Web.Controllers.Implements.Producer.Farm
         [ProducesResponseType(typeof(string), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> Registrarse(ProducerWithFarmRegisterDto dto)
+        public async Task<IActionResult> Registrarse([FromForm] ProducerWithFarmRegisterDto dto)
         {
+            var userId = HttpContext.GetUserId();
             try
             {
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-                if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
-                    return Unauthorized("El token no contiene un Claim 'sub' (NameIdentifier) válido o no es un ID.");
-
                 var userCreated = await _farmService.RegisterWithProducer(dto, userId);
 
                 return StatusCode(StatusCodes.Status200OK, new { isSuccess = true });
@@ -52,15 +50,16 @@ namespace Web.Controllers.Implements.Producer.Farm
 
 
         [HttpPost("register/farm")]
-    
         public async Task<IActionResult> Register([FromForm] FarmRegisterDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            var userId = HttpContext.GetUserId();
 
             try
             {
-                var result = await _farmService.CreateAsync(dto);
+                dto.ProducerId = userId;
+                var result = await _farmService.CreateFarmAsync(dto);
                 if(result !=null)
                     return Ok(new { IsSuccess = true, message = "Finca creada correctamente"});
                 else
@@ -93,24 +92,65 @@ namespace Web.Controllers.Implements.Producer.Farm
 
         }
 
-        [HttpDelete("{imageId}")]
-        public async Task<IActionResult> Delete(int imageId)
+        [HttpGet("{id:int}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public virtual async Task<IActionResult> GetById(int id)
         {
             try
             {
-                await _farmImageService.DeleteImageAsync(imageId);
-                return NoContent(); // 204
-            }
-            catch (BusinessException ex)
-            {
-                return BadRequest(new { message = ex.Message }); // 400
+                var result = await _farmService.GetByIdAsync(id);
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                // Puedes loguear el error si tienes un logger aquí
-                return StatusCode(500, new { message = "Error interno al eliminar la imagen." });
+                _logger.LogError(ex, "Error obteniendo datos");
+                return StatusCode(500, new { message = "Error interno del servidor." });
             }
+
         }
+
+        [HttpGet("by-producer")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public virtual async Task<IActionResult> GetByProducer()
+        {
+            var userId = HttpContext.GetUserId();
+            try
+            {
+                var result = await _farmService.GetByProducer(userId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error obteniendo datos");
+                return StatusCode(500, new { message = "Error interno del servidor." });
+            }
+
+        }
+
+        [HttpPut("{id:int}")]
+        [Consumes("multipart/form-data")]
+        public async Task<ActionResult<ProductSelectDto>> Update(int id, [FromForm] FarmUpdateDto dto)
+        {
+            if (dto is not BaseDto identifiableDto)
+                return BadRequest(new { message = "El DTO no implementa IHasId." });
+
+            identifiableDto.Id = id;
+            if (id != dto.Id)
+                return BadRequest("El ID de la URL no coincide con el ID del cuerpo del formulario.");
+
+            var result = await _farmService.UpdateFarmAsync(dto);
+            return Ok(result);
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _farmService.DeleteLogicAsync(id);
+            return NoContent();
+        }
+
 
     }
 

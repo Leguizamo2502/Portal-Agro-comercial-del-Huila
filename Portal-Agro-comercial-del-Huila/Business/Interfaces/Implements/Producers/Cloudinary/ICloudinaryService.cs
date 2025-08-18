@@ -12,7 +12,7 @@ namespace Business.Interfaces.Implements.Producers.Cloudinary
 {
     public interface ICloudinaryService
     {
-        Task<List<FarmImage>> UploadFarmImagesAsync(List<IFormFile> files, int farmid);
+        Task<ImageUploadResult> UploadFarmImagesAsync(IFormFile file, int farmid);
         Task DeleteAsync(string publicId);
 
         Task<ImageUploadResult> UploadProductImagesAsync(IFormFile file, int productid);

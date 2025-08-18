@@ -5,24 +5,24 @@ using System.Text;
 using System.Threading.Tasks;
 using Entity.DTOs.BaseDTO;
 
-namespace Entity.DTOs.Products
+namespace Entity.DTOs.Producer.Farm.Select
 {
-    public class ProductImageSelectDto : BaseDto
+    public class FarmImageSelectDto : BaseDto
     {
-        public ProductImageSelectDto(int id, string fileName, string imageUrl, string publicId, int productId)
+
+        public FarmImageSelectDto(int id, string fileName, string imageUrl, string publicId, int farmId)
         {
             Id = id;
             FileName = fileName;
             ImageUrl = imageUrl;
             PublicId = publicId;
-            ProductId = productId;
+            FarmId = farmId;
         }
 
         //public int Id { get; set; }
         public string ImageUrl { get; set; }
-        public string FileName { get; set; } 
+        public string FileName { get; set; }
         public string PublicId { get; set; }
-        public int ProductId { get; set; }
-
+        public int FarmId { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Entity.DTOs.Producer.Farm.Select;
 
-namespace Entity.DTOs.Products
+namespace Entity.DTOs.Products.Select
 {
     public class ProductSelectDto
     {

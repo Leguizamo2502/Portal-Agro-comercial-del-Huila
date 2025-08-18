@@ -11,7 +11,7 @@ namespace Data.Interfaces.Implements.Producers.Products
 {
     public interface IProductRepository : IDataGeneric<Product>
     {
-        Task<IEnumerable<Product>> GetByProducer(int producerId);
+        Task<IEnumerable<Product>> GetByProducer(int? producerId);
 
     }
 }

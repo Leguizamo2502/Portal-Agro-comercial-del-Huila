@@ -24,7 +24,17 @@ namespace Entity.Infrastructure.DataInit.Security
                 new Form { Id = 5, Name = "Rol-Usuario", Description = "Asignación rol-usuario", Url = "/account/security/rolUser", Active = true, IsDeleted = false, CreateAt = created },
                 new Form { Id = 6, Name = "Módulo-Formulario", Description = "Asignación módulo-form", Url = "/account/security/formModule", Active = true, IsDeleted = false, CreateAt = created },
                 new Form { Id = 7, Name = "Rol-Formulario-Permiso", Description = "Asignación R-F-P", Url = "/account/security/rolFormPermission", Active = true, IsDeleted = false, CreateAt = created },
-                new Form { Id = 8, Name = "Permisos", Description = "Catálogo de permisos", Url = "/account/security/permission", Active = true, IsDeleted = false, CreateAt = created }
+                new Form { Id = 8, Name = "Permisos", Description = "Catálogo de permisos", Url = "/account/security/permission", Active = true, IsDeleted = false, CreateAt = created },
+                new Form
+                {
+                    Id = 9,
+                    Name = "Inicio productor",
+                    Description = "Puerta de acceso a la gestión del productor",
+                    Url = "/account/producer",
+                    Active = true,
+                    IsDeleted = false,
+                    CreateAt = created
+                }
             );
         }
     }

@@ -1,10 +1,13 @@
 ﻿using Business.Interfaces.Implements.Producers.Cloudinary;
 using Business.Interfaces.Implements.Producers.Products;
 using Business.Repository;
+using Data.Interfaces.Implements.Producers;
 using Data.Interfaces.Implements.Producers.Products;
 using Data.Interfaces.IRepository;
 using Entity.Domain.Models.Implements.Products;
-using Entity.DTOs.Products;
+using Entity.DTOs.Products.Create;
+using Entity.DTOs.Products.Select;
+using Entity.DTOs.Products.Update;
 using Entity.Infrastructure.Context;
 using Mapster;
 using MapsterMapper;
@@ -24,20 +27,34 @@ namespace Business.Services.Producers.Products
         private readonly ApplicationDbContext _context;
         private readonly IProductImageRepository _productImageRepository;
         private readonly ILogger<ProductService> _logger;
+        private readonly IProducerRepository _producerRepository;
 
         private const int MaxImages = 5;
 
         public ProductService(IDataGeneric<Product> data, IMapper mapper, IProductRepository productRepository, 
             ICloudinaryService cloudinaryService, IProductImageRepository productImageRepository,ApplicationDbContext context, 
-            ILogger<ProductService> logger) : base(data, mapper)
+            ILogger<ProductService> logger,IProducerRepository producerRepository) : base(data, mapper)
         {
             _productRepository = productRepository;
             _cloudinaryService = cloudinaryService;
             _productImageRepository = productImageRepository;
             _context = context;
             _logger = logger;
+            _producerRepository = producerRepository;
         }
 
+        public override async Task<IEnumerable<ProductSelectDto>> GetAllAsync()
+        {
+            try
+            {
+                var entities = await _productRepository.GetAllAsync();
+                return _mapper.Map<IEnumerable<ProductSelectDto>>(entities);
+            }
+            catch (Exception ex)
+            {
+                throw new BusinessException("Error al obtener todos los registros de productos.", ex);
+            }
+        }
         public override async Task<ProductSelectDto?> GetByIdAsync(int id)
         {
             try
@@ -52,89 +69,6 @@ namespace Business.Services.Producers.Products
                 throw new BusinessException($"Error al obtener el rproducto con ID {id}.", ex);
             }
         }
-
-
-        public async Task<ProductSelectDto> CreateProductAsync(ProductCreateDto dto)
-        {
-            ValidateMaxImages(dto.Images?.Count ?? 0);
-
-            var entity = dto.Adapt<Product>();
-
-            await using var transaction = await _context.Database.BeginTransactionAsync();
-            try
-            {
-                await _productRepository.AddAsync(entity);
-                await _context.SaveChangesAsync();
-
-                var images = await UploadAndMapImagesAsync(dto.Images, entity.Id);
-                if (images.Any())
-                {
-                    await _productImageRepository.AddImages(images);
-                    await _context.SaveChangesAsync();
-                }
-
-                await transaction.CommitAsync();
-
-                var result = entity.Adapt<ProductSelectDto>();
-                result.Images = images.Adapt<List<ProductImageSelectDto>>();
-                return result;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error creando establecimiento");
-                await transaction.RollbackAsync();
-                throw;
-            }
-        }
-
-
-
-
-        public async Task<ProductSelectDto> UpdateProductAsync(ProductUpdateDto dto)
-        {
-            var entity = await _productRepository.GetByIdAsync(dto.Id)
-                ?? throw new Exception($"Product No se encontró el establecimiento {dto.Id}");
-
-            await using var transaction = await _context.Database.BeginTransactionAsync();
-            try
-            {
-                dto.Adapt(entity);
-
-                await _productRepository.UpdateAsync(entity);
-
-                if (dto.ImagesToDelete?.Any() == true)
-                    await DeleteImagesAsync(dto.ImagesToDelete);
-
-                if (dto.Images?.Any() == true)
-                {
-                    var validFiles = dto.Images.Where(f => f?.Length > 0).ToList();
-
-                    var currentCount = (await _productImageRepository.GetByProductIdAsync(dto.Id)).Count;
-                    ValidateMaxImages(validFiles.Count + currentCount, currentCount);
-
-                    var newImages = await UploadAndMapImagesAsync(validFiles, entity.Id);
-                    await _productImageRepository.AddImages(newImages);
-                }
-
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
-
-                return (await _productRepository.GetByIdAsync(dto.Id))!.Adapt<ProductSelectDto>();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error actualizando establecimiento ID {Id}", dto.Id);
-                await transaction.RollbackAsync();
-                throw;
-            }
-        }
-
-
-
-
-
-
-
         public override async Task<bool> DeleteAsync(int id)
         {
             var entity = await _productRepository.GetByIdAsync(id);
@@ -177,8 +111,99 @@ namespace Business.Services.Producers.Products
         }
 
 
+        public async Task<ProductSelectDto> CreateProductAsync(ProductCreateDto dto)
+        {
+            ValidateMaxImages(dto.Images?.Count ?? 0);
+
+            var entity = dto.Adapt<Product>();
+
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                await _productRepository.AddAsync(entity);
+                await _context.SaveChangesAsync();
+
+                var images = await UploadAndMapImagesAsync(dto.Images, entity.Id);
+                if (images.Any())
+                {
+                    await _productImageRepository.AddImages(images);
+                    await _context.SaveChangesAsync();
+                }
+
+                await transaction.CommitAsync();
+
+                var result = entity.Adapt<ProductSelectDto>();
+                result.Images = images.Adapt<List<ProductImageSelectDto>>();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creando producto");
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
 
 
+        public async Task<ProductSelectDto> UpdateProductAsync(ProductUpdateDto dto)
+        {
+            var entity = await _productRepository.GetByIdAsync(dto.Id)
+                ?? throw new Exception($"Product No se encontró el producto {dto.Id}");
+
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                dto.Adapt(entity);
+
+                await _productRepository.UpdateAsync(entity);
+
+                if (dto.ImagesToDelete?.Any() == true)
+                    await DeleteImagesAsync(dto.ImagesToDelete);
+
+                if (dto.Images?.Any() == true)
+                {
+                    var validFiles = dto.Images.Where(f => f?.Length > 0).ToList();
+
+                    var currentCount = (await _productImageRepository.GetByProductIdAsync(dto.Id)).Count;
+                    ValidateMaxImages(validFiles.Count + currentCount, currentCount);
+
+                    var newImages = await UploadAndMapImagesAsync(validFiles, entity.Id);
+                    await _productImageRepository.AddImages(newImages);
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return (await _productRepository.GetByIdAsync(dto.Id))!.Adapt<ProductSelectDto>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error actualizando producto ID {Id}", dto.Id);
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+
+        public async Task<IEnumerable<ProductSelectDto>> GetByProducer(int userId)
+        {
+            try
+            {
+                var producerId = await _producerRepository.GetIdProducer(userId);
+                if (producerId == null)
+                    throw new BusinessException("El usuario no está registrado como productor.");
+                var entities = await _productRepository.GetByProducer(producerId);
+                return _mapper.Map<IEnumerable<ProductSelectDto>>(entities);
+            }
+            catch (Exception ex)
+            {
+                throw new BusinessException("Error al obtener todos los registros de productos del productor {producerId}.", ex);
+            }
+        }
+
+
+
+        #region Helpers
         private async Task<List<ProductImage>> UploadAndMapImagesAsync(IEnumerable<IFormFile>? files, int productId)
         {
             if (files == null || !files.Any())
@@ -206,46 +231,14 @@ namespace Business.Services.Producers.Products
             });
 
             var images = (await Task.WhenAll(uploadTasks)).ToList();
-            _logger.LogInformation("{Count} imágenes subidas para establecimiento ID {Id}", images.Count, productId);
+            _logger.LogInformation("{Count} imágenes subidas para producto ID {Id}", images.Count, productId);
             return images;
         }
-
-
-
-        public override async Task<IEnumerable<ProductSelectDto>> GetAllAsync()
-        {
-            try
-            {
-                var entities = await _productRepository.GetAllAsync();
-                return _mapper.Map<IEnumerable<ProductSelectDto>>(entities);
-            }
-            catch (Exception ex)
-            {
-                throw new BusinessException("Error al obtener todos los registros de productos.", ex);
-            }
-        }
-
-        public async Task<IEnumerable<ProductSelectDto>> GetByProducer(int producerId)
-        {
-            try
-            {
-                var entities = await _productRepository.GetByProducer(producerId);
-                return _mapper.Map<IEnumerable<ProductSelectDto>>(entities);
-            }
-            catch (Exception ex)
-            {
-                throw new BusinessException("Error al obtener todos los registros de productos del productor {producerId}.", ex);
-            }
-        }
-
-
-
-        #region Helpers
 
         private void ValidateMaxImages(int totalImages, int currentCount = 0)
         {
             if (totalImages > MaxImages || totalImages > (MaxImages - currentCount))
-                throw new BusinessException($"Solo se permiten hasta {MaxImages} imágenes por establecimiento. Actualmente: {currentCount}.");
+                throw new BusinessException($"Solo se permiten hasta {MaxImages} imágenes por producto. Actualmente: {currentCount}.");
         }
 
         private async Task DeleteImagesAsync(IEnumerable<string> publicIds)

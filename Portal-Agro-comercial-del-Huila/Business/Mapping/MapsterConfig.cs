@@ -1,16 +1,16 @@
 ﻿using Entity.Domain.Models.Implements.Auth;
-using Entity.Domain.Models.Implements.Location;
 using Entity.Domain.Models.Implements.Producers;
 using Entity.Domain.Models.Implements.Products;
 using Entity.Domain.Models.Implements.Security;
 using Entity.DTOs.Auth;
 using Entity.DTOs.Auth.User;
-using Entity.DTOs.Location.Select;
 using Entity.DTOs.Producer.Categories;
 using Entity.DTOs.Producer.Farm.Create;
 using Entity.DTOs.Producer.Farm.Select;
-using Entity.DTOs.Producer.Producer.Create;
-using Entity.DTOs.Products;
+using Entity.DTOs.Producer.Farm.Update;
+using Entity.DTOs.Products.Create;
+using Entity.DTOs.Products.Select;
+using Entity.DTOs.Products.Update;
 using Entity.DTOs.Security.Create.Rols;
 using Entity.DTOs.Security.Selects.RolFormPermission;
 using Entity.DTOs.Security.Selects.Rols;
@@ -62,17 +62,31 @@ namespace Business.Mapping
 
             //FarmWith PRoducer a producer y famr
             config.NewConfig<ProducerWithFarmRegisterDto, Producer>();
-            config.NewConfig<ProducerWithFarmRegisterDto, Farm>();
+            config.NewConfig<ProducerWithFarmRegisterDto, Farm>().Ignore(des => des.FarmImages);
             config.NewConfig<ProducerWithFarmRegisterDto, FarmRegisterDto>();
 
             config.NewConfig<FarmRegisterDto, Farm>().Ignore(des => des.FarmImages);
 
-            config.NewConfig<FarmImage, FarmImageDto>();
+            config.NewConfig<FarmImage, FarmImageSelectDto>()
+                .MapWith(src => new FarmImageSelectDto(
+                    src.Id,
+                    src.FileName ?? string.Empty,
+                      src.ImageUrl ?? string.Empty,
+                      src.PublicId ?? string.Empty,
+                      src.FarmId
+                    ));
+
             config.NewConfig<Farm, FarmSelectDto>()
                 .Map(dest => dest.CityName, src => src.City.Name)
                 .Map(dest => dest.DepartmentName, src => src.City.Department.Name)
-                .Map(dest => dest.ProducerName, src => src.Producer.User.Person.FirstName) // o ajusta según tu modelo
-                .Map(dest => dest.Images, src => src.FarmImages.Adapt<List<FarmImageDto>>());
+                .Map(dest => dest.ProducerName, src => $"{src.Producer.User.Person.FirstName} {src.Producer.User.Person.LastName}")
+                .Map(dest => dest.Images, src => src.FarmImages ?? new List<FarmImage>());
+
+            config.NewConfig<FarmUpdateDto,Farm>()
+                 .Ignore(dest => dest.FarmImages)   // Se manejan aparte
+                .Ignore(dest => dest.Active)   // No se actualiza desde DTO
+                .IgnoreNullValues(true);
+
 
 
             //Products

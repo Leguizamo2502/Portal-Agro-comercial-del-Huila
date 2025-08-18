@@ -1,9 +1,9 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import { CanMatchFn, Router, UrlTree } from '@angular/router';
 import { map, catchError, of } from 'rxjs';
 import { AuthState } from '../../services/auth/auth.state';
 
-export const roleMatchGuard: CanActivateFn = (route, state) => {
+export const roleMatchGuard: CanMatchFn = (route): boolean | UrlTree | any => {
   const auth   = inject(AuthState);
   const router = inject(Router);
 

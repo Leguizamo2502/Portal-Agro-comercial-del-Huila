@@ -15,7 +15,7 @@ namespace Entity.DTOs.Producer.Farm.Select
         public string CityName { get; set; }
         public string DepartmentName { get; set; }
         public string ProducerName { get; set; }
-        public List<FarmImageDto> Images { get; set; }
+        public List<FarmImageSelectDto> Images { get; set; }
         
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Entity.DTOs.Products
+namespace Entity.DTOs.Products.Create
 {
     public class ProductCreateDto
     {

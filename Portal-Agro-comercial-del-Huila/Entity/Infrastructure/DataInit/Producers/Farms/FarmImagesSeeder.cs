@@ -23,6 +23,8 @@ namespace Entity.Infrastructure.DataInit.Producers.Farms
                    CreateAt = date,
                    IsDeleted = false,
                    Active = true,
+                   FileName = "Imagen_Default.jpg",
+                   PublicId = "default",
                },
                new FarmImage
                {
@@ -32,6 +34,8 @@ namespace Entity.Infrastructure.DataInit.Producers.Farms
                    CreateAt = date,
                    IsDeleted = false,
                    Active = true,
+                   FileName = "Imagen_Default.jpg",
+                   PublicId = "default",
                },
                new FarmImage
                {
@@ -41,6 +45,8 @@ namespace Entity.Infrastructure.DataInit.Producers.Farms
                    CreateAt = date,
                    IsDeleted = false,
                    Active = true,
+                   FileName = "Imagen_Default.jpg",
+                   PublicId = "default",
                },
                new FarmImage
                {
@@ -50,6 +56,8 @@ namespace Entity.Infrastructure.DataInit.Producers.Farms
                    CreateAt = date,
                    IsDeleted = false,
                    Active = true,
+                   FileName = "Imagen_Default.jpg",
+                   PublicId = "default",
                }
             );
         }

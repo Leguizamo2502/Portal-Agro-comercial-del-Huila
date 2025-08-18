@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using Business.Interfaces.IBusiness;
 using Business.Repository;
 using Entity.Domain.Models.Implements.Products;
-using Entity.DTOs.Products;
+using Entity.DTOs.Products.Create;
+using Entity.DTOs.Products.Select;
+using Entity.DTOs.Products.Update;
 
 namespace Business.Interfaces.Implements.Producers.Products
 {

@@ -1,7 +1,10 @@
 ﻿using Business.Interfaces.Implements.Producers.Products;
 using Entity.DTOs.BaseDTO;
-using Entity.DTOs.Products;
+using Entity.DTOs.Products.Create;
+using Entity.DTOs.Products.Select;
+using Entity.DTOs.Products.Update;
 using Microsoft.AspNetCore.Mvc;
+using Utilities.Helpers.Auth;
 
 namespace Web.Controllers.Implements.Producer.Products
 {
@@ -54,14 +57,15 @@ namespace Web.Controllers.Implements.Producer.Products
 
         }
 
-        [HttpGet("by-producer/{producerId}")]
+        [HttpGet("by-producer")]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
-        public virtual async Task<IActionResult> GetByProducer(int producerId)
+        public virtual async Task<IActionResult> GetByProducer()
         {
+            var userId = HttpContext.GetUserId();
             try
             {
-                var result = await _productService.GetByProducer(producerId);
+                var result = await _productService.GetByProducer(userId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -114,12 +118,12 @@ namespace Web.Controllers.Implements.Producer.Products
 
 
         /// <summary>
-        /// Eliminar lógicamente un establecimiento (soft delete).
+        /// Eliminar lógicamente un Producto (soft delete).
         /// </summary>
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _productService.DeleteAsync(id);
+            await _productService.DeleteLogicAsync(id);
             return NoContent();
         }
 

@@ -15,25 +15,30 @@ export const ACCOUNT_ROUTES: Routes = [
       { path: 'info', component: InfoComponent },
 
       // --- PRODUCER ---
-     {
+      {
         path: 'producer',
+        canMatch: [roleMatchGuard],
+        data: { roles: ['Producer'] },
         loadChildren: () =>
           import('../producer/producer.routes').then((m) => m.PRODUCER_ROUTES),
       },
 
       {
         path: 'security',
+        canMatch: [roleMatchGuard],
+        data: { roles: ['Admin'] },
         loadChildren: () =>
           import('../security/security.routes').then((m) => m.SECURITY_ROUTES),
       },
       {
         path: 'parameters',
+        canMatch: [roleMatchGuard],
+        data: { roles: ['Admin'] },
         loadChildren: () =>
           import('../parameters/parameters.routes').then(
             (m) => m.PARAMETERS_ROUTES
           ),
       },
-
     ],
   },
 ];
