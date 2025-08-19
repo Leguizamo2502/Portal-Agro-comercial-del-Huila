@@ -1,11 +1,16 @@
 export interface FarmSelectModel {
   id: number;
   name: string;
-  latitude: string;
-  longitude: string;
+  hectares: number;
+  altitude:number;
+  latitude: number;
+  longitude: number;
   cityName: string;
+  cityId: number;
   departmentName: string;
+  departmentId:number;
   producerName: string;
+  producerId:number
   images: FarmImageSelectModel[];
 }
 

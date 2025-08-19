@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ProductService } from '../../../../shared/services/product/product.service';
 import { ProductSelectModel } from '../../../../shared/models/product/product.model';
 import { CarruselComponent } from '../../../../shared/components/carrusel/carrusel.component';
-import { ContainerCardComponent } from "../../../../shared/components/container-card/container-card.component";
+import { ContainerCardComponent } from "../../../../shared/components/cards/container-card/container-card.component";
 
 @Component({
   selector: 'app-home',

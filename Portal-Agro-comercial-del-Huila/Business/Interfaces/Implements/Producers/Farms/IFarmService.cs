@@ -11,7 +11,7 @@ namespace Business.Interfaces.Implements.Producers.Farms
         //Task<bool> CreateFarm(FarmRegisterDto dto);
 
         Task<IEnumerable<FarmSelectDto>> GetByProducer(int producerId);
-        Task<FarmSelectDto> CreateFarmAsync(FarmRegisterDto dto);
+        Task<FarmRegisterDto> CreateFarmAsync(FarmRegisterDto dto);
         Task<FarmSelectDto> UpdateFarmAsync(FarmUpdateDto dto);
 
     }

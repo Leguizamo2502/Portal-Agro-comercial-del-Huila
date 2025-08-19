@@ -81,3 +81,9 @@
   border: 1px solid #e0e0e0;
   margin: 12px 0 0;
 }
+button[mat-icon-button] {
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}

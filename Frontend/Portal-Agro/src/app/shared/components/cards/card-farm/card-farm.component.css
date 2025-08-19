@@ -1,0 +1,117 @@
+/* Tarjeta con layout en columna y alto uniforme */
+.product-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  height: 300px;
+  flex: 1 1 250px;
+  /* max-width: 320px;
+  min-width: 200px; */
+  width: 13rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: #fff;
+}
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(76, 175, 80, 0.25);
+}
+
+/* Imagen con alto consistente entre tarjetas */
+/* Alto fijo idéntico para todas las portadas */
+.image-wrap {
+  width: 100%;
+  height: 200px; /* <-- ajústalo a tu diseño (180–220px) */
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* evita desbordes raros */
+}
+
+.image-wrap .card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* no recorta, mantiene proporción */
+  display: block;
+}
+
+/* Contenido que crece y permite empujar el precio al fondo */
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  padding: 1rem;
+}
+
+/* Título con 2 líneas máximas y altura fija para alinear precios */
+.title {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #1f2937;
+  white-space: nowrap; /* evita el salto de línea */
+  overflow: hidden; /* oculta lo que no cabe */
+  text-overflow: ellipsis;
+}
+.line-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  /* altura mínima equivalente a 2 líneas para uniformidad */
+  min-height: calc(1.25em * 2);
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  margin: 4px 0;
+  color: #374151;
+}
+.info-row mat-icon {
+  font-size: 18px;
+  color: #4caf50;
+}
+
+/* Ocupa el espacio libre para pegar el precio al borde inferior */
+.spacer {
+  flex: 1 1 auto;
+}
+
+.price {
+  font-weight: 700;
+  /* margin-top: 12px; */
+  font-size: 18px;
+  color: #1b5e20;
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  /* margin-top: 12px; */
+  /* color: #4caf50; */
+}
+button[mat-icon-button] {
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.icon-delete {
+  color: #e53935; /* rojo personalizado */
+  /* font-size: 24px;  */
+}
+.icon-edit {
+  color: #1b5e20; /* rojo personalizado */
+  /* font-size: 24px;  */
+}

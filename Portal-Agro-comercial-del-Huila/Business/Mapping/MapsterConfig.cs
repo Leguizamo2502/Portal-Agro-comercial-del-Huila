@@ -114,7 +114,9 @@ namespace Business.Mapping
                                src.Farm.Producer.User.Person.LastName)
                             : string.Empty)
                   // Mapear la colección usando el mapeo ProductImage -> ProductImageSelectDto
-                  .Map(dest => dest.Images, src => src.ProductImages ?? new List<ProductImage>());
+                  .Map(dest => dest.Images, src => src.ProductImages ?? new List<ProductImage>())
+                  .Map(dest => dest.CityName, src => src.Farm.City.Name)
+                  .Map(dest => dest.DepartmentName, src => src.Farm.City.Department.Name);
 
             //Category
             // Updated mapping to handle potential null references

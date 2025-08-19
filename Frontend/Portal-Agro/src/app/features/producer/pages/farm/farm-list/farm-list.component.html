@@ -1,1 +1,19 @@
-<p>farm-list works!</p>
+<div class="top">
+  <app-button
+  text="Crear Finca"
+  color="primary"
+  icon="add"
+  redirectTo="/account/producer/management/farm/create">
+</app-button>
+
+<div class="container-xxl px-3 top">
+  <div class="row g-4">
+    <div
+      class="col-12 col-sm-6 col-md-4 col-lg-3"
+      *ngFor="let farm of farms; trackBy: trackById">
+      <app-card-farm [farm]="farm" [showActions]="true" (edit)="onEdit($event)"
+        (delete)="onDelete($event)">></app-card-farm>
+    </div>
+  </div>
+</div>
+</div>

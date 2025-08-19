@@ -9,30 +9,30 @@
   </div>
 
   <mat-card-content class="content">
-    <h3 class="title line-2">{{ product.name }}</h3>
+    <h3 class="title line-2">{{ farm.name }}</h3>
 
     <p class="info-row">
       <mat-icon fontIcon="person" color="primary"></mat-icon>
-      {{ product.personName }}
+      {{ farm.producerName }}
     </p>
 
     <p class="info-row">
       <mat-icon fontIcon="place" color="primary"></mat-icon>
-      {{ product.farmName }}
+      {{ farm.cityName }}, {{farm.departmentName}}
     </p>
 
-    <div class="spacer"></div>
+    <!-- <div class="spacer"></div> -->
 
-    <p class="price">
-      ${{ product.price | number:'1.0-0' }}
-    </p>
+    <!-- <p class="price">
+      ${{ farm.price | number:'1.0-0' }}
+    </p> -->
 
      <!-- Botones de acción si está habilitado -->
     <div *ngIf="showActions" class="actions">
-      <button mat-icon-button color="primary" (click)="edit.emit(product)">
+      <button mat-icon-button color="primary" (click)="edit.emit(farm)">
         <mat-icon class="icon-edit">edit</mat-icon>
       </button>
-      <button mat-icon-button color="warn" (click)="delete.emit(product)">
+      <button mat-icon-button color="warn" (click)="delete.emit(farm)">
         <mat-icon class="icon-delete">delete</mat-icon>
       </button>
     </div>

@@ -191,7 +191,7 @@ namespace Business.Services.Producers.Farms
             }
         }
 
-        public async Task<FarmSelectDto> CreateFarmAsync(FarmRegisterDto dto)
+        public async Task<FarmRegisterDto> CreateFarmAsync(FarmRegisterDto dto)
         {
             ValidateMaxImages(dto.Images?.Count ?? 0);
             var pid = await _producerRepository.GetIdProducer(dto.ProducerId)
@@ -215,8 +215,8 @@ namespace Business.Services.Producers.Farms
 
                 await transaction.CommitAsync();
 
-                var result = entity.Adapt<FarmSelectDto>();
-                result.Images = images.Adapt<List<FarmImageSelectDto>>();
+                var result = entity.Adapt<FarmRegisterDto>();
+                //result.Images = images.Adapt<List<FarmImageSelectDto>>();
                 return result;
             }
             catch (Exception ex)

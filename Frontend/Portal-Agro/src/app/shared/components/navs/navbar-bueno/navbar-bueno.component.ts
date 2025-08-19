@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../../Core/services/auth/auth.service';
 import Swal from 'sweetalert2';
+import { AuthService } from '../../../../Core/services/auth/auth.service';
 
 @Component({
   selector: 'app-navbar-bueno',

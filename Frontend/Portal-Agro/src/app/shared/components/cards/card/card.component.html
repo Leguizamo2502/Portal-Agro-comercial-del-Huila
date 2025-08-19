@@ -1,0 +1,40 @@
+<mat-card class="product-card">
+  <div class="image-wrap">
+    <img
+      class="card-image"
+      [src]="imageUrl"
+      alt="Imagen del producto"
+      (error)="onImgError($event)"
+    />
+  </div>
+
+  <mat-card-content class="content">
+    <h3 class="title">{{ product.name }}</h3>
+
+    <p class="info-row">
+      <mat-icon fontIcon="person" color="primary"></mat-icon>
+      {{ product.personName }}
+    </p>
+
+    <p class="info-row">
+      <mat-icon fontIcon="place" color="primary"></mat-icon>
+      {{ product.cityName }}, {{product.departmentName}}
+    </p>
+
+    <!-- <div class="spacer"></div> -->
+
+    <p class="price">
+      ${{ product.price | number:'1.0-0' }}
+    </p>
+
+     <!-- Botones de acción si está habilitado -->
+    <div *ngIf="showActions" class="actions">
+      <button mat-icon-button color="primary" (click)="edit.emit(product)">
+        <mat-icon class="icon-edit">edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn" (click)="delete.emit(product)">
+        <mat-icon class="icon-delete">delete</mat-icon>
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>

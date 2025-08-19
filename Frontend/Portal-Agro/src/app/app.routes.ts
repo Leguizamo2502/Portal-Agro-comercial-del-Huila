@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
 import { ButtonComponent } from './shared/components/button/button.component';
-import { CardComponent } from './shared/components/card/card.component';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
-import { NavbarVerticalComponent } from './shared/components/navbar-vertical/navbar-vertical.component';
-import { NavbarSinCategoriaComponent } from './shared/components/navbar-sin-categoria/navbar-sin-categoria.component';
+import { NavbarVerticalComponent } from './shared/components/navs/navbar-vertical/navbar-vertical.component';
 import { CarruselComponent } from './shared/components/carrusel/carrusel.component';
 import { ForbiddenComponent } from './Core/page/forbidden/forbidden.component';
+import { CardComponent } from './shared/components/cards/card/card.component';
+import { NavbarSinCategoriaComponent } from './shared/components/navs/navbar-sin-categoria/navbar-sin-categoria.component';
 
 export const routes: Routes = [
 

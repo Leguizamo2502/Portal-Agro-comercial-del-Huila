@@ -1,18 +1,20 @@
 export interface ProductSelectModel {
-    id:           number;
-    name:         string;
-    description:  string;
-    price:        number;
-    unit:         string;
-    production:   string;
-    stock:        number;
-    status:       boolean;
-    categoryId:   number;
-    categoryName: string;
-    images:       ProductImageSelectModel[];
-    personName:   string;
-    farmId:       number;
-    farmName:     string;
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  unit: string;
+  production: string;
+  stock: number;
+  status: boolean;
+  categoryId: number;
+  categoryName: string;
+  images: ProductImageSelectModel[];
+  personName: string;
+  farmId: number;
+  farmName: string;
+  cityName: string;
+  departmentName: string;
 }
 
 export interface ProductImageSelectModel {
@@ -50,4 +52,3 @@ export interface ProductUpdateModel {
   farmId: number;
   imagesToDelete?: string[]; // PublicId o nombres de archivos a eliminar
 }
-

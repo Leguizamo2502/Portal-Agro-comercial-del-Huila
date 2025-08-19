@@ -80,3 +80,19 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   font-size: 2rem;
   color: #333;
 }
+
+
+/**
+cosas
+
+*/
+.top{
+  margin-top: 1rem;
+}
+
+.leaflet-control-layers-toggle {
+  background-image: url('/leaflet/layers.png');
+}
+.leaflet-retina .leaflet-control-layers-toggle {
+  background-image: url('/leaflet/layers-2x.png');
+}

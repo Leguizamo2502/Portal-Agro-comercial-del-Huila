@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ProductSelectModel } from '../../models/product/product.model';
+import { ProductSelectModel } from '../../../models/product/product.model';
 import { CardComponent } from "../card/card.component";
 import { CommonModule } from '@angular/common';
 

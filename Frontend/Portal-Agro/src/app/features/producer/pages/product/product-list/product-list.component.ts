@@ -4,10 +4,10 @@ import { FarmService } from '../../../../../shared/services/farm/farm.service';
 import { ButtonComponent } from "../../../../../shared/components/button/button.component";
 import { ProductService } from '../../../../../shared/services/product/product.service';
 import { ProductSelectModel } from '../../../../../shared/models/product/product.model';
-import { CardComponent } from "../../../../../shared/components/card/card.component";
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { CardComponent } from '../../../../../shared/components/cards/card/card.component';
 
 @Component({
   selector: 'app-product-list',

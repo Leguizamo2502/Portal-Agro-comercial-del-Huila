@@ -1,10 +1,11 @@
-﻿using Entity.DTOs.Producer.Farm.Select;
+﻿using Entity.DTOs.BaseDTO;
+using Entity.DTOs.Producer.Farm.Select;
 
 namespace Entity.DTOs.Products.Select
 {
-    public class ProductSelectDto
+    public class ProductSelectDto : BaseDto
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public double Price { get; set; }
@@ -17,6 +18,8 @@ namespace Entity.DTOs.Products.Select
         //public List<IFormFile> Images { get; set; } = new();
         public List<ProductImageSelectDto> Images { get; set; } = new();
         public string PersonName { get; set; }
+        public string CityName { get; set; }
+        public string DepartmentName { get; set; }
 
         public int FarmId { get; set; }
         public string FarmName { get; set; }

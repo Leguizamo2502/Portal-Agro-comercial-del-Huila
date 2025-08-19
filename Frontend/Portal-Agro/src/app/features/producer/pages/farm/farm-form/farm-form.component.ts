@@ -1,33 +1,77 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, inject, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  inject,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
-import { FarmSelectModel, FarmImageSelectModel, FarmUpdateModel, FarmWithProducerRegisterModel, FarmRegisterModel } from '../../../../../shared/models/farm/farm.model';
-import { DepartmentModel, CityModel } from '../../../../../shared/models/location/location.model';
+import {
+  FarmSelectModel,
+  FarmImageSelectModel,
+  FarmUpdateModel,
+  FarmWithProducerRegisterModel,
+  FarmRegisterModel,
+} from '../../../../../shared/models/farm/farm.model';
+import {
+  DepartmentModel,
+  CityModel,
+} from '../../../../../shared/models/location/location.model';
 import { FarmService } from '../../../../../shared/services/farm/farm.service';
 import { LocationService } from '../../../../../shared/services/location/location.service';
 
 // Leaflet
 import * as L from 'leaflet';
-import { ButtonComponent } from "../../../../../shared/components/button/button.component";
-import { MatIconModule } from "@angular/material/icon";
-import { MatStepperModule } from "@angular/material/stepper";
-import { MatInputModule } from "@angular/material/input";
-import { MatSelectModule } from "@angular/material/select";
+import { ButtonComponent } from '../../../../../shared/components/button/button.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { take } from 'rxjs';
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
 
 @Component({
   selector: 'app-farm-form',
-  imports: [ButtonComponent, MatIconModule, MatStepperModule, MatInputModule, MatSelectModule,ReactiveFormsModule,CommonModule],
+  imports: [
+    ButtonComponent,
+    MatIconModule,
+    MatStepperModule,
+    MatInputModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+    CommonModule,
+    MatFormFieldModule,
+    MatButtonModule, // <-- falta
+    MatTooltipModule,
+  ],
   templateUrl: './farm-form.component.html',
-  styleUrl: './farm-form.component.css'
+  standalone: true,
+  styleUrls: ['./farm-form.component.css'],
 })
-export class FarmFormComponent implements OnInit, AfterViewInit, OnDestroy {
+export class FarmFormComponent implements OnInit, OnDestroy {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private farmSrv = inject(FarmService);
   private locationSrv = inject(LocationService);
+  private zone = inject(NgZone);
 
   /** Si es true usa createWithProducer (requiere descripción); si es false usa create */
   @Input() createWithProducer = false;
@@ -60,53 +104,59 @@ export class FarmFormComponent implements OnInit, AfterViewInit, OnDestroy {
   departments: DepartmentModel[] = [];
   cities: CityModel[] = [];
 
-
-  
-
   // Mapa
-  @ViewChild('mapContainer', { static: false }) mapContainer?: ElementRef<HTMLDivElement>;
+  @ViewChild('mapContainer', { static: false })
+  mapContainer?: ElementRef<HTMLDivElement>;
   private map?: L.Map;
   private marker?: L.Marker;
   // Centro por defecto (Huila aprox.)
   private defaultCenter: [number, number] = [2.9386, -75.2519];
   private defaultZoom = 8;
-  
 
   farmId?: number;
 
+  onStepChange(ev: StepperSelectionEvent) {
+    // índice 1 = segundo paso (Ubicación)
+    if (ev.selectedIndex === 1) {
+      // Espera a que el paso sea visible y luego inicia
+      this.zone.runOutsideAngular(() => {
+        requestAnimationFrame(() => this.initMap());
+      });
+    }
+  }
+
   ngOnInit(): void {
     this.initForms();
-    
-    
+
+    // Validación condicional de 'description'
+    const desc = this.generalGroup.get('description');
+    desc?.clearValidators();
+    if (this.createWithProducer) {
+      desc?.addValidators([Validators.required, Validators.maxLength(1000)]);
+    } else {
+      desc?.addValidators([Validators.maxLength(1000)]);
+    }
+    desc?.updateValueAndValidity({ emitEvent: false });
+
     this.loadDepartments();
 
-    // Modo edición si viene :id
-    this.route.paramMap.subscribe((params) => {
-      const idParam = params.get('id');
-
-      if (idParam) {
-        this.farmId = Number(idParam);
-        this.isEdit = true;
-
-        this.resetBeforeLoad();
-        this.loadFarm(this.farmId);
-      } else {
-        this.farmId = undefined;
-        this.isEdit = false;
-
-        this.resetBeforeLoad();
-      }
-      
-    });
-
-
-    
-    
+    // Modo edición: lee el id una sola vez
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      this.farmId = Number(idParam);
+      this.isEdit = true;
+      this.resetBeforeLoad();
+      this.loadFarm(this.farmId);
+    } else {
+      this.farmId = undefined;
+      this.isEdit = false;
+      this.resetBeforeLoad();
+    }
   }
 
-  ngAfterViewInit(): void {
-    this.initMap();
-  }
+  // ngAfterViewInit(): void {
+  //   this.initMap();
+  // }
 
   ngOnDestroy(): void {
     this.map?.remove();
@@ -133,58 +183,74 @@ export class FarmFormComponent implements OnInit, AfterViewInit, OnDestroy {
   /* ============================ LOAD DATA ============================ */
   private loadFarm(id: number): void {
     this.isLoading = true;
-    this.farmSrv.getById(id).subscribe({
-      next: (f) => {
-        this.patchFromSelect(f);
-        // Si tu select incluye imágenes con publicId y url, úsalo directo; si no, crea un service aparte
-        this.existingImages = f.images ?? [];
-        // Sincroniza marcador con coordenadas
-        const lat = Number(this.ubicacionGroup.value.latitude) || this.defaultCenter[0];
-        const lng = Number(this.ubicacionGroup.value.longitude) || this.defaultCenter[1];
-        this.setMarker(lat, lng, true);
-      },
-      complete: () => (this.isLoading = false),
-      error: () => (this.isLoading = false),
-    });
+    this.farmSrv
+      .getById(id)
+      .pipe(take(1))
+      .subscribe({
+        next: (f) => {
+          if (!f) return;
+          this.patchFromSelect(f);
+
+          this.existingImages = f.images ?? [];
+
+          const lat = Number(this.ubicacionGroup.value.latitude);
+          const lng = Number(this.ubicacionGroup.value.longitude);
+          const safeLat = Number.isFinite(lat) ? lat : this.defaultCenter[0];
+          const safeLng = Number.isFinite(lng) ? lng : this.defaultCenter[1];
+          this.setMarker(safeLat, safeLng, true);
+        },
+        error: (err) => {
+          console.error('getById error', err);
+          this.isLoading = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo cargar la finca',
+          });
+        },
+        complete: () => (this.isLoading = false),
+      });
   }
 
   private patchFromSelect(f: FarmSelectModel): void {
     this.generalGroup.patchValue({
       name: f.name,
-      hectares: f['hectares' as keyof FarmSelectModel] ?? 0, // por si tu SelectModel no lo trae
-      altitude: f['altitude' as keyof FarmSelectModel] ?? 0,
+      hectares: f.hectares ?? 0,
+      altitude: f.altitude ?? 0,
       description: '',
     });
 
-    // Necesitas mapear cityId; tu SelectModel trae cityName/departmentName, no IDs.
-    // Para edición real, tu endpoint GET/{id} debería también retornar cityId y departmentId.
-    // Aquí asumimos que tienes cityId disponible (ajusta según tu DTO real).
-    // Ejemplo defensivo:
-    const cityIdGuess = (f as any).cityId ?? null;
-    const departmentIdGuess = (f as any).departmentId ?? null;
-
     this.ubicacionGroup.patchValue({
-      departmentId: departmentIdGuess,
-      cityId: cityIdGuess,
+      departmentId: f.departmentId ?? null,
+      cityId: f.cityId ?? null,
       latitude: Number(f.latitude),
       longitude: Number(f.longitude),
     });
 
-    // Si tenemos departmentId, cargamos ciudades y seleccionamos cityId
-    if (departmentIdGuess) {
-      this.onDepartmentChange(departmentIdGuess, cityIdGuess);
+    // Cargar ciudades según departmentId y fijar cityId
+    if (f.departmentId) {
+      this.onDepartmentChange(f.departmentId, f.cityId);
     }
   }
 
   private resetBeforeLoad(): void {
     this.generalGroup.reset({ hectares: 0, altitude: 0, description: '' });
-    this.ubicacionGroup.reset({ departmentId: null, cityId: null, latitude: null, longitude: null });
+    this.ubicacionGroup.reset({
+      departmentId: null,
+      cityId: null,
+      latitude: null,
+      longitude: null,
+    });
     this.selectedFiles = [];
     this.imagesPreview = [];
     this.existingImages = this.isEdit ? this.existingImages : [];
     this.imagesToDelete = [];
     // Reset marker
-    this.setMarker(this.defaultCenter[0] as number, this.defaultCenter[1] as number, true);
+    this.setMarker(
+      this.defaultCenter[0] as number,
+      this.defaultCenter[1] as number,
+      true
+    );
   }
 
   private loadDepartments(): void {
@@ -201,7 +267,7 @@ export class FarmFormComponent implements OnInit, AfterViewInit, OnDestroy {
     this.locationSrv.getCity(depId).subscribe({
       next: (cities) => {
         this.cities = cities;
-        if (presetCityId && cities.some(c => c.id === presetCityId)) {
+        if (presetCityId && cities.some((c) => c.id === presetCityId)) {
           this.ubicacionGroup.patchValue({ cityId: presetCityId });
         }
       },
@@ -212,13 +278,22 @@ export class FarmFormComponent implements OnInit, AfterViewInit, OnDestroy {
   private initMap(): void {
     if (!this.mapContainer) return;
 
-    // Fix iconos en Angular (evita 404)
-    const iconRetinaUrl = 'leaflet/layers-2x.png';
-    const iconUrl = 'leaflet/marker-icon.png';
-    const shadowUrl = 'leaflet/marker-shadow.png';
-    // Copia estos 3 archivos desde node_modules/leaflet/dist/images/ a assets/leaflet/
-    // o ajusta las rutas según tu bundling.
-    L.Icon.Default.mergeOptions({ iconRetinaUrl, iconUrl, shadowUrl });
+    // si ya existe, solo revalida tamaño y mueve marcador
+    if (this.map) {
+      this.map.invalidateSize(); // importante al abrir el step
+      const lat =
+        Number(this.ubicacionGroup.value.latitude) || this.defaultCenter[0];
+      const lng =
+        Number(this.ubicacionGroup.value.longitude) || this.defaultCenter[1];
+      this.setMarker(lat, lng, true);
+      return;
+    }
+
+    L.Icon.Default.mergeOptions({
+      iconRetinaUrl: '/leaflet/marker-icon-2x.png',
+      iconUrl: '/leaflet/marker-icon.png',
+      shadowUrl: '/leaflet/marker-shadow.png',
+    });
 
     this.map = L.map(this.mapContainer.nativeElement, {
       center: this.defaultCenter,
@@ -226,22 +301,24 @@ export class FarmFormComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      attribution: '&copy; OpenStreetMap contributors',
       maxZoom: 19,
     }).addTo(this.map);
 
-    // Click en mapa → mover marcador y actualizar form
     this.map.on('click', (e: L.LeafletMouseEvent) => {
       const { lat, lng } = e.latlng;
       this.setMarker(lat, lng, true);
       this.ubicacionGroup.patchValue({ latitude: lat, longitude: lng });
     });
 
-    // Inicia marcador
-    const lat = this.ubicacionGroup.value.latitude ?? (this.defaultCenter as number[])[0];
-    const lng = this.ubicacionGroup.value.longitude ?? (this.defaultCenter as number[])[1];
+    const lat =
+      Number(this.ubicacionGroup.value.latitude) || this.defaultCenter[0];
+    const lng =
+      Number(this.ubicacionGroup.value.longitude) || this.defaultCenter[1];
     this.setMarker(lat, lng, false);
+
+    // asegura tamaño correcto tras render
+    setTimeout(() => this.map!.invalidateSize(), 0);
   }
 
   private setMarker(lat: number, lng: number, pan = false): void {
@@ -251,7 +328,10 @@ export class FarmFormComponent implements OnInit, AfterViewInit, OnDestroy {
       this.marker = L.marker([lat, lng], { draggable: true }).addTo(this.map);
       this.marker.on('dragend', () => {
         const pos = this.marker!.getLatLng();
-        this.ubicacionGroup.patchValue({ latitude: pos.lat, longitude: pos.lng });
+        this.ubicacionGroup.patchValue({
+          latitude: pos.lat,
+          longitude: pos.lng,
+        });
       });
     } else {
       this.marker.setLatLng([lat, lng]);
@@ -317,7 +397,8 @@ export class FarmFormComponent implements OnInit, AfterViewInit, OnDestroy {
     newFiles.forEach((file) => {
       const reader = new FileReader();
       reader.onload = (ev) => {
-        if (ev.target?.result) this.imagesPreview.push(ev.target.result as string);
+        if (ev.target?.result)
+          this.imagesPreview.push(ev.target.result as string);
       };
       reader.readAsDataURL(file);
     });
@@ -370,7 +451,9 @@ export class FarmFormComponent implements OnInit, AfterViewInit, OnDestroy {
         longitude: Number(u.longitude),
         cityId: Number(u.cityId),
         images: this.selectedFiles.length ? this.selectedFiles : undefined,
-        imagesToDelete: this.imagesToDelete.length ? this.imagesToDelete : undefined,
+        imagesToDelete: this.imagesToDelete.length
+          ? this.imagesToDelete
+          : undefined,
       };
 
       this.farmSrv.update(dto).subscribe({
@@ -387,7 +470,11 @@ export class FarmFormComponent implements OnInit, AfterViewInit, OnDestroy {
           });
         },
         error: () => {
-          Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo actualizar la finca' });
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'No se pudo actualizar la finca',
+          });
           this.isLoading = false;
         },
       });
@@ -405,14 +492,22 @@ export class FarmFormComponent implements OnInit, AfterViewInit, OnDestroy {
         };
         this.farmSrv.createWithProducer(dto).subscribe({
           next: (resp) => {
-            Swal.fire({ icon: 'success', title: '¡Creado!', text: 'Productor y finca creados' }).then(() => {
+            Swal.fire({
+              icon: 'success',
+              title: '¡Creado!',
+              text: 'Productor y finca creados',
+            }).then(() => {
               this.saved.emit(resp);
               this.resetAfterSave();
               this.router.navigateByUrl('/account/producer/management/farm');
             });
           },
           error: () => {
-            Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo crear productor + finca' });
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo crear productor + finca',
+            });
             this.isLoading = false;
           },
         });
@@ -428,22 +523,28 @@ export class FarmFormComponent implements OnInit, AfterViewInit, OnDestroy {
         };
         this.farmSrv.create(dto).subscribe({
           next: (resp) => {
-            Swal.fire({ icon: 'success', title: '¡Creada!', text: 'La finca se registró con éxito' }).then(() => {
+            Swal.fire({
+              icon: 'success',
+              title: '¡Creada!',
+              text: 'La finca se registró con éxito',
+            }).then(() => {
               this.saved.emit(resp);
               this.resetAfterSave();
               this.router.navigateByUrl('/account/producer/management/farm');
             });
           },
           error: () => {
-            Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo registrar la finca' });
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo registrar la finca',
+            });
             this.isLoading = false;
           },
         });
       }
     }
   }
-
-  
 
   cancel(): void {
     this.resetBeforeLoad();

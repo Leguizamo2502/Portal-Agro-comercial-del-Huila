@@ -4,8 +4,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../../../Core/services/auth/auth.service';
-import { UserSelectModel } from '../../../Core/Models/user.model';
+import { AuthService } from '../../../../Core/services/auth/auth.service';
+import { UserSelectModel } from '../../../../Core/Models/user.model';
 
 
 @Component({

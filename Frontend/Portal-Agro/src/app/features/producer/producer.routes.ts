@@ -85,8 +85,8 @@ export const PRODUCER_ROUTES: Routes = [
                 path: 'update/:id',
                 title: 'Editar finca',
                 loadComponent: () =>
-                  import('./pages/farm/farm-update/farm-update.component').then(
-                    (m) => m.FarmUpdateComponent
+                  import('./pages/farm/farm-form/farm-form.component').then(
+                    (m) => m.FarmFormComponent
                   ),
               },
             ],
