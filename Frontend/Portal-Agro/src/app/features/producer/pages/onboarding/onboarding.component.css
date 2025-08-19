@@ -1,0 +1,80 @@
+/* ===== Paleta del proyecto (ajústala si usas otro verde) ===== */
+:host {
+  --brand-700: #1b5e20;  /* verde oscuro (títulos/hover) */
+  --brand-600: #2e7d32;  /* verde principal (botones/iconos) */
+  --brand-50:  #edf7ef;  /* verde muy claro (hero) */
+  --bg-cream:  #f7f4ec;  /* fondo crema que usas en el app */
+  --text-800:  #1f2937;
+  --text-600:  #475569;
+  --border:    #e5e7eb;
+  --shadow:    0 2px 10px rgba(0,0,0,.06);
+}
+
+/* Wrapper */
+.ob-wrap{
+  padding:24px;
+  display:grid;
+  gap:16px;
+  max-width:1100px;
+  margin:0 auto;
+}
+
+/* Hero con fondo acorde a la marca */
+.ob-hero{
+  display:grid;
+  gap:12px;
+  padding:16px;
+  background: var(--brand-50);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+
+/* Tipografía con colores del tema */
+.ob-title{
+  margin:0;
+  font-size:32px;
+  line-height:1.2;
+  color: var(--brand-700);
+}
+.ob-subtitle{
+  margin:0;
+  color: var(--text-600);
+}
+
+.ob-cta{ padding-top:8px; margin-bottom: 1rem; }
+
+/* Tarjetas de features con acento de marca */
+.ob-features{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:12px;
+}
+.ob-card{
+  display:grid;
+  gap:6px;
+  padding:16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  background: #fff;
+  /* acento superior */
+  border-top: 3px solid var(--brand-600);
+}
+.ob-card h3{ color: var(--brand-700); margin: 0; }
+.ob-card p { color: var(--text-600); margin: 0; }
+.ob-card mat-icon{
+  font-size:28px; width:28px; height:28px;
+  color: var(--brand-600);
+}
+
+/* Requisitos */
+.ob-req{
+  padding:12px 16px;
+  margin-top: 1rem;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  background: #fff;
+}
+.ob-req h3{ margin: 0 0 4px; color: var(--brand-700); }
+.ob-req ul{ margin:8px 0 0; padding-left:18px; }

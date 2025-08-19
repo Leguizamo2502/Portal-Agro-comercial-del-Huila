@@ -1,0 +1,39 @@
+
+    <h1 id="ob-title" class="ob-title">{{ title }}</h1>
+    <p class="ob-subtitle">{{ subtitle }}</p>
+    <div class="ob-cta">
+        <!-- <button mat-raised-button color="primary" (click)="convert.emit()" [disabled]="disabled">
+          Convertirme en productor
+        </button> -->
+        <app-button [text]="'Convertirme en productor'" [type]="'button'" [redirectTo]="'/account/register-producer'" [color]="'primary'"
+            [icon]="'agriculture'">
+        </app-button>
+    </div>
+
+<div class="ob-features">
+    <mat-card class="ob-card">
+        <mat-icon aria-hidden="true">storefront</mat-icon>
+        <h3>Ofrece con facilidad</h3>
+        <p>Publica productos con imágenes, precios y disponibilidad.</p>
+    </mat-card>
+
+    <mat-card class="ob-card">
+        <mat-icon aria-hidden="true">verified_user</mat-icon>
+        <h3>Genera confianza</h3>
+        <p>Completa tu perfil y el de tu finca para verificación.</p>
+    </mat-card>
+
+    <mat-card class="ob-card">
+        <mat-icon aria-hidden="true">insights</mat-icon>
+        <h3>Gestiona y crece</h3>
+        <p>Panel con inventario, pedidos y métricas básicas.</p>
+    </mat-card>
+</div>
+
+<mat-card class="ob-req">
+    <h3>Requisitos mínimos</h3>
+    <ul>
+        <li>Datos de la finca: nombre, ciudad y dirección.</li>
+        <li>Coordenadas (lat/long) y hasta 5 imágenes.</li>
+    </ul>
+</mat-card>

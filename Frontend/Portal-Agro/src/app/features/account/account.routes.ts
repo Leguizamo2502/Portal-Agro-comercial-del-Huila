@@ -15,6 +15,24 @@ export const ACCOUNT_ROUTES: Routes = [
       { path: 'info', component: InfoComponent },
 
       // --- PRODUCER ---
+
+      // Ruta pública de onboarding (NO canMatch)
+      {
+        path: 'become-producer',
+        title: 'Convertirme en productor',
+        loadComponent: () =>
+          import('../producer/pages/onboarding/onboarding.component').then(
+            (m) => m.OnboardingComponent
+          ),
+      },
+      {
+        path: 'register-producer',
+        title: 'Crear en productor',
+        loadComponent: () =>
+          import('../producer/pages/farm/farm-with-producer-form/farm-with-producer-form.component').then(
+            (m) => m.FarmWithProducerFormComponent
+          ),
+      },
       {
         path: 'producer',
         canMatch: [roleMatchGuard],

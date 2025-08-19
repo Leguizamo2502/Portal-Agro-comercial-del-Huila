@@ -26,29 +26,19 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import {
   ProductSelectModel,
   ProductImageSelectModel,
+  ProductRegisterModel,
+  ProductUpdateModel,
 } from '../../../../../shared/models/product/product.model';
 import { ProductService } from '../../../../../shared/services/product/product.service';
-import {
-  ProductUpdateModel,
-  ProductRegisterModel,
-} from '../../../../products/Models/product.model';
-import { ProductImageService } from '../../../../products/services/productImage/product-image.service';
 import { FarmService } from '../../../../../shared/services/farm/farm.service';
 import { CategoryService } from '../../../../parameters/services/category/category.service';
 import { FarmSelectModel } from '../../../../../shared/models/farm/farm.model';
 import { CategorySelectModel } from '../../../../parameters/models/category/category.model';
 import { ButtonComponent } from '../../../../../shared/components/button/button.component';
 import Swal from 'sweetalert2';
+import { ProductImageService } from '../../../../../shared/services/productImage/product-image.service';
 
-/** Modelos simples para selects */
-export interface CategoryOption {
-  id: number;
-  name: string;
-}
-export interface FarmOption {
-  id: number;
-  name: string;
-}
+
 
 @Component({
   selector: 'app-product-form',
@@ -81,7 +71,7 @@ export class ProductFormComponent implements OnInit {
   categories: CategorySelectModel[] = [];
 
   loadFarm() {
-    this.farmService.getFarms().subscribe((dara) => {
+    this.farmService.getByProducer().subscribe((dara) => {
       this.farms = dara;
     });
   }
@@ -393,9 +383,6 @@ export class ProductFormComponent implements OnInit {
   }
 
   cancel(): void {
-    // Si quieres navegar:
-    // this.router.navigate(['/account/producer/management/product']);
-    // O simplemente limpiar:
     this.resetForm();
   }
 

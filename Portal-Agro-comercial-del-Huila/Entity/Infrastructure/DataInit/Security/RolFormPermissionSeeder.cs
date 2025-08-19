@@ -16,7 +16,7 @@ namespace Entity.Infrastructure.DataInit.Security
             var created = new DateTime(2024, 1, 1);
 
             const int R_ADMIN = 1;
-            var forms = new[] { 1, 2, 3, 4, 5, 6, 7, 8 };         // todos los forms de Seguridad
+            var forms = new[] { 1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12 };         // todos los forms de Seguridad
             var perms = new[] { 1, 2, 3, 4 };                 // leer, crear, actualizar, eliminar
 
             // Índice único recomendado

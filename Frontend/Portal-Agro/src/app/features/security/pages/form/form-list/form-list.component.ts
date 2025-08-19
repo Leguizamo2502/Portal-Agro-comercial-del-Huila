@@ -3,13 +3,12 @@ import { FormService } from '../../../services/form/form.service';
 import { TableComponent } from '../../../../../shared/components/table/table.component';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { MatButton } from '@angular/material/button';
 import { ButtonComponent } from "../../../../../shared/components/button/button.component";
 import { FormSelectModel } from '../../../models/form/form.model';
 
 @Component({
   selector: 'app-form-list',
-  imports: [TableComponent, CommonModule, RouterLink, MatButton, ButtonComponent],
+  imports: [TableComponent, CommonModule, ButtonComponent],
   templateUrl: './form-list.component.html',
   styleUrl: './form-list.component.css',
 })

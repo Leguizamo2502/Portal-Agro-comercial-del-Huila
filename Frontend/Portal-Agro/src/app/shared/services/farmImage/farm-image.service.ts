@@ -1,20 +1,20 @@
-import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { environment } from '../../../../../environments/environment';
+import { FarmImageSelectModel } from '../../models/farm/farm.model';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ProductImageSelectModel } from '../../../../shared/models/product/product.model';
+import { environment } from '../../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProductImageService {
+export class FarmImageService {
   private http = inject(HttpClient);
-  private urlBase = environment.apiUrl + 'ProductImage'
+  private urlBase = environment.apiUrl + 'FarmImage'
   constructor() { }
 
-  /** Obtener imágenes de un producto */
-  getImagesByProductId(id: number): Observable<ProductImageSelectModel[]> {
-    return this.http.get<ProductImageSelectModel[]>(`${this.urlBase}/${id}`);
+  /** Obtener imágenes de un finca */
+  getImagesByFarmId(id: number): Observable<FarmImageSelectModel[]> {
+    return this.http.get<FarmImageSelectModel[]>(`${this.urlBase}/${id}`);
   }
 
   /** Eliminar varias imágenes a la vez mediante sus publicId */

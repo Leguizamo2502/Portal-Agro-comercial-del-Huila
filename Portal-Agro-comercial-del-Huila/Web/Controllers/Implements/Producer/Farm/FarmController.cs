@@ -14,8 +14,8 @@ using Utilities.Helpers.Auth;
 
 namespace Web.Controllers.Implements.Producer.Farm
 {
-    [Route("api/v1/[controller]")]
     [ApiController]
+    [Route("api/v1/[controller]")]
     public class FarmController : ControllerBase
     {
         private readonly IFarmService _farmService;

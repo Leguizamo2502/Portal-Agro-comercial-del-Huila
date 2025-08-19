@@ -2,14 +2,13 @@ import { Component, inject, OnInit } from '@angular/core';
 import { TableComponent } from '../../../../../shared/components/table/table.component';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { MatButton } from '@angular/material/button';
 import { CityService } from '../../../services/city/city.service';
 import { CitySelectModel } from '../../../models/city/city.model';
 import { ButtonComponent } from "../../../../../shared/components/button/button.component";
 
 @Component({
   selector: 'app-city-list',
-  imports: [TableComponent, CommonModule, RouterLink, MatButton, ButtonComponent],
+  imports: [TableComponent, CommonModule, ButtonComponent],
   templateUrl: './city-list.component.html',
   styleUrl: './city-list.component.css',
 })

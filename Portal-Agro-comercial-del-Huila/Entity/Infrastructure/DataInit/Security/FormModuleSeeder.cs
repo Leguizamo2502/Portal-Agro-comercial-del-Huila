@@ -27,16 +27,11 @@ namespace Entity.Infrastructure.DataInit.Security
                 new FormModule { Id = 6, ModuleId = 1, FormId = 6, Active = true, IsDeleted = false, CreateAt = created },
                 new FormModule { Id = 7, ModuleId = 1, FormId = 7, Active = true, IsDeleted = false, CreateAt = created },
                 new FormModule { Id = 8, ModuleId = 1, FormId = 8, Active = true, IsDeleted = false, CreateAt = created },
-                //Producer
-                new FormModule
-                {
-                    Id = 9,
-                    ModuleId = 3,   // Productor
-                    FormId = 9,   // /account/producer
-                    Active = true,
-                    IsDeleted = false,
-                    CreateAt = created
-                }
+               //Producer
+               new FormModule { Id = 9, ModuleId = 3, FormId = 9, Active = true, IsDeleted = false, CreateAt = created }, // /account/producer
+                new FormModule { Id = 10, ModuleId = 3, FormId = 10, Active = true, IsDeleted = false, CreateAt = created }, // /account/producer/summary
+                new FormModule { Id = 11, ModuleId = 3, FormId = 11, Active = true, IsDeleted = false, CreateAt = created }, // /account/producer/management/product
+                new FormModule { Id = 12, ModuleId = 3, FormId = 12, Active = true, IsDeleted = false, CreateAt = created }  // /account/producer/management/farm
             );
         }
     }

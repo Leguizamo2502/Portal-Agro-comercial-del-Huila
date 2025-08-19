@@ -24,6 +24,16 @@ namespace Entity.Infrastructure.DataInit.Producers
                     Active = true,
                     IsDeleted = true,
                     CreateAt = new DateTime(2025, 1, 1)
+                },
+                new Producer
+                {
+                    Id = 2,
+                    Code = "PENDIENTE",
+                    Description = "Hola vendo papa modo admin",
+                    UserId = 1,
+                    Active = true,
+                    IsDeleted = true,
+                    CreateAt = new DateTime(2025, 1, 1)
                 }
                 );
         }

@@ -1,1 +1,167 @@
-<p>farm-form works!</p>
+<div class="form-wrapper-transparent">
+  <mat-horizontal-stepper [linear]="true">
+    <!-- Paso 1: Datos generales -->
+    <mat-step [stepControl]="generalGroup">
+      <form [formGroup]="generalGroup">
+        <ng-template matStepLabel>Datos de la finca</ng-template>
+
+        <div class="info">
+          <h3>{{ isEdit ? 'Editar finca' : 'Nueva finca' }}</h3>
+          <span>Complete la información general</span>
+        </div>
+
+        <div class="row-2">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="name" required maxlength="120" />
+            <mat-error *ngIf="generalGroup.get('name')?.hasError('required')">Obligatorio</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Hectáreas</mat-label>
+            <input matInput type="number" formControlName="hectares" required min="0" />
+            <mat-error *ngIf="generalGroup.get('hectares')?.hasError('required')">Obligatorio</mat-error>
+            <mat-error *ngIf="generalGroup.get('hectares')?.hasError('min')">No negativo</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="row-2">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Altitud (msnm)</mat-label>
+            <input matInput type="number" formControlName="altitude" required min="0" />
+            <mat-error *ngIf="generalGroup.get('altitude')?.hasError('required')">Obligatorio</mat-error>
+            <mat-error *ngIf="generalGroup.get('altitude')?.hasError('min')">No negativo</mat-error>
+          </mat-form-field>
+
+          <mat-form-field *ngIf="createWithProducer" appearance="outline" class="w-100">
+            <mat-label>Descripción</mat-label>
+            <textarea matInput rows="3" formControlName="description" maxlength="1000"></textarea>
+          </mat-form-field>
+        </div>
+
+        <div class="actions">
+          <app-button
+            text="Siguiente"
+            color="primary"
+            [disabled]="generalGroup.invalid"
+            [stepperAction]="'next'">
+          </app-button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- Paso 2: Ubicación -->
+    <mat-step [stepControl]="ubicacionGroup">
+      <form [formGroup]="ubicacionGroup">
+        <ng-template matStepLabel>Ubicación</ng-template>
+
+        <div class="row-2">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Departamento</mat-label>
+            <mat-select formControlName="departmentId" required
+                        (selectionChange)="onDepartmentChange($event.value)">
+              <mat-option *ngFor="let d of departments" [value]="d.id">{{ d.name }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="ubicacionGroup.get('departmentId')?.hasError('required')">Obligatorio</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Ciudad</mat-label>
+            <mat-select formControlName="cityId" required>
+              <mat-option *ngFor="let c of cities" [value]="c.id">{{ c.name }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="ubicacionGroup.get('cityId')?.hasError('required')">Obligatorio</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="row-2">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Latitud</mat-label>
+            <input matInput type="number" formControlName="latitude" required (change)="onLatLngManualChange()"/>
+            <mat-error *ngIf="ubicacionGroup.get('latitude')?.hasError('required')">Obligatorio</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Longitud</mat-label>
+            <input matInput type="number" formControlName="longitude" required (change)="onLatLngManualChange()"/>
+            <mat-error *ngIf="ubicacionGroup.get('longitude')?.hasError('required')">Obligatorio</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div #mapContainer class="map"></div>
+
+        <div class="actions space-between">
+          <app-button text="Anterior" color="secondary" [stepperAction]="'previous'"></app-button>
+          <app-button text="Siguiente" color="primary" [disabled]="ubicacionGroup.invalid" [stepperAction]="'next'"></app-button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- Paso 3: Imágenes -->
+    <mat-step>
+      <ng-template matStepLabel>Imágenes</ng-template>
+
+      <div class="info">
+        <h3>Imágenes de la finca</h3>
+        <span>Máximo {{ MAX_IMAGES }} imágenes. Tamaño ≤ {{ MAX_FILE_SIZE_MB }} MB.</span>
+      </div>
+
+      <div class="drop-zone"
+           (dragover)="onDragOver($event)"
+           (dragleave)="onDragLeave($event)"
+           (drop)="onDropOrInput($event.dataTransfer?.files || null)"
+           [class.dragover]="isDragging"
+           (click)="fileInput.click()">
+
+        <mat-icon>cloud_upload</mat-icon>
+        <p>Arrastra aquí o haz clic para seleccionar</p>
+        <small>Formatos: JPG, PNG, WEBP</small>
+
+        <input #fileInput type="file" accept="image/*" multiple hidden
+               (change)="onDropOrInput(fileInput.files)" />
+      </div>
+
+      <div class="image-counter">
+        {{ selectedFiles.length + existingImages.length }}/{{ MAX_IMAGES }} imágenes
+      </div>
+
+      <div class="compact-image-grid">
+        <!-- existentes -->
+        <div class="compact-image-container" *ngFor="let img of existingImages; let i = index">
+          <img [src]="img.imageUrl" alt="Imagen existente" class="compact-image" />
+          <div class="compact-image-actions">
+            <button mat-icon-button color="warn" (click)="removeImage(i, true)" matTooltip="Marcar para eliminar">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+          <span class="compact-image-label">Existente</span>
+        </div>
+
+        <!-- nuevas -->
+        <div class="compact-image-container" *ngFor="let prev of imagesPreview; let i = index">
+          <img [src]="prev" alt="Vista previa" class="compact-image" />
+          <div class="compact-image-actions">
+            <button mat-icon-button color="warn" (click)="removeImage(i, false)" matTooltip="Quitar">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+          <span class="compact-image-label">Nueva</span>
+        </div>
+      </div>
+
+      <div class="actions space-between">
+        <app-button text="Anterior" color="secondary" [stepperAction]="'previous'"></app-button>
+        <app-button
+          [text]="isEdit ? 'Actualizar' : 'Crear'"
+          color="primary"
+          [disabled]="isLoading || (!isEdit && (selectedFiles.length + existingImages.length) === 0)"
+          (clicked)="submit()">
+        </app-button>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
+
+  <div class="footer-actions">
+    <app-button text="Cancelar" color="secondary" [back]="true"></app-button>
+  </div>
+</div>

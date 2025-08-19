@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers.Implements.Producer.Farm
 {
+    [ApiController]
+    [Route("api/v1/[controller]")]
     public class FarmImageController : ControllerBase
     {
         private readonly IFarmImageService _farmImageService;

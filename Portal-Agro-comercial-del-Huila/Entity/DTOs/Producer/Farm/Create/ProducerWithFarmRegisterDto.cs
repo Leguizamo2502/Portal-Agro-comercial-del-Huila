@@ -9,10 +9,10 @@ namespace Entity.DTOs.Producer.Farm.Create
 {
     public class ProducerWithFarmRegisterDto
     {
-        // Info del nuevo productor
-        public string Description { get; set; } // Descripción del productor (si aplica)
+        
+        public string Description { get; set; } 
 
-        // Info de la finca
+        
         public string Name { get; set; }
         public double Hectares { get; set; }
         public double Altitude { get; set; }
@@ -21,9 +21,9 @@ namespace Entity.DTOs.Producer.Farm.Create
 
         public List<IFormFile> Images { get; set; }
 
-        // Datos clave
+        
         public int CityId { get; set; }
-        //public int UserId { get; set; } // para crear el producer asociado
+        
 
     }
 }

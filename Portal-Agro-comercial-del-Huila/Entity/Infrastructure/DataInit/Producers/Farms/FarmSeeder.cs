@@ -72,6 +72,20 @@ namespace Entity.Infrastructure.DataInit.Producers.Farms
                     IsDeleted = false,
                     Active = true,
                     CreateAt = date
+                },
+                new Farm
+                {
+                    Id = 5,
+                    Name = "Finca los Primos",
+                    Hectares = 4,
+                    Altitude = 1600,
+                    Latitude = 1200,
+                    Longitude = 600,
+                    ProducerId = 2,
+                    CityId = 33,
+                    IsDeleted = false,
+                    Active = true,
+                    CreateAt = date
                 }
             );
         }

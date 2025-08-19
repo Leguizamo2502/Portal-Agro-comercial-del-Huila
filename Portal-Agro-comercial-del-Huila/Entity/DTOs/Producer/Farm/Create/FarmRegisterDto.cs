@@ -19,6 +19,6 @@ namespace Entity.DTOs.Producer.Farm.Create
         public List<IFormFile> Images { get; set; } = new();
 
         public int CityId { get; set; }
-        public int ProducerId { get; set; } // ID del productor ya existente
+        public int ProducerId { get; set; } 
     }
 }

@@ -9,7 +9,7 @@ import { ButtonComponent } from "../../../../../shared/components/button/button.
 
 @Component({
   selector: 'app-module-list',
-  imports: [TableComponent, CommonModule, RouterLink, ButtonComponent],
+  imports: [TableComponent, CommonModule, ButtonComponent],
   templateUrl: './module-list.component.html',
   styleUrl: './module-list.component.css',
 })

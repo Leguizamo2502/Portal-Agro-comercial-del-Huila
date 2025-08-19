@@ -1,9 +1,15 @@
 // core/auth/auth.state.ts
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable, of, shareReplay, switchMap, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  of,
+  shareReplay,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { AuthService } from './auth.service';
 import { UserMeDto } from '../../Models/login.model';
-
 
 @Injectable({ providedIn: 'root' })
 export class AuthState {
@@ -21,24 +27,39 @@ export class AuthState {
     try {
       const raw = sessionStorage.getItem(this.storageKey);
       if (raw) this._me$.next(JSON.parse(raw) as UserMeDto);
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }
-  
 
   loadMe(): Observable<UserMeDto | null> {
     return this.authService.GetMe().pipe(
-      tap((me) => this.normalizeAndCache(me),),
-      
+      tap((me) => this.normalizeAndCache(me)),
+
       switchMap(() => of(this._me$.value)),
       shareReplay(1)
     );
   }
 
   private normalizeAndCache(me: UserMeDto) {
-    me.permissions = (me.permissions ?? []).map(p => p.toLowerCase());
-    me.menu?.forEach(s =>
-      s.forms?.forEach(f => f.permissions = (f.permissions ?? []).map(p => p.toLowerCase()))
+    // 1) Normaliza roles
+    me.roles = (me.roles ?? [])
+      .map((r) => (r ?? '').toString().trim())
+      .filter(Boolean);
+
+    // 2) Normaliza a minúsculas para cache (opcional pero consistente)
+    //    Si haces esto, ajusta hasRole a comparar en minúsculas (ya lo haces).
+    me.roles = me.roles.map((r) => r.toLowerCase());
+
+    // 3) Normaliza permisos y forms (como ya tenías)
+    me.permissions = (me.permissions ?? []).map((p) => p.toLowerCase());
+    me.menu?.forEach((s) =>
+      s.forms?.forEach(
+        (f) =>
+          (f.permissions = (f.permissions ?? []).map((p) => p.toLowerCase()))
+      )
     );
+
     this._me$.next(me);
     sessionStorage.setItem(this.storageKey, JSON.stringify(me));
   }
@@ -50,7 +71,9 @@ export class AuthState {
 
   hasRole(role: string): boolean {
     const me = this._me$.value;
-    return !!me && me.roles?.some(r => r.toLowerCase() === role.toLowerCase());
+    if (!me?.roles?.length) return false;
+    const wanted = (role ?? '').toLowerCase();
+    return me.roles.some((r) => (r ?? '').toLowerCase() === wanted);
   }
 
   hasFormPermission(routeKeyOrUrl: string, action: string): boolean {
@@ -58,8 +81,8 @@ export class AuthState {
     if (!me) return false;
     const key = (routeKeyOrUrl ?? '').toLowerCase();
     const form = me.menu
-      ?.flatMap(m => m.forms ?? [])
-      .find(f => (f.url ?? '').toLowerCase() === key);
+      ?.flatMap((m) => m.forms ?? [])
+      .find((f) => (f.url ?? '').toLowerCase() === key);
     return !!form && (form.permissions ?? []).includes(action.toLowerCase());
   }
 

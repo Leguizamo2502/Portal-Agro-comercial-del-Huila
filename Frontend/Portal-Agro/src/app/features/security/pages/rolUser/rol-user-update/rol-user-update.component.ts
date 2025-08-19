@@ -7,11 +7,10 @@ import { RolUserService } from '../../../services/rolUser/rol-user.service';
 import { RolUserSelectModel, RolUserRegisterModel, RolUserFormComponent } from '../rol-user-form/rol-user-form.component';
 import { UserService } from '../../../services/user/user.service';
 import { UserSelectModel } from '../../../../../Core/Models/user.model';
-import { RolFormComponent } from "../../rol/rol-form/rol-form.component";
 
 @Component({
   selector: 'app-rol-user-update',
-  imports: [RolFormComponent, RolUserFormComponent],
+  imports: [RolUserFormComponent],
   templateUrl: './rol-user-update.component.html',
   styleUrl: './rol-user-update.component.css'
 })

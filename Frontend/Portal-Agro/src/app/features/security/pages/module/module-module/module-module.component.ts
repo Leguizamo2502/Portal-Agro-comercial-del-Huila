@@ -5,13 +5,12 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterLink } from '@angular/router';
 import { ModuleRegisterModel, ModuleSelectModel } from '../../../models/module/module.model';
 import { ButtonComponent } from "../../../../../shared/components/button/button.component";
 
 @Component({
   selector: 'app-form-form',
-  imports: [[MatFormFieldModule, ReactiveFormsModule, MatInputModule, MatButtonModule, RouterLink, MatIconModule, CommonModule], ButtonComponent],
+  imports: [[MatFormFieldModule, ReactiveFormsModule, MatInputModule, MatButtonModule, MatIconModule, CommonModule], ButtonComponent],
   templateUrl: '../module-module/module-module.component.html',
   styleUrl: '../module-module/module-module.component.css'
 })

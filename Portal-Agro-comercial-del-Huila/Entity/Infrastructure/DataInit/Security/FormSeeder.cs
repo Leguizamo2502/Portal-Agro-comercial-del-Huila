@@ -34,7 +34,10 @@ namespace Entity.Infrastructure.DataInit.Security
                     Active = true,
                     IsDeleted = false,
                     CreateAt = created
-                }
+                },
+                new Form { Id = 10, Name = "Resumen Productor", Description = "Resumen", Url = "/account/producer/summary", Active = true, IsDeleted = false, CreateAt = created },
+                new Form { Id = 11, Name = "Productos", Description = "Gestión de productos", Url = "/account/producer/management/product", Active = true, IsDeleted = false, CreateAt = created },
+                new Form { Id = 12, Name = "Fincas", Description = "Gestión de fincas", Url = "/account/producer/management/farm", Active = true, IsDeleted = false, CreateAt = created }
             );
         }
     }
