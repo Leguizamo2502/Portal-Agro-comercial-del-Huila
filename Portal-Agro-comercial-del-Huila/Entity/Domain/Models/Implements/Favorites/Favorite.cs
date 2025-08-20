@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Entity.Domain.Models.Base;
+using Entity.Domain.Models.Implements.Auth;
+using Entity.Domain.Models.Implements.Products;
 
 namespace Entity.Domain.Models.Implements.Favorites
 {
-    internal class Favorite
+    public class Favorite : BaseModel
     {
+        public int UserId { get; set; }
+        public User User { get; set; }
+        public int ProductId { get; set; }
+        public Product Product { get; set; }
     }
 }

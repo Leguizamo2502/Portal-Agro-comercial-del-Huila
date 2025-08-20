@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Business.Interfaces.IBusiness;
-using Business.Repository;
-using Entity.Domain.Models.Implements.Products;
+﻿using Business.Interfaces.IBusiness;
 using Entity.DTOs.Products.Create;
 using Entity.DTOs.Products.Select;
 using Entity.DTOs.Products.Update;
@@ -17,5 +10,6 @@ namespace Business.Interfaces.Implements.Producers.Products
         Task<IEnumerable<ProductSelectDto>> GetByProducer(int producerId);
         Task<ProductSelectDto> CreateProductAsync(ProductCreateDto dto);
         Task<ProductSelectDto> UpdateProductAsync(ProductUpdateDto dto);
+        Task<bool> AddFavoriteAsync(int userId, int productId);
     }
 }

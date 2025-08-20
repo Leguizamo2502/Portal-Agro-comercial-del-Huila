@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Data.Interfaces.IRepository;
+using Entity.Domain.Models.Implements.Favorites;
 
 namespace Data.Interfaces.Implements.Favorites
 {
-    internal interface IFavoriteRepository
+    public interface IFavoriteRepository : IDataGeneric<Favorite>
     {
+        Task<bool> ExistsAsync(int userId, int productId);
     }
 }

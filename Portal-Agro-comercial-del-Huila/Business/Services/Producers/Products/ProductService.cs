@@ -1,10 +1,14 @@
 ﻿using Business.Interfaces.Implements.Producers.Cloudinary;
 using Business.Interfaces.Implements.Producers.Products;
 using Business.Repository;
+using Data.Interfaces.Implements.Favorites;
 using Data.Interfaces.Implements.Producers;
 using Data.Interfaces.Implements.Producers.Products;
 using Data.Interfaces.IRepository;
+using Entity.Domain.Models.Implements.Auth;
+using Entity.Domain.Models.Implements.Favorites;
 using Entity.Domain.Models.Implements.Products;
+using Entity.DTOs.Favorites.Create;
 using Entity.DTOs.Products.Create;
 using Entity.DTOs.Products.Select;
 using Entity.DTOs.Products.Update;
@@ -12,10 +16,12 @@ using Entity.Infrastructure.Context;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Utilities.Exceptions;
 using Utilities.Helpers.Business;
 using static System.Net.Mime.MediaTypeNames;
+using static Dapper.SqlMapper;
 
 namespace Business.Services.Producers.Products
 {
@@ -28,12 +34,13 @@ namespace Business.Services.Producers.Products
         private readonly IProductImageRepository _productImageRepository;
         private readonly ILogger<ProductService> _logger;
         private readonly IProducerRepository _producerRepository;
+        private readonly IFavoriteRepository _favoriteRepository;
 
         private const int MaxImages = 5;
 
         public ProductService(IDataGeneric<Product> data, IMapper mapper, IProductRepository productRepository, 
             ICloudinaryService cloudinaryService, IProductImageRepository productImageRepository,ApplicationDbContext context, 
-            ILogger<ProductService> logger,IProducerRepository producerRepository) : base(data, mapper)
+            ILogger<ProductService> logger,IProducerRepository producerRepository,IFavoriteRepository favoriteRepository) : base(data, mapper)
         {
             _productRepository = productRepository;
             _cloudinaryService = cloudinaryService;
@@ -41,6 +48,7 @@ namespace Business.Services.Producers.Products
             _context = context;
             _logger = logger;
             _producerRepository = producerRepository;
+            _favoriteRepository = favoriteRepository;
         }
 
         public override async Task<IEnumerable<ProductSelectDto>> GetAllAsync()
@@ -144,7 +152,6 @@ namespace Business.Services.Producers.Products
             }
         }
 
-
         public async Task<ProductSelectDto> UpdateProductAsync(ProductUpdateDto dto)
         {
             var entity = await _productRepository.GetByIdAsync(dto.Id)
@@ -184,7 +191,6 @@ namespace Business.Services.Producers.Products
             }
         }
 
-
         public async Task<IEnumerable<ProductSelectDto>> GetByProducer(int userId)
         {
             try
@@ -202,6 +208,22 @@ namespace Business.Services.Producers.Products
         }
 
 
+        public async Task<bool> AddFavoriteAsync(int userId, int productId)
+        {
+            if (await _favoriteRepository.ExistsAsync(userId, productId))
+                return false;
+
+            try
+            {
+                var entity = new Favorite { UserId = userId, ProductId = productId };
+                await _favoriteRepository.AddAsync(entity);
+                return true;
+            }
+            catch (DbUpdateException)
+            {
+                return false;
+            }
+        }
 
         #region Helpers
         private async Task<List<ProductImage>> UploadAndMapImagesAsync(IEnumerable<IFormFile>? files, int productId)

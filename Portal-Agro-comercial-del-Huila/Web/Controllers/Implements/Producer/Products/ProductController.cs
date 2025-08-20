@@ -1,5 +1,6 @@
 ﻿using Business.Interfaces.Implements.Producers.Products;
 using Entity.DTOs.BaseDTO;
+using Entity.DTOs.Favorites.Create;
 using Entity.DTOs.Products.Create;
 using Entity.DTOs.Products.Select;
 using Entity.DTOs.Products.Update;
@@ -100,6 +101,27 @@ namespace Web.Controllers.Implements.Producer.Products
             }
         }
 
+        [HttpPost("register/favorite")]
+        public async Task<IActionResult> RegisterFavorite(FavoriteDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            var userId = HttpContext.GetUserId();
+            try
+            {
+                
+                var result = await _productService.AddFavorite(userId,dto.ProductId);
+                if (result != null)
+                    return Ok(new { IsSuccess = true, message = "Favorito creado correctamente" });
+                else
+                    return BadRequest(ModelState);
+            }
+            catch (Exception ex)
+            {
+        
+                return StatusCode(500, new { IsSuccess = false, message = "Ocurrió un error al registrar Favorito", error = ex.Message });
+            }
+        }
 
         [HttpPut("{id:int}")]
         [Consumes("multipart/form-data")]
