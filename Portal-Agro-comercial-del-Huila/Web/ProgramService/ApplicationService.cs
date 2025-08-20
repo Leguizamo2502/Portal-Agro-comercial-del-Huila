@@ -16,6 +16,7 @@ using Business.Services.Producers.Farms;
 using Business.Services.Producers.Products;
 using Business.Services.Security;
 using Data.Interfaces.Implements.Auth;
+using Data.Interfaces.Implements.Favorites;
 using Data.Interfaces.Implements.Location;
 using Data.Interfaces.Implements.Producers;
 using Data.Interfaces.Implements.Producers.Categories;
@@ -26,6 +27,7 @@ using Data.Interfaces.Implements.Security.Mes;
 using Data.Interfaces.IRepository;
 using Data.Repository;
 using Data.Service.Auth;
+using Data.Service.Favorites;
 using Data.Service.Location;
 using Data.Service.Producers;
 using Data.Service.Producers.Categories;
@@ -114,6 +116,8 @@ namespace Web.ProgramService
 
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();
+
+            services.AddScoped<IFavoriteRepository, FavoriteRepository>();
 
             services.AddScoped<IProductImageRepository, ProductImageRepository>();
             services.AddScoped<IProductImageService, ProductImageService>();

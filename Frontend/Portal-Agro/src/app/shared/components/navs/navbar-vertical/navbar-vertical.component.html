@@ -15,8 +15,9 @@
             <i class="bi bi-key-fill me-2"></i> Mi Informacion
         </a>
 
-        <a class="list-group-item list-group-item-action" routerLink="/favoritos" routerLinkActive="active">
-            <i class="bi bi-heart-fill me-2"></i> Favoritos
+        <a class="list-group-item list-group-item-action" (click)="navigateTo('favorite')"
+            [ngClass]="{ 'active': activePath === 'favorite' }">
+            <i class="bi bi-key-fill me-2"></i> Favoritos
         </a>
 
         <a class="list-group-item list-group-item-action" routerLink="/pedidos" routerLinkActive="active">

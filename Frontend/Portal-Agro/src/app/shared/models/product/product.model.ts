@@ -15,6 +15,7 @@ export interface ProductSelectModel {
   farmName: string;
   cityName: string;
   departmentName: string;
+  isFavorite: boolean;
 }
 
 export interface ProductImageSelectModel {
@@ -51,4 +52,8 @@ export interface ProductUpdateModel {
   images?: File[]; // Archivos nuevos a subir
   farmId: number;
   imagesToDelete?: string[]; // PublicId o nombres de archivos a eliminar
+}
+
+export interface FavoriteCreateRequest{
+  productId:number
 }

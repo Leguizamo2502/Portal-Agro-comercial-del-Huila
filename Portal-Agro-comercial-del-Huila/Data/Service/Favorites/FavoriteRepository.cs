@@ -20,6 +20,21 @@ namespace Data.Service.Favorites
                 .AnyAsync(f => f.UserId == userId && f.ProductId == productId);
         }
 
+        public async Task<Favorite?> GetByFavoriteAsync(int userId, int productId)
+        {
+            return await _dbSet.
+                FirstOrDefaultAsync(f => f.UserId == userId && f.ProductId == productId);
+        }
+
+        public async Task<HashSet<int>> GetFavoriteProductIdsByUserAsync(int userId)
+        {
+            return await _context.Favorites
+                .AsNoTracking()
+                .Where(f => f.UserId == userId)
+                .Select(f => f.ProductId)
+                .ToHashSetAsync();
+        }
+
 
     }
 }

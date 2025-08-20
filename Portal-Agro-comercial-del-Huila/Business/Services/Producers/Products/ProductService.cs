@@ -63,6 +63,54 @@ namespace Business.Services.Producers.Products
                 throw new BusinessException("Error al obtener todos los registros de productos.", ex);
             }
         }
+
+        public async Task<IEnumerable<ProductSelectDto>> GetAllForUsersAsync(int userId)
+        {
+            try
+            {
+                var entities = await _productRepository.GetAllAsync();
+
+                // Llamas al repo de favoritos (sin LINQ aquí)
+                var favoriteIds = await _favoriteRepository.GetFavoriteProductIdsByUserAsync(userId);
+
+                var dtos = _mapper.Map<List<ProductSelectDto>>(entities); // <= LIST en vez de IEnumerable
+
+                foreach (var dto in dtos)
+                    dto.IsFavorite = favoriteIds.Contains(dto.Id); // dto.Id = ProductId
+
+                return dtos;
+            }
+            catch (Exception ex)
+            {
+                throw new BusinessException("Error al obtener todos los registros de productos.", ex);
+            }
+        }
+
+        public async Task<IEnumerable<ProductSelectDto>> GetFavoritesForUsersAsync(int userId)
+        {
+            try
+            {
+                var favoriteIds = await _favoriteRepository.GetFavoriteProductIdsByUserAsync(userId);
+
+                if (favoriteIds == null || !favoriteIds.Any())
+                    return Enumerable.Empty<ProductSelectDto>();
+
+                var favoriteProducts = await _productRepository.GetByIdsFavoritesAsync(favoriteIds);
+
+                var dtos = _mapper.Map<List<ProductSelectDto>>(favoriteProducts);
+
+
+                foreach (var dto in dtos)
+                    dto.IsFavorite = true;
+
+                return dtos;
+            }
+            catch (Exception ex)
+            {
+                throw new BusinessException("Error al obtener productos favoritos del usuario.", ex);
+            }
+        }
+
         public override async Task<ProductSelectDto?> GetByIdAsync(int id)
         {
             try
@@ -224,6 +272,24 @@ namespace Business.Services.Producers.Products
                 return false;
             }
         }
+
+        public async Task<bool> RemoveFavoriteAsync(int userId, int productId)
+        {
+            try
+            {
+                var entity = await _favoriteRepository.GetByFavoriteAsync(userId, productId);
+
+                if (entity is null)
+                    return false;
+
+                return await _favoriteRepository.DeleteAsync(entity.Id);
+            }
+            catch (DbUpdateException)
+            {
+                return false;
+            }
+        }
+
 
         #region Helpers
         private async Task<List<ProductImage>> UploadAndMapImagesAsync(IEnumerable<IFormFile>? files, int productId)

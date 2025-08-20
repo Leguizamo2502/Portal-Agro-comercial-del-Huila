@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Entity.Domain.Models.Implements.Auth;
+using Entity.Domain.Models.Implements.Favorites;
 using Entity.Domain.Models.Implements.Producers;
 using Entity.Domain.Models.Implements.Products;
 using Entity.Domain.Models.Implements.Security;
@@ -69,6 +70,8 @@ namespace Entity.Infrastructure.Context
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
+
+        public DbSet<Favorite> Favorites { get; set; }
 
 
     }

@@ -5,7 +5,6 @@ namespace Entity.DTOs.Products.Select
 {
     public class ProductSelectDto : BaseDto
     {
-        //public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public double Price { get; set; }
@@ -15,7 +14,6 @@ namespace Entity.DTOs.Products.Select
         public bool Status { get; set; }
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
-        //public List<IFormFile> Images { get; set; } = new();
         public List<ProductImageSelectDto> Images { get; set; } = new();
         public string PersonName { get; set; }
         public string CityName { get; set; }
@@ -23,5 +21,6 @@ namespace Entity.DTOs.Products.Select
 
         public int FarmId { get; set; }
         public string FarmName { get; set; }
+        public bool IsFavorite { get; set; }
     }
 }

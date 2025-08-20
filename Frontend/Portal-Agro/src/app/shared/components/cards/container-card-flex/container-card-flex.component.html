@@ -1,0 +1,18 @@
+<!-- shared/components/cards/container-card/container-card.component.html -->
+<div class="container-xxl px-3">
+  <div class="row g-4">
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3"
+         *ngFor="let p of products; trackBy: trackById">
+      <app-card
+        [product]="p"
+        [showActions]="showActions"
+        [showFavorite]="showFavorite"
+        [isFavorite]="p.isFavorite"
+        [disabledFavorite]="togglingId === p.id"
+        (edit)="edit.emit($event)"
+        (delete)="delete.emit($event)"
+        (toggleFavorite)="toggleFavorite.emit($event)">
+      </app-card>
+    </div>
+  </div>
+</div>

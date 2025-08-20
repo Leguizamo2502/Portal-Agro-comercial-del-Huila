@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Entity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250819155957_Inicial")]
+    [Migration("20250820055546_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -215,6 +215,39 @@ namespace Entity.Migrations
                             Password = "5cc500a2237915f8c6d906d4ea5c9632a3e0a6220d7cdffc620fe36cbbb92316",
                             PersonId = 3
                         });
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Favorites.Favorite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId", "ProductId")
+                        .IsUnique();
+
+                    b.ToTable("Favorites", (string)null);
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Location.City", b =>
@@ -3048,6 +3081,25 @@ namespace Entity.Migrations
                     b.Navigation("Person");
                 });
 
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Favorites.Favorite", b =>
+                {
+                    b.HasOne("Entity.Domain.Models.Implements.Products.Product", "Product")
+                        .WithMany("Favorites")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Entity.Domain.Models.Implements.Auth.User", "User")
+                        .WithMany("Favorites")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Entity.Domain.Models.Implements.Location.City", b =>
                 {
                     b.HasOne("Entity.Domain.Models.Implements.Location.Department", "Department")
@@ -3212,6 +3264,8 @@ namespace Entity.Migrations
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Auth.User", b =>
                 {
+                    b.Navigation("Favorites");
+
                     b.Navigation("Producer");
 
                     b.Navigation("RolUsers");
@@ -3250,6 +3304,8 @@ namespace Entity.Migrations
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Products.Product", b =>
                 {
+                    b.Navigation("Favorites");
+
                     b.Navigation("ProductImages");
                 });
 

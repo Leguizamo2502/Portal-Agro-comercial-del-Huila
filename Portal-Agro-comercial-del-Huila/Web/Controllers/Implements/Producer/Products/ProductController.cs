@@ -5,6 +5,7 @@ using Entity.DTOs.Products.Create;
 using Entity.DTOs.Products.Select;
 using Entity.DTOs.Products.Update;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Utilities.Helpers.Auth;
 
 namespace Web.Controllers.Implements.Producer.Products
@@ -101,27 +102,8 @@ namespace Web.Controllers.Implements.Producer.Products
             }
         }
 
-        [HttpPost("register/favorite")]
-        public async Task<IActionResult> RegisterFavorite(FavoriteDto dto)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-            var userId = HttpContext.GetUserId();
-            try
-            {
-                
-                var result = await _productService.AddFavorite(userId,dto.ProductId);
-                if (result != null)
-                    return Ok(new { IsSuccess = true, message = "Favorito creado correctamente" });
-                else
-                    return BadRequest(ModelState);
-            }
-            catch (Exception ex)
-            {
         
-                return StatusCode(500, new { IsSuccess = false, message = "Ocurrió un error al registrar Favorito", error = ex.Message });
-            }
-        }
+
 
         [HttpPut("{id:int}")]
         [Consumes("multipart/form-data")]
@@ -147,6 +129,73 @@ namespace Web.Controllers.Implements.Producer.Products
         {
             await _productService.DeleteLogicAsync(id);
             return NoContent();
+        }
+
+        [HttpPost("register/favorite")]
+        public async Task<IActionResult> RegisterFavorite([FromBody] FavoriteDto dto)
+        {
+            var userId = HttpContext.GetUserId();
+            var created = await _productService.AddFavoriteAsync(userId, dto.ProductId);
+            if (created) return StatusCode(StatusCodes.Status201Created);
+            return NoContent();
+        }
+        [HttpDelete("favorite/{productId:int}")]
+        public async Task<IActionResult> DeleteFavorite(int productId)
+        {
+            var userId = HttpContext.GetUserId();
+
+            try
+            {
+                var removed = await _productService.RemoveFavoriteAsync(userId, productId);
+
+                if (removed)
+                    return NoContent(); // 204, borrado exitoso
+                else
+                    return NotFound(new { IsSuccess = false, message = "El favorito no existe" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { IsSuccess = false, message = "Ocurrió un error al eliminar favorito", error = ex.Message });
+            }
+        }
+
+        [HttpGet("home")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public virtual async Task<IActionResult> GetForUser()
+        {
+            var userId = HttpContext.GetUserId();
+            try
+            {
+                var result = await _productService.GetAllForUsersAsync(userId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error obteniendo datos");
+                return StatusCode(500, new { message = "Error interno del servidor." });
+            }
+
+        }
+
+        [HttpGet("favorites")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public virtual async Task<IActionResult> GetFavoritesUser()
+        {
+            //var userId = HttpContext.GetUserId();
+            try
+            {
+                var result = await _productService.GetFavoritesForUsersAsync(2);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error obteniendo datos");
+                return StatusCode(500, new { message = "Error interno del servidor." });
+            }
+
         }
 
     }

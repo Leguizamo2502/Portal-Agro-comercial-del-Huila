@@ -1,4 +1,18 @@
+<!-- card.component.html -->
 <mat-card class="product-card">
+  <!-- Estrellita: esquina superior derecha -->
+  <!-- card.component.html -->
+<button
+  *ngIf="showFavorite"
+  mat-icon-button
+  class="fav-btn"
+  [disabled]="disabledFavorite"
+  (click)="onToggleFavorite()"
+  aria-label="Favorito">
+  <mat-icon [fontIcon]="isFavorite ? 'star' : 'star_border'"></mat-icon>
+</button>
+
+
   <div class="image-wrap">
     <img
       class="card-image"
@@ -18,16 +32,13 @@
 
     <p class="info-row">
       <mat-icon fontIcon="place" color="primary"></mat-icon>
-      {{ product.cityName }}, {{product.departmentName}}
+      {{ product.cityName }}, {{ product.departmentName }}
     </p>
-
-    <!-- <div class="spacer"></div> -->
 
     <p class="price">
       ${{ product.price | number:'1.0-0' }}
     </p>
 
-     <!-- Botones de acción si está habilitado -->
     <div *ngIf="showActions" class="actions">
       <button mat-icon-button color="primary" (click)="edit.emit(product)">
         <mat-icon class="icon-edit">edit</mat-icon>

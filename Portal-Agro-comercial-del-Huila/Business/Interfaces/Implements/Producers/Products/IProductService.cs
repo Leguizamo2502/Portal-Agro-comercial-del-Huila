@@ -11,5 +11,8 @@ namespace Business.Interfaces.Implements.Producers.Products
         Task<ProductSelectDto> CreateProductAsync(ProductCreateDto dto);
         Task<ProductSelectDto> UpdateProductAsync(ProductUpdateDto dto);
         Task<bool> AddFavoriteAsync(int userId, int productId);
+        Task<bool> RemoveFavoriteAsync(int userId, int productId);
+        Task<IEnumerable<ProductSelectDto>> GetAllForUsersAsync(int userId);
+        Task<IEnumerable<ProductSelectDto>> GetFavoritesForUsersAsync(int userId);
     }
 }

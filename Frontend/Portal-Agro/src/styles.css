@@ -1,13 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
-@import 'leaflet/dist/leaflet.css';
+@import "leaflet/dist/leaflet.css";
 
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #f9f7f1;
+}
 
-
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-color: #F9F7F1;}
-
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 .fondo-auth {
   /* PUEDES CAMBIAR LA IMAGEN DE FONDO AQUÍ */
@@ -18,11 +29,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
   /* Fallback si no tienes imagen */
   background-color: #2e7d32;
-   &::before {
+  &::before {
     content: "";
     position: absolute;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.6); 
+    background-color: rgba(0, 0, 0, 0.6);
     z-index: 0;
   }
 
@@ -49,7 +60,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   width: 100%;
 }
 .form-inner {
-  max-width: 640px;  /* ajusta a tu gusto: 600–720px */
+  max-width: 640px; /* ajusta a tu gusto: 600–720px */
   margin: 0 auto;
 }
 
@@ -57,14 +68,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .form-container {
   display: flex;
   flex-direction: column;
-  align-items: stretch;  /* <-- clave */
+  align-items: stretch; /* <-- clave */
   gap: 1.5rem;
 }
 
 /* 4) El campo ocupa el 100% del ancho disponible */
 .form-field,
 .custom-mat-field,
-.mat-mdc-form-field {     /* selector de Angular Material */
+.mat-mdc-form-field {
+  /* selector de Angular Material */
   width: 100%;
 }
 
@@ -76,23 +88,34 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 /*   Titulos account*/
-.title-p{
+.title-p {
   font-size: 2rem;
   color: #333;
 }
-
 
 /**
 cosas
 
 */
-.top{
+.top {
   margin-top: 1rem;
 }
 
 .leaflet-control-layers-toggle {
-  background-image: url('/leaflet/layers.png');
+  background-image: url("/leaflet/layers.png");
 }
 .leaflet-retina .leaflet-control-layers-toggle {
-  background-image: url('/leaflet/layers-2x.png');
+  background-image: url("/leaflet/layers-2x.png");
+}
+
+/*
+
+estilos
+*/
+
+.info-title {
+  margin-bottom: 20px;
+  color: #1e4620;
+  font-size: 22px;
+  font-weight: bold;
 }

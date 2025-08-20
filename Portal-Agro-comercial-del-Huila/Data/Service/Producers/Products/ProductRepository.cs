@@ -19,6 +19,37 @@ namespace Data.Service.Producers.Products
         {
         }
 
+        private IQueryable<Product> BaseQuery()
+        {
+            return _dbSet
+                .AsNoTracking()
+                .Where(p => !p.IsDeleted)
+                .Include(p => p.Category)
+                .Include(p => p.Farm)
+                    .ThenInclude(f => f.City)
+                        .ThenInclude(c => c.Department)
+                .Include(p => p.Farm)
+                    .ThenInclude(f => f.Producer)
+                        .ThenInclude(prod => prod.User)
+                            .ThenInclude(u => u.Person)
+                .Include(p => p.ProductImages.Where(pi => !pi.IsDeleted))
+                .AsSplitQuery(); // evita explosión cartesiana por múltiples Includes
+        }
+
+
+        public async Task<IEnumerable<Product>> GetByIdsFavoritesAsync(IEnumerable<int> ids)
+        {
+            var idsList = ids?.Distinct().ToList() ?? new List<int>();
+            if (idsList.Count == 0)
+                return new List<Product>();
+
+            return await BaseQuery()
+                .Where(p => idsList.Contains(p.Id))
+                .OrderByDescending(p => p.CreateAt)
+                .ThenByDescending(p => p.Id)
+                .ToListAsync();
+        }
+
 
 
         public override async Task<Product> AddAsync(Product entity)
@@ -65,21 +96,25 @@ namespace Data.Service.Producers.Products
         public override async Task<IEnumerable<Product>> GetAllAsync()
         {
 
-            return await _dbSet
-               .AsNoTracking()
-               .OrderByDescending(p => p.CreateAt)          // último creado primero
-               .ThenByDescending(p => p.Id)                  // desempate estable
-               .Include(p => p.Category)
-               .Include(p => p.Farm)
-                   .ThenInclude(f => f.City)
-                       .ThenInclude(c => c.Department)
-               .Include(p => p.Farm)
-                   .ThenInclude(f => f.Producer)
-                       .ThenInclude(prod => prod.User)
-                           .ThenInclude(u => u.Person)
-               .Include(p => p.ProductImages.Where(pi => !pi.IsDeleted))
-               .Where(p=>p.IsDeleted == false)
-               .ToListAsync();
+            //return await _dbSet
+            //   .AsNoTracking()
+            //   .OrderByDescending(p => p.CreateAt)          // último creado primero
+            //   .ThenByDescending(p => p.Id)                  // desempate estable
+            //   .Include(p => p.Category)
+            //   .Include(p => p.Farm)
+            //       .ThenInclude(f => f.City)
+            //           .ThenInclude(c => c.Department)
+            //   .Include(p => p.Farm)
+            //       .ThenInclude(f => f.Producer)
+            //           .ThenInclude(prod => prod.User)
+            //               .ThenInclude(u => u.Person)
+            //   .Include(p => p.ProductImages.Where(pi => !pi.IsDeleted))
+            //   .Where(p=>p.IsDeleted == false)
+            //   .ToListAsync();
+            return await BaseQuery()
+                .OrderByDescending(p => p.CreateAt)
+                .ThenByDescending(p => p.Id)
+                .ToListAsync();
 
         }
 

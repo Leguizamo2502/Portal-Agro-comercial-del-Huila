@@ -2,7 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
-import { ProductRegisterModel, ProductSelectModel, ProductUpdateModel } from './../../models/product/product.model';
+import {
+  ProductRegisterModel,
+  ProductSelectModel,
+  ProductUpdateModel,
+} from './../../models/product/product.model';
 
 @Injectable({
   providedIn: 'root',
@@ -13,12 +17,21 @@ export class ProductService {
 
   constructor(private http: HttpClient) {}
 
+  /** --------------------------------------------------  Favorites  ----------------------------------------------------- */
+  getAllHome(): Observable<ProductSelectModel[]> {
+    return this.http.get<ProductSelectModel[]>(this.urlBase + '/home');
+  }
+
+  getFavorites(): Observable<ProductSelectModel[]> {
+    return this.http.get<ProductSelectModel[]>(this.urlBase + '/favorites');
+  }
   /** --------------------------------------------------  CRUD  ----------------------------------------------------- */
   /** Obtener todos los productos  */
+
   getAll(): Observable<ProductSelectModel[]> {
     return this.http.get<ProductSelectModel[]>(this.urlBase);
   }
-   /** Obtener productos por productor (requiere endpoint GET /Product/by-producer */
+  /** Obtener productos por productor (requiere endpoint GET /Product/by-producer */
   getByProducerId(): Observable<ProductSelectModel[]> {
     return this.http.get<ProductSelectModel[]>(this.urlBase + '/by-producer');
   }

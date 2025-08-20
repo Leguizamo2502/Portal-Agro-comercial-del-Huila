@@ -3,6 +3,7 @@ import { InfoComponent } from './components/info/info.component';
 import { SummaryComponent } from '../producer/pages/summary/summary.component';
 import { AccountComponent } from './pages/account/account.component';
 import { roleMatchGuard } from '../../Core/guards/role-match/role-match.guard';
+import { FavoriteComponent } from './components/favorite/favorite.component';
 
 export const ACCOUNT_ROUTES: Routes = [
   {
@@ -10,9 +11,22 @@ export const ACCOUNT_ROUTES: Routes = [
     component: AccountComponent,
     children: [
       // default
-      { path: '', redirectTo: 'info', pathMatch: 'full' },
+      {
+        path: '',
+        redirectTo: 'info',
+        canMatch: [roleMatchGuard],
+        data: { roles: ['Consumer'] },
+        pathMatch: 'full',
+      },
       // Home info
-      { path: 'info', component: InfoComponent },
+      { path: 'info', title: 'Informacion', component: InfoComponent },
+      {
+        path: 'favorite',
+        title: 'Ver Favoritos',
+        canMatch: [roleMatchGuard],
+        data: { roles: ['Consumer'] },
+        component: FavoriteComponent,
+      },
 
       // --- PRODUCER ---
 
@@ -29,9 +43,9 @@ export const ACCOUNT_ROUTES: Routes = [
         path: 'register-producer',
         title: 'Crear en productor',
         loadComponent: () =>
-          import('../producer/pages/farm/farm-with-producer-form/farm-with-producer-form.component').then(
-            (m) => m.FarmWithProducerFormComponent
-          ),
+          import(
+            '../producer/pages/farm/farm-with-producer-form/farm-with-producer-form.component'
+          ).then((m) => m.FarmWithProducerFormComponent),
       },
       {
         path: 'producer',

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Entity.DTOs.Favorites.Create
+﻿namespace Entity.DTOs.Favorites.Create
 {
-    internal class FavoriteRegisterDto
+    public class FavoriteDto
     {
+        public int ProductId { get; set; }
     }
 }

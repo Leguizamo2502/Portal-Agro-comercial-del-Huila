@@ -1,12 +1,11 @@
-/* Tarjeta con layout en columna y alto uniforme */
+/* 1) La tarjeta debe ser relative para posicionar el botón */
 .product-card {
+  position: relative; /* <-- NUEVO */
   display: flex;
   flex-direction: column;
   height: 100%;
   height: 300px;
   flex: 1 1 250px;
-  /* max-width: 320px;
-  min-width: 200px; */
   width: 13rem;
   border: 1px solid #e0e0e0;
   border-radius: 12px;
@@ -15,39 +14,53 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   background: #fff;
 }
-.product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 20px rgba(76, 175, 80, 0.25);
+
+/* 2) Botón de favorito en esquina superior derecha */
+.fav-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 3;
+  background: #fff; /* contraste sobre la imagen */
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  width: 36px; /* área táctil razonable */
+  height: 36px; /* idem */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
-/* Imagen con alto consistente entre tarjetas */
-/* Alto fijo idéntico para todas las portadas */
+/* Estado “activo” (estrella llena) */
+.fav-btn--active mat-icon {
+  color: #f4b400; /* dorado Google-like; ajústalo si quieres */
+}
+
+/* Deshabilitado (evita ghost clicks) */
+.fav-btn[disabled] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* 3) Imagen (sin cambios funcionales) */
 .image-wrap {
   width: 100%;
-  height: 200px; /* <-- ajústalo a tu diseño (180–220px) */
+  height: 200px;
   background: #f5f5f5;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden; /* evita desbordes raros */
+  overflow: hidden;
 }
-
 .image-wrap .card-image {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* no recorta, mantiene proporción */
+  object-fit: contain;
   display: block;
 }
 
-/* Contenido que crece y permite empujar el precio al fondo */
-.content {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-  padding: 1rem;
-}
-
-/* Título con 2 líneas máximas y altura fija para alinear precios */
+/* 4) Título: evita el truncado agresivo y permite 2 líneas */
 .title {
   margin: 0 0 8px 0;
   font-size: 18px;
@@ -66,7 +79,13 @@
   /* altura mínima equivalente a 2 líneas para uniformidad */
   min-height: calc(1.25em * 2);
 }
-
+/* Resto de tus estilos se mantienen igual */
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  padding: 1rem;
+}
 .info-row {
   display: flex;
   align-items: center;
@@ -79,33 +98,24 @@
   font-size: 18px;
   color: #4caf50;
 }
-
-/* Ocupa el espacio libre para pegar el precio al borde inferior */
 .spacer {
   flex: 1 1 auto;
 }
-
 .price {
   font-weight: 700;
-  /* margin-top: 12px; */
   font-size: 18px;
   color: #1b5e20;
   margin: 0;
 }
-
 .actions {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  /* margin-top: 12px; */
-  /* color: #4caf50; */
 }
-
 .icon-delete {
-  color: #e53935; /* rojo personalizado */
-  /* font-size: 24px;  */
+  color: #e53935;
 }
 .icon-edit {
-  color: #1b5e20; /* rojo personalizado */
-  /* font-size: 24px;  */
+  color: #1b5e20;
 }
+ 
