@@ -1,0 +1,22 @@
+<section class="producer-layout">
+  <!-- <header class="header">
+    <h1 class="title-p">Productor</h1>
+  </header> -->
+
+  <nav mat-tab-nav-bar [tabPanel]="mainPanel">
+    <a
+      mat-tab-link
+      *ngFor="let t of tabs"
+      [routerLink]="t.path"
+      routerLinkActive
+      #rla="routerLinkActive"
+      [active]="rla.isActive"
+    >
+      {{ t.label }}
+    </a>
+  </nav>
+
+  <mat-tab-nav-panel #mainPanel>
+    <router-outlet></router-outlet>
+  </mat-tab-nav-panel>
+</section>

@@ -15,7 +15,7 @@ namespace Entity.DTOs.Products
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
         //public List<IFormFile> Images { get; set; } = new();
-        public List<FarmImageDto> Images { get; set; }
+        public List<ProductImageSelectDto> Images { get; set; } = new();
         public string PersonName { get; set; }
 
         public int FarmId { get; set; }

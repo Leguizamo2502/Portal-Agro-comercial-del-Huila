@@ -1,4 +1,4 @@
-<div class="sidebar" [class.collapsed]="!isOpen()">
+<div class="sidebar" [class.hidden]="!isOpen()">
   <!-- Perfil -->
   <div class="profile">
     <img src="assets/profile.jpg" alt="Perfil">
@@ -10,7 +10,6 @@
 
   <!-- Menú -->
   <ul class="nav flex-column">
-    <!-- Mi Información -->
     <li class="nav-item">
       <a href="#" class="nav-link" (click)="navigateTo('info')" [class.active]="activePath === 'info'">
         <i class="bi bi-person-fill"></i>
@@ -18,7 +17,6 @@
       </a>
     </li>
 
-    <!-- Favoritos -->
     <li class="nav-item">
       <a href="#" class="nav-link" (click)="navigateTo('favoritos')" [class.active]="activePath === 'favoritos'">
         <i class="bi bi-heart-fill"></i>
@@ -26,7 +24,6 @@
       </a>
     </li>
 
-    <!-- Pedidos -->
     <li class="nav-item">
       <a href="#" class="nav-link" (click)="navigateTo('pedidos')" [class.active]="activePath === 'pedidos'">
         <i class="bi bi-bag-fill"></i>
@@ -34,7 +31,6 @@
       </a>
     </li>
 
-    <!-- Productor -->
     <li class="nav-item">
       <a href="#" class="nav-link" (click)="navigateTo('productor')" [class.active]="activePath === 'productor'">
         <i class="bi bi-person-workspace"></i>
@@ -42,7 +38,6 @@
       </a>
     </li>
 
-    <!-- Soporte -->
     <li class="nav-item">
       <a href="#" class="nav-link" (click)="navigateTo('soporte')" [class.active]="activePath === 'soporte'">
         <i class="bi bi-question-circle-fill"></i>
@@ -50,7 +45,7 @@
       </a>
     </li>
 
-    <!-- Seguridad (Submenú) -->
+    <!-- Seguridad -->
     <li class="nav-item">
       <div class="nav-link submenu-toggle" (click)="toggleSubmenu('security')">
         <i class="bi bi-shield-lock-fill"></i>
@@ -68,7 +63,7 @@
       </ul>
     </li>
 
-    <!-- Parámetros (Submenú) -->
+    <!-- Parámetros -->
     <li class="nav-item">
       <div class="nav-link submenu-toggle" (click)="toggleSubmenu('parameters')">
         <i class="bi bi-sliders2"></i>

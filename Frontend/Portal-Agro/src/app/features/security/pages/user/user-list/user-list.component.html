@@ -1,0 +1,7 @@
+<app-table
+  [columns]="columns"
+  [data]="users"
+  [searchableKeys]="['fullName']"
+  (edit)="onEdit($event)"
+  (delete)="onDelete($event)">
+</app-table>

@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../../features/auth/services/auth.service';
+import { AuthService } from '../../../Core/services/auth/auth.service';
 import { SidebarService } from '../../services/sidebar/sidebar.service'; // Importar el servicio
 import Swal from 'sweetalert2';
 

@@ -1,47 +1,36 @@
-<div *ngIf="loading" class="text-center my-5">
-  <div class="spinner-border text-success"></div>
-</div>
-
-<div *ngIf="!loading" class="container my-5">
+<div *ngIf="product" class="container my-5">
   <div class="row justify-content-center">
     <div class="col-lg-10">
 
-      <div class="d-flex flex-wrap justify-content-center gap-4 mb-4">
+      <div class="d-flex flex-wrap gap-4">
 
-        <div *ngIf="product?.thumbnails?.length" class="d-flex flex-column gap-2">
-          <img *ngFor="let img of product.thumbnails"
-              [src]="img"
-              (click)="changeMainImage(img)"
-              class="img-thumbnail"
-              style="width: 60px; height: 60px; object-fit: cover; cursor: pointer;">
+        <!-- Miniaturas -->
+        <div *ngIf="product.images.length" class="d-flex flex-column gap-2">
+          <img *ngFor="let img of product.images" [src]="img.imageUrl" (click)="changeMainImage(img.imageUrl)"
+            class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover; cursor: pointer;">
         </div>
 
+        <!-- Imagen principal -->
         <div class="flex-fill d-flex align-items-center justify-content-center" style="max-width: 400px;">
-          <img [src]="selectedImage || product.image"
-              class="img-fluid rounded shadow"
-              style="max-height: 350px; object-fit: cover;">
+          <img [src]="selectedImage || (product.images.length ? product.images[0].imageUrl : '')"
+            class="img-fluid rounded shadow" style="max-height: 350px; object-fit: cover;">
+
         </div>
 
-        <div class="border rounded p-3 shadow-sm" style="width: 260px;">
-          <p class="mb-1">+{{ product.orders }} Pedidos</p>
-          <p class="mb-1">Productor:
-            <a href="#" class="text-success">{{ product.producer }}</a>
-          </p>
-          <p class="mb-1">Categorías:</p>
-          <div class="d-flex flex-wrap gap-1 mb-2">
-            <span *ngFor="let cat of product.categories"
-                  class="badge bg-light text-dark border">
-              {{ cat }}
-            </span>
-          </div>
-          <p class="mb-1">Stock: {{ product.stock }} canastas</p>
-          <p class="mb-2">Precio: {{ product.price | currency:'COP' }}</p>
+        <!-- Información del producto -->
+        <div class="border rounded p-3 shadow-sm" style="min-width: 260px;">
+          <h3 class="mb-3">{{ product.name }}</h3>
+          <p class="mb-1"><strong>Descripción:</strong> {{ product.description }}</p>
+          <p class="mb-1"><strong>Productor:</strong> {{ product.personName }}</p>
+          <p class="mb-1"><strong>Finca:</strong> {{ product.farmName }}</p>
+          <p class="mb-1"><strong>Categoría:</strong> {{ product.categoryName }}</p>
+          <p class="mb-1"><strong>Stock:</strong> {{ product.stock }} {{ product.unit }}</p>
+          <p class="mb-2"><strong>Precio:</strong> {{ product.price | currency:'COP':'symbol' }}</p>
           <button class="btn btn-success w-100">Añadir al Pedido</button>
         </div>
-
       </div>
 
-      <div class="mb-3">
+        <div class="mb-3">
         <h5>Descripción</h5>
         <p>{{ product.description }}</p>
       </div>

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductSelectModel } from '../../models/product/product.model';
 import { MatCardModule } from '@angular/material/card';
@@ -18,15 +18,20 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrls: ['./card.component.css']
 })
 export class CardComponent {
-  private _products: ProductSelectModel[] = [];
+  @Input({ required: true }) product!: ProductSelectModel;
+  @Input() showActions = false; // controla si se muestran los iconos
 
-  @Input()
-  set products(value: ProductSelectModel[]) {
-    this._products = value || [];
-    console.log('CardComponent - productos recibidos en setter:', this._products);
+  @Output() edit = new EventEmitter<ProductSelectModel>();
+  @Output() delete = new EventEmitter<ProductSelectModel>();
+
+  private readonly placeholder = 'img/cargaImagen.png';
+
+  get imageUrl(): string {
+    const url = this.product?.images?.[0]?.imageUrl;
+    return url && url.trim() ? url : this.placeholder;
   }
 
-  get products(): ProductSelectModel[] {
-    return this._products;
+  onImgError(ev: Event) {
+    (ev.target as HTMLImageElement).src = this.placeholder;
   }
 }

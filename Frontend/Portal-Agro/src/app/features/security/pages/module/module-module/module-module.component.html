@@ -1,41 +1,67 @@
-<h2>{{title}}</h2>
-<form (submit)="gurdarCambios()" [formGroup]="form" class="form-container">
-    <!-- <h2 class="form-title">Formulario</h2> -->
+<div class="form-wrapper-transparent">
+  <h2 class="titleForm">{{ title }}</h2>
+
+  <form (submit)="save()" [formGroup]="form" class="form-container">
+    <div class="form-field">
+      <mat-form-field appearance="outline" class="custom-mat-field">
+        <mat-label>Nombre</mat-label>
+        <input
+          matInput
+          [formControl]="form.controls.name"
+          placeholder="Ingrese el nombre del módulo"
+          required
+        />
+        <mat-error *ngIf="form.controls.name.hasError('required')">
+          El nombre es obligatorio
+        </mat-error>
+        <mat-error *ngIf="form.controls.name.hasError('minlength')">
+          El nombre debe tener al menos 3 caracteres
+        </mat-error>
+        <mat-error *ngIf="form.controls.name.hasError('maxlength')">
+          El nombre no puede exceder los 50 caracteres
+        </mat-error>
+      </mat-form-field>
+    </div>
 
     <div class="form-field">
-        <mat-form-field appearance="outline">
-            <mat-label>Nombre</mat-label>
-            <input [formControl]="form.controls.name" matInput placeholder="Ingrese el nombre del modulo" required>
-            <mat-error *ngIf="form.controls.name.hasError('required')">
-                El nombre es obligatorio
-            </mat-error>
-            <mat-error *ngIf="form.controls.name.hasError('minlength')">
-                El nombre debe tener al menos 3 caracteres
-            </mat-error>
-            <mat-error *ngIf="form.controls.name.hasError('maxlength')">
-                El nombre no puede exceder los 50 caracteres
-            </mat-error>
-        </mat-form-field>
+      <mat-form-field appearance="outline" class="custom-mat-field">
+        <mat-label>Descripción</mat-label>
+        <textarea
+          matInput
+          [formControl]="form.controls.description"
+          placeholder="Describa el propósito del módulo"
+          rows="3"
+        ></textarea>
+        <mat-error *ngIf="form.controls.description.hasError('maxlength')">
+          La descripción no puede exceder los 255 caracteres
+        </mat-error>
+      </mat-form-field>
     </div>
 
-    <div class="form-field">
-        <mat-form-field appearance="outline">
-            <mat-label>Descripción</mat-label>
-            <textarea [formControl]="form.controls.description" matInput
-                placeholder="Describa el propósito del formulario" rows="3"></textarea>
-            <mat-error *ngIf="form.controls.description.hasError('maxlength')">
-                La descripción no puede exceder los 255 caracteres
-            </mat-error>
-        </mat-form-field>
-    </div>
+    <div class="form-actions cont-botones">
+      <app-button
+        [text]="'Guardar'"
+        [icon]="'save'"
+        [type]="'submit'"
+        [disabled]="form.invalid">
+      </app-button>
 
+      <!-- Opción A: volver atrás -->
+      <app-button
+        [text]="'Cancelar'"
+        [icon]="'cancel'"
+        [color]="'secondary'"
+        [back]="true">
+      </app-button>
 
-    <div class="form-actions">
-        <button type="submit" mat-flat-button color="primary" [disabled]="form.invalid">
-            <mat-icon>save</mat-icon> Guardar
-        </button>
-        <a mat-stroked-button color="warn" routerLink="/account/security/module">
-            <mat-icon>cancel</mat-icon> Cancelar
-        </a>
+      <!-- Opción B: ir fijo a la lista de módulos
+      <app-button
+        [text]="'Cancelar'"
+        [icon]="'cancel'"
+        [color]="'secondary'"
+        redirectTo="/account/security/module">
+      </app-button>
+      -->
     </div>
-</form>
+  </form>
+</div>

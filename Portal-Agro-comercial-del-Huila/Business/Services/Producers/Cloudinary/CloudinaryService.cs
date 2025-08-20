@@ -11,6 +11,10 @@ namespace Business.Services.Producers.Cloudinary
     public class CloudinaryService : ICloudinaryService
     {
         private readonly CloudinaryDotNet.Cloudinary _cloudinary;
+
+        // Configuración personalizada
+        private readonly string[] _allowedExtensions = { ".jpg", ".jpeg", ".png", ".webp" };
+        private const long _maxFileSizeInBytes = 5 * 1024 * 1024; // 5 MB
         public CloudinaryService(CloudinaryDotNet.Cloudinary cloudinary)
         {
             _cloudinary = cloudinary;
@@ -61,61 +65,64 @@ namespace Business.Services.Producers.Cloudinary
         }
 
 
-        public async Task DeleteImageAsync(string publicId)
+        //public async Task DeleteImageAsync(string publicId)
+        //{
+        //    var deletionParams = new DeletionParams(publicId);
+        //    var result = await _cloudinary.DestroyAsync(deletionParams);
+
+        //    if (result.Result != "ok")
+        //        throw new BusinessException("No se pudo eliminar la imagen de Cloudinary.");
+        //}
+
+        public async Task DeleteAsync(string publicId)
         {
+            if (string.IsNullOrWhiteSpace(publicId))
+                throw new BusinessException("PublicId no puede estar vacío.");
+
             var deletionParams = new DeletionParams(publicId);
             var result = await _cloudinary.DestroyAsync(deletionParams);
 
-            if (result.Result != "ok")
-                throw new BusinessException("No se pudo eliminar la imagen de Cloudinary.");
+            if (result.Result != "ok" && result.Result != "not_found")
+                throw new BusinessException($"Error al eliminar imagen: {result.Error?.Message ?? result.Result}");
         }
 
 
 
-
-        public async Task<List<ProductImage>> UploadProductImagesAsync(List<IFormFile> files, int productid)
+        public async Task<ImageUploadResult> UploadProductImagesAsync(IFormFile file, int productid)
         {
-            if (files == null || files.Count == 0)
-                throw new BusinessException("Debe subir al menos una imagen.");
 
-            if (files.Count > 5)
-                throw new BusinessException("Solo se permiten hasta 5 imágenes por producto.");
 
-            var images = new List<ProductImage>();
+            ValidateImage(file);
 
-            foreach (var file in files)
-            {
-                if (file.Length <= 0)
-                    continue;
+ 
 
                 //var safeName = name.Replace(" ", "_").ToLowerInvariant();
                 var fileName = $"product_{productid}_{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
                 var folder = $"products/{productid}";
 
-                var uploadParams = new ImageUploadParams
-                {
-                    PublicId = $"img_{Guid.NewGuid()}",
-                    File = new FileDescription(file.FileName, file.OpenReadStream()),
-                    Folder = folder,
-                    Transformation = new Transformation()
-                    .Quality("auto")            // Ajusta calidad automáticamente
-                    .FetchFormat("auto")        // Cambia el formato a WebP/AVIF si el cliente lo soporta
-                    .Width(1200)                // Escala la imagen a 1200px de ancho (ajusta si quieres menos)
-                    .Crop("limit")              // No agranda, solo reduce si es necesario
-                };
+            await using var stream = file.OpenReadStream();
 
-                var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+            var uploadParams = new ImageUploadParams
+            {
+                PublicId = $"img_{Guid.NewGuid()}",
+                File = new FileDescription(file.FileName, stream),
+                Folder = folder,
+                Transformation = new Transformation()
+                    .Quality("auto")
+                    .FetchFormat("auto")
+                    .Width(1200)
+                    .Crop("limit")
+            };
 
-                if (uploadResult.Error != null)
-                    throw new BusinessException($"Error al subir la imagen: {uploadResult.Error.Message}");
+            var result = await _cloudinary.UploadAsync(uploadParams);
 
-                images.Add(new ProductImage
-                {
-                    ImageUrl = uploadResult.SecureUrl.ToString()
-                });
+            if (result.Error != null || string.IsNullOrWhiteSpace(result.SecureUrl?.AbsoluteUri))
+            {
+                throw new BusinessException($"Error al subir imagen: {result.Error?.Message ?? "Respuesta vacía o inválida"}");
             }
 
-            return images;
+            return result;
+
         }
 
 
@@ -145,6 +152,20 @@ namespace Business.Services.Producers.Cloudinary
                                         .Replace("\\", "/"); // Garantizar formato UNIX
 
             return publicId;
+        }
+
+
+        private void ValidateImage(IFormFile file)
+        {
+            if (file == null || file.Length <= 0)
+                throw new BusinessException("El archivo de imagen está vacío.");
+
+            if (file.Length > _maxFileSizeInBytes)
+                throw new BusinessException("El tamaño máximo permitido es de 5 MB.");
+
+            var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+            if (!_allowedExtensions.Contains(extension))
+                throw new BusinessException($"Extensión de archivo no permitida. Extensiones válidas: {string.Join(", ", _allowedExtensions)}");
         }
     }
 }

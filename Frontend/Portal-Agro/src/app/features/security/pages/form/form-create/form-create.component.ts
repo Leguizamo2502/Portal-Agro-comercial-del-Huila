@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { FormService } from '../../../services/form/form.service';
 import { Router } from '@angular/router';
-import { formRegisterModel } from '../../../models/form/form.model';
 import { FormFormComponent } from '../form-form/form-form.component';
 import Swal from 'sweetalert2';
+import { FormRegisterModel } from '../../../models/form/form.model';
 
 @Component({
   selector: 'app-form-create',
@@ -15,7 +15,7 @@ export class FormCreateComponent {
   formService = inject(FormService);
   router = inject(Router);
 
-  saveChange(form: formRegisterModel) {
+  saveChange(form: FormRegisterModel) {
     this.formService.create(form).subscribe({
       next: () => {
         Swal.fire({

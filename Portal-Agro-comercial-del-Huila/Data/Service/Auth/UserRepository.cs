@@ -56,10 +56,20 @@ namespace Data.Service.Auth
                 .FirstOrDefaultAsync(u => u.Email == email && u.IsDeleted == false);
         }
 
+        public async Task<User?> GetDataBasic(int userId)
+        {
+            return await _dbSet
+                .Include(u => u.Person)
+                .FirstOrDefaultAsync(u=>u.Id == userId);
+        }
 
-        
-
-
+        public override async Task<IEnumerable<User>> GetAllAsync()
+        {
+            return await _dbSet
+                .Include(u => u.Person)
+                .ThenInclude(p=>p.City)
+                .ToListAsync();
+        }
     }
  
 }

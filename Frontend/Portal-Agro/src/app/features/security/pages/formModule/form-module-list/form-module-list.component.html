@@ -1,0 +1,15 @@
+<!-- <button mat-flat-button routerLink="create">Crear Permiso</button> -->
+<app-button
+  text="Crear Modulo y Formulario"
+  color="primary"
+  icon="add"
+  redirectTo="/account/security/formModule/create">
+</app-button>
+
+<app-table
+  [columns]="columns"
+  [data]="formodules"
+  [searchableKeys]="['moduleName']"
+  (edit)="onEdit($event)"
+  (delete)="onDelete($event)">
+</app-table>

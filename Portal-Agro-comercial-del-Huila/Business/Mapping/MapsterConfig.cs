@@ -4,6 +4,7 @@ using Entity.Domain.Models.Implements.Producers;
 using Entity.Domain.Models.Implements.Products;
 using Entity.Domain.Models.Implements.Security;
 using Entity.DTOs.Auth;
+using Entity.DTOs.Auth.User;
 using Entity.DTOs.Location.Select;
 using Entity.DTOs.Producer.Categories;
 using Entity.DTOs.Producer.Farm.Create;
@@ -11,6 +12,7 @@ using Entity.DTOs.Producer.Farm.Select;
 using Entity.DTOs.Producer.Producer.Create;
 using Entity.DTOs.Products;
 using Entity.DTOs.Security.Create.Rols;
+using Entity.DTOs.Security.Selects.RolFormPermission;
 using Entity.DTOs.Security.Selects.Rols;
 using Entity.DTOs.Security.Selects.RolUser;
 using Mapster;
@@ -47,6 +49,16 @@ namespace Business.Mapping
                 .Map(dest => dest.Person, src => src.Person)
                 .Map(dest => dest.Roles, src => src.RolUsers.Select(r => r.Rol.Name).ToList());
 
+            config.NewConfig<User, UserSelectDto>()
+                //.Map(dest=>dest.active,src=>src.Active)
+                .Map(dest => dest.FullName, src => $"{src.Person.FirstName} {src.Person.LastName}")
+                .Map(dest => dest.PhoneNumber, src => src.Person.PhoneNumber)
+                .Map(dest => dest.Address, src => src.Person.Address)
+                .Map(dest => dest.Identification, src => src.Person.Identification)
+                .Map(dest => dest.CityId, src => src.Person.CityId)
+                .Map(dest => dest.CityName, src => src.Person.City.Name);
+
+
 
             //FarmWith PRoducer a producer y famr
             config.NewConfig<ProducerWithFarmRegisterDto, Producer>();
@@ -65,17 +77,37 @@ namespace Business.Mapping
 
             //Products
             config.NewConfig<ProductCreateDto, Product>().Ignore(des => des.ProductImages);
-            config.NewConfig<ProductImage, ProductImageDto>();
+            config.NewConfig<ProductImage, ProductImageSelectDto>()
+                  .MapWith(src => new ProductImageSelectDto(
+                      src.Id,
+                      src.FileName ?? string.Empty,
+                      src.ImageUrl ?? string.Empty,
+                      src.PublicId ?? string.Empty,
+                      src.ProductId
+                  ));
+            // DTO de actualización → Entidad (ignorar nulos y valores por defecto)
+            config.NewConfig<ProductUpdateDto, Product>()
+                .Ignore(dest => dest.ProductImages)   // Se manejan aparte
+                .Ignore(dest => dest.Active)   // No se actualiza desde DTO
+                .IgnoreNullValues(true);
+
+
             config.NewConfig<Product, ProductSelectDto>()
-                .Map(dest=>dest.PersonName,src => $"{src.Farm.Producer.User.Person.FirstName} {src.Farm.Producer.User.Person.LastName}")
-                .Map(dest => dest.Images, src => src.ProductImages.Adapt<List<ProductImageDto>>());
+                  .Map(dest => dest.PersonName,
+                       src => (src.Farm != null && src.Farm.Producer != null &&
+                               src.Farm.Producer.User != null && src.Farm.Producer.User.Person != null)
+                            ? (src.Farm.Producer.User.Person.FirstName + " " +
+                               src.Farm.Producer.User.Person.LastName)
+                            : string.Empty)
+                  // Mapear la colección usando el mapeo ProductImage -> ProductImageSelectDto
+                  .Map(dest => dest.Images, src => src.ProductImages ?? new List<ProductImage>());
 
             //Category
             // Updated mapping to handle potential null references
             config.NewConfig<Category, CategorySelectDto>()
                 .Map(dest => dest.Id, src => src.Id) // si no se mapea automáticamente
                 .Map(dest => dest.Name, src => src.Name)
-                .Map(dest => dest.ParentId, src => src.ParentCategoryId)
+                .Map(dest => dest.ParentCategoryId, src => src.ParentCategoryId)
                 .Map(dest => dest.ParentName, src => src.ParentCategory != null ? src.ParentCategory.Name : null);
 
             config.NewConfig<CategoryRegisterDto, Category>();
@@ -88,6 +120,12 @@ namespace Business.Mapping
             config.NewConfig<RolUser, RolUserSelectDto>()
                 .Map(dest => dest.UserName, src => src.User.Person.FirstName)
                 .Map(dest => dest.RolName, src => src.Rol.Name);
+
+            config.NewConfig<RolFormPermission, RolFormPermissionSelectDto>()
+                .Map(dest => dest.RolName, src => src.Rol.Name)
+                .Map(dest => dest.FormName, src => src.Form.Name)
+                .Map(dest => dest.PermissionName, src => src.Permission.Name);
+                
 
 
             //LOcation

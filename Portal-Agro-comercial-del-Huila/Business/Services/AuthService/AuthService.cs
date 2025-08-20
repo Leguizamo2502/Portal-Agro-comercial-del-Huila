@@ -10,9 +10,11 @@ using Data.Service;
 using Entity.Domain.Models.Implements.Auth;
 using Entity.Domain.Models.Implements.Security;
 using Entity.DTOs.Auth;
+using Entity.DTOs.Auth.User;
 using MapsterMapper;
 using Microsoft.Extensions.Logging;
 using Utilities.Exceptions;
+using Utilities.Helpers.Business;
 using Utilities.Messaging.Implements;
 using Utilities.Messaging.Interfaces;
 
@@ -37,6 +39,29 @@ namespace Business.Services.AuthService
 
             _emailService = emailService;
             _passwordResetRepo = passwordResetRepo;
+        }
+
+
+        
+
+        public async Task<UserSelectDto?> GetDataBasic(int userId)
+        {
+            try
+            {
+                BusinessValidationHelper.ThrowIfZeroOrLess(userId, "El ID debe ser mayor que cero.");
+
+                var entity = await _userData.GetDataBasic(userId);
+                var roles = await _rolUserData.GetRolesUserAsync(userId);
+                if (entity == null) return null;
+                var select = _mapper.Map<UserSelectDto>(entity);
+                select.Roles = roles;
+                return select;
+                
+            }
+            catch (Exception ex)
+            {
+                throw new BusinessException($"Error al obtener el registro con ID {userId}.", ex);
+            }
         }
 
         public async Task<IEnumerable<string>> GetRolesUserAsync(int idUser)

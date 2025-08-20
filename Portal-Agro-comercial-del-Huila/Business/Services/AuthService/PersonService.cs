@@ -18,19 +18,5 @@ namespace Business.Services.AuthService
             _personRepository = personRepository;
         }
 
-        public async Task<PersonSelectDto?> GetDataBasic(int personId)
-        {
-            try
-            {
-                BusinessValidationHelper.ThrowIfZeroOrLess(personId, "El ID debe ser mayor que cero.");
-
-                var entity = await _personRepository.GetDataBasic(personId);
-                return entity == null ? default : _mapper.Map<PersonSelectDto>(entity);
-            }
-            catch (Exception ex)
-            {
-                throw new BusinessException($"Error al obtener la persona con ID {personId}.", ex);
-            }
-        }
     }
 }

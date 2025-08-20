@@ -1,5 +1,5 @@
 import { ModuleService } from './../../../services/module/module.service';
-import { ModuleModuleComponent } from './../module-module/module-module.component';
+import { ModuleModuleComponent } from '../module-module/module-module.component';
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';

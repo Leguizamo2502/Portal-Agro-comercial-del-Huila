@@ -34,7 +34,7 @@ namespace Business.Services.Producers.Farms
                 throw new BusinessException("La imagen no existe.");
 
             var publicId = _cloudinaryService.ExtractPublicId(image.ImageUrl);
-            await _cloudinaryService.DeleteImageAsync(publicId);
+            await _cloudinaryService.DeleteAsync(publicId);
 
             await _farmImageRepository.DeleteAsync(image.Id);
         }

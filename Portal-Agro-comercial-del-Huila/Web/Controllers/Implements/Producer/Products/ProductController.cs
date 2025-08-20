@@ -1,4 +1,5 @@
 ﻿using Business.Interfaces.Implements.Producers.Products;
+using Entity.DTOs.BaseDTO;
 using Entity.DTOs.Products;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,12 +12,10 @@ namespace Web.Controllers.Implements.Producer.Products
     {
         private readonly IProductService _productService;
         private readonly ILogger<ProductController> _logger;
-        private readonly IProductImageService _productImageService;
-        public ProductController(IProductService productService, ILogger<ProductController> logger, IProductImageService productImageService)
+        public ProductController(IProductService productService, ILogger<ProductController> logger)
         {
             _productService = productService;
             _logger = logger;
-            _productImageService = productImageService;
         }
 
         [HttpGet]
@@ -37,6 +36,42 @@ namespace Web.Controllers.Implements.Producer.Products
 
         }
 
+        [HttpGet("{id:int}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public virtual async Task<IActionResult> GetById(int id)
+        {
+            try
+            {
+                var result = await _productService.GetByIdAsync(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error obteniendo datos");
+                return StatusCode(500, new { message = "Error interno del servidor." });
+            }
+
+        }
+
+        [HttpGet("by-producer/{producerId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public virtual async Task<IActionResult> GetByProducer(int producerId)
+        {
+            try
+            {
+                var result = await _productService.GetByProducer(producerId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error obteniendo datos");
+                return StatusCode(500, new { message = "Error interno del servidor." });
+            }
+
+        }
+
 
         [HttpPost("register/product")]
         public async Task<IActionResult> Register([FromForm] ProductCreateDto dto)
@@ -46,7 +81,7 @@ namespace Web.Controllers.Implements.Producer.Products
 
             try
             {
-                var result = await _productService.CreateAsync(dto);
+                var result = await _productService.CreateProductAsync(dto);
                 if (result != null)
                     return Ok(new { IsSuccess = true, message = "Producto creada correctamente" });
                 else
@@ -59,6 +94,33 @@ namespace Web.Controllers.Implements.Producer.Products
 
                 return StatusCode(500, new { IsSuccess = false, message = "Ocurrió un error al registrar la producto", error = ex.Message });
             }
+        }
+
+
+        [HttpPut("{id:int}")]
+        [Consumes("multipart/form-data")]
+        public async Task<ActionResult<ProductSelectDto>> Update(int id, [FromForm] ProductUpdateDto dto)
+        {
+            if (dto is not BaseDto identifiableDto)
+                return BadRequest(new { message = "El DTO no implementa IHasId." });
+
+            identifiableDto.Id = id;
+            if (id != dto.Id)
+                return BadRequest("El ID de la URL no coincide con el ID del cuerpo del formulario.");
+
+            var result = await _productService.UpdateProductAsync(dto);
+            return Ok(result);
+        }
+
+
+        /// <summary>
+        /// Eliminar lógicamente un establecimiento (soft delete).
+        /// </summary>
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _productService.DeleteAsync(id);
+            return NoContent();
         }
 
     }

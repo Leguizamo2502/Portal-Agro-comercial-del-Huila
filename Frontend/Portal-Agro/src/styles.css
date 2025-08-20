@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background-color: #F9F7F1;}
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
@@ -27,4 +27,53 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     position: relative;
     z-index: 1;
   }
+}
+
+/* 1) El título puede seguir centrado */
+.titleForm {
+  color: #2e7d32;
+  font-size: 2rem;
+  text-align: center;
+  margin: 0 0 2rem;
+  font-weight: 600;
+}
+
+/* 2) El wrapper ocupa todo el panel; el interior limita el ancho total del formulario */
+.form-wrapper-transparent {
+  background-color: transparent;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 100%;
+}
+.form-inner {
+  max-width: 640px;  /* ajusta a tu gusto: 600–720px */
+  margin: 0 auto;
+}
+
+/* 3) El formulario NO centra los hijos; los estira */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;  /* <-- clave */
+  gap: 1.5rem;
+}
+
+/* 4) El campo ocupa el 100% del ancho disponible */
+.form-field,
+.custom-mat-field,
+.mat-mdc-form-field {     /* selector de Angular Material */
+  width: 100%;
+}
+
+/* (opcional) Centrar el grupo de botones, no los inputs */
+.cont-botones {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/*   Titulos account*/
+.title-p{
+  font-size: 2rem;
+  color: #333;
 }

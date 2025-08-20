@@ -7,12 +7,10 @@ import {
 } from '@angular/core';
 import { FormService } from '../../../services/form/form.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  formRegisterModel,
-  formSelectModel,
-} from '../../../models/form/form.model';
+
 import { FormFormComponent } from '../form-form/form-form.component';
 import Swal from 'sweetalert2';
+import { FormRegisterModel, FormSelectModel } from '../../../models/form/form.model';
 
 @Component({
   selector: 'app-fomr-update',
@@ -26,7 +24,7 @@ export class FomrUpdateComponent implements OnInit {
   route = inject(ActivatedRoute);
 
   id!: number;
-  model?: formSelectModel;
+  model?: FormSelectModel;
 
   ngOnInit(): void {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
@@ -37,7 +35,7 @@ export class FomrUpdateComponent implements OnInit {
     });
   }
 
-  save(form: formRegisterModel) {
+  save(form: FormRegisterModel) {
     this.formService.update(this.id, form).subscribe({
       next: () => {
         Swal.fire({

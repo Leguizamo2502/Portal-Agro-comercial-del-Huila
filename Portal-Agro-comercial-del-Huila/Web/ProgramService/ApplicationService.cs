@@ -54,6 +54,8 @@ namespace Web.ProgramService
             services.AddScoped<IPersonRepository, PersonRepository>();
             services.AddScoped<IPersonService, PersonService>();
 
+           
+
             //Cloudinary
             services.AddScoped<ICloudinaryService, CloudinaryService>();
 
@@ -64,7 +66,7 @@ namespace Web.ProgramService
             //services
 
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddScoped<ICityRepository, CityRepository>();
             services.AddScoped<ICityService, CityService>();
@@ -94,6 +96,8 @@ namespace Web.ProgramService
             services.AddScoped<IRolUserRepository, RolUserRepository>();
             services.AddScoped<IRolUserService, RolUserService>();
 
+            services.AddScoped<IRolFormPermissionRepository, RolFormPermissionRepository>();   
+            services.AddScoped<IRolFormPermissionService,RolFormPermissionService>();
 
 
             //Producer

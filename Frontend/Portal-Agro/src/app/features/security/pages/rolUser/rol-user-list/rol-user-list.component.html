@@ -1,0 +1,15 @@
+<!-- <button mat-flat-button routerLink="create">Crear Permiso</button> -->
+<app-button
+  text="Crear Rol y Usuario"
+  color="primary"
+  icon="add"
+  redirectTo="/account/security/rolUser/create">
+</app-button>
+
+<app-table
+  [columns]="columns"
+  [data]="rolUsers"
+  [searchableKeys]="['userName']"
+  (edit)="onEdit($event)"
+  (delete)="onDelete($event)">
+</app-table>

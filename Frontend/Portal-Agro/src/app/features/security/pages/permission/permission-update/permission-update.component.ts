@@ -1,5 +1,4 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormService } from '../../../services/form/form.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import { PermissionRegisterModel, PermissionSelectModel } from '../../../models/permission/permission.model';

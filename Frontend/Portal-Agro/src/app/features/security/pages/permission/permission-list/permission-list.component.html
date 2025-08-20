@@ -1,8 +1,15 @@
-<button mat-flat-button routerLink="create">Crear Permiso</button>
+<!-- <button mat-flat-button routerLink="create">Crear Permiso</button> -->
+<app-button
+  text="Crear Permiso"
+  color="primary"
+  icon="add"
+  redirectTo="/account/security/permission/create">
+</app-button>
 
 <app-table
   [columns]="columns"
   [data]="permissions"
+  [searchableKeys]="['name']"
   (edit)="onEdit($event)"
   (delete)="onDelete($event)">
 </app-table>

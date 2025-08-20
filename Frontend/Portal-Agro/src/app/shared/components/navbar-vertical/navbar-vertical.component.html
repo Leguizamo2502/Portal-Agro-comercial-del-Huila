@@ -1,8 +1,8 @@
 <div class="sidebar shadow p-3 bg-light rounded">
     <!-- Usuario -->
     <div class="text-center mb-3">
-        <h6 class="fw-bold text-success">{{ user.name }}</h6>
-        <p class="mb-0 text-muted">{{ user.email }}</p>
+        <h6 class="fw-bold text-success">{{ user?.fullName }}</h6>
+        <p class="mb-0 text-muted">{{ user?.email }}</p>
     </div>
 
     <!-- Menú -->
@@ -11,9 +11,9 @@
             <i class="bi bi-person-fill me-2"></i> Mi Información
         </a> -->
         <a class="list-group-item list-group-item-action" (click)="navigateTo('info')"
-                [ngClass]="{ 'active': activePath === 'info' }">
-                <i class="bi bi-key-fill me-2"></i> Mi Informacion
-            </a>
+            [ngClass]="{ 'active': activePath === 'info' }">
+            <i class="bi bi-key-fill me-2"></i> Mi Informacion
+        </a>
 
         <a class="list-group-item list-group-item-action" routerLink="/favoritos" routerLinkActive="active">
             <i class="bi bi-heart-fill me-2"></i> Favoritos
@@ -23,7 +23,8 @@
             <i class="bi bi-bag-fill me-2"></i> Pedidos
         </a>
 
-        <a class="list-group-item list-group-item-action" routerLink="/productor" routerLinkActive="active">
+        <a class="list-group-item list-group-item-action" (click)="navigateTo('producer')"
+            [ngClass]="{ 'active': activePath === 'producer' }">
             <i class="bi bi-person-workspace me-2"></i> Productor
         </a>
 
@@ -45,6 +46,15 @@
                 <i class="bi bi-people-fill me-2"></i> Usuarios
             </a>
 
+            <a class="list-group-item list-group-item-action" (click)="navigateTo('security/rol')"
+                [ngClass]="{ 'active': activePath === 'security/rol' }">
+                <i class="bi bi-people-fill me-2"></i> Roles
+            </a>
+            <a class="list-group-item list-group-item-action" (click)="navigateTo('security/rolUser')"
+                [ngClass]="{ 'active': activePath === 'security/rolUser' }">
+                <i class="bi bi-people-fill me-2"></i> Roles y Usuarios
+            </a>
+
             <a class="list-group-item list-group-item-action" (click)="navigateTo('security/permission')"
                 [ngClass]="{ 'active': activePath === 'security/permission' }">
                 <i class="bi bi-key-fill me-2"></i> Permisos
@@ -58,6 +68,15 @@
             <a class="list-group-item list-group-item-action" (click)="navigateTo('security/module')"
                 [ngClass]="{ 'active': activePath === 'security/module' }">
                 <i class="bi bi-key-fill me-2"></i> Modulos
+            </a>
+            <a class="list-group-item list-group-item-action" (click)="navigateTo('security/formModule')"
+                [ngClass]="{ 'active': activePath === 'security/formModule' }">
+                <i class="bi bi-people-fill me-2"></i> Modulos y Formularios
+            </a>
+
+            <a class="list-group-item list-group-item-action" (click)="navigateTo('security/rolFormPermission')"
+                [ngClass]="{ 'active': activePath === 'security/rolFormPermission' }">
+                <i class="bi bi-people-fill me-2"></i> Rol, Formularios y Permisos
             </a>
 
         </div>
@@ -76,11 +95,11 @@
                 <i class="bi bi-tags-fill me-2"></i> Categorías
             </a>
             <a class="list-group-item list-group-item-action" (click)="navigateTo('parameters/department')"
-                [ngClass]="{ 'active': activePath === 'parameters/category' }">
+                [ngClass]="{ 'active': activePath === 'parameters/department' }">
                 <i class="bi bi-tags-fill me-2"></i> Departamento
             </a>
             <a class="list-group-item list-group-item-action" (click)="navigateTo('parameters/city')"
-                [ngClass]="{ 'active': activePath === 'parameters/category' }">
+                [ngClass]="{ 'active': activePath === 'parameters/city' }">
                 <i class="bi bi-tags-fill me-2"></i> Ciudad
             </a>
         </div>

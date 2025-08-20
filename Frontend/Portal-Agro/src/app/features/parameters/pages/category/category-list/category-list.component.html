@@ -1,8 +1,12 @@
-<button mat-flat-button routerLink="create">Crear Formulario</button>
+<!-- <button mat-flat-button routerLink="create">Crear Formulario</button> -->
+ <app-button [text]="'Crear Categoria'"  color="primary"
+  icon="add"
+  redirectTo="/account/parameters/category/create">></app-button>
 
 <app-table
   [columns]="columns"
   [data]="categorys"
+  [searchableKeys]="['name']"
   (edit)="onEdit($event)"
   (delete)="onDelete($event)">
 </app-table>

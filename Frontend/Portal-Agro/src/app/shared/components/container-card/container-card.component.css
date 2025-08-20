@@ -1,0 +1,36 @@
+/* contenedor general */
+.product-section {
+  background-color: #f9f6f1;
+  border-radius: 8px;
+  padding: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+
+/* título */
+.section-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #6d4c41;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 4px;
+}
+
+/* carrusel horizontal */
+.product-container {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 16px;
+  padding: 8px 0;
+  scroll-behavior: smooth;
+}
+
+/* scrollbar */
+.product-container::-webkit-scrollbar { height: 8px; }
+.product-container::-webkit-scrollbar-thumb {
+  background-color: #4caf50;
+  border-radius: 4px;
+}

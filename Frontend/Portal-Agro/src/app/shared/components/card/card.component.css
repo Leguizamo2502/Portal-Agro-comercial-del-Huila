@@ -1,86 +1,99 @@
-/*  El contenedor general */
-.product-section {
-  background-color: #f9f6f1;
-  border-radius: 8px;
-  padding: 16px;
-  max-width: 1400px; 
-  margin: 0 auto; 
-  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-}
-/*  El título
-.section-title {
-  font-size: 20px;
-  font-weight: bold;
-  color: #6d4c41;
-  margin-bottom: 8px;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 4px;
-} */
-/*  Contenedor de las cards */
-.product-container {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  gap: 16px;
-  padding: 8px 0;
-  scroll-behavior: smooth;
-}
-/* Scroll personalizado  */
-.product-container::-webkit-scrollbar {
-  height: 8px;
-}
-.product-container::-webkit-scrollbar-thumb {
-  background-color: #4caf50;
-  border-radius: 4px;
-}
-/*  Cada card individual  */
+/* Tarjeta con layout en columna y alto uniforme */
 .product-card {
-  flex: 0 0 auto;
-  width: 280px;
-  border: 1px solid #4caf50;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 1 1 250px;
+  max-width: 320px;
+  min-width: 200px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform .2s ease, box-shadow .2s ease;
+  background: #fff;
 }
-
 .product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(76, 175, 80, 0.4);
-}
-/* Imagen del producto  */
-.product-card img {
-  width: 100%;
-  height: 180px;
-  object-fit: contain;
-  background-color: #f5f5f5;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(76,175,80,.25);
 }
 
-mat-card-content {
+/* Imagen con alto consistente entre tarjetas */
+/* Alto fijo idéntico para todas las portadas */
+.image-wrap {
+  width: 100%;
+  height: 200px;              /* <-- ajústalo a tu diseño (180–220px) */
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;           /* evita desbordes raros */
+}
+
+.image-wrap .card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;        /* no recorta, mantiene proporción */
+  display: block;
+}
+
+/* Contenido que crece y permite empujar el precio al fondo */
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
   padding: 16px;
 }
 
-h3 {
+/* Título con 2 líneas máximas y altura fija para alinear precios */
+.title {
   margin: 0 0 8px 0;
   font-size: 18px;
   font-weight: 600;
+  line-height: 1.25;
+  color: #1f2937;
 }
-/* Datos del producto  */
+.line-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  /* altura mínima equivalente a 2 líneas para uniformidad */
+  min-height: calc(1.25em * 2);
+}
+
 .info-row {
   display: flex;
   align-items: center;
+  gap: 6px;
   font-size: 14px;
   margin: 4px 0;
+  color: #374151;
 }
+.info-row mat-icon { font-size: 18px; color: #4caf50; }
 
-.info-row mat-icon {
-  font-size: 18px;
-  margin-right: 6px;
-  color: #4caf50;
-}
+/* Ocupa el espacio libre para pegar el precio al borde inferior */
+.spacer { flex: 1 1 auto; }
 
 .price {
-  font-weight: bold;
+  font-weight: 700;
   margin-top: 12px;
-  font-size: 16px;
-  color: #2e7d32;
+  font-size: 18px;
+  color: #1b5e20;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  /* margin-top: 12px; */
+  /* color: #4caf50; */
+}
+
+.icon-delete {
+  color: #e53935; /* rojo personalizado */
+  /* font-size: 24px;  */
+}
+.icon-edit {
+  color: #1b5e20; /* rojo personalizado */
+  /* font-size: 24px;  */
 }

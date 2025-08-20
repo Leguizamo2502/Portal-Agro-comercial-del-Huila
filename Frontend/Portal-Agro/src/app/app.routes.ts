@@ -5,12 +5,17 @@ import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { NavbarVerticalComponent } from './shared/components/navbar-vertical/navbar-vertical.component';
 import { NavbarSinCategoriaComponent } from './shared/components/navbar-sin-categoria/navbar-sin-categoria.component';
 import { CarruselComponent } from './shared/components/carrusel/carrusel.component';
+
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 import { OrderHistoryComponent } from './shared/components/order-history/order-history.component';
 import { ProductDetailComponent } from './shared/components/product-detail/product-detail.component';
 
 
+import { ForbiddenComponent } from './Core/page/forbidden/forbidden.component';
+
+
 export const routes: Routes = [
+
   {
     path: '',
     redirectTo: 'auth/login', 
@@ -21,11 +26,11 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },
-  {
-    path: '',
-    loadChildren: () =>
-      import('./features/products/products.routes').then((m) => m.PRODUCTS_ROUTES),
-  },
+  // {
+  //   path: '',
+  //   loadChildren: () =>
+  //     import('./features/products/products.routes').then((m) => m.PRODUCTS_ROUTES),
+  // },
   {
     path: 'home',
     loadChildren: () =>
@@ -37,6 +42,8 @@ export const routes: Routes = [
     loadChildren: ()=>
       import('./features/account/account.routes').then((r)=>r.ACCOUNT_ROUTES),
   },
+
+  {path:'forbidden',component:ForbiddenComponent},
 
   
   { path: 'card', component: CardComponent },

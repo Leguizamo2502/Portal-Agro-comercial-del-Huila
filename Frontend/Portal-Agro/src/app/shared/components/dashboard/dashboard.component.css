@@ -4,15 +4,17 @@
   height: 100vh;
   width: 250px;
   border-right: 1px solid #ddd;
-  transition: width 0.3s;
+  transition: transform 0.3s ease-in-out;
   overflow: hidden;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
   z-index: 10;
 }
 
-.sidebar.collapsed {
-  width: 70px; /* ancho reducido solo para íconos */
-  overflow: hidden; /* 👈 mantenemos limpio */
+/* 🔴 Cuando está cerrada, ocultar totalmente */
+.sidebar.hidden {
+  transform: translateX(-100%);
 }
 
 /* Perfil */
@@ -20,10 +22,6 @@
   display: flex;
   align-items: center;
   padding: 15px;
-}
-
-.sidebar.collapsed .profile {
-  justify-content: center; /* centra la imagen */
 }
 
 .profile img {
@@ -63,28 +61,18 @@
   font-size: 20px;
   margin-right: 10px;
   transition: margin-right 0.3s, color 0.3s;
-  color: #28a745 !important; /* verde base */
-  display: flex;             /* igual que la imagen */
+  color: #28a745 !important;
+  display: flex;
   justify-content: center;
   align-items: center;
-  width: 30px;               /* cuadrado fijo */
+  width: 30px;
   height: 30px;
 }
 
-/* Hover ícono + texto */
+/* Hover */
 .nav-link:hover,
 .nav-link:hover i {
-  color: #218838 !important; /* verde más oscuro */
-}
-
-/* Sidebar colapsada → solo íconos (centrados igual que la foto) */
-.sidebar.collapsed .nav-link {
-  justify-content: center;
-  padding: 12px 0;
-}
-
-.sidebar.collapsed .nav-link i {
-  margin-right: 0; /* el ícono queda centrado */
+  color: #218838 !important;
 }
 
 /* Texto */
@@ -94,9 +82,9 @@
   transition: opacity 0.3s, margin-left 0.3s;
 }
 
-/* Link activo */
+/* Activo */
 .nav-link.active {
-  background: #e6f4ea; /* fondo verdecito claro */
+  background: #e6f4ea;
   color: #218838 !important;
   border-radius: 8px;
 }

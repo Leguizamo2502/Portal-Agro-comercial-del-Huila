@@ -1,0 +1,11 @@
+.product-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3rem; /* espacio entre tarjetas */
+  justify-content: flex-start; /* alinea a la izquierda */
+}
+
+.product-container app-card {
+  flex: 0 1 250px; /* ancho fijo con ajuste */
+  max-width: 250px;
+}

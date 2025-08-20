@@ -21,6 +21,7 @@ namespace Data.Service.Producers.Categories
         {
             return await _dbSet
                 .Include(c => c.SubCategories)
+                .Where(c=>c.IsDeleted == false)
                 .ToListAsync();
         }
     }

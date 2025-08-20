@@ -5,41 +5,39 @@ import { DepartmentRegisterModel } from '../../../models/department/department.m
 import { DepartmentService } from '../../../services/department/department.service';
 import { DepartmentFormComponent } from '../deparment-form/deparment-form.component';
 
-
 @Component({
   selector: 'app-deparment-create',
   imports: [DepartmentFormComponent],
   templateUrl: './deparment-create.component.html',
-  styleUrl: './deparment-create.component.css'
+  styleUrl: './deparment-create.component.css',
 })
 export class DepartmentCreateComponent {
   departmentService = inject(DepartmentService);
   router = inject(Router);
 
-
   saveChange(department: DepartmentRegisterModel) {
-      this.departmentService.create(department).subscribe({
-        next: () => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Departamento creado',
-            text: 'El Departamento se ha guardado correctamente',
-            confirmButtonText: 'Aceptar',
-          }).then(() => {
-            this.router.navigate(['/account/parameters/department']);
-          });
-  
-          console.log(department);
-        },
-        error: (error) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se pudo guardar el permiso.',
-          });
-  
-          console.error(error);
-        },
-      });
-    }
+    this.departmentService.create(department).subscribe({
+      next: () => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Departamento creado',
+          text: 'El Departamento se ha guardado correctamente',
+          confirmButtonText: 'Aceptar',
+        }).then(() => {
+          this.router.navigate(['/account/parameters/department']);
+        });
+
+        // console.log(department);
+      },
+      error: (error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo guardar el permiso.',
+        });
+
+        console.error(error);
+      },
+    });
+  }
 }

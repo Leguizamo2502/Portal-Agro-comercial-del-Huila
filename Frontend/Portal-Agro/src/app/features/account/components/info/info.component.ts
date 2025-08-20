@@ -1,18 +1,19 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { PersonService } from '../../../../shared/services/person/person.service';
-import { PersonSelectModel } from '../../../../shared/models/person/person.model';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from "@angular/material/icon";
+import { AuthService } from '../../../../Core/services/auth/auth.service';
+import { UserSelectModel } from '../../../../Core/Models/user.model';
+import { ButtonComponent } from "../../../../shared/components/button/button.component";
 
 @Component({
   selector: 'app-info',
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule, MatIconModule, ButtonComponent],
   templateUrl: './info.component.html',
   styleUrl: './info.component.css'
 })
 export class InfoComponent implements OnInit{
-  personService = inject(PersonService);
-  person? : PersonSelectModel;
+  authService = inject(AuthService);
+  person? : UserSelectModel;
 
 
   ngOnInit(): void {
@@ -20,8 +21,9 @@ export class InfoComponent implements OnInit{
   }
 
   loadPerson(){
-    this.personService.getDataBasic().subscribe((data)=>{
+    this.authService.GetDataBasic().subscribe((data)=>{
       this.person = data;
+      console.log(data);
     })
   }
 

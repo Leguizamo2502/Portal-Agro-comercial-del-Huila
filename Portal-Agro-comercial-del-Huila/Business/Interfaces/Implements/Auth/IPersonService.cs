@@ -6,7 +6,6 @@ namespace Business.Interfaces.Implements.Auth
 {
     public interface IPersonService : IBusiness<PersonRegisterDto,PersonSelectDto>
     {
-        Task<PersonSelectDto?> GetDataBasic(int personId);
 
     }
 }

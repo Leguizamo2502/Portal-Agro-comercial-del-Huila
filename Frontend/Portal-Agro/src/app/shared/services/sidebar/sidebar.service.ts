@@ -7,6 +7,7 @@ export class SidebarService {
   // Signal para controlar si está abierta o cerrada
   // Por defecto true para desktop
   private _isOpen = signal(true);
+isOpenMobile: any;
   
   // Getter público para leer el estado
   get isOpen() {

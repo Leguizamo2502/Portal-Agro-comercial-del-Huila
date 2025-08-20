@@ -1,0 +1,10 @@
+<section class="product-section">
+  <h2 class="section-title" *ngIf="showHeader">{{ title }}</h2>
+
+  <div class="product-container">
+    <app-card
+      *ngFor="let product of products; trackBy: trackById"
+      [product]="product">
+    </app-card>
+  </div>
+</section>

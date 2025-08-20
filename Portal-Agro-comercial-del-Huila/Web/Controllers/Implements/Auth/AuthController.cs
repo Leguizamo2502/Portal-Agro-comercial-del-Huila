@@ -7,6 +7,7 @@ using Entity.DTOs.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Utilities.Exceptions;
+using Utilities.Helpers.Auth;
 
 namespace Web.Controllers.Implements.Auth
 {
@@ -105,10 +106,12 @@ namespace Web.Controllers.Implements.Auth
         [HttpGet("me")]
         public async Task<IActionResult> GetCurrentUser()
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
-                return Unauthorized("El token no contiene un Claim 'sub' (NameIdentifier) válido o no es un ID.");
+            //if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
+            //    return Unauthorized("El token no contiene un Claim 'sub' (NameIdentifier) válido o no es un ID.");
+            var userId = HttpContext.GetUserId();
+
 
             var currentUserDto = await _meService.GetAllDataMeAsync(userId);
 
@@ -125,16 +128,32 @@ namespace Web.Controllers.Implements.Auth
 
 
 
-        //[HttpGet]
-        //[Route("ValidarToken")]
-        //public IActionResult ValidarToken([FromQuery] string token)
+        [Authorize]
+        [HttpGet("DataBasic")]
+        public async Task<IActionResult> GetDataBasic()
+        {
+            //var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //if (string.IsNullOrWhiteSpace(userIdClaim)
+            //    || !int.TryParse(userIdClaim, out var userId))
+            //{
+            //    return Unauthorized("Token inválido o Claim 'NameIdentifier' ausente.");
+            //}
+            var userId = HttpContext.GetUserId();
 
-        //{
-
-        //    bool respuesta = _token.validarToken(token);
-        //    return StatusCode(StatusCodes.Status200OK, new { isSuccess = respuesta });
-
-        //}
+            try
+            {
+                var currentUserDto = await _authService.GetDataBasic(userId);
+                return Ok(currentUserDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "GetDataBasic falló para UserId={UserId}", userId);
+                return StatusCode(
+                    StatusCodes.Status500InternalServerError,
+                    "Ocurrió un error interno al procesar la solicitud."
+                );
+            }
+        }
 
         [HttpPost("recuperar/enviar-codigo")]
         [ProducesResponseType(typeof(string), 200)]

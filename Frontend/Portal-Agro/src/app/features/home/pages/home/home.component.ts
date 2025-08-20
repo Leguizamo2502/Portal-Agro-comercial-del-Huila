@@ -4,11 +4,12 @@ import { ProductService } from '../../../../shared/services/product/product.serv
 import { ProductSelectModel } from '../../../../shared/models/product/product.model';
 import { CardComponent } from '../../../../shared/components/card/card.component';
 import { CarruselComponent } from '../../../../shared/components/carrusel/carrusel.component';
+import { ContainerCardComponent } from "../../../../shared/components/container-card/container-card.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, CardComponent, CarruselComponent],
+  imports: [CommonModule, CarruselComponent, ContainerCardComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -21,7 +22,7 @@ export class HomeComponent implements OnInit {
   }
 
   loadProduct() {
-    this.productService.getProduct().subscribe(data => {
+    this.productService.getAll().subscribe(data => {
       this.products = data;
       console.log('HomeComponent - productos cargados:', this.products);
     });

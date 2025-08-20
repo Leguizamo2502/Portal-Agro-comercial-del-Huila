@@ -1,11 +1,57 @@
-<button [type]="type"
-        [disabled]="disabled"
-        (click)="onClick()"
-        [ngClass]="{
-          'btn-primary': color === 'primary',
-          'btn-secondary': color === 'secondary',
-          'btn-danger': color === 'danger'
-        }">
-  {{ text }}
+<!-- button.component.html -->
+<!-- NEXT -->
+<button *ngIf="stepperAction === 'next'; else notNext"
+  [type]="type"
+  [disabled]="disabled"
+  (click)="onClick()"
+  class="custom-btn"
+  [ngClass]="{
+    'btn-primary': color === 'primary',
+    'btn-secondary': color === 'secondary',
+    'btn-danger': color === 'danger'
+  }"
+  [attr.aria-label]="text"
+  matStepperNext
+>
+  <mat-icon *ngIf="icon" class="icon" aria-hidden="true">{{ icon }}</mat-icon>
+  <span class="label">{{ text }}</span>
 </button>
- 
+
+<ng-template #notNext>
+  <!-- PREVIOUS -->
+  <button *ngIf="stepperAction === 'previous'; else plain"
+    [type]="type"
+    [disabled]="disabled"
+    (click)="onClick()"
+    class="custom-btn"
+    [ngClass]="{
+      'btn-primary': color === 'primary',
+      'btn-secondary': color === 'secondary',
+      'btn-danger': color === 'danger'
+    }"
+    [attr.aria-label]="text"
+    matStepperPrevious
+  >
+    <mat-icon *ngIf="icon" class="icon" aria-hidden="true">{{ icon }}</mat-icon>
+    <span class="label">{{ text }}</span>
+  </button>
+</ng-template>
+
+<!-- SIN ACCIÓN DE STEPPER -->
+<ng-template #plain>
+  <button
+    [type]="type"
+    [disabled]="disabled"
+    (click)="onClick()"
+    class="custom-btn"
+    [ngClass]="{
+      'btn-primary': color === 'primary',
+      'btn-secondary': color === 'secondary',
+      'btn-danger': color === 'danger'
+    }"
+    [attr.aria-label]="text"
+  >
+    <mat-icon *ngIf="icon" class="icon" aria-hidden="true">{{ icon }}</mat-icon>
+    <span class="label">{{ text }}</span>
+  </button>
+</ng-template>

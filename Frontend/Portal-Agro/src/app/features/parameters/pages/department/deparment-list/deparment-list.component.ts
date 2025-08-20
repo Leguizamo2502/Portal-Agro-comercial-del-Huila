@@ -5,10 +5,11 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatButton } from '@angular/material/button';
 import { DepartmentSelectModel } from '../../../models/department/department.model';
+import { ButtonComponent } from "../../../../../shared/components/button/button.component";
 
 @Component({
   selector: 'app-deparment-list',
-  imports: [TableComponent, CommonModule, RouterLink,MatButton],
+  imports: [TableComponent, CommonModule, ButtonComponent],
   templateUrl: './deparment-list.component.html',
   styleUrl: './deparment-list.component.css',
 })

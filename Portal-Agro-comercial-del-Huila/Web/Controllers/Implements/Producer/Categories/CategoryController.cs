@@ -28,7 +28,7 @@ namespace Web.Controllers.Implements.Producer.Categories
         protected override async Task<IEnumerable<CategorySelectDto>> GetAllAsync()
         {
             return await _service.GetAllAsync();
-        }
+            }
 
         protected override async Task<CategorySelectDto?> GetByIdAsync(int id)
         {

@@ -4,10 +4,12 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ModuleService } from '../../../services/module/module.service';
 import { ModuleSelectModel } from '../../../models/module/module.model';
+import { AccountComponent } from "../../../../account/pages/account/account.component";
+import { ButtonComponent } from "../../../../../shared/components/button/button.component";
 
 @Component({
   selector: 'app-module-list',
-  imports: [TableComponent, CommonModule, RouterLink],
+  imports: [TableComponent, CommonModule, RouterLink, ButtonComponent],
   templateUrl: './module-list.component.html',
   styleUrl: './module-list.component.css',
 })

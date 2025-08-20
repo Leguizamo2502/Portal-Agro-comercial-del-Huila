@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Entity.Domain.Models.Implements.Auth;
 using Entity.DTOs.Auth;
+using Entity.DTOs.Auth.User;
 
 namespace Business.Interfaces.Implements.Auth
 {
@@ -14,5 +16,7 @@ namespace Business.Interfaces.Implements.Auth
         Task ResetPasswordAsync(ConfirmResetDto dto);
 
         Task<IEnumerable<string>> GetRolesUserAsync(int idUser);
+        Task<UserSelectDto?> GetDataBasic(int userId);
+
     }
 }

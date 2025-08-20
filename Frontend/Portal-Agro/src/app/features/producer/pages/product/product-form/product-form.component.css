@@ -1,0 +1,208 @@
+/* ===== Paleta base ===== */
+:root {
+  --primary: #28a745;
+  --primary-hover: #218838;
+  --primary-contrast: #ffffff;
+  --secondary: #6c757d;
+  --secondary-hover: #5a6268;
+  --text-strong: #2c3e50;
+  --text-muted: #607d8b;
+  --line: #dfe3e8;
+}
+
+/* ===== Wrapper & título ===== */
+.titleForm {
+  color: #2e7d32;
+  font-size: 2rem;
+  text-align: center;
+  margin: 0 0 2rem;
+  font-weight: 600;
+}
+
+.form-wrapper-transparent {
+  background-color: transparent;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 100%;
+}
+
+.info h3 {
+  margin: 0 0 .25rem;
+  color: var(--text-strong);
+  font-weight: 700;
+}
+
+.info span {
+  color: var(--text-muted);
+}
+
+/* ===== Layout ===== */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1.5rem;
+}
+
+.row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.w-100 { width: 100%; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .row-2 { grid-template-columns: 1fr; }
+}
+
+/* ===== Stepper (Angular Material overrides) ===== */
+.mat-step-header .mat-step-label {
+  color: #455a64;
+  font-weight: 600;
+}
+
+.mat-stepper-horizontal-line {
+  border-top-color: var(--line) !important;
+}
+
+.mat-step-header .mat-step-icon,
+.mat-step-header .mat-step-icon-state-edit {
+  background-color: var(--secondary);
+  color: #fff;
+}
+
+.mat-step-header.mat-active .mat-step-icon {
+  background-color: var(--primary);
+  color: var(--primary-contrast);
+}
+
+.mat-step-header .mat-step-icon-state-done {
+  background-color: var(--primary);
+  color: var(--primary-contrast);
+}
+
+/* ===== Angular Material form field (outline + focus) ===== */
+.mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+.mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+.mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: var(--primary) !important;
+}
+
+.mat-mdc-form-field.mat-focused .mdc-floating-label {
+  color: var(--primary) !important;
+}
+
+.mat-mdc-form-field.mat-focused .mat-mdc-form-field-icon-prefix,
+.mat-mdc-form-field.mat-focused .mat-mdc-form-field-icon-suffix {
+  color: var(--primary) !important;
+}
+
+.mat-mdc-option.mdc-list-item--selected .mdc-list-item__primary-text,
+.mat-mdc-option.mat-mdc-option-active .mdc-list-item__primary-text {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* ===== Acciones / botones ===== */
+.actions,
+.actions.space-between {
+  display: flex;
+  gap: 12px;
+}
+.actions { justify-content: flex-end; }
+.actions.space-between { justify-content: space-between; }
+
+/* Ajuste base de tus botones en este contexto */
+.custom-btn { min-width: 120px; }
+
+/* ===== Drop zone / Imágenes ===== */
+.drop-zone {
+  border: 2px dashed #9ccc9c;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+  max-width: 100%;
+  background: #f8fff8;
+}
+.drop-zone.dragover {
+  background: #effdf0;
+  border-color: var(--primary);
+}
+.drop-zone mat-icon {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+  display: block;
+  margin: 0 auto 8px;
+  color: var(--primary);
+}
+
+.image-counter {
+  margin-top: 8px;
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+/* Grilla de miniaturas */
+.compact-image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+@media (max-width: 768px) {
+  .compact-image-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+}
+
+.compact-image-container {
+  position: relative;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  background: #f8f8f8;
+}
+
+.compact-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.compact-image-actions {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(255,255,255,0.85);
+  border-radius: 999px;
+}
+
+.compact-image-label {
+  position: absolute;
+  left: 8px;
+  bottom: 6px;
+  font-size: 11px;
+  color: #fff;
+  background: rgba(0,0,0,0.55);
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+/* ===== Spinner primario ===== */
+.mat-mdc-progress-spinner circle,
+.mat-mdc-progress-spinner .mdc-circular-progress__indeterminate-circle-graphic {
+  stroke: var(--primary) !important;
+}
+
+/* ===== Footer ===== */
+.footer-actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
