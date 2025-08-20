@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entity.DTOs.Favorite
+namespace Entity.DTOs.Favorites.Create
 {
-    internal class FavoriteDto
+    internal class FavoriteRegisterDto
     {
     }
 }
