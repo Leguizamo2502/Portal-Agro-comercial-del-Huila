@@ -99,6 +99,8 @@ cosas
 */
 .top {
   margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .leaflet-control-layers-toggle {

@@ -4,12 +4,12 @@ import { Router } from '@angular/router';
 import { FarmSelectModel } from '../../../../../shared/models/farm/farm.model';
 import Swal from 'sweetalert2';
 import { ButtonComponent } from '../../../../../shared/components/button/button.component';
-import { CardFarmComponent } from '../../../../../shared/components/cards/card-farm/card-farm.component';
 import { CommonModule } from '@angular/common';
+import { ContainerCardFlexComponent } from "../../../../../shared/components/cards/container-card-flex/container-card-flex.component";
 
 @Component({
   selector: 'app-farm-list',
-  imports: [ButtonComponent, CardFarmComponent, CommonModule],
+  imports: [ButtonComponent, CommonModule, ContainerCardFlexComponent],
   templateUrl: './farm-list.component.html',
   styleUrl: './farm-list.component.css',
 })

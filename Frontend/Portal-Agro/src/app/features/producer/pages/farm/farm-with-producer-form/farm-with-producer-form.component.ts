@@ -12,11 +12,11 @@ import { AuthState } from '../../../../../Core/services/auth/auth.state';
   styleUrl: './farm-with-producer-form.component.css'
 })
 export class FarmWithProducerFormComponent {
-  private auth = inject(AuthState);
+  // private auth = inject(AuthState);
 
   onSaved(farm: FarmSelectModel) {
     console.log('Finca guardada', farm);
 
-    this.auth.loadMe().pipe(take(1)).subscribe();
+    // this.auth.loadMe().pipe(take(1)).subscribe();
   }
 }

@@ -2,6 +2,8 @@
 import { Injectable, inject } from '@angular/core';
 import {
   BehaviorSubject,
+  catchError,
+  firstValueFrom,
   Observable,
   of,
   shareReplay,
@@ -39,6 +41,24 @@ export class AuthState {
       switchMap(() => of(this._me$.value)),
       shareReplay(1)
     );
+  }
+
+  /** Forzar recarga desde el backend y re-cachear */
+  reloadMe(): Observable<UserMeDto | null> {
+    return this.authService.GetMe().pipe(
+      tap((me) => this.normalizeAndCache(me)),
+      catchError((_err) => {
+        // Opcional: si falla, no dejes “me” sucio
+        this.clear();
+        return of(null);
+      }),
+      shareReplay(1)
+    );
+  }
+
+  /** Versión async conveniente para await */
+  async reloadMeOnce(): Promise<UserMeDto | null> {
+    return await firstValueFrom(this.reloadMe());
   }
 
   private normalizeAndCache(me: UserMeDto) {

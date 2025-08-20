@@ -46,6 +46,7 @@ import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { take } from 'rxjs';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
+import { AuthState } from '../../../../../Core/services/auth/auth.state';
 
 @Component({
   selector: 'app-farm-form',
@@ -72,6 +73,7 @@ export class FarmFormComponent implements OnInit, OnDestroy {
   private farmSrv = inject(FarmService);
   private locationSrv = inject(LocationService);
   private zone = inject(NgZone);
+  private authState = inject(AuthState);
 
   /** Si es true usa createWithProducer (requiere descripción); si es false usa create */
   @Input() createWithProducer = false;
@@ -491,16 +493,29 @@ export class FarmFormComponent implements OnInit, OnDestroy {
           cityId: Number(u.cityId),
         };
         this.farmSrv.createWithProducer(dto).subscribe({
-          next: (resp) => {
-            Swal.fire({
+          next: async (resp) => {
+            // 1) Notifica éxito
+            await Swal.fire({
               icon: 'success',
               title: '¡Creado!',
               text: 'Productor y finca creados',
-            }).then(() => {
-              this.saved.emit(resp);
-              this.resetAfterSave();
-              this.router.navigateByUrl('/account/producer/management/farm');
+              confirmButtonText: 'Aceptar',
             });
+
+            try {
+              // 2) Fuerza recarga del me (roles/menú/permisos)
+              await this.authState.reloadMeOnce();
+            } catch {
+              // Si falla, no bloquees la UX
+              console.warn(
+                'No se pudo recargar el perfil (me) tras la creación.'
+              );
+            }
+
+            // 3) Finaliza flujo: emite, resetea y navega
+            this.saved.emit(resp);
+            this.resetAfterSave();
+            this.router.navigateByUrl('/account/producer/management/farm');
           },
           error: () => {
             Swal.fire({

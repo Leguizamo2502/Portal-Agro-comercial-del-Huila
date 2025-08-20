@@ -10,10 +10,12 @@
       </div>
     </div>
   </div> -->
-  <app-container-card-flex
-  [products]="products"
-  [showActions]="true"
-  (edit)="onEdit($event)"
-  (delete)="onDelete($event)">
-</app-container-card-flex>
+  <div class="top">
+    <app-container-card-flex [type]="'product'" [items]="products" [showActions]="true"
+      (editProduct)="onEdit($event)" (deleteProduct)="onDelete($event)">
+    </app-container-card-flex>
+  </div>
+  <div *ngIf="products.length === 0" class="empty">
+    No tienes productos todavía.
+  </div>
 </div>

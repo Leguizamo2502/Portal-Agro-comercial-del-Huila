@@ -7,12 +7,11 @@ import { ProductSelectModel } from '../../../../../shared/models/product/product
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
-import { CardComponent } from '../../../../../shared/components/cards/card/card.component';
 import { ContainerCardFlexComponent } from "../../../../../shared/components/cards/container-card-flex/container-card-flex.component";
 
 @Component({
   selector: 'app-product-list',
-  imports: [ButtonComponent, CardComponent, CommonModule, ContainerCardFlexComponent],
+  imports: [ButtonComponent, CommonModule, ContainerCardFlexComponent],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })
