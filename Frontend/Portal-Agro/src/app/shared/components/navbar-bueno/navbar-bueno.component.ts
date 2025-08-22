@@ -1,22 +1,27 @@
 import { Component, inject } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
 import { AuthService } from '../../../Core/services/auth/auth.service';
-import { SidebarService } from '../../services/sidebar/sidebar.service'; // Importar el servicio
+import { SidebarService } from '../../services/sidebar/sidebar.service';
 import Swal from 'sweetalert2';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-navbar-bueno',
-  imports: [RouterLink, MatIcon],
+  standalone: true,
+  imports: [RouterLink, MatIcon, CommonModule],
   templateUrl: './navbar-bueno.component.html',
-  styleUrl: './navbar-bueno.component.css',
+  styleUrls: ['./navbar-bueno.component.css']
 })
 export class NavbarBuenoComponent {
   authService = inject(AuthService);
   router = inject(Router);
-  sidebarService = inject(SidebarService); // Inyectar el servicio
+  sidebarService = inject(SidebarService);
 
-  // Método para manejar el clic de la hamburguesa
+  get isAccountRoute(): boolean {
+    return this.router.url.startsWith('/account');
+  }
+
   toggleSidebar() {
     this.sidebarService.toggle();
   }
@@ -31,7 +36,6 @@ export class NavbarBuenoComponent {
           timer: 2000,
           showConfirmButton: false,
         });
-
         this.router.navigate(['auth/login']);
       },
       error: (err) => {

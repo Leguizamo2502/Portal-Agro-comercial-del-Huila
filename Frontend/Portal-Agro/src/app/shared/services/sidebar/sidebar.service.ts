@@ -4,34 +4,56 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root'
 })
 export class SidebarService {
-  // Signal para controlar si está abierta o cerrada
-  // Por defecto true para desktop
-  private _isOpen = signal(true);
-isOpenMobile: any;
+  // Signal que representa el estado del sidebar
+  sidebarOpen = signal(false); // Cambiado: iniciar siempre cerrado
   
-  // Getter público para leer el estado
-  get isOpen() {
-    return this._isOpen.asReadonly();
+  // Signal para detectar si estamos en móvil
+  private isMobile = signal(false);
+
+  constructor() {
+    this.updateScreenSize();
   }
 
-  // Método para abrir la sidebar
-  open() {
-    this._isOpen.set(true);
+  /** Detectar si estamos en pantalla móvil */
+  private updateScreenSize() {
+    this.isMobile.set(window.innerWidth < 768);
   }
 
-  // Método para cerrar la sidebar
-  close() {
-    this._isOpen.set(false);
-  }
-
-  // Método para alternar el estado
-  toggle() {
-    this._isOpen.update(value => !value);
-  }
-
-  // Método para inicializar basado en el tamaño de pantalla
+  /** Inicializar estado según el tamaño de la pantalla */
   initializeBasedOnScreenSize() {
-    const isDesktop = window.innerWidth >= 992; // Bootstrap lg breakpoint
-    this._isOpen.set(isDesktop);
+    this.updateScreenSize();
+    
+    // Solo en desktop abrimos automáticamente
+    if (!this.isMobile()) {
+      this.sidebarOpen.set(true);
+    }
+    // En móvil mantenemos el estado actual (no forzamos cerrar)
+  }
+
+  /** Alternar manualmente el estado (botón hamburguesa) */
+  toggle() {
+    this.sidebarOpen.update(v => !v);
+  }
+
+  /** Forzar abrir */
+  openSidebar() {
+    this.sidebarOpen.set(true);
+  }
+
+  /** Forzar cerrar */
+  closeSidebar() {
+    this.sidebarOpen.set(false);
+  }
+
+  /** Cerrar sidebar solo si estamos en móvil */
+  closeOnMobile() {
+    if (this.isMobile()) {
+      this.closeSidebar();
+    }
+  }
+
+  /** Obtener estado de móvil */
+  getIsMobile() {
+    return this.isMobile();
   }
 }

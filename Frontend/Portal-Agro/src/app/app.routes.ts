@@ -6,12 +6,13 @@ import { NavbarVerticalComponent } from './shared/components/navbar-vertical/nav
 import { NavbarSinCategoriaComponent } from './shared/components/navbar-sin-categoria/navbar-sin-categoria.component';
 import { CarruselComponent } from './shared/components/carrusel/carrusel.component';
 
-import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
-import { OrderHistoryComponent } from './shared/components/order-history/order-history.component';
 import { ProductDetailComponent } from './shared/components/product-detail/product-detail.component';
 
 
 import { ForbiddenComponent } from './Core/page/forbidden/forbidden.component';
+import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
+import { NavbarBuenoComponent } from './shared/components/navbar-bueno/navbar-bueno.component';
+
 
 
 export const routes: Routes = [
@@ -47,15 +48,52 @@ export const routes: Routes = [
 
   
   { path: 'card', component: CardComponent },
-  { path: 'dashboard', component: DashboardComponent },
   { path: 'carrusel', component: CarruselComponent },
   { path: 'boton', component: ButtonComponent },
   { path: 'navbar', component: NavbarComponent },
   { path: 'navbar-vertical', component: NavbarVerticalComponent},
+  { path: 'navbar-bueno', component: NavbarBuenoComponent},
   { path: 'navbar-sin-categoria', component: NavbarSinCategoriaComponent},
   { path: 'carrusel', component: CarruselComponent},
-  { path: 'order-history', component: OrderHistoryComponent},
-  { path: 'dashboard', component: DashboardComponent},
   { path: 'product-detail', component:ProductDetailComponent},
+  { path: 'dashboard', component:DashboardComponent},
 
 ];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -43,10 +43,10 @@
         <div class="d-lg-none w-100">
             <!-- Primera fila mobile -->
             <div class="d-flex align-items-center mobile-top-row">
-                <button class="navbar-toggler" type="button" (click)="toggleSidebar()">
+                <button class="navbar-toggler" type="button" (click)="toggleSidebar()" *ngIf="isAccountRoute || router.url == '/account'">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                
+                    
                 <form class="search-form-mobile flex-grow-1 mx-3" role="search">
                     <input class="form-control search-input" type="search" placeholder="¿Qué buscas?" />
                     <button class="search-btn" type="submit">
