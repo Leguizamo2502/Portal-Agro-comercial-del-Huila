@@ -6,6 +6,7 @@ import { CarruselComponent } from './shared/components/carrusel/carrusel.compone
 import { ForbiddenComponent } from './Core/page/forbidden/forbidden.component';
 import { CardComponent } from './shared/components/cards/card/card.component';
 import { NavbarSinCategoriaComponent } from './shared/components/navs/navbar-sin-categoria/navbar-sin-categoria.component';
+import { ProducerProfileComponent } from './features/producer-profile/producer-profile.component';
 
 export const routes: Routes = [
 
@@ -45,4 +46,5 @@ export const routes: Routes = [
   { path: 'navbar', component: NavbarComponent },
   { path: 'navbar-vertical', component: NavbarVerticalComponent},
   { path: 'navbar-sin-categoria', component: NavbarSinCategoriaComponent},
+  { path: 'producer-profile', component: ProducerProfileComponent}
 ];
