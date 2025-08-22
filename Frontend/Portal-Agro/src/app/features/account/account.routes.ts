@@ -4,6 +4,7 @@ import { SummaryComponent } from '../producer/pages/summary/summary.component';
 import { AccountComponent } from './pages/account/account.component';
 import { roleMatchGuard } from '../../Core/guards/role-match/role-match.guard';
 import { FavoriteComponent } from './components/favorite/favorite.component';
+import { SupportComponent } from './components/support/support.component';
 
 export const ACCOUNT_ROUTES: Routes = [
   {
@@ -26,6 +27,14 @@ export const ACCOUNT_ROUTES: Routes = [
         canMatch: [roleMatchGuard],
         data: { roles: ['Consumer'] },
         component: FavoriteComponent,
+      },
+
+      {
+        path: 'support',
+        title: 'Soporte',
+        canMatch: [roleMatchGuard],
+        data: { roles: ['Consumer'] },
+        component: SupportComponent,
       },
 
       // --- PRODUCER ---

@@ -86,6 +86,13 @@ namespace Business.Services.AuthService
                 if (await _userData.ExistsByEmailAsync(dto.Email))
                     throw new Exception("Correo ya registrado");
 
+                //var validPassword = BusinessValidationHelper.IsValidPassword(dto.Password);
+                //if (!validPassword)
+                //{
+                //    throw new BusinessException("Contraseña no valida");
+                //}
+                    
+
                 // Mapear DTO a entidades
                 var person = _mapper.Map<Person>(dto);
                 var user = _mapper.Map<User>(dto);
