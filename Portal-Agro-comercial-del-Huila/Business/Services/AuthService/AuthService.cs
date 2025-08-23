@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Business.Interfaces.Implements.Auth;
+﻿using Business.Interfaces.Implements.Auth;
 using Custom.Encripter;
 using Data.Interfaces.Implements.Auth;
-using Data.Service;
 using Entity.Domain.Models.Implements.Auth;
-using Entity.Domain.Models.Implements.Security;
 using Entity.DTOs.Auth;
 using Entity.DTOs.Auth.User;
 using MapsterMapper;
 using Microsoft.Extensions.Logging;
 using Utilities.Exceptions;
 using Utilities.Helpers.Business;
-using Utilities.Messaging.Implements;
 using Utilities.Messaging.Interfaces;
 
 namespace Business.Services.AuthService
