@@ -9,11 +9,11 @@ import { ProductDetailComponent } from './shared/components/product-detail/produ
 
 import { ForbiddenComponent } from './Core/page/forbidden/forbidden.component';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
-import { NavbarBuenoComponent } from './shared/components/navbar-bueno/navbar-bueno.component';
 
 
 import { CardComponent } from './shared/components/cards/card/card.component';
 import { NavbarSinCategoriaComponent } from './shared/components/navs/navbar-sin-categoria/navbar-sin-categoria.component';
+import { NavbarBuenoComponent } from './shared/components/navs/navbar-bueno/navbar-bueno.component';
 
 export const routes: Routes = [
 

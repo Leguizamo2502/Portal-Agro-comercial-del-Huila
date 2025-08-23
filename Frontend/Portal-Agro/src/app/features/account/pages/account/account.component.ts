@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { NavbarVerticalComponent } from "../../../../shared/components/navs/navbar-vertical/navbar-vertical.component";
 import {  RouterOutlet } from '@angular/router';
 

@@ -3,7 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SidebarService } from '../../../services/sidebar/sidebar.service';
 import { DashboardComponent } from '../../dashboard/dashboard.component';
-import { NavbarBuenoComponent } from '../../navbar-bueno/navbar-bueno.component';
+import { NavbarBuenoComponent } from '../../navs/navbar-bueno/navbar-bueno.component';
 
 @Component({
   selector: 'app-main-layout',

@@ -56,7 +56,7 @@ export const ACCOUNT_ROUTES: Routes = [
             '../producer/pages/farm/farm-with-producer-form/farm-with-producer-form.component'
           ).then((m) => m.FarmWithProducerFormComponent),
       },
-      {
+      
       { path: '', redirectTo: 'info', pathMatch: 'full' },
       { path: 'info', component: InfoComponent },
       {
