@@ -4,7 +4,7 @@ import { InfoComponent } from './components/info/info.component';
 export const ACCOUNT_ROUTES: Routes = [
   {
     path: '',
-    // ❌ NO component: MainLayoutComponent aquí (ya está en el nivel superior)
+    //NO component: MainLayoutComponent aquí (ya está en el nivel superior)
     children: [
       { path: '', redirectTo: 'info', pathMatch: 'full' },
       { path: 'info', component: InfoComponent },

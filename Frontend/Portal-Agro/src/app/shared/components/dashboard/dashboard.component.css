@@ -1,17 +1,21 @@
+/* Barra lateral */
 .sidebar {
   background: #fff;
-  height: 100%; /* Cambio: de 100vh a 100% */
-  width: 250px;
+  height: 100%;
+  width: 300px; 
   border-right: 1px solid #ddd;
   transition: width 0.3s ease-in-out;
-  overflow: hidden; /* ✅ Sin scroll - sidebar fijo */
-  position: relative; /* Cambio: de fixed a relative */
+  position: relative;
   display: flex;
   flex-direction: column;
+  overflow-y: auto; 
 }
 
-.sidebar.hidden {
-  transform: translateX(-100%); /* ✅ Cambio: usar transform en lugar de width */
+/* Expandir barra lateral en escritorio */
+@media (min-width: 769px) {
+  .sidebar {
+    width: 300px; 
+  }
 }
 
 /* Perfil del usuario */
@@ -21,8 +25,8 @@
   padding: 20px 15px;
   border-bottom: 1px solid #eee;
   background: #f8f9fa;
-  min-height: 80px; /* Altura mínima para el perfil */
-  flex-shrink: 0; /* ✅ El perfil no se comprime */
+  min-height: 80px;
+  flex-shrink: 0;
 }
 
 .profile img {
@@ -70,14 +74,13 @@
   padding: 0;
   margin: 0;
   flex: 1;
-  overflow: hidden; /* ✅ Sin scroll en la navegación */
   display: flex;
   flex-direction: column;
 }
 
 .nav-item {
   margin: 0;
-  flex-shrink: 0; /* ✅ Evita que los elementos se compriman */
+  flex-shrink: 0;
 }
 
 .nav-link {
