@@ -13,6 +13,7 @@ import { DashboardComponent } from './shared/components/dashboard/dashboard.comp
 
 import { CardComponent } from './shared/components/cards/card/card.component';
 import { NavbarSinCategoriaComponent } from './shared/components/navs/navbar-sin-categoria/navbar-sin-categoria.component';
+import { ProducerProfileComponent } from './features/producer-profile/producer-profile.component';
 import { NavbarBuenoComponent } from './shared/components/navs/navbar-bueno/navbar-bueno.component';
 
 export const routes: Routes = [
@@ -54,6 +55,8 @@ export const routes: Routes = [
   { path: 'navbar-vertical', component: NavbarVerticalComponent},
   { path: 'navbar-bueno', component: NavbarBuenoComponent},
   { path: 'navbar-sin-categoria', component: NavbarSinCategoriaComponent},
+  { path: 'producer-profile', component: ProducerProfileComponent}
+];
   { path: 'carrusel', component: CarruselComponent},
   { path: 'product-detail', component:ProductDetailComponent},
   { path: 'dashboard', component:DashboardComponent},

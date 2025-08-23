@@ -1,0 +1,62 @@
+<div class="container my-5" *ngIf="producer as p">
+  <div class="card shadow-lg p-4 rounded-4">
+
+    <div class="row align-items-center text-center text-md-start">
+
+      <div class="row align-items-center">
+
+      <div class="col-md-6 mb-3 d-flex flex-column align-items-center">
+        <img
+          [src]="p.user.imageUrl || 'assets/default-user.jpg'"
+          class="rounded-circle shadow-sm mb-3 img-profile"
+          alt="Foto productor"
+          width="150" height="150">
+        <h4 class="fw-bold">{{ p.user.name }}</h4>
+        <p class="text-muted">{{ p.user.email }}</p>
+      </div>
+
+
+      <div class="col-md-6 d-flex justify-content-md-end justify-content-center">
+        <img [src]="p.qrUrl || 'assets/default-qr.png'" width="150" alt="QR" class="shadow-sm rounded">
+      </div>
+    </div>
+
+    <hr>
+
+    <section class="my-4">
+      <h5 class="fw-bold">Descripción</h5>
+      <p class="text-secondary">{{ p.description }}</p>
+    </section>
+
+    <section class="my-4">
+      <h5 class="fw-bold mb-3">Fincas</h5>
+      <div class="row g-3">
+        <div class="col-md-3" *ngFor="let farm of p.farms">
+          <div class="card farm-card shadow-sm border-0 h-100">
+            <img [src]="farm.imageUrl || 'assets/default-farm.jpg'" class="card-img-top" alt="Farm">
+            <div class="card-body text-center">
+              <h6 class="fw-semibold">{{ farm.name }}</h6>
+              <p class="small text-muted mb-0">{{ farm.location }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="my-4">
+      <h5 class="fw-bold mb-3">Productos</h5>
+      <div class="row g-3">
+        <div class="col-md-3" *ngFor="let product of p.products">
+          <div class="card product-card shadow-sm border-0 h-100">
+            <img [src]="product.imageUrl || 'assets/default-product.jpg'" class="card-img-top" alt="Producto">
+            <div class="card-body text-center">
+              <h6 class="fw-semibold">{{ product.name }}</h6>
+              <p class="small text-muted mb-0">{{ product.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
