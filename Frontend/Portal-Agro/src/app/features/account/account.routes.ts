@@ -1,4 +1,4 @@
-import { Routes, CanActivateFn } from '@angular/router';
+import { Routes } from '@angular/router';
 import { InfoComponent } from './components/info/info.component';
 import { SummaryComponent } from '../producer/pages/summary/summary.component';
 import { AccountComponent } from './pages/account/account.component';
@@ -9,7 +9,7 @@ import { SupportComponent } from './components/support/support.component';
 export const ACCOUNT_ROUTES: Routes = [
   {
     path: '',
-    component: AccountComponent,
+    //NO component: MainLayoutComponent aquí (ya está en el nivel superior)
     children: [
       // default
       {
@@ -57,13 +57,15 @@ export const ACCOUNT_ROUTES: Routes = [
           ).then((m) => m.FarmWithProducerFormComponent),
       },
       {
+      { path: '', redirectTo: 'info', pathMatch: 'full' },
+      { path: 'info', component: InfoComponent },
+      {
         path: 'producer',
         canMatch: [roleMatchGuard],
         data: { roles: ['Producer'] },
         loadChildren: () =>
           import('../producer/producer.routes').then((m) => m.PRODUCER_ROUTES),
       },
-
       {
         path: 'security',
         canMatch: [roleMatchGuard],
@@ -76,9 +78,7 @@ export const ACCOUNT_ROUTES: Routes = [
         canMatch: [roleMatchGuard],
         data: { roles: ['Admin'] },
         loadChildren: () =>
-          import('../parameters/parameters.routes').then(
-            (m) => m.PARAMETERS_ROUTES
-          ),
+          import('../parameters/parameters.routes').then((m) => m.PARAMETERS_ROUTES),
       },
     ],
   },

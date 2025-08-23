@@ -28,7 +28,7 @@ export class RolFormComponent {
 
   get model() {
     return this._model;
-  }
+  } 
   
   @Output()
   posteoForm = new EventEmitter<RolRegisterModel>()

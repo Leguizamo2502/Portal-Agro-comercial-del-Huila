@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NavbarBuenoComponent } from './navbar-bueno.component';
+import { ProductDetailComponent } from './product-detail.component';
 
-describe('NavbarBuenoComponent', () => {
-  let component: NavbarBuenoComponent;
-  let fixture: ComponentFixture<NavbarBuenoComponent>;
+describe('ProductDetailComponent', () => {
+  let component: ProductDetailComponent;
+  let fixture: ComponentFixture<ProductDetailComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NavbarBuenoComponent]
+      imports: [ProductDetailComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(NavbarBuenoComponent);
+    fixture = TestBed.createComponent(ProductDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

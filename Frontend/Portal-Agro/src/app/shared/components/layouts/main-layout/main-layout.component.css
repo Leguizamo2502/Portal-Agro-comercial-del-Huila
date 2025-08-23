@@ -1,0 +1,63 @@
+/* layout */
+.layout {
+  display: flex;
+  height: calc(100vh - 60px);  /* Ajustar según altura del navbar */
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+}
+
+/* Sidebar siempre visible */
+aside {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  height: calc(100vh - 60px);
+  width: 250px;
+  background: white;
+  border-right: 1px solid #ddd;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+/* Contenido principal */
+.content {
+  flex: 1;
+  height: calc(100vh - 60px);
+  overflow-y: auto;
+  padding: 20px;
+  background: #f8fafc;
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .layout {
+    position: relative;
+  }
+
+  aside {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: 1000;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    transform: translateX(-100%);
+    /* Sidebar oculto en móvil por defecto */
+    transition: transform 0.3s ease;
+  }
+
+  aside:not(.hidden) {
+    transform: translateX(0);
+    /* Sidebar visible en móvil */
+  }
+
+  .content {
+    padding: 16px;
+    width: 100%;
+    margin-left: 0;
+    /* Eliminar espacio en móvil */
+  }
+}
