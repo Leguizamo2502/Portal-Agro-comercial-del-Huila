@@ -1,63 +1,75 @@
 /* layout */
 .layout {
   display: flex;
-  height: calc(100vh - 60px);  /* Ajustar según altura del navbar */
+  height: calc(100vh - 60px);
   position: relative;
   overflow: hidden;
   margin: 0;
 }
 
-/* Sidebar siempre visible */
+/* Sidebar */
 aside {
   position: fixed;
   top: 60px;
   left: 0;
   height: calc(100vh - 60px);
   width: 250px;
-  background: white;
+  background: #fff;
   border-right: 1px solid #ddd;
   z-index: 1000;
   overflow: hidden;
 }
 
-/* Contenido principal */
+/* Oculto por clase */
+aside.hidden {
+  display: none;
+}
+
+/* Contenido principal: por defecto SIN margen */
 .content {
   flex: 1;
   height: calc(100vh - 60px);
   overflow-y: auto;
   padding: 20px;
   background: #f8fafc;
-  margin-left: 250px;
+  margin-left: 0;
   transition: margin-left 0.3s ease;
 }
 
-/* Responsivo */
-@media (max-width: 768px) {
-  .layout {
-    position: relative;
-  }
+/* Cuando el sidebar está activo en desktop, aplica margen */
+.content.with-sidebar {
+  margin-left: 250px;
+}
 
+/* Responsivo (móvil) */
+@media (max-width: 768px) {
   aside {
     position: absolute;
-    top: 0;
+    top: 0;            /* dentro del contenedor .layout */
     left: 0;
     height: 100%;
     z-index: 1000;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 2px 0 10px rgba(0,0,0,0.2);
     transform: translateX(-100%);
-    /* Sidebar oculto en móvil por defecto */
     transition: transform 0.3s ease;
   }
 
-  aside:not(.hidden) {
+  /* Marcar explícitamente el modo móvil (clase mobile) */
+  aside.mobile:not(.hidden) {
     transform: translateX(0);
-    /* Sidebar visible en móvil */
   }
 
   .content {
     padding: 16px;
     width: 100%;
-    margin-left: 0;
-    /* Eliminar espacio en móvil */
+    margin-left: 0; /* nunca reservas espacio en móvil */
   }
+}
+
+/* Backdrop */
+.sidebar-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 900;
 }

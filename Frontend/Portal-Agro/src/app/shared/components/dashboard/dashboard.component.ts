@@ -58,7 +58,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     // Navegar dentro de la ruta de cuenta
     this.router.navigate(['/account/' + path]);
     this.activePath = path;
-    console.log("Navegando a:", '/account/' + path);
+    // console.log("Navegando a:", '/account/' + path);
     
     // Cerrar la barra lateral en móvil después de navegar
     this.sidebarService.closeOnMobile();
