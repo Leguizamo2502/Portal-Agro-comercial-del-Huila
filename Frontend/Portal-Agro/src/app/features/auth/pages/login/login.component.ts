@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -34,7 +34,10 @@ import { finalize, switchMap, take } from 'rxjs/operators';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
+  ngOnInit(): void {
+    console.log("holalogin")
+  }
   public fb = inject(FormBuilder);
   private _servicio = inject(AuthService);
   private _router = inject(Router);
