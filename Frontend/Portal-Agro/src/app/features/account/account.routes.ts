@@ -1,7 +1,5 @@
 import { Routes } from '@angular/router';
 import { InfoComponent } from './components/info/info.component';
-import { SummaryComponent } from '../producer/pages/summary/summary.component';
-import { AccountComponent } from './pages/account/account.component';
 import { roleMatchGuard } from '../../Core/guards/role-match/role-match.guard';
 import { FavoriteComponent } from './components/favorite/favorite.component';
 import { SupportComponent } from './components/support/support.component';
@@ -9,9 +7,7 @@ import { SupportComponent } from './components/support/support.component';
 export const ACCOUNT_ROUTES: Routes = [
   {
     path: '',
-    //NO component: MainLayoutComponent aquí (ya está en el nivel superior)
     children: [
-      // default
       {
         path: '',
         redirectTo: 'info',
@@ -57,8 +53,6 @@ export const ACCOUNT_ROUTES: Routes = [
           ).then((m) => m.FarmWithProducerFormComponent),
       },
       
-      { path: '', redirectTo: 'info', pathMatch: 'full' },
-      { path: 'info', component: InfoComponent },
       {
         path: 'producer',
         canMatch: [roleMatchGuard],

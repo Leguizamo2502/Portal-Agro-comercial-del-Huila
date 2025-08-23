@@ -1,24 +1,26 @@
 <!-- Navbar superior -->
 <app-navbar-bueno (toggleSidebar)="toggleSidebar()"></app-navbar-bueno>
 
-<div class="layout">
-  <!-- Backdrop para móvil -->
-  <div 
-    *ngIf="sidebarService.sidebarOpen() && sidebarService.getIsMobile()" 
+<div class="layout" [class.with-sidebar]="showSidebarOnDesktop">
+  <!-- Backdrop para móvil (solo en /account) -->
+  <div
+    *ngIf="isAccountRoute && sidebarService.sidebarOpen() && sidebarService.getIsMobile()"
     class="sidebar-backdrop"
     (click)="onBackdropClick()">
   </div>
 
-  <!-- Contenedor sidebar - SIEMPRE presente -->
-  <aside 
-    [class.hidden]="!sidebarService.sidebarOpen()">
+  <!-- Contenedor sidebar - solo en /account -->
+  <aside
+    *ngIf="isAccountRoute"
+    [class.hidden]="!sidebarService.sidebarOpen()"
+    [class.mobile]="sidebarService.getIsMobile()">
     <app-dashboard></app-dashboard>
   </aside>
 
   <!-- Contenido dinámico -->
-  <main 
+  <main
     class="content"
-    [class.sidebar-hidden]="!sidebarService.sidebarOpen()">
+    [class.with-sidebar]="showSidebarOnDesktop">
     <router-outlet></router-outlet>
   </main>
 </div>

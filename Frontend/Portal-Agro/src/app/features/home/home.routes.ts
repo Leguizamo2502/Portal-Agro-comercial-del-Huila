@@ -5,5 +5,4 @@ export const HOME_ROUTES: Routes=[
     {path:'',redirectTo:'inicio',pathMatch:'full'},
     
     {path:'inicio', component: HomeComponent},
-    // {path: 'register', component: RegisterComponent}
 ];
