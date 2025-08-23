@@ -55,9 +55,8 @@ export const routes: Routes = [
   { path: 'navbar-vertical', component: NavbarVerticalComponent},
   { path: 'navbar-bueno', component: NavbarBuenoComponent},
   { path: 'navbar-sin-categoria', component: NavbarSinCategoriaComponent},
-  { path: 'producer-profile', component: ProducerProfileComponent}
-];
-  { path: 'carrusel', component: CarruselComponent},
+  { path: 'producer-profile', component: ProducerProfileComponent},
+
   { path: 'product-detail', component:ProductDetailComponent},
   { path: 'dashboard', component:DashboardComponent},
 
