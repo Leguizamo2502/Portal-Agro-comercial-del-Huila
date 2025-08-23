@@ -1,66 +1,76 @@
-<nav class="navbar navbar-expand-lg custom-navbar sticky-top">
+<nav class="navbar custom-navbar sticky-top">
     <div class="container-fluid">
-        <img src="logos/logo.png" alt="" class="logo">
-        <a class="navbar-brand color-title" routerLink="/home/inicio">ㅤㅤPortal Agro-comercial del Huila</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <form class="d-flex" role="search">
-                <input class="form-control me-" type="search" placeholder="Buscar" aria-label="Buscar" />
-                <!-- <button class="btn btn-outline-light" type="submit">Buscar</button> -->
+        <!-- Desktop Layout -->
+        <div class="d-none d-lg-flex w-100 align-items-center">
+            <!-- Logo y título -->
+            <div class="navbar-brand-section">
+                <img src="logos/logo.png" alt="" class="logo">
+                <a class="navbar-brand color-title ms-2" routerLink="/home/inicio">Portal Agro-comercial del Huila</a>
+            </div>
+
+            <!-- Búsqueda centrada -->
+            <form class="search-form mx-auto" role="search">
+                <input class="form-control search-input" type="search" placeholder="Buscar" />
+                <button class="search-btn" type="submit">
+                    <mat-icon>search</mat-icon>
+                </button>
             </form>
 
+            <!-- Iconos derecha -->
+            <div class="desktop-icons">
+                <a class="nav-link custom-text" routerLink="/home/inicio">Inicio</a>
+                <a class="nav-link custom-text" routerLink="/home/productos">Productos</a>
+                <a class="nav-link custom-text" routerLink="/home/inicio">
+                    <mat-icon>notifications</mat-icon>
+                </a>
+                <a class="nav-link custom-text" routerLink="/home/inicio">
+                    <mat-icon>shopping_cart</mat-icon>
+                </a>
+                <div class="dropdown">
+                    <a class="nav-link custom-text dropdown-toggle" role="button" data-bs-toggle="dropdown">
+                        <mat-icon>account_circle</mat-icon>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" routerLink="/account">Mi Cuenta</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" (click)="logOut()">Cerrar Sesión</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
-            <!-- 🔽 Este div empuja el formulario a la derecha -->
-            <div class="ms-auto">
-                <ul class="navbar-nav mb-2 mb-lg-0">
-
-                    <li class="nav-item">
-                        <a class="nav-link custom-text active" routerLink="/home/inicio">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link custom-text active" routerLink="/home/inicio">Productos</a>
-                    </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link custom-text" href="#"></a>
-                    </li> -->
-                    <li class="nav-item">
-                        <a class="nav-link custom-text active" routerLink="/home/inicio"><mat-icon>notifications</mat-icon></a>
-                        
-                    </li>
-
-                    <li class="nav-item">
-                        <!-- <a class="nav-link custom-text active" routerLink="/home/inicio"><mat-icon>notifications</mat-icon></a> -->
-                        <a class="nav-link custom-text active" routerLink="/home/inicio"><mat-icon>shopping_cart</mat-icon></a>  
-                    </li>
-
-                    <!-- <li class="nav-item">
-                        <a class="nav-link custom-text active" routerLink="/account"><mat-icon>account_circle</mat-icon></a>  
-                    </li> -->
-                    <!-- <li class="nav-item">
-                        <a class="nav-link custom-text" href="#"></a>
-                    </li> -->
+        <!-- Mobile Layout -->
+        <div class="d-lg-none w-100">
+            <!-- Primera fila mobile -->
+            <div class="d-flex align-items-center mobile-top-row">
+                <button class="navbar-toggler" type="button" (click)="toggleSidebar()" *ngIf="isAccountRoute || router.url == '/account'">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
                     
-                    <li class="nav-item dropdown">
-                        <a class="nav-link custom-text" role="button"
-                            data-bs-toggle="dropdown">
-                            <mat-icon>account_circle</mat-icon>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item btn" routerLink="account">Mi Cuenta</a></li>
-                            <!-- <li><a class="dropdown-item" href="#">Another action</a></li> -->
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item btn" (click)="logOut()">Cerrar Sesión</a></li>
-                        </ul>
-                    </li>
-                    <!-- <li class="nav-item">
-                    <a class="nav-link custom-text disabled" aria-disabled="true">Disabled</a>
-                </li> -->
-                </ul>
+                <form class="search-form-mobile flex-grow-1 mx-3" role="search">
+                    <input class="form-control search-input" type="search" placeholder="¿Qué buscas?" />
+                    <button class="search-btn" type="submit">
+                        <mat-icon>search</mat-icon>
+                    </button>
+                </form>
+
+                <div class="mobile-icons">
+                    <a class="custom-text" routerLink="/home/inicio">
+                        <mat-icon>notifications</mat-icon>
+                    </a>
+                    <a class="custom-text" routerLink="/account">
+                        <mat-icon>account_circle</mat-icon>
+                    </a>
+                    <a class="custom-text" routerLink="/home/inicio">
+                        <mat-icon>shopping_cart</mat-icon>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Segunda fila mobile: botones de navegación -->
+            <div class="mobile-nav-buttons">
+                <a class="mobile-nav-btn" routerLink="/home/inicio">Inicio</a>
+                <a class="mobile-nav-btn" routerLink="/home/productos">Productos</a>
             </div>
         </div>
     </div>

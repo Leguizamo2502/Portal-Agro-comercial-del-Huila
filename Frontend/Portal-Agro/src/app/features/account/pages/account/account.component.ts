@@ -4,10 +4,9 @@ import {  RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-account',
-  imports: [NavbarVerticalComponent, RouterOutlet],
+  standalone: true,
+  imports: [RouterOutlet],
   templateUrl: './account.component.html',
-  styleUrl: './account.component.css'
+  styleUrls: ['./account.component.css']
 })
-export class AccountComponent {
-
-}
+export class AccountComponent {}

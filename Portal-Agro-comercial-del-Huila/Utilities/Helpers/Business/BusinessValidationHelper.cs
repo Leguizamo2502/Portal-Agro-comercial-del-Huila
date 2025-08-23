@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Entity.Domain.Models.Base;
 
@@ -19,6 +20,15 @@ namespace Utilities.Helpers.Business
         {
             if (obj == null)
                 throw new InvalidOperationException(message);
+        }
+
+        public static bool IsValidPassword(string password)
+        {
+            if (string.IsNullOrWhiteSpace(password)) return false;
+
+            // Al menos 6 caracteres y una mayúscula
+            var regex = new Regex(@"^(?=.*[A-Z]).{6,}$");
+            return regex.IsMatch(password);
         }
 
         /// <summary>

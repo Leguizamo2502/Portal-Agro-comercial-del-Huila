@@ -2,11 +2,13 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthState } from './Core/services/auth/auth.state';
+import { MainLayoutComponent } from "./shared/components/layouts/main-layout/main-layout.component";
+
 import { NavbarBuenoComponent } from './shared/components/navs/navbar-bueno/navbar-bueno.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule, NavbarBuenoComponent],
+  imports: [RouterOutlet, CommonModule, MainLayoutComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

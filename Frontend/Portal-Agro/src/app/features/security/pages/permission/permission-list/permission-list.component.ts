@@ -8,7 +8,7 @@ import { ButtonComponent } from "../../../../../shared/components/button/button.
 
 @Component({
   selector: 'app-permission-list',
-  imports: [TableComponent,CommonModule,ButtonComponent],
+  imports: [TableComponent, CommonModule, ButtonComponent],
   templateUrl: './permission-list.component.html',
   styleUrl: './permission-list.component.css',
 })

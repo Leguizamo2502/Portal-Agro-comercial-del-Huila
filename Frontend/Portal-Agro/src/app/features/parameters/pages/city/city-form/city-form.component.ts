@@ -3,8 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from "@angular/material/input";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from '@angular/material/button';
-import { RouterLink } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { NgIf, NgFor, CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CityRegisterModel, CitySelectModel } from '../../../models/city/city.model';
 import { DepartmentSelectModel } from '../../../models/department/department.model';
@@ -13,16 +12,19 @@ import { ButtonComponent } from "../../../../../shared/components/button/button.
 
 @Component({
   selector: 'app-city-form',
+  standalone: true,
   imports: [
     MatFormFieldModule, ReactiveFormsModule, MatInputModule, MatButtonModule,
+    MatIconModule, MatSelectModule,
+    NgIf, NgFor,
    MatIconModule, CommonModule, MatSelectModule,
     ButtonComponent
-],
+  ],
   templateUrl: './city-form.component.html',
-  styleUrl: './city-form.component.css'
+  styleUrls: ['./city-form.component.css']
 })
 export class CityFormComponent implements OnInit {
-  formBuilder = inject(FormBuilder);
+  private formBuilder = inject(FormBuilder);
   
   @Input({ required: true }) title!: string;
 
@@ -46,7 +48,7 @@ export class CityFormComponent implements OnInit {
   
   form = this.formBuilder.group({
     name: ['', Validators.required],
-    departmentId: [null, Validators.required], // antes era nameDpto
+    departmentId: [null, Validators.required],
   });
   
   ngOnInit(): void {
@@ -54,6 +56,7 @@ export class CityFormComponent implements OnInit {
       this.form.patchValue(this.model);
     }
   }
+
   save() {
     const form = this.form.value as CityRegisterModel;
     this.posteoForm.emit(form);

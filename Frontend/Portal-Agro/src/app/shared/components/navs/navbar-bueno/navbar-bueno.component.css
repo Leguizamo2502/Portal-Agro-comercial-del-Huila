@@ -1,11 +1,12 @@
+/* Barra de navegación personalizada */
 .custom-navbar {
-  background-color: #2e7d32; /* color personalizado */
+  background-color: #2e7d32;
   position: sticky;
   top: 0;
   z-index: 1020;
-  /* color: white; */
 }
 
+/* Estilo para texto blanco */
 .custom-text {
   color: #ffffff !important;
 }
@@ -13,14 +14,142 @@
 .custom-text:hover {
   color: #1cc736 !important;
 }
-.color-title{
+
+/* Estilo para el título en la barra */
+.color-title {
   color: #ffffff !important;
-
 }
 
-
-.logo{
-    height: 5vh;
-    width: auto;
+/* Logo */
+.logo {
+  height: 5vh;
+  width: auto;
 }
 
+/* Estilos de la sección de la marca (logo y título) en escritorio */
+.navbar-brand-section {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.navbar-brand {
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Estilos del formulario de búsqueda (escritorio) */
+.search-form {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Estilo del formulario de búsqueda (móvil) */
+.search-form-mobile {
+  position: relative;
+}
+
+/* Input de búsqueda */
+.search-input {
+  border-radius: 25px;
+  padding: 8px 45px 8px 15px;
+  border: 1px solid #ddd;
+  width: 100%;
+  background-color: white;
+}
+
+/* Botón de búsqueda */
+.search-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  color: #666;
+  padding: 4px;
+  border-radius: 50%;
+}
+
+/* Estilos de los iconos (escritorio) */
+.desktop-icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 0 0 auto;
+}
+
+.desktop-icons .nav-link {
+  color: #ffffff !important;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.desktop-icons .nav-link:hover {
+  color: #1cc736 !important;
+}
+
+/* Estilos para la barra de navegación en móvil */
+.mobile-top-row {
+  padding: 10px 15px;
+}
+
+/* Estilo del ícono del botón de menú móvil */
+.navbar-toggler {
+  border: none;
+  padding: 4px 8px;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='m4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Estilos de los iconos en móvil */
+.mobile-icons {
+  display: flex;
+  gap: 8px;
+}
+
+.mobile-icons a {
+  padding: 6px;
+  border-radius: 4px;
+}
+
+/* Botones de navegación en móvil */
+.mobile-nav-buttons {
+  display: flex;
+  background-color: rgba(255,255,255,0.1);
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.mobile-nav-btn {
+  flex: 1;
+  text-align: center;
+  padding: 12px 15px;
+  color: #ffffff !important;
+  text-decoration: none;
+  font-weight: 500;
+  border-right: 1px solid rgba(255,255,255,0.1);
+  transition: all 0.3s ease;
+}
+
+.mobile-nav-btn:last-child {
+  border-right: none;
+}
+
+.mobile-nav-btn:hover {
+  color: #1cc736 !important;
+  background-color: rgba(255,255,255,0.05);
+}
+
+/* Ajustes responsive para pantallas pequeñas */
+@media (max-width: 991px) {
+  .custom-navbar .container-fluid {
+    padding: 0;
+  }
+}

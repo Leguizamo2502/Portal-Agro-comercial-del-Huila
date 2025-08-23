@@ -1,0 +1,24 @@
+<!-- Navbar superior -->
+<app-navbar-bueno (toggleSidebar)="toggleSidebar()"></app-navbar-bueno>
+
+<div class="layout">
+  <!-- Backdrop para móvil -->
+  <div 
+    *ngIf="sidebarService.sidebarOpen() && sidebarService.getIsMobile()" 
+    class="sidebar-backdrop"
+    (click)="onBackdropClick()">
+  </div>
+
+  <!-- Contenedor sidebar - SIEMPRE presente -->
+  <aside 
+    [class.hidden]="!sidebarService.sidebarOpen()">
+    <app-dashboard></app-dashboard>
+  </aside>
+
+  <!-- Contenido dinámico -->
+  <main 
+    class="content"
+    [class.sidebar-hidden]="!sidebarService.sidebarOpen()">
+    <router-outlet></router-outlet>
+  </main>
+</div>

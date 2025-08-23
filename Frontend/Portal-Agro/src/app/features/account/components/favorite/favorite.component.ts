@@ -2,12 +2,12 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ProductService } from '../../../../shared/services/product/product.service';
 import { ProductSelectModel } from '../../../../shared/models/product/product.model';
 import { FavoriteService } from '../../../../shared/services/favorite/favorite.service';
-import { ContainerCardFlexComponent } from "../../../../shared/components/cards/container-card-flex/container-card-flex.component";
 import { CommonModule } from '@angular/common';
+import { ContainerCardFlexComponent } from "../../../../shared/components/cards/container-card-flex/container-card-flex.component";
 
 @Component({
   selector: 'app-favorite',
-  imports: [ContainerCardFlexComponent,CommonModule],
+  imports: [CommonModule, ContainerCardFlexComponent],
   templateUrl: './favorite.component.html',
   styleUrl: './favorite.component.css',
 })

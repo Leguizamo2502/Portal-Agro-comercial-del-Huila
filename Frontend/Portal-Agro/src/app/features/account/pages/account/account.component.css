@@ -1,35 +1,23 @@
 /* account.component.css */
 
-/* 1. Grid de dos columnas: sidebar + contenido */
+/* Grid de dos columnas: sidebar + contenido */
 .layout-container {
   display: grid;
-  grid-template-columns: minmax(200px, 1fr) 3fr;
+  grid-template-columns: 250px 1fr; /* El sidebar es de 250px y el contenido ocupa el resto */
   grid-template-rows: auto 1fr;
   height: 100vh;
+  gap: 0; /* Eliminar espacio entre el sidebar y el contenido */
 }
 
-/* 2. Sidebar se vuelve sticky en lugar de fixed */
-/* .sidebar-fixed {
-  grid-column: 1;
-  grid-row: 1 / span 2;
-  position: sticky;
-  top: 80px;             
-  align-self: start;
-  background-color: white;
-  overflow-y: auto;
-  border-right: 1px solid #ddd;
-  padding: 1rem;
-} */
-
-/* 3. Contenido principal ocupa la 2ª columna */
+/* Contenido principal */
 .contenido-principal {
   grid-column: 2;
   grid-row: 2;
-  overflow: auto;
+  overflow: hidden; /* Evitar scroll */
   padding: 2rem;
 }
 
-/* 4. Caja blanca interior */
+/* Caja blanca interior */
 .contenido {
   background-color: white;
   padding: 2rem;
@@ -37,19 +25,13 @@
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
   min-height: 400px;
   max-height: 80vh;
-  overflow: auto;
+  overflow: hidden; /* Evitar scroll */
 }
+
 @media (max-width: 768px) {
   .layout-container {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* En móvil, el sidebar ocupa toda la fila */
     grid-template-rows: auto auto 1fr;
-  }
-  .sidebar-fixed {
-    grid-column: 1;
-    grid-row: 2;  /* justo debajo del header */
-    top: 0;
-    border-right: none;
-    border-bottom: 1px solid #ddd;
   }
   .contenido-principal {
     grid-column: 1;

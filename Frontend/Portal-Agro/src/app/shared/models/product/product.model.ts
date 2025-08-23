@@ -16,6 +16,12 @@ export interface ProductSelectModel {
   cityName: string;
   departmentName: string;
   isFavorite: boolean;
+  // 👇 Opcionales (solo mockup en frontend)
+  orders?: number;
+  categories?: string[];
+  moreInfo?: string;
+  location?: string;
+  reviews?: ReviewModel[];
 }
 
 export interface ProductImageSelectModel {
@@ -56,4 +62,11 @@ export interface ProductUpdateModel {
 
 export interface FavoriteCreateRequest{
   productId:number
+}
+
+export interface ReviewModel {
+  user: string;
+  avatar: string;
+  date: Date;
+  comment: string;
 }
