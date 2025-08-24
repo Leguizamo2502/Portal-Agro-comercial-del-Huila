@@ -37,7 +37,7 @@ export class NavbarVerticalComponent  implements OnInit{
   navigateTo(path: string) {
     this.router.navigate([path], { relativeTo: this.route });
     this.activePath = path;
-    console.log("Hola")
+    // console.log("Hola")
   }
 
   

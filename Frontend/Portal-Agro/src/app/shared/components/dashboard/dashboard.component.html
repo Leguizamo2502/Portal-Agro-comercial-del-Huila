@@ -1,52 +1,52 @@
 <div class="sidebar" [class.hidden]="!isOpen">
   <!-- Perfil -->
   <div class="profile">
-    <img src="assets/profile.jpg" alt="Perfil">
+    <!-- <img src="assets/profile.jpg" alt="Perfil"> -->
     <div class="profile-info" [class.hide-text]="!isOpen">
-      <h5>{{ user.name }}</h5>
-      <small>{{ user.email }}</small>
+      <h5>{{ user?.fullName }}</h5>
+      <small>{{ user?.email }}</small>
     </div>
   </div>
 
   <!-- Menú -->
   <ul class="nav flex-column">
     <li class="nav-item">
-      <a href="#" class="nav-link" (click)="navigateTo('info')" [class.active]="activePath === 'info'">
+      <a class="nav-link" (click)="navigateTo('info')" [class.active]="activePath === 'info'">
         <i class="bi bi-person-fill"></i>
         <span class="link-text" [class.hide-text]="!isOpen">Mi Información</span>
       </a>
     </li>
 
     <li class="nav-item">
-      <a href="#" class="nav-link" (click)="navigateTo('favoritos')" [class.active]="activePath === 'favoritos'">
+      <a class="nav-link" (click)="navigateTo('favorite')" [class.active]="activePath === 'favorite'">
         <i class="bi bi-heart-fill"></i>
         <span class="link-text" [class.hide-text]="!isOpen">Favoritos</span>
       </a>
     </li>
 
     <li class="nav-item">
-      <a href="#" class="nav-link" (click)="navigateTo('pedidos')" [class.active]="activePath === 'pedidos'">
+      <a class="nav-link" (click)="navigateTo('pedidos')" [class.active]="activePath === 'pedidos'">
         <i class="bi bi-bag-fill"></i>
         <span class="link-text" [class.hide-text]="!isOpen">Pedidos</span>
       </a>
     </li>
 
     <li class="nav-item">
-      <a href="#" class="nav-link" (click)="navigateTo('productor')" [class.active]="activePath === 'productor'">
+      <a class="nav-link" (click)="navigateTo('producer')" [class.active]="activePath === 'producer'">
         <i class="bi bi-person-workspace"></i>
         <span class="link-text" [class.hide-text]="!isOpen">Productor</span>
       </a>
     </li>
 
     <li class="nav-item">
-      <a href="#" class="nav-link" (click)="navigateTo('soporte')" [class.active]="activePath === 'soporte'">
+      <a class="nav-link" (click)="navigateTo('support')" [class.active]="activePath === 'support'">
         <i class="bi bi-question-circle-fill"></i>
         <span class="link-text" [class.hide-text]="!isOpen">Soporte</span>
       </a>
     </li>
 
     <!-- Submenús -->
-    <li class="nav-item">
+    <li class="nav-item" *appHasRole="['admin']">
       <div class="nav-link submenu-toggle" (click)="toggleSubmenu('security')">
         <i class="bi bi-shield-lock-fill"></i>
         <span class="link-text" [class.hide-text]="!isOpen">Seguridad</span>
@@ -55,25 +55,25 @@
         </i>
       </div>
       <ul class="submenu" *ngIf="openSubmenus['security'] && isOpen">
-        <li><a href="#" (click)="navigateTo('security/user')" [class.active]="activePath === 'security/user'">Usuarios</a></li>
-        <li><a href="#" (click)="navigateTo('security/permission')" [class.active]="activePath === 'security/permission'">Permisos</a></li>
-        <li><a href="#" (click)="navigateTo('security/form')" [class.active]="activePath === 'security/form'">Formularios</a></li>
-        <li><a href="#" (click)="navigateTo('security/module')" [class.active]="activePath === 'security/module'">Módulos</a></li>
+        <li><a (click)="navigateTo('security/user')" [class.active]="activePath === 'security/user'">Usuarios</a></li>
+        <li><a (click)="navigateTo('security/permission')" [class.active]="activePath === 'security/permission'">Permisos</a></li>
+        <li><a (click)="navigateTo('security/form')" [class.active]="activePath === 'security/form'">Formularios</a></li>
+        <li><a (click)="navigateTo('security/module')" [class.active]="activePath === 'security/module'">Módulos</a></li>
       </ul>
     </li>
 
-    <li class="nav-item">
+    <li class="nav-item" *appHasRole="['admin']">
       <div class="nav-link submenu-toggle" (click)="toggleSubmenu('parameters')">
         <i class="bi bi-sliders2"></i>
-        <span class="link-text" [class.hide-text]="!isOpen">Parámetros</span>
+        <span class="link-text" [class.hide-text]="!isOpen" >Parámetros</span>
         <i class="bi" [class.hide-text]="!isOpen"
           [ngClass]="{'bi-chevron-down': openSubmenus['parameters'], 'bi-chevron-right': !openSubmenus['parameters']}">
         </i>
       </div>
       <ul class="submenu" *ngIf="openSubmenus['parameters'] && isOpen">
-        <li><a href="#" (click)="navigateTo('parameters/category')" [class.active]="activePath === 'parameters/category'">Categorías</a></li>
-        <li><a href="#" (click)="navigateTo('parameters/department')" [class.active]="activePath === 'parameters/department'">Departamento</a></li>
-        <li><a href="#" (click)="navigateTo('parameters/city')" [class.active]="activePath === 'parameters/city'">Ciudad</a></li>
+        <li><a (click)="navigateTo('parameters/category')" [class.active]="activePath === 'parameters/category'">Categorías</a></li>
+        <li><a (click)="navigateTo('parameters/department')" [class.active]="activePath === 'parameters/department'">Departamento</a></li>
+        <li><a (click)="navigateTo('parameters/city')" [class.active]="activePath === 'parameters/city'">Ciudad</a></li>
       </ul>
     </li>
   </ul>
