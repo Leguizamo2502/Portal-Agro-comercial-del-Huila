@@ -16,6 +16,7 @@ import { CarruselComponent } from './shared/components/carrusel/carrusel.compone
 import { CardComponent } from './shared/components/cards/card/card.component';
 import { ProductDetailComponent } from './shared/components/product-detail/product-detail.component';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
+import { NotFoundComponent } from './Core/page/not-found/not-found.component';
 
 export const routes: Routes = [
   // Redirección inicial
@@ -27,7 +28,6 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },
-  { path: 'forbidden', component: ForbiddenComponent },
 
   // ===== RUTAS CON LAYOUT =====
   {
@@ -48,6 +48,7 @@ export const routes: Routes = [
           ),
       },
       { path: 'forbidden', component: ForbiddenComponent },
+      {path:'notFound',component:NotFoundComponent},
 
       // Demos / componentes sueltos (si quieres que usen el layout)
       { path: 'dashboard', component: DashboardComponent },
@@ -63,5 +64,5 @@ export const routes: Routes = [
   },
 
   // 404 (ajusta según tu app)
-  { path: '**', redirectTo: 'forbidden' },
+  { path: '**', redirectTo: 'notFound' },
 ];
