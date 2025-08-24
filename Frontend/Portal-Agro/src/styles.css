@@ -115,9 +115,144 @@ cosas
 estilos
 */
 
-.info-title {
-  margin-bottom: 20px;
+.info-container {
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto; /* Centrar el contenedor */
+}
+
+/* .title { */
+  /* margin-bottom: 24px;
   color: #1e4620;
-  font-size: 22px;
-  font-weight: bold;
+  font-size: 24px;
+  font-weight: 600;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 8px;
+}
+
+.subtitle {
+  margin-top: 8px;
+  margin-bottom: 16px;
+  color: #374151;    
+  font-size: 18px;       
+  font-weight: 500;      
+} */
+
+
+
+.info-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 16px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #4caf50;
+}
+
+.info-item span {
+  flex: 1;
+}
+
+.icon {
+  background-color: #4caf50;
+  color: white;
+  padding: 12px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin-right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.actions-section {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .info-container {
+    padding: 16px;
+    margin: 16px;
+    max-width: calc(100% - 32px);
+  }
+  
+  /* .title {
+    font-size: 20px;
+  } */
+  
+  .info-item {
+    font-size: 14px;
+    padding: 8px;
+  }
+  
+  .icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 12px;
+  }
+}
+
+
+/* ---------- Title ---------- */
+.title {
+  margin-bottom: 24px;
+  color: #1e4620;             /* verde oscuro */
+  font-size: 24px;
+  font-weight: 600;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 8px;
+}
+
+/* ---------- Subtitle ---------- */
+.subtitle {
+  margin-top: 8px;
+  margin-bottom: 16px;
+  color: #374151;             /* gris oscuro */
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* ---------- Texto general ---------- */
+.text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #4b5563;             /* gris medio */
+  margin-bottom: 16px;
+  font-weight: 400;
+}
+
+/* ---------- Responsive ---------- */
+
+/* Tablets medianas (≤1024px) */
+@media (max-width: 1024px) {
+  .title { font-size: 22px; }
+  .subtitle { font-size: 17px; }
+  .text { font-size: 15px; line-height: 1.55; }
+}
+
+/* Tablets pequeñas (≤768px) */
+@media (max-width: 768px) {
+  .title { font-size: 20px; margin-bottom: 20px; }
+  .subtitle { font-size: 16px; margin-bottom: 14px; }
+  .text { font-size: 14px; line-height: 1.5; }
+}
+
+/* Móviles (≤480px) */
+@media (max-width: 480px) {
+  .title { font-size: 18px; margin-bottom: 16px; }
+  .subtitle { font-size: 15px; margin-bottom: 12px; }
+  .text { font-size: 13px; line-height: 1.4; }
 }

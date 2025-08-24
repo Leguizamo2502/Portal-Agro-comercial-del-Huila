@@ -1,32 +1,28 @@
+<h2 class="info-title">Información Básica</h2>
 
-  <h2 class="info-title">Información Básica</h2>
-  
-  <div class="info-item">
-    <mat-icon class="icon">mail</mat-icon>
-    <span><strong>Correo:</strong> {{ person?.email || 'No disponible' }}</span>
-  </div>
-  
-  <div class="info-item">
-    <mat-icon class="icon">call</mat-icon>
-    <span><strong>Número de Teléfono:</strong> {{ person?.phoneNumber || 'No disponible' }}</span>
-  </div>
-  
-  <div class="info-item">
-    <mat-icon class="icon">badge</mat-icon>
-    <span><strong>Documento de Identidad:</strong> {{ person?.identification || 'No disponible' }}</span>
-  </div>
-  
-  <div class="info-item">
-    <mat-icon class="icon">location_on</mat-icon>
-    <span><strong>Dirección:</strong> {{ person?.address || 'No disponible' }}</span>
-  </div>
-  
-  <div class="actions-section">
-    <h2 class="info-title">Acciones</h2>
-    
-    <app-button  
-      [text]="'Actualizar Información'" 
-      [color]="'primary'" 
-      [icon]="'edit'">
-    </app-button>
-  </div>
+<div class="info-item">
+  <mat-icon class="icon">mail</mat-icon>
+  <span><strong>Correo:</strong> {{ person?.email || 'No disponible' }}</span>
+</div>
+
+<div class="info-item">
+  <mat-icon class="icon">call</mat-icon>
+  <span><strong>Número de Teléfono:</strong> {{ person?.phoneNumber || 'No disponible' }}</span>
+</div>
+
+<div class="info-item">
+  <mat-icon class="icon">badge</mat-icon>
+  <span><strong>Documento de Identidad:</strong> {{ person?.identification || 'No disponible' }}</span>
+</div>
+
+<div class="info-item">
+  <mat-icon class="icon">location_on</mat-icon>
+  <span><strong>Dirección:</strong> {{ person?.address || 'No disponible' }}</span>
+</div>
+
+<div class="actions-section">
+  <h2 class="info-title">Acciones</h2>
+
+  <app-button [text]="'Actualizar Información'" [color]="'primary'" [icon]="'edit'">
+  </app-button>
+</div>

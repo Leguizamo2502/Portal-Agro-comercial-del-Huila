@@ -1,33 +1,28 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ProductSelectModel } from '../../../models/product/product.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-card',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule
-  ],
+  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule],
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.css']
 })
 export class CardComponent {
-  @Input({ required: true }) product!: ProductSelectModel;
+  router = inject(Router);
 
-  // Acciones de edición/eliminación existentes
+  @Input({ required: true }) product!: ProductSelectModel;
   @Input() showActions = false;
 
-  // Nuevo: controlar visibilidad y estado del favorito
-  @Input() showFavorite = false;       // muestra/oculta el botón estrella
-  @Input() isFavorite: boolean = false; // estado actual del favorito
+  @Input() showFavorite = false;
+  @Input() isFavorite: boolean = false;
   @Input() disabledFavorite = false;
-  // Eventos hacia el padre
+
   @Output() edit = new EventEmitter<ProductSelectModel>();
   @Output() delete = new EventEmitter<ProductSelectModel>();
   @Output() toggleFavorite = new EventEmitter<ProductSelectModel>();
@@ -37,14 +32,31 @@ export class CardComponent {
   get imageUrl(): string {
     const url = this.product?.images?.[0]?.imageUrl;
     return url && url.trim() ? url : this.placeholder;
-    // Si tu DTO ya trae imageUrl plano, podrías usar: return this.product.imageUrl ?? this.placeholder;
   }
 
   onImgError(ev: Event) {
     (ev.target as HTMLImageElement).src = this.placeholder;
   }
 
-  onToggleFavorite() {
+  // Navegar al detalle
+  onDetail(item: ProductSelectModel) {
+    this.router.navigate(['/home/product', item.id]);
+  }
+
+  // Click favorito: detener propagación y emitir
+  onFavoriteClick(ev: Event) {
+    ev.stopPropagation();
     this.toggleFavorite.emit(this.product);
+  }
+
+  // Click editar/eliminar: detener propagación y emitir
+  onEditClick(ev: Event) {
+    ev.stopPropagation();
+    this.edit.emit(this.product);
+  }
+
+  onDeleteClick(ev: Event) {
+    ev.stopPropagation();
+    this.delete.emit(this.product);
   }
 }
