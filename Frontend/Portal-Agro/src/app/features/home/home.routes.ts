@@ -5,4 +5,6 @@ export const HOME_ROUTES: Routes=[
     {path:'',redirectTo:'inicio',pathMatch:'full'},
     
     {path:'inicio', component: HomeComponent},
+    {path: 'product', loadChildren: () => import('../products/products.routes').then(m => m.PRODUCTS_ROUTES)}
+
 ];

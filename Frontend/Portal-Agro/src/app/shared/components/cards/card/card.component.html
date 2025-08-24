@@ -1,17 +1,25 @@
-<!-- card.component.html -->
-<mat-card class="product-card">
-  <!-- Estrellita: esquina superior derecha -->
-  <!-- card.component.html -->
-<button
-  *ngIf="showFavorite"
-  mat-icon-button
-  class="fav-btn"
-  [disabled]="disabledFavorite"
-  (click)="onToggleFavorite()"
-  aria-label="Favorito">
-  <mat-icon [fontIcon]="isFavorite ? 'star' : 'star_border'"></mat-icon>
-</button>
-
+<!-- Hacemos la tarjeta “clickable” y accesible con teclado -->
+<mat-card
+  class="product-card"
+  role="button"
+  tabindex="0"
+  (click)="onDetail(product)"
+  (keydown.enter)="onDetail(product)"
+  (keydown.space)="onDetail(product); $event.preventDefault()"
+>
+  <!-- Botón favorito: detener propagación -->
+  <button
+    *ngIf="showFavorite"
+    mat-icon-button
+    class="fav-btn"
+    [disabled]="disabledFavorite"
+    (click)="onFavoriteClick($event)"
+    (keydown.enter)="$event.stopPropagation()"
+    (keydown.space)="$event.stopPropagation(); $event.preventDefault()"
+    aria-label="Favorito"
+  >
+    <mat-icon [fontIcon]="isFavorite ? 'star' : 'star_border'"></mat-icon>
+  </button>
 
   <div class="image-wrap">
     <img
@@ -23,15 +31,15 @@
   </div>
 
   <mat-card-content class="content">
-    <h3 class="title">{{ product.name }}</h3>
+    <h3 class="title line-2" [title]="product.name">{{ product.name }}</h3>
 
     <p class="info-row">
-      <mat-icon fontIcon="person" color="primary"></mat-icon>
+      <mat-icon fontIcon="person" color="primary" aria-hidden="true"></mat-icon>
       {{ product.personName }}
     </p>
 
     <p class="info-row">
-      <mat-icon fontIcon="place" color="primary"></mat-icon>
+      <mat-icon fontIcon="place" color="primary" aria-hidden="true"></mat-icon>
       {{ product.cityName }}, {{ product.departmentName }}
     </p>
 
@@ -40,10 +48,25 @@
     </p>
 
     <div *ngIf="showActions" class="actions">
-      <button mat-icon-button color="primary" (click)="edit.emit(product)">
+      <button
+        mat-icon-button
+        color="primary"
+        (click)="onEditClick($event)"
+        (keydown.enter)="$event.stopPropagation()"
+        (keydown.space)="$event.stopPropagation(); $event.preventDefault()"
+        aria-label="Editar producto"
+      >
         <mat-icon class="icon-edit">edit</mat-icon>
       </button>
-      <button mat-icon-button color="warn" (click)="delete.emit(product)">
+
+      <button
+        mat-icon-button
+        color="warn"
+        (click)="onDeleteClick($event)"
+        (keydown.enter)="$event.stopPropagation()"
+        (keydown.space)="$event.stopPropagation(); $event.preventDefault()"
+        aria-label="Eliminar producto"
+      >
         <mat-icon class="icon-delete">delete</mat-icon>
       </button>
     </div>

@@ -15,6 +15,14 @@
   background: #fff;
 }
 
+.product-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+}
+
+.product-card:hover .card-image {
+  transform: scale(1.05);
+}
 /* 2) Botón de favorito en esquina superior derecha */
 .fav-btn {
   position: absolute;
@@ -58,6 +66,7 @@
   height: 100%;
   object-fit: contain;
   display: block;
+  transition: transform 0.3s ease; /
 }
 
 /* 4) Título: evita el truncado agresivo y permite 2 líneas */
@@ -118,4 +127,21 @@
 .icon-edit {
   color: #1b5e20;
 }
- 
+
+/* Responsive */
+@media (max-width: 768px) {
+  .product-card {
+    width: 100%;
+    height: auto;
+    flex: 1 1 auto;
+  }
+  .image-wrap {
+    height: 160px;
+  }
+  .title {
+    font-size: 16px;
+  }
+  .price {
+    font-size: 16px;
+  }
+}
