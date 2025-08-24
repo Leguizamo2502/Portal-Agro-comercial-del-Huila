@@ -26,7 +26,8 @@
                     <p class="mb-1"><strong>Categoría:</strong> {{ product.categoryName }}</p>
                     <p class="mb-1"><strong>Stock:</strong> {{ product.stock }} {{ product.unit }}</p>
                     <p class="mb-2"><strong>Precio:</strong> {{ product.price | currency:'COP':'symbol' }}</p>
-                    <button class="btn btn-success w-100">Añadir al Pedido</button>
+                    <!-- <button class="btn btn-success w-100">Añadir al Pedido</button> -->
+                     <app-button [text]="'Añadir al Pedido'" [type]="'button'" [icon]="'shopping_cart'"></app-button>
                 </div>
             </div>
 

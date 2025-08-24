@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductSelectModel } from '../../models/product/product.model';
 import { ProductService } from '../../services/product/product.service';
+import { ButtonComponent } from "../button/button.component";
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ButtonComponent],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css']
 })
@@ -23,7 +24,7 @@ export class ProductDetailComponent implements OnInit {
 
   ngOnInit(): void {
     // TODO: más adelante se puede leer el ID desde la ruta con ActivatedRoute
-    const productId = 1;
+    const productId = 23;
     this.productService.getById(productId).subscribe(data => {
       // aquí agregamos reseñas de prueba si no vienen del backend
       this.product = {
