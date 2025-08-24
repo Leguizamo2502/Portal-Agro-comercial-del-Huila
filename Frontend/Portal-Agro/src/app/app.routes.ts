@@ -16,6 +16,7 @@ import { CarruselComponent } from './shared/components/carrusel/carrusel.compone
 import { CardComponent } from './shared/components/cards/card/card.component';
 import { ProductDetailComponent } from './shared/components/product-detail/product-detail.component';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
+import { ProducerProfileComponent } from './features/producer-profile/producer-profile.component';
 
 export const routes: Routes = [
   // Redirección inicial
@@ -59,6 +60,7 @@ export const routes: Routes = [
       { path: 'navbar-bueno', component: NavbarBuenoComponent },
       { path: 'navbar-sin-categoria', component: NavbarSinCategoriaComponent },
       { path: 'carrusel', component: CarruselComponent },
+      { path: 'producer-profile', component: ProducerProfileComponent },
     ],
   },
 
