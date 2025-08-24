@@ -184,10 +184,10 @@ namespace Web.Controllers.Implements.Producer.Products
         [ProducesResponseType(500)]
         public virtual async Task<IActionResult> GetFavoritesUser()
         {
-            //var userId = HttpContext.GetUserId();
+            var userId = HttpContext.GetUserId();
             try
             {
-                var result = await _productService.GetFavoritesForUsersAsync(2);
+                var result = await _productService.GetFavoritesForUsersAsync(userId);
                 return Ok(result);
             }
             catch (Exception ex)
