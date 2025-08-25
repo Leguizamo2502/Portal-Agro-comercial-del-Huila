@@ -24,6 +24,7 @@ using Data.Interfaces.Implements.Producers.Farms;
 using Data.Interfaces.Implements.Producers.Products;
 using Data.Interfaces.Implements.Security;
 using Data.Interfaces.Implements.Security.Mes;
+using Data.Interfaces.Implements.Security.Token;
 using Data.Interfaces.IRepository;
 using Data.Repository;
 using Data.Service.Auth;
@@ -35,9 +36,11 @@ using Data.Service.Producers.Farms;
 using Data.Service.Producers.Products;
 using Data.Service.Security;
 using Data.Service.Security.Mes;
+using Data.Service.Security.Token;
 using Mapster;
 using Utilities.Messaging.Implements;
 using Utilities.Messaging.Interfaces;
+using Web.Infrastructures;
 
 namespace Web.ProgramService
 {
@@ -55,6 +58,9 @@ namespace Web.ProgramService
 
             services.AddScoped<IPersonRepository, PersonRepository>();
             services.AddScoped<IPersonService, PersonService>();
+
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<IAuthCookieFactory, AuthCookieFactory>();
 
            
 
