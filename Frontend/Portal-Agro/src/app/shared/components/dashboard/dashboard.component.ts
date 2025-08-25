@@ -2,40 +2,47 @@ import { Component, inject, OnInit, OnDestroy, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SidebarService } from '../../services/sidebar/sidebar.service';
+import { HasRoleDirective } from '../../directives/has-role.directive';
+import { AuthService } from '../../../Core/services/auth/auth.service';
+import { UserSelectModel } from '../../../Core/Models/user.model';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, HasRoleDirective],
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   sidebarService = inject(SidebarService);
   router = inject(Router);
   route = inject(ActivatedRoute);
+  authService = inject(AuthService);
+  user?: UserSelectModel;
 
-  isOpen = false;  // Control de si la barra lateral está abierta
+  isOpen = false; // Control de si la barra lateral está abierta
 
   activePath = '';
 
   openSubmenus: { [key: string]: boolean } = {
     security: false,
-    parameters: false
+    parameters: false,
   };
 
   private resizeListener?: () => void;
 
-  user = {
-    name: 'Vanessa Ortiz',
-    email: 'vanessaortiz@gmail.com'
-  };
+  loadUser(){
+    this.authService.GetDataBasic().subscribe((data)=>{
+      this.user= data;
+    })
+  }
 
   constructor() {
     // Usamos efecto para reaccionar a los cambios de estado de la barra lateral
     effect(() => {
       this.isOpen = this.sidebarService.sidebarOpen();
     });
+    this.loadUser();
   }
 
   ngOnInit() {
@@ -55,12 +62,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   navigateTo(path: string) {
-    // Navegar dentro de la ruta de cuenta
     this.router.navigate(['/account/' + path]);
     this.activePath = path;
-    // console.log("Navegando a:", '/account/' + path);
-    
-    // Cerrar la barra lateral en móvil después de navegar
+
     this.sidebarService.closeOnMobile();
   }
 

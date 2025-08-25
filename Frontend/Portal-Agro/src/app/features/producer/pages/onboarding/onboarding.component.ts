@@ -11,9 +11,9 @@ import { ButtonComponent } from "../../../../shared/components/button/button.com
 })
 
 export class OnboardingComponent {
-  @Input() title = 'Conviértete en Productor';
-  @Input() subtitle = 'Crea tu perfil, registra tu finca y comienza a publicar tus productos.';
-  @Input() disabled = false;
+  // @Input() title = 'Conviértete en Productor';
+  // @Input() subtitle = 'Crea tu perfil, registra tu finca y comienza a publicar tus productos.';
+  // @Input() disabled = false;
 
  
 }

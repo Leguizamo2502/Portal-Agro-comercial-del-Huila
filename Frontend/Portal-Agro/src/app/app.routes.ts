@@ -16,6 +16,8 @@ import { CarruselComponent } from './shared/components/carrusel/carrusel.compone
 import { CardComponent } from './shared/components/cards/card/card.component';
 import { ProductDetailComponent } from './shared/components/product-detail/product-detail.component';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
+import { NotFoundComponent } from './Core/page/not-found/not-found.component';
+import { authGuard, guestGuard } from './Core/guards/auth/guest.guard';
 
 export const routes: Routes = [
   // Redirección inicial
@@ -24,10 +26,10 @@ export const routes: Routes = [
   // ===== RUTAS SIN LAYOUT =====
   {
     path: 'auth',
+    canMatch: [guestGuard],
     loadChildren: () =>
       import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },
-  { path: 'forbidden', component: ForbiddenComponent },
 
   // ===== RUTAS CON LAYOUT =====
   {
@@ -37,17 +39,20 @@ export const routes: Routes = [
       // Lazy modules que SÍ deben usar layout
       {
         path: 'home',
+        canMatch: [authGuard],
         loadChildren: () =>
           import('./features/home/home.routes').then((m) => m.HOME_ROUTES),
       },
       {
         path: 'account',
+        canMatch: [authGuard],
         loadChildren: () =>
           import('./features/account/account.routes').then(
             (r) => r.ACCOUNT_ROUTES
           ),
       },
       { path: 'forbidden', component: ForbiddenComponent },
+      {path:'notFound',component:NotFoundComponent},
 
       // Demos / componentes sueltos (si quieres que usen el layout)
       { path: 'dashboard', component: DashboardComponent },
@@ -63,5 +68,5 @@ export const routes: Routes = [
   },
 
   // 404 (ajusta según tu app)
-  { path: '**', redirectTo: 'forbidden' },
+  { path: '**', redirectTo: 'notFound' },
 ];

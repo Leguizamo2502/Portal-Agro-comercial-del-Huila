@@ -4,6 +4,7 @@ using Entity.DTOs.Favorites.Create;
 using Entity.DTOs.Products.Create;
 using Entity.DTOs.Products.Select;
 using Entity.DTOs.Products.Update;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Utilities.Helpers.Auth;
@@ -161,6 +162,7 @@ namespace Web.Controllers.Implements.Producer.Products
         }
 
         [HttpGet("home")]
+        [Authorize]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
         public virtual async Task<IActionResult> GetForUser()
@@ -184,10 +186,10 @@ namespace Web.Controllers.Implements.Producer.Products
         [ProducesResponseType(500)]
         public virtual async Task<IActionResult> GetFavoritesUser()
         {
-            //var userId = HttpContext.GetUserId();
+            var userId = HttpContext.GetUserId();
             try
             {
-                var result = await _productService.GetFavoritesForUsersAsync(2);
+                var result = await _productService.GetFavoritesForUsersAsync(userId);
                 return Ok(result);
             }
             catch (Exception ex)

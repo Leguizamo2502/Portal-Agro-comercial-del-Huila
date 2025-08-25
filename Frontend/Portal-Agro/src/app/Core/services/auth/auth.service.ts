@@ -37,11 +37,10 @@ export class AuthService {
 
   // 🔹 Implementación de logout
   LogOut(): Observable<any> {
-    // si tu backend tiene endpoint de logout:
-    // return this.http.post(this.urlBase + 'logout', {});
+    return this.http.post<any>(this.urlBase + 'logout', []);
+  }
 
-    // si NO tiene endpoint: simplemente limpia el token local
-    localStorage.removeItem('token');
-    return of({ success: true });
+  RefreshToken(): Observable<any> {
+    return this.http.post(this.urlBase + 'refresh', {}); // cookies viajan por withCredentials()
   }
 }

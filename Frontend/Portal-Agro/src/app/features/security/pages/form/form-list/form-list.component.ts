@@ -31,7 +31,6 @@ export class FormListComponent implements OnInit {
   onEdit(item: any) {
     const id = item.id;
     this.router.navigate(['/account/security/form/update', id]);
-
   }
 
   onDelete(item: any) {

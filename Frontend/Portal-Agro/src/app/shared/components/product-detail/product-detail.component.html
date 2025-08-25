@@ -1,3 +1,4 @@
+<app-button [type]="'button'" [color]="'primary'" [text]="'Volver'" [icon]="'arrow_back'" [back]="true" style="z-index: 10;"></app-button>
 <div *ngIf="product" class="container my-5">
     <div class="row justify-content-center">
         <div class="row gap-4 col-lg-10 ">
@@ -27,7 +28,8 @@
                     <p class="mb-1"><strong>Categoría:</strong> {{ product.categoryName }}</p>
                     <p class="mb-1"><strong>Stock:</strong> {{ product.stock }} {{ product.unit }}</p>
                     <p class="mb-2"><strong>Precio:</strong> {{ product.price | currency:'COP':'symbol' }}</p>
-                    <button class="btn btn-success w-100">Añadir al Pedido</button>
+                    <!-- <button class="btn btn-success w-100">Añadir al Pedido</button> -->
+                    <app-button [text]="'Añadir al Pedido'" [type]="'button'" [icon]="'shopping_cart'"></app-button>
                 </div>
             </div>
 
