@@ -4,8 +4,9 @@ import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { credentialsInterceptor } from './Core/interceptors/credentials.interceptor';
+import { authInterceptor } from './Core/interceptors/auth/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes,withComponentInputBinding()),
-    provideHttpClient(withInterceptors([credentialsInterceptor]))]
+    provideHttpClient(withInterceptors([credentialsInterceptor,authInterceptor]))]
 };

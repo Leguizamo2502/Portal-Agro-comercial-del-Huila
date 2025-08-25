@@ -19,6 +19,19 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+/* Habilita el área de errores/hints SOLO para tus campos con clase custom-mat-field */
+.custom-mat-field .mat-mdc-form-field-subscript-wrapper {
+  display: block !important;
+  height: auto !important;
+  min-height: 22px;         /* reserva espacio para el mensaje */
+  overflow: visible !important;
+  visibility: visible !important;
+}
+
+/* Asegura que el texto de error no esté oculto */
+.custom-mat-field .mat-mdc-form-field-error {
+  display: block !important;
+}
 
 .fondo-auth {
   /* PUEDES CAMBIAR LA IMAGEN DE FONDO AQUÍ */
@@ -179,6 +192,10 @@ estilos
   margin-top: 32px;
   padding-top: 24px;
   border-top: 1px solid #e0e0e0;
+}
+.actions-section app-button {
+  gap: 1rem;
+  margin-right: 1rem;
 }
 
 /* Responsive */

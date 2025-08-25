@@ -18,5 +18,9 @@ namespace Business.Interfaces.Implements.Auth
         Task<IEnumerable<string>> GetRolesUserAsync(int idUser);
         Task<UserSelectDto?> GetDataBasic(int userId);
 
+        Task ChangePasswordAsync(ChangePasswordDto dto, int userId);
+
+        Task<bool> UpdatePerson(PersonUpdateDto dto, int userId);
+
     }
 }
