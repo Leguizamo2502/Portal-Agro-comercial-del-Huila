@@ -15,6 +15,7 @@ using Utilities.Helpers.Auth;
 namespace Web.Controllers.Implements.Producer.Farm
 {
     [ApiController]
+    [Authorize]
     [Route("api/v1/[controller]")]
     public class FarmController : ControllerBase
     {
@@ -28,7 +29,6 @@ namespace Web.Controllers.Implements.Producer.Farm
 
 
         [HttpPost]
-        [Authorize]
         [Route("registrar/producer")]
         [ProducesResponseType(typeof(string), 200)]
         [ProducesResponseType(400)]

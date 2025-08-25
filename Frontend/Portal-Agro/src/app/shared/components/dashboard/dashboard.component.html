@@ -3,7 +3,7 @@
   <div class="profile">
     <!-- <img src="assets/profile.jpg" alt="Perfil"> -->
     <div class="profile-info" [class.hide-text]="!isOpen">
-      <h5>{{ user?.fullName }}</h5>
+      <h5>{{ user?.firstName }} {{user?.lastName}}</h5>
       <small>{{ user?.email }}</small>
     </div>
   </div>

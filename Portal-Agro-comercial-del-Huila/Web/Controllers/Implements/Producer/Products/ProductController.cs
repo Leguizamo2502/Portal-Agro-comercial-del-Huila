@@ -13,6 +13,7 @@ namespace Web.Controllers.Implements.Producer.Products
 {
 
     [ApiController]
+    [Authorize]
     [Route("api/v1/[controller]")]
     public class ProductController : ControllerBase
     {
@@ -162,7 +163,6 @@ namespace Web.Controllers.Implements.Producer.Products
         }
 
         [HttpGet("home")]
-        [Authorize]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
         public virtual async Task<IActionResult> GetForUser()

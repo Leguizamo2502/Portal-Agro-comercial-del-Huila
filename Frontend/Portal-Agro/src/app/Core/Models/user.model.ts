@@ -1,5 +1,6 @@
 export interface UserSelectModel{
-    fullName:       string;
+    firstName:       string;
+    lastName:       string;
     identification: string;
     address:        string;
     phoneNumber:    string;
@@ -9,4 +10,15 @@ export interface UserSelectModel{
     active:         boolean;
     roles:          string[];
     id:             number;
+}
+
+
+export interface PersonUpdateModel{
+    firstName:       string;
+    lastName:       string;
+
+    // identification: string;
+    address:        string;
+    phoneNumber:    string;
+    // email:          string;
 }

@@ -20,21 +20,60 @@ namespace Business.Services.AuthService
         private readonly IMapper _mapper;
         private readonly ISendCode _emailService;
         private readonly IPasswordResetCodeRepository _passwordResetRepo;
+        private readonly IPersonRepository _personRepository;
 
         public AuthService(IUserRepository userData,ILogger<AuthService> logger, IRolUserRepository rolUserData, IMapper mapper,
-            ISendCode emailService, IPasswordResetCodeRepository passwordResetRepo)
+            ISendCode emailService, IPasswordResetCodeRepository passwordResetRepo,IPersonRepository personRepository)
         {
             _logger = logger;
             _userData = userData;
             _rolUserData = rolUserData;
             _mapper = mapper;
-
+            _personRepository = personRepository;
             _emailService = emailService;
             _passwordResetRepo = passwordResetRepo;
         }
 
+        public async Task ChangePasswordAsync(ChangePasswordDto dto, int userId)
+        {
+            try
+            {
+                // Validaciones básicas de entrada
+                if (dto is null) throw new ValidationException("Datos inválidos.");
+                if (string.IsNullOrWhiteSpace(dto.CurrentPassword) || string.IsNullOrWhiteSpace(dto.NewPassword))
+                    throw new ValidationException("Las contraseñas no pueden estar vacías.");
 
-        
+                if (!BusinessValidationHelper.IsValidPassword(dto.NewPassword))
+                {
+                    throw new BusinessException("Contraseña no valida");
+                }
+
+                if (dto.NewPassword == dto.CurrentPassword)
+                    throw new ValidationException("La nueva contraseña no puede ser igual a la actual.");
+
+
+                var user = await _userData.GetByIdAsync(userId)
+                           ?? throw new ValidationException("Usuario no encontrado.");
+
+
+                var hashedCurrent = EncriptePassword.EncripteSHA256(dto.CurrentPassword);
+                if (!string.Equals(user.Password, hashedCurrent, StringComparison.Ordinal))
+                    throw new ValidationException("Credenciales inválidas.");
+
+                // Actualizar nueva contraseña
+                user.Password = EncriptePassword.EncripteSHA256(dto.NewPassword);
+
+                await _userData.UpdateAsync(user);
+
+
+            }
+            catch (ValidationException) { throw; }
+            catch (Exception ex)
+            {
+                throw new BusinessException("Error al cambiar la contraseña.", ex);
+            }
+        }
+
 
         public async Task<UserSelectDto?> GetDataBasic(int userId)
         {
@@ -78,12 +117,12 @@ namespace Business.Services.AuthService
                 if (await _userData.ExistsByEmailAsync(dto.Email))
                     throw new Exception("Correo ya registrado");
 
-                //var validPassword = BusinessValidationHelper.IsValidPassword(dto.Password);
-                //if (!validPassword)
-                //{
-                //    throw new BusinessException("Contraseña no valida");
-                //}
-                    
+                var validPassword = BusinessValidationHelper.IsValidPassword(dto.Password);
+                if (!validPassword)
+                {
+                    throw new BusinessException("Contraseña no valida");
+                }
+
 
                 // Mapear DTO a entidades
                 var person = _mapper.Map<Person>(dto);
@@ -150,10 +189,30 @@ namespace Business.Services.AuthService
             await _passwordResetRepo.UpdateAsync(record);
         }
 
+        public async Task<bool> UpdatePerson(PersonUpdateDto dto, int userId)
+        {
+            try
+            {
+                var person = await _personRepository.GetByUserIdAsync(userId)
+                    ?? throw new ValidationException("Usuario no encontrado");
+                //if (await _userData.ExistsByEmailAsync(dto.Email))
+                //    throw new Exception("Correo ya registrado");
 
+                _mapper.Map(dto, person);
 
+                await _personRepository.UpdateAsync(person);
 
-
+                return true;
+            }
+            catch (ValidationException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new BusinessException("Error al actualizar la persona.", ex);
+            }
+        }
 
     }
 }

@@ -5,48 +5,47 @@ import { Router } from '@angular/router';
 import { catchError, switchMap, throwError } from 'rxjs';
 import { AuthService } from '../../services/auth/auth.service';
 import { environment } from '../../../../environments/environment';
+import { AuthState } from '../../services/auth/auth.state';
 
-// Debe coincidir con _cookieSettings.CsrfCookieName del backend
-const CSRF_COOKIE_NAME = 'XSRF-TOKEN';
 
-function readCookie(name: string): string | null {
+
+function getCookie(name: string): string | null {
   const m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
   return m ? decodeURIComponent(m[1]) : null;
 }
 
+
+
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const auth = inject(AuthService);
+  const authService = inject(AuthService);
+  const userStore = inject(AuthState);
   const router = inject(Router);
 
-  const apiBase = environment.apiUrl; 
-  const isApi = req.url.startsWith(apiBase);
-  const isRefresh = /\/Auth\/refresh$/i.test(req.url); // case-insensitive y ruta correcta
+  const isApiRequest = req.url.startsWith(environment.apiUrl);
+  const isRefreshEndpoint = /\/auth\/refresh$/i.test(req.url);
 
-  if (isApi) {
-    const csrf = readCookie(CSRF_COOKIE_NAME);
+  if (isApiRequest) {
+    const csrfCookie = getCookie('XSRF-TOKEN');
+
     req = req.clone({
-      setHeaders: csrf ? { 'X-XSRF-TOKEN': csrf } : {}
+      withCredentials: true,
+      setHeaders: csrfCookie ? { 'X-XSRF-TOKEN': csrfCookie } : {}
     });
   }
 
   return next(req).pipe(
     catchError((error) => {
-      const is401 = error instanceof HttpErrorResponse && error.status === 401;
-
-      if (is401 && isApi && !isRefresh) {
-        return auth.RefreshToken().pipe(
-          // Reintenta el request original tal cual
+      if (error instanceof HttpErrorResponse && error.status === 401 && isApiRequest && !isRefreshEndpoint) {
+        return authService.RefreshToken().pipe(
           switchMap(() => next(req)),
-          catchError((refreshErr) => {
-            // Si el refresh falla (401/403), limpias estado y rediriges
-            // OJO: si mantienes un store de usuario, límpialo aquí
-            router.navigate(['/login']);
-            return throwError(() => refreshErr);
+          catchError((refreshError) => {
+            userStore.clear();
+            router.navigate(['/']);
+            return throwError(() => refreshError);
           })
         );
       }
-
       return throwError(() => error);
-    })
-  );
+    })
+  );
 };

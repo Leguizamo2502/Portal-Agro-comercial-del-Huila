@@ -10,7 +10,7 @@
         <mat-select [formControl]="form.controls.userId" required>
           <mat-option [value]="0" disabled>Seleccione un usuario</mat-option>
           <mat-option *ngFor="let u of users" [value]="u.id">
-            {{ u.fullName }}
+            {{ u.firstName }} {{ u.lastName }} 
           </mat-option>
         </mat-select>
         <mat-error *ngIf="form.controls.userId.hasError('required') || form.controls.userId.value === 0">

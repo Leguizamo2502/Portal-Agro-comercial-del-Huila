@@ -1,8 +1,10 @@
 import { Routes } from '@angular/router';
-import { InfoComponent } from './components/info/info.component';
+import { InfoComponent } from './pages/info/info.component';
 import { roleMatchGuard } from '../../Core/guards/role-match/role-match.guard';
-import { FavoriteComponent } from './components/favorite/favorite.component';
-import { SupportComponent } from './components/support/support.component';
+import { FavoriteComponent } from './pages/favorite/favorite.component';
+import { SupportComponent } from './pages/support/support.component';
+import { FormChangePasswordComponent } from './components/form-change-password/form-change-password.component';
+import { UpdatePersonComponent } from './components/update-person/update-person.component';
 
 export const ACCOUNT_ROUTES: Routes = [
   {
@@ -16,7 +18,27 @@ export const ACCOUNT_ROUTES: Routes = [
         pathMatch: 'full',
       },
       // Home info
-      { path: 'info', title: 'Informacion', component: InfoComponent },
+      {
+        path: 'info',
+        title: 'Informacion',
+        canMatch: [roleMatchGuard],
+        data: { roles: ['Consumer'] },
+        component: InfoComponent,
+      },
+      {
+        path: 'info/changePassword',
+        title: 'Cambiar Contraseña',
+        canMatch: [roleMatchGuard],
+        data: { roles: ['Consumer'] },
+        component: FormChangePasswordComponent,
+      },
+      {
+        path: 'info/updateDataBasic',
+        title: 'Actualizar Datos Basicos',
+        canMatch: [roleMatchGuard],
+        data: { roles: ['Consumer'] },
+        component: UpdatePersonComponent,
+      },
       {
         path: 'favorite',
         title: 'Ver Favoritos',
@@ -52,7 +74,7 @@ export const ACCOUNT_ROUTES: Routes = [
             '../producer/pages/farm/farm-with-producer-form/farm-with-producer-form.component'
           ).then((m) => m.FarmWithProducerFormComponent),
       },
-      
+
       {
         path: 'producer',
         canMatch: [roleMatchGuard],
@@ -72,7 +94,9 @@ export const ACCOUNT_ROUTES: Routes = [
         canMatch: [roleMatchGuard],
         data: { roles: ['Admin'] },
         loadChildren: () =>
-          import('../parameters/parameters.routes').then((m) => m.PARAMETERS_ROUTES),
+          import('../parameters/parameters.routes').then(
+            (m) => m.PARAMETERS_ROUTES
+          ),
       },
     ],
   },
