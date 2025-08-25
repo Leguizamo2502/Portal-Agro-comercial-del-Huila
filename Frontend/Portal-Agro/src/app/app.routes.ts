@@ -17,6 +17,7 @@ import { CardComponent } from './shared/components/cards/card/card.component';
 import { ProductDetailComponent } from './shared/components/product-detail/product-detail.component';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 import { NotFoundComponent } from './Core/page/not-found/not-found.component';
+import { authGuard, guestGuard } from './Core/guards/auth/guest.guard';
 
 export const routes: Routes = [
   // Redirección inicial
@@ -25,6 +26,7 @@ export const routes: Routes = [
   // ===== RUTAS SIN LAYOUT =====
   {
     path: 'auth',
+    canMatch: [guestGuard],
     loadChildren: () =>
       import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },
@@ -37,11 +39,13 @@ export const routes: Routes = [
       // Lazy modules que SÍ deben usar layout
       {
         path: 'home',
+        canMatch: [authGuard],
         loadChildren: () =>
           import('./features/home/home.routes').then((m) => m.HOME_ROUTES),
       },
       {
         path: 'account',
+        canMatch: [authGuard],
         loadChildren: () =>
           import('./features/account/account.routes').then(
             (r) => r.ACCOUNT_ROUTES

@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Entity.Domain.Models.Implements.Auth;
+using Entity.Domain.Models.Implements.Auth.Token;
 using Entity.Domain.Models.Implements.Favorites;
 using Entity.Domain.Models.Implements.Producers;
 using Entity.Domain.Models.Implements.Products;
@@ -46,6 +47,8 @@ namespace Entity.Infrastructure.Context
         }
 
         //Auth
+
+        public DbSet<RefreshToken> RefreshToken { get; set; }
         public DbSet<Person> Persons { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<PasswordResetCode> PasswordResetCodes { get; set; }

@@ -9,48 +9,47 @@ namespace Web.ProgramService
     {
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IToken, Token>();
-
             services.AddAuthentication(config =>
             {
                 config.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                config.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                config.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer(config =>
+            .AddJwtBearer(options =>
             {
-                config.RequireHttpsMetadata = false; // ❗ Solo para desarrollo
-                config.SaveToken = true;
-
-                config.TokenValidationParameters = new TokenValidationParameters
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero,
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidAudience = configuration["Jwt:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(configuration["Jwt:key"]!)
+                        Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!)
                     )
                 };
 
-                // 👉 Buscar el token en la cookie "jwt"
-                config.Events = new JwtBearerEvents
+                // ✅ Leer desde la cookie
+                options.Events = new JwtBearerEvents
                 {
                     OnMessageReceived = context =>
                     {
-                        var token = context.Request.Cookies["jwt"];
-                        if (!string.IsNullOrEmpty(token))
+                        var accessToken = context.Request.Cookies["access_token"];
+                        if (!string.IsNullOrEmpty(accessToken))
                         {
-                            context.Token = token;
+                            context.Token = accessToken;
                         }
-
                         return Task.CompletedTask;
                     }
                 };
             });
 
+
+
             return services;
         }
     }
 }
+

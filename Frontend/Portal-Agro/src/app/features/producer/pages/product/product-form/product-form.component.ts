@@ -37,6 +37,7 @@ import { CategorySelectModel } from '../../../../parameters/models/category/cate
 import { ButtonComponent } from '../../../../../shared/components/button/button.component';
 import Swal from 'sweetalert2';
 import { ProductImageService } from '../../../../../shared/services/productImage/product-image.service';
+import { catchError, finalize, of, take } from 'rxjs';
 
 
 
@@ -284,103 +285,107 @@ export class ProductFormComponent implements OnInit {
 
   // Submit
   submit(): void {
-    if (this.generalGroup.invalid || this.detallesGroup.invalid) {
-      this.generalGroup.markAllAsTouched();
-      this.detallesGroup.markAllAsTouched();
-      return;
-    }
+  // Evita doble submit
+  if (this.isLoading) return;
 
-    if (!this.isEdit && this.selectedFiles.length === 0) {
-      alert('Debes agregar al menos una imagen para crear el producto');
-      return;
-    }
+  // Forzar visualización de errores en formularios
+  this.generalGroup.markAllAsTouched();
+  this.detallesGroup.markAllAsTouched();
 
-    this.isLoading = true;
-    const g = this.generalGroup.value;
-    const d = this.detallesGroup.value;
+  if (this.generalGroup.invalid || this.detallesGroup.invalid) return;
 
-    if (this.isEdit) {
-      const dto: ProductUpdateModel = {
-        id: this.productId!,
-        name: g.name,
-        description: g.description,
-        price: Number(g.price),
-        unit: g.unit,
-        production: g.production,
-        stock: Number(d.stock),
-        status: Boolean(d.status),
-        categoryId: Number(d.categoryId),
-        farmId: Number(d.farmId),
-        images: this.selectedFiles.length ? this.selectedFiles : undefined,
-        imagesToDelete: this.imagesToDelete.length
-          ? this.imagesToDelete
-          : undefined,
-      };
-
-      this.productSrv.update(dto).subscribe({
-        next: (resp) => {
-          Swal.fire({
-            icon: 'success',
-            title: '¡Actualizado!',
-            text: 'El producto se actualizó con éxito',
-            confirmButtonText: 'Aceptar',
-          }).then(() => {
-            this.saved.emit(resp);
-            this.resetAfterSave();
-            // Redirigir al dashboard (ajusta la ruta real)
-            this.router.navigateByUrl('/account/producer/management/product');
-          });
-        },
-        error: (err) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se pudo actualizar el producto',
-            confirmButtonText: 'Cerrar',
-          });
-          this.isLoading = false;
-        },
-      });
-    } else {
-      const dto: ProductRegisterModel = {
-        name: g.name,
-        description: g.description,
-        price: Number(g.price),
-        unit: g.unit,
-        production: g.production,
-        stock: Number(d.stock),
-        status: Boolean(d.status),
-        categoryId: Number(d.categoryId),
-        farmId: Number(d.farmId),
-        images: this.selectedFiles.length ? this.selectedFiles : undefined,
-      };
-
-      this.productSrv.create(dto).subscribe({
-        next: (resp) => {
-          Swal.fire({
-            icon: 'success',
-            title: '¡Creado!',
-            text: 'El producto se registró con éxito',
-            confirmButtonText: 'Aceptar',
-          }).then(() => {
-            this.saved.emit(resp);
-            this.resetAfterSave();
-            // Redirigir al dashboard (ajusta la ruta real)
-            this.router.navigateByUrl('/account/producer/management/product');
-          });
-        },
-        error: (err) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se pudo registrar el producto',
-            confirmButtonText: 'Cerrar',
-          });
-          this.isLoading = false;
-        },
-      });
-    }
+  // Al crear, requiere al menos una imagen
+  if (!this.isEdit && this.selectedFiles.length === 0) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Falta imagen',
+      text: 'Debes agregar al menos una imagen para crear el producto.',
+      confirmButtonText: 'Entendido',
+    });
+    return;
   }
+
+  this.isLoading = true;
+
+  const g = this.generalGroup.value;
+  const d = this.detallesGroup.value;
+
+  // Datos base comunes
+  const base = {
+    name: (g.name ?? '').trim(),
+    description: (g.description ?? '').trim(),
+    price: Number(g.price),
+    unit: g.unit,
+    production: g.production,
+    stock: Number(d.stock),
+    status: Boolean(d.status),
+    categoryId: Number(d.categoryId),
+    farmId: Number(d.farmId),
+  };
+
+  // DTOs
+  const dtoUpdate: ProductUpdateModel = {
+    id: this.productId!,
+    ...base,
+    images: this.selectedFiles.length ? this.selectedFiles : undefined,
+    imagesToDelete: this.imagesToDelete.length ? this.imagesToDelete : undefined,
+  };
+
+  const dtoCreate: ProductRegisterModel = {
+    ...base,
+    images: this.selectedFiles.length ? this.selectedFiles : undefined,
+  };
+
+  // Swal loading
+  Swal.fire({
+    title: this.isEdit ? 'Actualizando producto...' : 'Creando producto...',
+    text: 'Por favor espera',
+    allowOutsideClick: false,
+    didOpen: () => Swal.showLoading(),
+  });
+
+  const request$ = this.isEdit
+    ? this.productSrv.update(dtoUpdate)
+    : this.productSrv.create(dtoCreate);
+
+  request$
+    .pipe(
+      take(1),
+      catchError((err) => {
+        const msg =
+          err?.error?.message ||
+          err?.message ||
+          (this.isEdit
+            ? 'No se pudo actualizar el producto.'
+            : 'No se pudo registrar el producto.');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: msg,
+          confirmButtonText: 'Cerrar',
+        });
+        return of(null);
+      }),
+      finalize(() => (this.isLoading = false))
+    )
+    .subscribe((resp) => {
+      if (!resp) return; // ya se mostró el error
+
+      Swal.fire({
+        icon: 'success',
+        title: this.isEdit ? '¡Actualizado!' : '¡Creado!',
+        text: this.isEdit
+          ? 'El producto se actualizó con éxito.'
+          : 'El producto se registró con éxito.',
+        confirmButtonText: 'Aceptar',
+      }).then(() => {
+        this.saved.emit(resp);
+        this.resetAfterSave();
+        this.router.navigateByUrl('/account/producer/management/product');
+      });
+    });
+}
+
 
   cancel(): void {
     this.resetForm();

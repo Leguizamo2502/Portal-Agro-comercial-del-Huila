@@ -44,7 +44,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { take } from 'rxjs';
+import { catchError, finalize, of, take } from 'rxjs';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { AuthState } from '../../../../../Core/services/auth/auth.state';
 
@@ -427,139 +427,148 @@ export class FarmFormComponent implements OnInit, OnDestroy {
 
   /* ============================ SUBMIT ============================ */
   submit(): void {
-    if (this.generalGroup.invalid || this.ubicacionGroup.invalid) {
-      this.generalGroup.markAllAsTouched();
-      this.ubicacionGroup.markAllAsTouched();
-      return;
-    }
+  // Bloquea doble envío
+  if (this.isLoading) return;
 
-    if (!this.isEdit && this.selectedFiles.length === 0) {
-      alert('Debes agregar al menos una imagen para crear la finca');
-      return;
-    }
+  // Fuerza visualización de errores
+  this.generalGroup.markAllAsTouched();
+  this.ubicacionGroup.markAllAsTouched();
 
-    this.isLoading = true;
+  if (this.generalGroup.invalid || this.ubicacionGroup.invalid) return;
 
-    const g = this.generalGroup.value;
-    const u = this.ubicacionGroup.value;
+  // Reglas adicionales
+  if (!this.isEdit && this.selectedFiles.length === 0) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Falta imagen',
+      text: 'Debes agregar al menos una imagen para crear la finca.',
+      confirmButtonText: 'Entendido',
+    });
+    return;
+  }
 
-    if (this.isEdit) {
-      const dto: FarmUpdateModel = {
-        id: this.farmId!,
-        name: g.name,
-        hectares: Number(g.hectares),
-        altitude: Number(g.altitude),
-        latitude: Number(u.latitude),
-        longitude: Number(u.longitude),
-        cityId: Number(u.cityId),
-        images: this.selectedFiles.length ? this.selectedFiles : undefined,
-        imagesToDelete: this.imagesToDelete.length
-          ? this.imagesToDelete
-          : undefined,
-      };
+  const g = this.generalGroup.value;
+  const u = this.ubicacionGroup.value;
 
-      this.farmSrv.update(dto).subscribe({
-        next: (resp) => {
-          Swal.fire({
-            icon: 'success',
-            title: '¡Actualizada!',
-            text: 'La finca se actualizó con éxito',
-            confirmButtonText: 'Aceptar',
-          }).then(() => {
-            this.saved.emit(resp);
-            this.resetAfterSave();
-            this.router.navigateByUrl('/account/producer/management/farm');
-          });
-        },
-        error: () => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se pudo actualizar la finca',
-          });
-          this.isLoading = false;
-        },
-      });
-    } else {
-      if (this.createWithProducer) {
-        const dto: FarmWithProducerRegisterModel = {
-          name: g.name,
-          description: g.description ?? '',
-          hectares: Number(g.hectares),
-          altitude: Number(g.altitude),
-          latitude: Number(u.latitude),
-          longitude: Number(u.longitude),
-          images: this.selectedFiles,
-          cityId: Number(u.cityId),
-        };
-        this.farmSrv.createWithProducer(dto).subscribe({
-          next: async (resp) => {
-            // 1) Notifica éxito
-            await Swal.fire({
-              icon: 'success',
-              title: '¡Creado!',
-              text: 'Productor y finca creados',
-              confirmButtonText: 'Aceptar',
-            });
+  const name = (g.name ?? '').trim();
+  const description = (g.description ?? '').trim();
+  const hectares = Number(g.hectares);
+  const altitude = Number(g.altitude);
+  const latitude = Number(u.latitude);
+  const longitude = Number(u.longitude);
+  const cityId = Number(u.cityId);
 
-            try {
-              // 2) Fuerza recarga del me (roles/menú/permisos)
-              await this.authState.reloadMeOnce();
-            } catch {
-              // Si falla, no bloquees la UX
-              console.warn(
-                'No se pudo recargar el perfil (me) tras la creación.'
-              );
-            }
+  // Validaciones numéricas básicas
+  if (isNaN(hectares) || hectares <= 0) {
+    Swal.fire({ icon: 'warning', title: 'Dato inválido', text: 'Las hectáreas deben ser un número mayor a 0.' });
+    return;
+  }
+  if (isNaN(latitude) || latitude < -90 || latitude > 90 || isNaN(longitude) || longitude < -180 || longitude > 180) {
+    Swal.fire({ icon: 'warning', title: 'Coordenadas inválidas', text: 'Latitud debe estar entre -90 y 90, y longitud entre -180 y 180.' });
+    return;
+  }
+  if (isNaN(cityId) || cityId <= 0) {
+    Swal.fire({ icon: 'warning', title: 'Dato inválido', text: 'Selecciona una ciudad válida.' });
+    return;
+  }
 
-            // 3) Finaliza flujo: emite, resetea y navega
-            this.saved.emit(resp);
-            this.resetAfterSave();
-            this.router.navigateByUrl('/account/producer/management/farm');
-          },
-          error: () => {
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'No se pudo crear productor + finca',
-            });
-            this.isLoading = false;
-          },
+  this.isLoading = true;
+
+  // Loading con SweetAlert2
+  Swal.fire({
+    title: this.isEdit ? 'Actualizando finca...' : (this.createWithProducer ? 'Creando productor y finca...' : 'Creando finca...'),
+    text: 'Por favor espera',
+    allowOutsideClick: false,
+    didOpen: () => Swal.showLoading(),
+  });
+
+  // DTOs
+  const dtoUpdate: FarmUpdateModel = {
+    id: this.farmId!,
+    name,
+    hectares,
+    altitude,
+    latitude,
+    longitude,
+    cityId,
+    images: this.selectedFiles.length ? this.selectedFiles : undefined,
+    imagesToDelete: this.imagesToDelete.length ? this.imagesToDelete : undefined,
+  };
+
+  const dtoCreateWithProducer: FarmWithProducerRegisterModel = {
+    name,
+    description,
+    hectares,
+    altitude,
+    latitude,
+    longitude,
+    images: this.selectedFiles,
+    cityId,
+  };
+
+  const dtoCreate: FarmRegisterModel = {
+    name,
+    hectares,
+    altitude,
+    latitude,
+    longitude,
+    images: this.selectedFiles,
+    cityId,
+  };
+
+  // Selección de request según modo
+  const request$ = this.isEdit
+    ? this.farmSrv.update(dtoUpdate)
+    : (this.createWithProducer ? this.farmSrv.createWithProducer(dtoCreateWithProducer) : this.farmSrv.create(dtoCreate));
+
+  request$
+    .pipe(
+      take(1),
+      catchError((err) => {
+        const msg =
+          err?.error?.message ||
+          err?.message ||
+          (this.isEdit
+            ? 'No se pudo actualizar la finca.'
+            : (this.createWithProducer ? 'No se pudo crear productor + finca.' : 'No se pudo registrar la finca.'));
+        Swal.fire({ icon: 'error', title: 'Error', text: msg, confirmButtonText: 'Cerrar' });
+        return of(null);
+      }),
+      finalize(() => (this.isLoading = false))
+    )
+    .subscribe(async (resp) => {
+      if (!resp) return; // error ya informado
+
+      if (!this.isEdit && this.createWithProducer) {
+        // Caso especial: crear productor + finca
+        await Swal.fire({
+          icon: 'success',
+          title: '¡Creado!',
+          text: 'Productor y finca creados',
+          confirmButtonText: 'Aceptar',
         });
+
+        try {
+          await this.authState.reloadMeOnce(); // refresca roles/menú/permisos
+        } catch {
+          console.warn('No se pudo recargar el perfil (me) tras la creación.');
+        }
       } else {
-        const dto: FarmRegisterModel = {
-          name: g.name,
-          hectares: Number(g.hectares),
-          altitude: Number(g.altitude),
-          latitude: Number(u.latitude),
-          longitude: Number(u.longitude),
-          images: this.selectedFiles,
-          cityId: Number(u.cityId),
-        };
-        this.farmSrv.create(dto).subscribe({
-          next: (resp) => {
-            Swal.fire({
-              icon: 'success',
-              title: '¡Creada!',
-              text: 'La finca se registró con éxito',
-            }).then(() => {
-              this.saved.emit(resp);
-              this.resetAfterSave();
-              this.router.navigateByUrl('/account/producer/management/farm');
-            });
-          },
-          error: () => {
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'No se pudo registrar la finca',
-            });
-            this.isLoading = false;
-          },
+        // Crear solo finca o actualizar
+        await Swal.fire({
+          icon: 'success',
+          title: this.isEdit ? '¡Actualizada!' : '¡Creada!',
+          text: this.isEdit ? 'La finca se actualizó con éxito' : 'La finca se registró con éxito',
+          confirmButtonText: 'Aceptar',
         });
       }
-    }
-  }
+
+      this.saved.emit(resp);
+      this.resetAfterSave();
+      this.router.navigateByUrl('/account/producer/management/farm');
+    });
+}
+
 
   cancel(): void {
     this.resetBeforeLoad();

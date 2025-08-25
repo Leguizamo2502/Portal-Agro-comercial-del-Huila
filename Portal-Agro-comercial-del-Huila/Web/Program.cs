@@ -1,4 +1,5 @@
 using CloudinaryDotNet;
+using Entity.Domain.Models.Implements.Auth.Token;
 using Microsoft.Extensions.FileProviders;
 using Web.ProgramService;
 
@@ -16,6 +17,10 @@ builder.Services.AddCustomCors(builder.Configuration);
 
 //Jwt
 builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddCustomCors(builder.Configuration);
+
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
+builder.Services.Configure<CookieSettings>(builder.Configuration.GetSection("Cookie"));
 
 //Cloudinary
 var cloudinaryConfig = builder.Configuration.GetSection("Cloudinary");
@@ -41,11 +46,22 @@ builder.Services.AddDatabase(builder.Configuration);
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
+
+// Archivos estáticos
+app.UseStaticFiles();
+
+// Swagger
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "PortalAgro API v1");
+    c.RoutePrefix = "swagger";
+});
 
 
 
