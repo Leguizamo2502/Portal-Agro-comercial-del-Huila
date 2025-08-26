@@ -70,9 +70,26 @@ textarea {
   padding-bottom: 8px;
   background: transparent;
 }
-.product-description p {
+.product-description .subtitle{
   margin: 0;
 }
 .rating-summary{
   width: 32rem;
+}
+.review .subtitle{
+  margin: 0;
+}
+.info-product .mb-1 .text{
+  margin: 0;
+}
+
+.avatar-review .start{
+  height: 2rem;
+  margin-top: 0.5rem;
+}
+
+.to-overlay{
+  position: relative;
+  z-index: 1;
+  right: 2rem;
 }
