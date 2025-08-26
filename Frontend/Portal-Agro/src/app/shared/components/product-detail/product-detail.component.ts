@@ -14,14 +14,22 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./product-detail.component.css'],
 })
 export class ProductDetailComponent implements OnInit {
-  product!: ProductSelectModel & { reviews: any[] }; // extendemos con reviews mock
+  product!: ProductSelectModel & { reviews: any[] }; // extendemos con reviews
   loading = true;
   selectedImage: string | null = null;
   route = inject(ActivatedRoute);
 
+  Math = Math;
 
   // para la reseña nueva
   newReview: string = '';
+  selectedRating: number = 0; // rating que el usuario selecciona
+  stars = Array(5).fill(0); // arreglo de 5 estrellas
+
+  // ratings
+  averageRating: number = 0;
+  distribution: { star: number; count: number; percentage: number }[] = [];
+  totalReviews: number = 0;
 
   constructor(private productService: ProductService) {}
 
@@ -32,7 +40,7 @@ export class ProductDetailComponent implements OnInit {
     if (!this.productId) return;
 
     this.productService.getById(this.productId).subscribe((data) => {
-      // aquí agregamos reseñas de prueba si no vienen del backend
+      // agregar reseñas mock
       this.product = {
         ...data,
         reviews: [
@@ -40,6 +48,7 @@ export class ProductDetailComponent implements OnInit {
             user: 'Isabella Riel',
             avatar:
               'https://i.pinimg.com/1200x/21/21/6b/21216b7b9f889e2f9619dc59ef138497.jpg',
+            rating: 3,
             comment: 'Excelente calidad y frescura.',
             date: new Date('2025-08-10'),
           },
@@ -47,11 +56,14 @@ export class ProductDetailComponent implements OnInit {
             user: 'Marcos Alzate',
             avatar:
               'https://i.pinimg.com/736x/36/5f/40/365f40852f2e121163f8636a09d23491.jpg',
+            rating: 5,
             comment: 'Muy buen sabor, pero me gustaría más tamaño.',
             date: new Date('2025-08-12'),
           },
         ],
       };
+
+      this.calculateRatings(); // calcula promedio + barras
       this.loading = false;
     });
   }
@@ -60,16 +72,50 @@ export class ProductDetailComponent implements OnInit {
     this.selectedImage = imgUrl;
   }
 
+  // seleccionar estrellas
+  setRating(rating: number) {
+    this.selectedRating = rating;
+  }
+
   submitReview() {
-    if (!this.newReview.trim()) return;
+    if (!this.newReview.trim() || this.selectedRating === 0) return;
 
     this.product.reviews.unshift({
       user: 'Usuario Demo', // en futuro: usuario logueado
-      avatar: 'https://i.pravatar.cc/40', // avatar genérico
+      avatar: 'https://i.pravatar.cc/40',
+      rating: this.selectedRating,
       comment: this.newReview,
       date: new Date(),
     });
 
-    this.newReview = ''; // limpiar textarea
+    // limpiar inputs
+    this.newReview = '';
+    this.selectedRating = 0;
+
+    this.calculateRatings(); // recalcular después de nueva reseña
+  }
+
+  private calculateRatings() {
+    if (!this.product?.reviews?.length) return;
+
+    this.totalReviews = this.product.reviews.length;
+    const sum = this.product.reviews.reduce(
+      (acc, r) => acc + (r.rating || 0),
+      0
+    );
+    this.averageRating = sum / this.totalReviews;
+
+    this.distribution = [1, 2, 3, 4, 5]
+      .map((star) => {
+        const count = this.product.reviews.filter((r) => r.rating === star)
+          .length;
+        const percentage = (count / this.totalReviews) * 100;
+        return { star, count, percentage };
+      })
+      .reverse();
+  }
+
+  getRoundedAverage(): number {
+    return Math.round(this.averageRating);
   }
 }

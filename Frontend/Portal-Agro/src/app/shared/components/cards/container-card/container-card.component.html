@@ -1,7 +1,7 @@
 <section class="product-section">
   <h2 class="section-title" *ngIf="showHeader">{{ title }}</h2>
 
-  <div class="product-container">
+  <div class="product-container sm:grid sm:grid-cols-3 gap-4 p-2">
     <app-card *ngFor="let p of products; trackBy: trackById" [product]="p" [showFavorite]="true"
       [isFavorite]="p.isFavorite" [showActions]="false" [disabledFavorite]="togglingId === p.id"
       (toggleFavorite)="onToggleFavorite($event)">
