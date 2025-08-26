@@ -17,6 +17,7 @@ import { DashboardComponent } from './shared/components/dashboard/dashboard.comp
 import { NotFoundComponent } from './Core/page/not-found/not-found.component';
 import { authGuard, guestGuard } from './Core/guards/auth/guest.guard';
 import { FormChangePasswordComponent } from './features/account/components/form-change-password/form-change-password.component';
+import { ProducerProfileComponent } from './features/producer-profile/producer-profile.component';
 
 export const routes: Routes = [
   // Redirección inicial
@@ -61,7 +62,8 @@ export const routes: Routes = [
       { path: 'navbar-vertical', component: NavbarVerticalComponent },
       { path: 'navbar-bueno', component: NavbarBuenoComponent },
       { path: 'carrusel', component: CarruselComponent },
-      {path: 'change',component:FormChangePasswordComponent}
+      {path: 'change',component:FormChangePasswordComponent},
+      {path: 'producer',component:ProducerProfileComponent}
     ],
   },
 
