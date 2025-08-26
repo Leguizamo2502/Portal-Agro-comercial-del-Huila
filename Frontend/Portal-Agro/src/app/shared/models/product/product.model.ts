@@ -69,4 +69,7 @@ export interface ReviewModel {
   avatar: string;
   date: Date;
   comment: string;
+
+  // prueba de calificacion
+  rating: number;
 }
