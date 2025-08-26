@@ -17,6 +17,10 @@ namespace Data.Service.Auth
         {
         }
 
-    
+        public async Task<Person?> GetByUserIdAsync(int userId)
+        {
+            return await _dbSet 
+                .FirstOrDefaultAsync(p => p.User.Id == userId && p.IsDeleted == false);
+        }
     }
 }

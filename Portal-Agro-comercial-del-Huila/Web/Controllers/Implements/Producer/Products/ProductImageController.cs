@@ -1,11 +1,13 @@
 ﻿using Business.Interfaces.Implements.Producers.Products;
 using Entity.DTOs.Products.Select;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers.Implements.Producer.Products
 {
     [ApiController]
     [Route("api/v1/[controller]")]
+    [Authorize]
     public class ProductImageController : ControllerBase
     {
         private readonly IProductImageService _productImageService;

@@ -1,7 +1,8 @@
 import { Routes } from "@angular/router";
-import { HomeComponent } from "./pages/home/home.component";
+import { ProductDetailComponent } from "../../shared/components/product-detail/product-detail.component";
+import { ProductComponent } from "./pages/product/product.component";
 
 export const PRODUCTS_ROUTES: Routes=[
-    {path:'home', component: HomeComponent},
-    // {path: 'register', component: RegisterComponent}
+    {path:'product',component:ProductComponent},
+    {path:':id', component: ProductDetailComponent},
 ];

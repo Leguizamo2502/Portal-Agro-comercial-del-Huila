@@ -8,15 +8,15 @@ import { MainLayoutComponent } from './shared/components/layouts/main-layout/mai
 
 // “Showcase”/demos (si quieres que usen layout, van como hijos del layout):
 import { ButtonComponent } from './shared/components/button/button.component';
-import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { NavbarVerticalComponent } from './shared/components/navs/navbar-vertical/navbar-vertical.component';
-import { NavbarSinCategoriaComponent } from './shared/components/navs/navbar-sin-categoria/navbar-sin-categoria.component';
 import { NavbarBuenoComponent } from './shared/components/navs/navbar-bueno/navbar-bueno.component';
 import { CarruselComponent } from './shared/components/carrusel/carrusel.component';
 import { CardComponent } from './shared/components/cards/card/card.component';
 import { ProductDetailComponent } from './shared/components/product-detail/product-detail.component';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 import { NotFoundComponent } from './Core/page/not-found/not-found.component';
+import { authGuard, guestGuard } from './Core/guards/auth/guest.guard';
+import { FormChangePasswordComponent } from './features/account/components/form-change-password/form-change-password.component';
 import { ProducerProfileComponent } from './features/producer-profile/producer-profile.component';
 
 export const routes: Routes = [
@@ -26,6 +26,7 @@ export const routes: Routes = [
   // ===== RUTAS SIN LAYOUT =====
   {
     path: 'auth',
+    // canMatch: [guestGuard],
     loadChildren: () =>
       import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },
@@ -38,11 +39,13 @@ export const routes: Routes = [
       // Lazy modules que SÍ deben usar layout
       {
         path: 'home',
+        canMatch: [authGuard],
         loadChildren: () =>
           import('./features/home/home.routes').then((m) => m.HOME_ROUTES),
       },
       {
         path: 'account',
+        canMatch: [authGuard],
         loadChildren: () =>
           import('./features/account/account.routes').then(
             (r) => r.ACCOUNT_ROUTES
@@ -56,12 +59,11 @@ export const routes: Routes = [
       { path: 'product-detail', component: ProductDetailComponent },
       { path: 'card', component: CardComponent },
       { path: 'boton', component: ButtonComponent },
-      { path: 'navbar', component: NavbarComponent },
       { path: 'navbar-vertical', component: NavbarVerticalComponent },
       { path: 'navbar-bueno', component: NavbarBuenoComponent },
-      { path: 'navbar-sin-categoria', component: NavbarSinCategoriaComponent },
       { path: 'carrusel', component: CarruselComponent },
-      { path: 'producer-profile', component: ProducerProfileComponent },
+      {path: 'change',component:FormChangePasswordComponent},
+      {path: 'producer',component:ProducerProfileComponent}
     ],
   },
 
