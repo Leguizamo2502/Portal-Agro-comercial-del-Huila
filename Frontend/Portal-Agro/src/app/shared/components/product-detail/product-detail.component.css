@@ -44,7 +44,7 @@ textarea {
 
 .product-info {
   border: 1px solid #ddd;
-  padding: 1rem;
+  padding: 0;
   border-radius: 10px;
   width: 250px;
 }
@@ -65,8 +65,14 @@ textarea {
 
 .detail-header {
   position: sticky;
-  top: 16px;         /* deja un margen con el navbar */
-  z-index: 10;       /* por encima del contenido */
+  top: 16px;
+  z-index: 10;
   padding-bottom: 8px;
   background: transparent;
+}
+.product-description p {
+  margin: 0;
+}
+.rating-summary{
+  width: 32rem;
 }
