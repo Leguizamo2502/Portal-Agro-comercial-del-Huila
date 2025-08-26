@@ -17,6 +17,7 @@ import { CardComponent } from './shared/components/cards/card/card.component';
 import { ProductDetailComponent } from './shared/components/product-detail/product-detail.component';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 import { NotFoundComponent } from './Core/page/not-found/not-found.component';
+import { ProducerProfileComponent } from './features/producer-profile/producer-profile.component';
 
 export const routes: Routes = [
   // Redirección inicial

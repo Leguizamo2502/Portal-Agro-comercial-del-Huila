@@ -24,7 +24,7 @@ export class ProductDetailComponent implements OnInit {
 
   ngOnInit(): void {
     // TODO: más adelante se puede leer el ID desde la ruta con ActivatedRoute
-    const productId = 23;
+    const productId = 1;
     this.productService.getById(productId).subscribe(data => {
       // aquí agregamos reseñas de prueba si no vienen del backend
       this.product = {
