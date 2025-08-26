@@ -1,7 +1,10 @@
 using CloudinaryDotNet;
 using Entity.Domain.Models.Implements.Auth.Token;
-using Microsoft.Extensions.FileProviders;
 using Web.ProgramService;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Entity.Validations.interfaces;
+using Entity.Validation.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +17,11 @@ builder.Services.AddSwaggerGen();
 
 //Cors
 builder.Services.AddCustomCors(builder.Configuration);
+
+//Validations
+builder.Services.AddScoped<IValidatorService, ValidatorService>();
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserDtoValidator>();
+builder.Services.AddFluentValidationAutoValidation();
 
 //Jwt
 builder.Services.AddJwtAuthentication(builder.Configuration);
