@@ -9,13 +9,10 @@ import { RegisterUserModel } from '../../../../Core/Models/registeruser.model';
 import Swal from 'sweetalert2';
 import { Router, RouterLink } from '@angular/router';
 import { LocationService } from '../../../../shared/services/location/location.service';
-import {
-  CityModel,
-  DepartmentModel,
-} from '../../../../shared/models/location/location.model';
+import { CityModel, DepartmentModel } from '../../../../shared/models/location/location.model';
 import { CommonModule } from '@angular/common';
 
-// Angular Material (si tu módulo los expone para standalone, mantenlos)
+// Angular Material
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -26,6 +23,9 @@ import { MatCardModule } from '@angular/material/card';
 import { AuthService } from '../../../../Core/services/auth/auth.service';
 import { take, catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
+
+// ✅ Importa el servicio de política de contraseñas
+import { PasswordPolicyService } from '../../../../shared/services/passwordPolicy/password-policy.service';
 
 @Component({
   selector: 'app-register',
@@ -42,7 +42,7 @@ import { of } from 'rxjs';
     MatCardModule,
   ],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css',
+  styleUrls: ['./register.component.css'], // ✅ corregido (plural)
   standalone: true,
 })
 export class RegisterComponent implements OnInit {
@@ -51,17 +51,24 @@ export class RegisterComponent implements OnInit {
   private _router = inject(Router);
   private _location = inject(LocationService);
 
+  // ✅ Inyecta el servicio de password policy
+  private pass = inject(PasswordPolicyService);
+
   departments: DepartmentModel[] = [];
   cities: CityModel[] = [];
 
-  // Paso 1: Credenciales
+  // Paso 1: Credenciales (usa la política en el control y el match a nivel de grupo)
   public credentialsForm: FormGroup = this.fb.group(
     {
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      // ❗ Elimina Validators.minLength(6) porque la regex ya lo exige
+      password: ['', [this.pass.validator()]],
       confirmPassword: ['', Validators.required],
     },
-    { validators: this.passwordMatchValidator }
+    {
+      // ❗ Validador de coincidencia usando el servicio
+      validators: this.pass.passwordsMatch('password', 'confirmPassword'),
+    }
   );
 
   // Paso 2: Datos básicos
@@ -79,7 +86,6 @@ export class RegisterComponent implements OnInit {
     cityId: ['', Validators.required],
   });
 
-  // Control del step actual
   currentStep = 1;
   isLinear = true;
   loading = false;
@@ -89,32 +95,18 @@ export class RegisterComponent implements OnInit {
     this.bindDepartmentWatcher();
   }
 
-  // Validator de confirmación de contraseña
-  private passwordMatchValidator(form: FormGroup) {
-    const password = form.get('password')?.value ?? '';
-    const confirm = form.get('confirmPassword')?.value ?? '';
-    if (password && confirm && password !== confirm) {
-      form.get('confirmPassword')?.setErrors({ passwordMismatch: true });
-      return { passwordMismatch: true };
-    }
-    return null;
-  }
+  // 🗑️ Elimina tu passwordMatchValidator previo: ahora todo pasa por PasswordPolicyService
 
   // Navegación entre pasos
   nextStep(): void {
     if (this.currentStep === 1 && this.credentialsForm.valid) {
-      this.currentStep = 2;
-      return;
+      this.currentStep = 2; return;
     }
     if (this.currentStep === 2 && this.basicForm.valid) {
-      this.currentStep = 3;
-      return;
+      this.currentStep = 3; return;
     }
   }
-
-  prevStep(): void {
-    if (this.currentStep > 1) this.currentStep -= 1;
-  }
+  prevStep(): void { if (this.currentStep > 1) this.currentStep -= 1; }
 
   // Carga y enlace de ubicaciones
   private bindDepartmentWatcher(): void {
@@ -130,25 +122,20 @@ export class RegisterComponent implements OnInit {
   }
 
   private loadDeparment(): void {
-    this._location.getDepartment().subscribe((data) => {
-      this.departments = data;
-    });
+    this._location.getDepartment().subscribe((data) => this.departments = data);
   }
-
   private loadCities(id: number): void {
-    this._location.getCity(id).subscribe((data) => {
-      this.cities = data;
-    });
+    this._location.getCity(id).subscribe((data) => this.cities = data);
   }
 
-  // Mensajes de error reutilizables
+  // Mensajes de error reutilizables (agrega passwordPolicy)
   getErrorMessage(formGroup: FormGroup, fieldName: string): string {
     const field = formGroup.get(fieldName);
     if (field?.hasError('required')) return 'Este campo es requerido';
     if (field?.hasError('email')) return 'Email no válido';
-    if (field?.hasError('minlength')) return 'Mínimo 6 caracteres';
     if (field?.hasError('pattern')) return 'Solo números permitidos';
-    if (field?.hasError('passwordMismatch')) return 'Las contraseñas no coinciden';
+    if (field?.hasError('passwordPolicy')) return 'Mínimo 6 caracteres y al menos 1 mayúscula';
+    if (formGroup.hasError('passwordMismatch')) return 'Las contraseñas no coinciden';
     return '';
   }
 
@@ -156,14 +143,11 @@ export class RegisterComponent implements OnInit {
   register(): void {
     if (this.loading) return;
 
-    // Forzamos touched para mostrar errores antes del submit
     this.credentialsForm.markAllAsTouched();
     this.basicForm.markAllAsTouched();
     this.contactForm.markAllAsTouched();
 
-    if (this.credentialsForm.invalid || this.basicForm.invalid || this.contactForm.invalid) {
-      return;
-    }
+    if (this.credentialsForm.invalid || this.basicForm.invalid || this.contactForm.invalid) return;
 
     const objeto: RegisterUserModel = {
       firstName: (this.basicForm.value.firstName ?? '').trim(),
@@ -185,15 +169,11 @@ export class RegisterComponent implements OnInit {
       didOpen: () => Swal.showLoading(),
     });
 
-    this._servicio
-      .Register(objeto)
+    this._servicio.Register(objeto)
       .pipe(
         take(1),
         catchError((err) => {
-          const msg =
-            err?.error?.message ||
-            err?.message ||
-            'No se pudo completar el registro.';
+          const msg = err?.error?.message || err?.message || 'No se pudo completar el registro.';
           Swal.fire({ icon: 'error', title: 'Error', text: msg });
           return of({ isSuccess: false });
         }),
@@ -208,11 +188,7 @@ export class RegisterComponent implements OnInit {
           }).then(() => this._router.navigate(['/auth/login']));
         } else {
           if (!Swal.isVisible() || Swal.isLoading()) {
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: 'Error al crear el usuario.',
-            });
+            Swal.fire({ icon: 'error', title: 'Oops...', text: 'Error al crear el usuario.' });
           }
         }
       });

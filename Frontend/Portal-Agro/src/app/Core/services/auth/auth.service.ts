@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, switchMap } from 'rxjs';
 import { environment } from '../../../../environments/environment.development';
 import { LoginModel, LoginResponseModel, UserMeDto } from '../../Models/login.model';
 import { RegisterUserModel } from '../../Models/registeruser.model';
-import { UserSelectModel } from '../../Models/user.model';
+import { PersonUpdateModel, UserSelectModel } from '../../Models/user.model';
+import { ChangePasswordModel, RecoverPasswordConfirmModel, RecoverPasswordModel } from '../../Models/changePassword.model';
 
 @Injectable({
   providedIn: 'root',
@@ -23,9 +24,9 @@ export class AuthService {
     return this.http.post<any>(this.urlBase + 'login', Objeto);
   }
 
-  //LogOut():Observable<any>{
-   // return this.http.post<any>(this.urlBase+"logout",[])
-//  }
+  ChangePassword(Objeto: ChangePasswordModel): Observable<any> {
+    return this.http.put<any>(this.urlBase + 'ChangePassword', Objeto);
+  }
 
   GetMe(): Observable<UserMeDto> {
     return this.http.get<UserMeDto>(this.urlBase + 'me');
@@ -35,12 +36,27 @@ export class AuthService {
     return this.http.get<UserSelectModel>(this.urlBase+"DataBasic")
   }
 
-  // 🔹 Implementación de logout
   LogOut(): Observable<any> {
     return this.http.post<any>(this.urlBase + 'logout', []);
   }
 
-  RefreshToken(): Observable<any> {
-    return this.http.post(this.urlBase + 'refresh', {}); // cookies viajan por withCredentials()
+  RefreshToken(): Observable<UserMeDto> {
+    return this.http.post<any>(this.urlBase + 'refresh', {}, { withCredentials: true }).pipe(
+      switchMap(() => this.GetMe())
+    );
+  }
+
+  UpdatePerson(objeto:PersonUpdateModel):Observable<any>{
+    return this.http.put<any>(this.urlBase+"UpdatePerson",objeto)
   }
+
+  RequestRecoverPassword(objeto: RecoverPasswordModel): Observable<any> {
+    return this.http.post<any>(this.urlBase + 'recover/send-code', objeto);
+  }
+
+  ConfirmRecoverPassword(objeto: RecoverPasswordConfirmModel): Observable<any> {
+    return this.http.post<any>(this.urlBase + 'recover/confirm', objeto);
+  }
+
+  
 }

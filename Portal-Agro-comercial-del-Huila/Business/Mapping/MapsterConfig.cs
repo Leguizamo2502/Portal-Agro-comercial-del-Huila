@@ -51,7 +51,8 @@ namespace Business.Mapping
 
             config.NewConfig<User, UserSelectDto>()
                 //.Map(dest=>dest.active,src=>src.Active)
-                .Map(dest => dest.FullName, src => $"{src.Person.FirstName} {src.Person.LastName}")
+                .Map(dest => dest.FirstName, src =>src.Person.FirstName)
+                .Map(dest=> dest.LastName, src => src.Person.LastName)
                 .Map(dest => dest.PhoneNumber, src => src.Person.PhoneNumber)
                 .Map(dest => dest.Address, src => src.Person.Address)
                 .Map(dest => dest.Identification, src => src.Person.Identification)

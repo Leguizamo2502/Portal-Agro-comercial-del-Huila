@@ -3,6 +3,7 @@ using Business.CustomJwt;
 using Business.Interfaces.Implements.Auth;
 using Business.Interfaces.Implements.Location;
 using Business.Interfaces.Implements.Security.Mes;
+using Business.Services.AuthService;
 using Entity.Domain.Models.Implements.Auth.Token;
 using Entity.DTOs.Auth;
 using Microsoft.AspNetCore.Authorization;
@@ -234,7 +235,7 @@ namespace Web.Controllers.Implements.Auth
             }
         }
 
-        [HttpPost("recuperar/enviar-codigo")]
+        [HttpPost("recover/send-code")]
         [ProducesResponseType(typeof(string), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
@@ -268,7 +269,7 @@ namespace Web.Controllers.Implements.Auth
             }
         }
 
-        [HttpPost("recuperar/confirmar")]
+        [HttpPost("recover/confirm")]
         [ProducesResponseType(typeof(string), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
@@ -302,10 +303,72 @@ namespace Web.Controllers.Implements.Auth
             }
         }
 
+        [HttpPut("ChangePassword")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ChangeMyPassword([FromBody] ChangePasswordDto dto)
+        {
+            if (!ModelState.IsValid) return ValidationProblem(ModelState);
 
-        
+            var userId = HttpContext.GetUserId();
 
-        
+            try
+            {
+                await _authService.ChangePasswordAsync(dto, userId);
+                return NoContent();
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (BusinessException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { message = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { message = "Error inesperado." });
+            }
+        }
+
+        [HttpPut("updatePerson")]
+        [Authorize]
+        public async Task<IActionResult> Update([FromBody] PersonUpdateDto dto)
+        {
+            try
+            {
+                var userId = HttpContext.GetUserId();
+
+                var result = await _authService.UpdatePerson(dto, userId);
+
+                if (result)
+                    return Ok(new { message = "Información actualizada correctamente." });
+
+                return BadRequest("No se pudo actualizar la información.");
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            catch (BusinessException ex)
+            {
+                _logger.LogError(ex, "Error de negocio al actualizar persona");
+                return StatusCode(500, new { error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error inesperado al actualizar persona");
+                return StatusCode(500, new { error = "Ocurrió un error inesperado." });
+            }
+        }
+
+
+
 
 
 

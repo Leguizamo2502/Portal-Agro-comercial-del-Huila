@@ -25,13 +25,14 @@
         </div> -->
 
         <!-- Paso 1: Credenciales -->
+        <!-- Paso 1: Credenciales -->
         <form [formGroup]="credentialsForm" *ngIf="currentStep === 1">
           <div class="mb-2">
             <label for="email" class="form-label">Correo Electrónico</label>
             <input id="email" type="email" class="form-control input-custom" formControlName="email"
-                   placeholder="Correo Electrónico">
+              placeholder="Correo Electrónico">
             <div class="text-danger small"
-                 *ngIf="credentialsForm.get('email')?.invalid && credentialsForm.get('email')?.touched">
+              *ngIf="credentialsForm.get('email')?.invalid && credentialsForm.get('email')?.touched">
               {{ getErrorMessage(credentialsForm, 'email') }}
             </div>
           </div>
@@ -39,9 +40,9 @@
           <div class="mb-2">
             <label for="password" class="form-label">Contraseña</label>
             <input id="password" type="password" class="form-control input-custom" formControlName="password"
-                   placeholder="Contraseña">
+              placeholder="Contraseña">
             <div class="text-danger small"
-                 *ngIf="credentialsForm.get('password')?.invalid && credentialsForm.get('password')?.touched">
+              *ngIf="credentialsForm.get('password')?.invalid && credentialsForm.get('password')?.touched">
               {{ getErrorMessage(credentialsForm, 'password') }}
             </div>
           </div>
@@ -49,29 +50,30 @@
           <div class="mb-2">
             <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
             <input id="confirmPassword" type="password" class="form-control input-custom"
-                   formControlName="confirmPassword" placeholder="Confirmar Contraseña">
-            <div class="text-danger small"
-                 *ngIf="credentialsForm.get('confirmPassword')?.invalid && credentialsForm.get('confirmPassword')?.touched">
+              formControlName="confirmPassword" placeholder="Confirmar Contraseña">
+            <div class="text-danger small" *ngIf="(credentialsForm.get('confirmPassword')?.touched || credentialsForm.get('password')?.touched) 
+                 && credentialsForm.hasError('passwordMismatch')">
               {{ getErrorMessage(credentialsForm, 'confirmPassword') }}
             </div>
           </div>
 
           <div class="d-grid mt-3">
-            <button type="button" class="btn btn-success btn-custom"
-                    (click)="nextStep()" [disabled]="credentialsForm.invalid">
+            <button type="button" class="btn btn-success btn-custom" (click)="nextStep()"
+              [disabled]="credentialsForm.invalid">
               Siguiente
             </button>
           </div>
         </form>
+
 
         <!-- Paso 2: Datos básicos -->
         <form [formGroup]="basicForm" *ngIf="currentStep === 2">
           <div class="mb-2">
             <label for="firstName" class="form-label">Nombre</label>
             <input id="firstName" type="text" class="form-control input-custom" formControlName="firstName"
-                   placeholder="Nombre">
+              placeholder="Nombre">
             <div class="text-danger small"
-                 *ngIf="basicForm.get('firstName')?.invalid && basicForm.get('firstName')?.touched">
+              *ngIf="basicForm.get('firstName')?.invalid && basicForm.get('firstName')?.touched">
               {{ getErrorMessage(basicForm, 'firstName') }}
             </div>
           </div>
@@ -79,9 +81,9 @@
           <div class="mb-2">
             <label for="lastName" class="form-label">Apellido</label>
             <input id="lastName" type="text" class="form-control input-custom" formControlName="lastName"
-                   placeholder="Apellido">
+              placeholder="Apellido">
             <div class="text-danger small"
-                 *ngIf="basicForm.get('lastName')?.invalid && basicForm.get('lastName')?.touched">
+              *ngIf="basicForm.get('lastName')?.invalid && basicForm.get('lastName')?.touched">
               {{ getErrorMessage(basicForm, 'lastName') }}
             </div>
           </div>
@@ -89,17 +91,17 @@
           <div class="mb-2">
             <label for="identification" class="form-label">Número de Identidad</label>
             <input id="identification" type="text" class="form-control input-custom" formControlName="identification"
-                   placeholder="Número de Identidad">
+              placeholder="Número de Identidad">
             <div class="text-danger small"
-                 *ngIf="basicForm.get('identification')?.invalid && basicForm.get('identification')?.touched">
+              *ngIf="basicForm.get('identification')?.invalid && basicForm.get('identification')?.touched">
               {{ getErrorMessage(basicForm, 'identification') }}
             </div>
           </div>
 
           <div class="d-flex justify-content-between mt-3">
             <button type="button" class="btn btn-outline-secondary" (click)="prevStep()">Volver</button>
-            <button type="button" class="btn btn-success btn-custom"
-                    (click)="nextStep()" [disabled]="basicForm.invalid">
+            <button type="button" class="btn btn-success btn-custom" (click)="nextStep()"
+              [disabled]="basicForm.invalid">
               Siguiente
             </button>
           </div>
@@ -110,9 +112,9 @@
           <div class="mb-2">
             <label for="phoneNumber" class="form-label">Número de Teléfono</label>
             <input id="phoneNumber" type="tel" class="form-control input-custom" formControlName="phoneNumber"
-                   placeholder="Número de Teléfono">
+              placeholder="Número de Teléfono">
             <div class="text-danger small"
-                 *ngIf="contactForm.get('phoneNumber')?.invalid && contactForm.get('phoneNumber')?.touched">
+              *ngIf="contactForm.get('phoneNumber')?.invalid && contactForm.get('phoneNumber')?.touched">
               {{ getErrorMessage(contactForm, 'phoneNumber') }}
             </div>
           </div>
@@ -120,9 +122,9 @@
           <div class="mb-2">
             <label for="address" class="form-label">Dirección</label>
             <input id="address" type="text" class="form-control input-custom" formControlName="address"
-                   placeholder="Dirección">
+              placeholder="Dirección">
             <div class="text-danger small"
-                 *ngIf="contactForm.get('address')?.invalid && contactForm.get('address')?.touched">
+              *ngIf="contactForm.get('address')?.invalid && contactForm.get('address')?.touched">
               {{ getErrorMessage(contactForm, 'address') }}
             </div>
           </div>
@@ -146,8 +148,8 @@
 
           <div class="d-flex justify-content-between mt-3">
             <button type="button" class="btn btn-outline-secondary" (click)="prevStep()">Volver</button>
-            <button type="button" class="btn btn-success btn-custom"
-                    (click)="register()" [disabled]="contactForm.invalid">
+            <button type="button" class="btn btn-success btn-custom" (click)="register()"
+              [disabled]="contactForm.invalid">
               Registrarse
             </button>
           </div>

@@ -1,0 +1,61 @@
+<div class="form-wrapper-transparent">
+  <h2 class="titleForm">{{ title }}</h2>
+
+  <form (ngSubmit)="save()" [formGroup]="form" class="form-container">
+    <!-- Nombres -->
+    <div class="form-field">
+      <mat-form-field appearance="outline" class="custom-mat-field">
+        <mat-label>Nombres</mat-label>
+        <input matInput formControlName="firstName" placeholder="Ingresa tus nombres">
+        <mat-error *ngIf="f.firstName.hasError('required')">Este campo es obligatorio</mat-error>
+        <mat-error *ngIf="f.firstName.hasError('minlength')">Mínimo 2 caracteres</mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Apellidos -->
+    <div class="form-field">
+      <mat-form-field appearance="outline" class="custom-mat-field">
+        <mat-label>Apellidos</mat-label>
+        <input matInput formControlName="lastName" placeholder="Ingresa tus apellidos">
+        <mat-error *ngIf="f.lastName.hasError('required')">Este campo es obligatorio</mat-error>
+        <mat-error *ngIf="f.lastName.hasError('minlength')">Mínimo 2 caracteres</mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Dirección -->
+    <div class="form-field">
+      <mat-form-field appearance="outline" class="custom-mat-field">
+        <mat-label>Dirección</mat-label>
+        <input matInput formControlName="address" placeholder="Ingresa tu dirección">
+        <mat-error *ngIf="f.address.hasError('required')">Este campo es obligatorio</mat-error>
+        <mat-error *ngIf="f.address.hasError('minlength')">Mínimo 4 caracteres</mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Teléfono -->
+    <div class="form-field">
+      <mat-form-field appearance="outline" class="custom-mat-field">
+        <mat-label>Teléfono</mat-label>
+        <input matInput formControlName="phoneNumber" placeholder="Solo dígitos" inputmode="numeric">
+        <mat-error *ngIf="f.phoneNumber.hasError('required')">Este campo es obligatorio</mat-error>
+        <mat-error *ngIf="f.phoneNumber.hasError('pattern')">Debe tener entre 7 y 15 dígitos</mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Email -->
+    <!-- <div class="form-field">
+      <mat-form-field appearance="outline" class="custom-mat-field">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" placeholder="correo@dominio.com">
+        <mat-error *ngIf="f.email.hasError('required')">Este campo es obligatorio</mat-error>
+        <mat-error *ngIf="f.email.hasError('email')">Email no válido</mat-error>
+      </mat-form-field>
+    </div> -->
+
+    <!-- Botones -->
+    <div class="form-actions cont-botones">
+      <app-button [text]="'Guardar'" [icon]="'save'" [type]="'submit'" [disabled]="form.invalid || isLoading"></app-button>
+      <app-button [text]="'Cancelar'" [icon]="'cancel'" [color]="'secondary'" (click)="cancel()"></app-button>
+    </div>
+  </form>
+</div>

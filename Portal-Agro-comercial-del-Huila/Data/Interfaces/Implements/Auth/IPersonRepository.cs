@@ -5,6 +5,6 @@ namespace Data.Interfaces.Implements.Auth
 {
     public interface IPersonRepository : IDataGeneric<Person>
     {
-        
+        Task<Person?> GetByUserIdAsync(int userId);
     }
 }
