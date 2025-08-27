@@ -7,7 +7,7 @@ using Business.Interfaces.Implements.Producers.Categories;
 using Business.Repository;
 using Data.Interfaces.Implements.Producers.Categories;
 using Data.Interfaces.IRepository;
-using Entity.Domain.Models.Implements.Products;
+using Entity.Domain.Models.Implements.Producers.Products;
 using Entity.DTOs.Producer.Categories;
 using MapsterMapper;
 using Utilities.Exceptions;

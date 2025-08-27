@@ -1,5 +1,5 @@
 ﻿using Data.Interfaces.IRepository;
-using Entity.Domain.Models.Implements.Producers;
+using Entity.Domain.Models.Implements.Producers.Farms;
 
 namespace Data.Interfaces.Implements.Producers.Farms
 {

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Entity.Domain.Models.Implements.Producers;
+using Entity.Domain.Models.Implements.Producers; // Farm está en este namespace
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,7 +7,6 @@ namespace Entity.Infrastructure.DataInit.Producers.Farms
 {
     public class FarmSeeder : IEntityTypeConfiguration<Farm>
     {
-
         public void Configure(EntityTypeBuilder<Farm> builder)
         {
             var date = new DateTime(2024, 1, 1);
@@ -23,8 +18,8 @@ namespace Entity.Infrastructure.DataInit.Producers.Farms
                     Name = "Finca el Jardin",
                     Hectares = 4,
                     Altitude = 1600,
-                    Latitude = 1200,
-                    Longitude = 600,
+                    Latitude = 1200.0,
+                    Longitude = 600.0,
                     ProducerId = 1,
                     CityId = 33,
                     IsDeleted = false,
@@ -37,8 +32,8 @@ namespace Entity.Infrastructure.DataInit.Producers.Farms
                     Name = "Finca el Mirador",
                     Hectares = 4,
                     Altitude = 1600,
-                    Latitude = 1200,
-                    Longitude = 600,
+                    Latitude = 1200.0,
+                    Longitude = 600.0,
                     ProducerId = 1,
                     CityId = 33,
                     IsDeleted = false,
@@ -51,8 +46,8 @@ namespace Entity.Infrastructure.DataInit.Producers.Farms
                     Name = "Finca los Alpes",
                     Hectares = 4,
                     Altitude = 1600,
-                    Latitude = 1200,
-                    Longitude = 600,
+                    Latitude = 1200.0,
+                    Longitude = 600.0,
                     ProducerId = 1,
                     CityId = 33,
                     IsDeleted = false,
@@ -65,8 +60,8 @@ namespace Entity.Infrastructure.DataInit.Producers.Farms
                     Name = "Finca los Lulos",
                     Hectares = 4,
                     Altitude = 1600,
-                    Latitude = 1200,
-                    Longitude = 600,
+                    Latitude = 1200.0,
+                    Longitude = 600.0,
                     ProducerId = 1,
                     CityId = 33,
                     IsDeleted = false,
@@ -79,8 +74,8 @@ namespace Entity.Infrastructure.DataInit.Producers.Farms
                     Name = "Finca los Primos",
                     Hectares = 4,
                     Altitude = 1600,
-                    Latitude = 1200,
-                    Longitude = 600,
+                    Latitude = 1200.0,
+                    Longitude = 600.0,
                     ProducerId = 2,
                     CityId = 33,
                     IsDeleted = false,

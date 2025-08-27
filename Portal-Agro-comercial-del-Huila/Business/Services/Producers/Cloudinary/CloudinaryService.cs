@@ -1,8 +1,6 @@
 ﻿using Business.Interfaces.Implements.Producers.Cloudinary;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using Entity.Domain.Models.Implements.Producers;
-using Entity.Domain.Models.Implements.Products;
 using Microsoft.AspNetCore.Http;
 using Utilities.Exceptions;
 
