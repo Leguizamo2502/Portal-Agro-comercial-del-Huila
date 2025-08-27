@@ -8,7 +8,7 @@ using Data.Interfaces.Implements.Producers.Farms;
 using Data.Interfaces.IRepository;
 using Entity.Domain.Models.Implements.Auth;
 using Entity.Domain.Models.Implements.Producers;
-using Entity.Domain.Models.Implements.Products;
+using Entity.Domain.Models.Implements.Producers.Farms;
 using Entity.DTOs.Producer.Farm.Create;
 using Entity.DTOs.Producer.Farm.Select;
 using Entity.DTOs.Producer.Farm.Update;

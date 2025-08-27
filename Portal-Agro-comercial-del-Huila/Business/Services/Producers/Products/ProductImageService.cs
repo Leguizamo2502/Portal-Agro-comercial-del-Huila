@@ -3,7 +3,7 @@ using Business.Interfaces.Implements.Producers.Products;
 using Business.Repository;
 using Data.Interfaces.Implements.Producers.Products;
 using Data.Interfaces.IRepository;
-using Entity.Domain.Models.Implements.Products;
+using Entity.Domain.Models.Implements.Producers.Products;
 using Entity.DTOs.Products.Select;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;

@@ -43,8 +43,8 @@ public class ProductUpdateDtoValidator : AbstractValidator<ProductUpdateDto>
         RuleFor(x => x.CategoryId)
             .GreaterThan(0).WithMessage("Categoría inválida.");
 
-        RuleFor(x => x.FarmId)
-            .GreaterThan(0).WithMessage("Finca inválida.");
+        //RuleFor(x => x.FarmId)
+        //    .GreaterThan(0).WithMessage("Finca inválida.");
 
         // Images: opcional, pero si vienen, limitar cantidad/tamaño/tipo
         RuleFor(x => x.Images)
