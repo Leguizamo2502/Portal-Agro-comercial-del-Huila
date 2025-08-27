@@ -62,8 +62,8 @@ export const routes: Routes = [
       { path: 'navbar-vertical', component: NavbarVerticalComponent },
       { path: 'navbar-bueno', component: NavbarBuenoComponent },
       { path: 'carrusel', component: CarruselComponent },
-      {path: 'change',component:FormChangePasswordComponent},
-      {path: 'producer',component:ProducerProfileComponent}
+      {path: 'change', component:FormChangePasswordComponent},
+      {path: 'producer', component:ProducerProfileComponent}
     ],
   },
 

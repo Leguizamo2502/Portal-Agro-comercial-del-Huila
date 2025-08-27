@@ -1,4 +1,4 @@
-<div class="container my-5" *ngIf="profile as p">
+<div class="container my-3 profile-container" *ngIf="profile as p">
   <div class="card shadow-lg p-4 rounded-4">
 
     <!-- HEADER -->
@@ -26,19 +26,17 @@
       </div>
     </div>
 
-    <hr>
-
     <!-- Descripción -->
     <section class="my-4" *ngIf="p.description">
-      <h5 class="fw-bold">Descripción</h5>
+      <h5 class="title">Descripción</h5>
       <p class="text-secondary">{{ p.description }}</p>
     </section>
 
     <!-- FINCAS con componente -->
     <section class="my-4">
-      <h5 class="fw-bold mb-3">Fincas</h5>
-      <div class="row g-3">
-        <div class="col-md-3" *ngFor="let farm of p.farms">
+      <h5 class="mb-3 title">Fincas</h5>
+      <div class="d-flex flex-nowrap gap-4 overflow-x-auto justify-content-start justify-content-md-center">
+        <div *ngFor="let farm of p.farms" class="flex-shrink-0">
           <app-card-farm [farm]="farm"></app-card-farm>
         </div>
       </div>
@@ -46,15 +44,16 @@
 
 
   <!-- PRODUCTOS (usa app-card, NO container-card) -->
-<section class="my-4">
-  <h5 class="fw-bold mb-3">Últimos Agregados</h5>
-  <div class="row g-3">
-    <div class="col-md-3" *ngFor="let product of p.products">
-      <app-card
-        [product]="product"
-        [showActions]="false"
-        [showFavorite]="false">
-      </app-card>
+  <section class="my-4">
+    <h5 class="mb-3 title">Últimos Agregados</h5>
+    <div class="d-flex flex-nowrap gap-4 overflow-x-auto justify-content-start justify-content-md-center">
+      <div *ngFor="let product of p.products" class="flex-shrink-0">
+        <app-card
+          [product]="product"
+          [showActions]="false"
+          [showFavorite]="false">
+        </app-card>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+</div>
