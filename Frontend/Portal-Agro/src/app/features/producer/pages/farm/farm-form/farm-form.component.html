@@ -67,7 +67,7 @@
       <form [formGroup]="ubicacionGroup">
         <ng-template matStepLabel>Ubicación</ng-template>
 
-        <div class="row-2">
+        <div class="row-2 top">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Departamento</mat-label>
             <mat-select formControlName="departmentId" required (selectionChange)="onDepartmentChange($event.value)">
