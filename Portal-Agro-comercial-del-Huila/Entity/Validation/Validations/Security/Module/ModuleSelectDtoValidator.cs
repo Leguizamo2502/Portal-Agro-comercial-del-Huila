@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Entity.DTOs.Security.Create.NewFolder;
+using Entity.DTOs.Security.Selects.Module;
+using FluentValidation;
 
-namespace Entity.Validation.Validations.Security.Module
+
+public class ModuleSelectDtoValidator : AbstractValidator<ModuleSelectDto>
 {
-    class ModuleSelectDtoValidator
+    public ModuleSelectDtoValidator()
     {
+        RuleLevelCascadeMode = CascadeMode.Stop;
+
+        RuleFor(x => x.Name).NameRules();
+        RuleFor(x => x.Description).DescriptionRules();
     }
 }

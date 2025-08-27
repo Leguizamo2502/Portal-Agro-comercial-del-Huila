@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Entity.DTOs.Security.Selects.Permissions;
+using FluentValidation;
 
-namespace Entity.Validation.Validations.Security.Permission
+
+public class PermissionSelectDtoValidator : AbstractValidator<PermissionSelectDto>
 {
-    class permissionSelectDtoValidator
+    public PermissionSelectDtoValidator()
     {
+        RuleLevelCascadeMode = CascadeMode.Stop;
+
+        RuleFor(x => x.Name).NameRules();
+        RuleFor(x => x.Description).DescriptionRules();
     }
 }

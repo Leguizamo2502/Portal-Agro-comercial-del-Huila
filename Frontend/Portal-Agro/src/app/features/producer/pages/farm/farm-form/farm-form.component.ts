@@ -18,6 +18,9 @@ import {
   FormGroup,
   ReactiveFormsModule,
   Validators,
+  AbstractControl,
+  ValidationErrors,
+  ValidatorFn,
 } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -48,6 +51,31 @@ import { catchError, finalize, of, take } from 'rxjs';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { AuthState } from '../../../../../Core/services/auth/auth.state';
 
+//
+// ---- Validadores utilitarios (alineados con FluentValidation del backend) ----
+//
+const positiveNumberValidator = (label: string): ValidatorFn =>
+  (c: AbstractControl): ValidationErrors | null => {
+    const n = Number(c.value);
+    if (!Number.isFinite(n) || n <= 0) return { positive: `${label} debe ser mayor a 0.` };
+    return null;
+  };
+
+const rangeValidator = (min: number, max: number, label: string): ValidatorFn =>
+  (c: AbstractControl): ValidationErrors | null => {
+    const n = Number(c.value);
+    if (!Number.isFinite(n)) return { required: `${label} es obligatorio.` };
+    if (n < min || n > max) return { range: `${label} debe estar entre ${min} y ${max}.` };
+    return null;
+  };
+
+const positiveIntValidator = (label: string): ValidatorFn =>
+  (c: AbstractControl): ValidationErrors | null => {
+    const n = Number(c.value);
+    if (!Number.isInteger(n) || n <= 0) return { positiveInt: `Debe seleccionar ${label.toLowerCase()} válida.` };
+    return null;
+  };
+
 @Component({
   selector: 'app-farm-form',
   imports: [
@@ -59,7 +87,7 @@ import { AuthState } from '../../../../../Core/services/auth/auth.state';
     ReactiveFormsModule,
     CommonModule,
     MatFormFieldModule,
-    MatButtonModule, // <-- falta
+    MatButtonModule,
     MatTooltipModule,
   ],
   templateUrl: './farm-form.component.html',
@@ -93,7 +121,7 @@ export class FarmFormComponent implements OnInit, OnDestroy {
 
   // Límites
   readonly MAX_IMAGES = 5;
-  readonly MAX_FILE_SIZE_MB = 5;
+  readonly MAX_FILE_SIZE_MB = 5; // Si decides alinear a backend con 2MB, cambia aquí y en backend.
   readonly MAX_FILE_SIZE_BYTES = this.MAX_FILE_SIZE_MB * 1024 * 1024;
 
   // Imágenes
@@ -120,7 +148,6 @@ export class FarmFormComponent implements OnInit, OnDestroy {
   onStepChange(ev: StepperSelectionEvent) {
     // índice 1 = segundo paso (Ubicación)
     if (ev.selectedIndex === 1) {
-      // Espera a que el paso sea visible y luego inicia
       this.zone.runOutsideAngular(() => {
         requestAnimationFrame(() => this.initMap());
       });
@@ -134,9 +161,11 @@ export class FarmFormComponent implements OnInit, OnDestroy {
     const desc = this.generalGroup.get('description');
     desc?.clearValidators();
     if (this.createWithProducer) {
-      desc?.addValidators([Validators.required, Validators.maxLength(1000)]);
+      // Backend: 5–500 obligatoria en ProducerWithFarmRegisterDto
+      desc?.addValidators([Validators.required, Validators.minLength(5), Validators.maxLength(500)]);
     } else {
-      desc?.addValidators([Validators.maxLength(1000)]);
+      // No obligatoria; límite razonable
+      desc?.addValidators([Validators.maxLength(500)]);
     }
     desc?.updateValueAndValidity({ emitEvent: false });
 
@@ -156,10 +185,6 @@ export class FarmFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  // ngAfterViewInit(): void {
-  //   this.initMap();
-  // }
-
   ngOnDestroy(): void {
     this.map?.remove();
   }
@@ -167,18 +192,24 @@ export class FarmFormComponent implements OnInit, OnDestroy {
   /* ============================ INIT FORMS ============================ */
   private initForms(): void {
     this.generalGroup = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(120)]],
-      hectares: [0, [Validators.required, Validators.min(0)]],
-      altitude: [0, [Validators.required, Validators.min(0)]],
+      // Backend: Name Length(2,100)
+      name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+      // Backend: Hectares > 0
+      hectares: [null, [Validators.required, positiveNumberValidator('Las hectáreas')]],
+      // Backend: Altitude >= 0 && <= 9000
+      altitude: [null, [Validators.required, Validators.min(0), Validators.max(9000)]],
       // Solo si createWithProducer
       description: [''],
     });
 
     this.ubicacionGroup = this.fb.group({
       departmentId: [null, [Validators.required]],
-      cityId: [null, [Validators.required]],
-      latitude: [null, [Validators.required]],
-      longitude: [null, [Validators.required]],
+      // Backend: CityId > 0
+      cityId: [null, [Validators.required, positiveIntValidator('Ciudad')]],
+      // Backend: Latitude [-90, 90]
+      latitude: [null, [Validators.required, rangeValidator(-90, 90, 'Latitud')]],
+      // Backend: Longitude [-180, 180]
+      longitude: [null, [Validators.required, rangeValidator(-180, 180, 'Longitud')]],
     });
   }
 
@@ -410,13 +441,12 @@ export class FarmFormComponent implements OnInit, OnDestroy {
     if (this.isDeletingImage) return;
 
     if (isExisting) {
-      // Si soportas borrado inmediato en backend, llama a un servicio análogo a ProductImageService para Farm
       const img = this.existingImages[index];
       if (!img?.publicId) {
         this.existingImages.splice(index, 1);
         return;
       }
-      // Alternativa: delegar al PUT usando imagesToDelete
+      // Delegar al PUT usando imagesToDelete
       this.imagesToDelete.push(img.publicId);
       this.existingImages.splice(index, 1);
     } else {
@@ -427,148 +457,133 @@ export class FarmFormComponent implements OnInit, OnDestroy {
 
   /* ============================ SUBMIT ============================ */
   submit(): void {
-  // Bloquea doble envío
-  if (this.isLoading) return;
+    // Bloquea doble envío
+    if (this.isLoading) return;
 
-  // Fuerza visualización de errores
-  this.generalGroup.markAllAsTouched();
-  this.ubicacionGroup.markAllAsTouched();
+    // Fuerza visualización de errores
+    this.generalGroup.markAllAsTouched();
+    this.ubicacionGroup.markAllAsTouched();
 
-  if (this.generalGroup.invalid || this.ubicacionGroup.invalid) return;
+    if (this.generalGroup.invalid || this.ubicacionGroup.invalid) return;
 
-  // Reglas adicionales
-  if (!this.isEdit && this.selectedFiles.length === 0) {
+    // Reglas adicionales (backend: create requiere al menos 1 imagen)
+    if (!this.isEdit && this.selectedFiles.length === 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Falta imagen',
+        text: 'Debes agregar al menos una imagen para crear la finca.',
+        confirmButtonText: 'Entendido',
+      });
+      return;
+    }
+
+    const g = this.generalGroup.value;
+    const u = this.ubicacionGroup.value;
+
+    const name = (g.name ?? '').trim();
+    const description = (g.description ?? '').trim();
+    const hectares = Number(g.hectares);
+    const altitude = Number(g.altitude);
+    const latitude = Number(u.latitude);
+    const longitude = Number(u.longitude);
+    const cityId = Number(u.cityId);
+
+    this.isLoading = true;
+
+    // Loading con SweetAlert2
     Swal.fire({
-      icon: 'warning',
-      title: 'Falta imagen',
-      text: 'Debes agregar al menos una imagen para crear la finca.',
-      confirmButtonText: 'Entendido',
+      title: this.isEdit ? 'Actualizando finca...' : (this.createWithProducer ? 'Creando productor y finca...' : 'Creando finca...'),
+      text: 'Por favor espera',
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
     });
-    return;
-  }
 
-  const g = this.generalGroup.value;
-  const u = this.ubicacionGroup.value;
+    // DTOs
+    const dtoUpdate: FarmUpdateModel = {
+      id: this.farmId!,
+      name,
+      hectares,
+      altitude,
+      latitude,
+      longitude,
+      cityId,
+      images: this.selectedFiles.length ? this.selectedFiles : undefined,
+      imagesToDelete: this.imagesToDelete.length ? this.imagesToDelete : undefined,
+    };
 
-  const name = (g.name ?? '').trim();
-  const description = (g.description ?? '').trim();
-  const hectares = Number(g.hectares);
-  const altitude = Number(g.altitude);
-  const latitude = Number(u.latitude);
-  const longitude = Number(u.longitude);
-  const cityId = Number(u.cityId);
+    const dtoCreateWithProducer: FarmWithProducerRegisterModel = {
+      name,
+      description,
+      hectares,
+      altitude,
+      latitude,
+      longitude,
+      images: this.selectedFiles,
+      cityId,
+    };
 
-  // Validaciones numéricas básicas
-  if (isNaN(hectares) || hectares <= 0) {
-    Swal.fire({ icon: 'warning', title: 'Dato inválido', text: 'Las hectáreas deben ser un número mayor a 0.' });
-    return;
-  }
-  if (isNaN(latitude) || latitude < -90 || latitude > 90 || isNaN(longitude) || longitude < -180 || longitude > 180) {
-    Swal.fire({ icon: 'warning', title: 'Coordenadas inválidas', text: 'Latitud debe estar entre -90 y 90, y longitud entre -180 y 180.' });
-    return;
-  }
-  if (isNaN(cityId) || cityId <= 0) {
-    Swal.fire({ icon: 'warning', title: 'Dato inválido', text: 'Selecciona una ciudad válida.' });
-    return;
-  }
+    const dtoCreate: FarmRegisterModel = {
+      name,
+      hectares,
+      altitude,
+      latitude,
+      longitude,
+      images: this.selectedFiles,
+      cityId,
+      // Si el backend exige ProducerId > 0 en FarmRegisterDto, agrega aquí producerId desde tu AuthState:
+      // producerId: this.authState.me?.producerId
+    };
 
-  this.isLoading = true;
+    // Selección de request según modo
+    const request$ = this.isEdit
+      ? this.farmSrv.update(dtoUpdate)
+      : (this.createWithProducer ? this.farmSrv.createWithProducer(dtoCreateWithProducer) : this.farmSrv.create(dtoCreate));
 
-  // Loading con SweetAlert2
-  Swal.fire({
-    title: this.isEdit ? 'Actualizando finca...' : (this.createWithProducer ? 'Creando productor y finca...' : 'Creando finca...'),
-    text: 'Por favor espera',
-    allowOutsideClick: false,
-    didOpen: () => Swal.showLoading(),
-  });
+    request$
+      .pipe(
+        take(1),
+        catchError((err) => {
+          const msg =
+            err?.error?.message ||
+            err?.message ||
+            (this.isEdit
+              ? 'No se pudo actualizar la finca.'
+              : (this.createWithProducer ? 'No se pudo crear productor + finca.' : 'No se pudo registrar la finca.'));
+          Swal.fire({ icon: 'error', title: 'Error', text: msg, confirmButtonText: 'Cerrar' });
+          return of(null);
+        }),
+        finalize(() => (this.isLoading = false))
+      )
+      .subscribe(async (resp) => {
+        if (!resp) return; // error ya informado
 
-  // DTOs
-  const dtoUpdate: FarmUpdateModel = {
-    id: this.farmId!,
-    name,
-    hectares,
-    altitude,
-    latitude,
-    longitude,
-    cityId,
-    images: this.selectedFiles.length ? this.selectedFiles : undefined,
-    imagesToDelete: this.imagesToDelete.length ? this.imagesToDelete : undefined,
-  };
+        if (!this.isEdit && this.createWithProducer) {
+          await Swal.fire({
+            icon: 'success',
+            title: '¡Creado!',
+            text: 'Productor y finca creados',
+            confirmButtonText: 'Aceptar',
+          });
 
-  const dtoCreateWithProducer: FarmWithProducerRegisterModel = {
-    name,
-    description,
-    hectares,
-    altitude,
-    latitude,
-    longitude,
-    images: this.selectedFiles,
-    cityId,
-  };
-
-  const dtoCreate: FarmRegisterModel = {
-    name,
-    hectares,
-    altitude,
-    latitude,
-    longitude,
-    images: this.selectedFiles,
-    cityId,
-  };
-
-  // Selección de request según modo
-  const request$ = this.isEdit
-    ? this.farmSrv.update(dtoUpdate)
-    : (this.createWithProducer ? this.farmSrv.createWithProducer(dtoCreateWithProducer) : this.farmSrv.create(dtoCreate));
-
-  request$
-    .pipe(
-      take(1),
-      catchError((err) => {
-        const msg =
-          err?.error?.message ||
-          err?.message ||
-          (this.isEdit
-            ? 'No se pudo actualizar la finca.'
-            : (this.createWithProducer ? 'No se pudo crear productor + finca.' : 'No se pudo registrar la finca.'));
-        Swal.fire({ icon: 'error', title: 'Error', text: msg, confirmButtonText: 'Cerrar' });
-        return of(null);
-      }),
-      finalize(() => (this.isLoading = false))
-    )
-    .subscribe(async (resp) => {
-      if (!resp) return; // error ya informado
-
-      if (!this.isEdit && this.createWithProducer) {
-        // Caso especial: crear productor + finca
-        await Swal.fire({
-          icon: 'success',
-          title: '¡Creado!',
-          text: 'Productor y finca creados',
-          confirmButtonText: 'Aceptar',
-        });
-
-        try {
-          await this.authState.reloadMeOnce(); // refresca roles/menú/permisos
-        } catch {
-          console.warn('No se pudo recargar el perfil (me) tras la creación.');
+          try {
+            await this.authState.reloadMeOnce();
+          } catch {
+            console.warn('No se pudo recargar el perfil (me) tras la creación.');
+          }
+        } else {
+          await Swal.fire({
+            icon: 'success',
+            title: this.isEdit ? '¡Actualizada!' : '¡Creada!',
+            text: this.isEdit ? 'La finca se actualizó con éxito' : 'La finca se registró con éxito',
+            confirmButtonText: 'Aceptar',
+          });
         }
-      } else {
-        // Crear solo finca o actualizar
-        await Swal.fire({
-          icon: 'success',
-          title: this.isEdit ? '¡Actualizada!' : '¡Creada!',
-          text: this.isEdit ? 'La finca se actualizó con éxito' : 'La finca se registró con éxito',
-          confirmButtonText: 'Aceptar',
-        });
-      }
 
-      this.saved.emit(resp);
-      this.resetAfterSave();
-      this.router.navigateByUrl('/account/producer/management/farm');
-    });
-}
-
+        this.saved.emit(resp);
+        this.resetAfterSave();
+        this.router.navigateByUrl('/account/producer/management/farm');
+      });
+  }
 
   cancel(): void {
     this.resetBeforeLoad();
