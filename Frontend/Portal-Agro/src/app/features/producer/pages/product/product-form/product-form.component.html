@@ -1,6 +1,5 @@
+<!-- product-form.component.html -->
 <div class="form-wrapper-transparent">
-  <!-- <h2 class="titleForm">{{ isEdit ? 'Editar producto' : 'Nuevo producto' }}</h2> -->
-
   <mat-horizontal-stepper [linear]="true">
     <!-- Paso 1: Datos generales -->
     <mat-step [stepControl]="generalGroup">
@@ -15,44 +14,61 @@
         <div class="row-2">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Nombre</mat-label>
-            <input matInput formControlName="name" required maxlength="120" />
+            <input matInput formControlName="name" required maxlength="100" />
             <mat-error *ngIf="generalGroup.get('name')?.hasError('required')">Obligatorio</mat-error>
+            <mat-error *ngIf="generalGroup.get('name')?.hasError('whitespace')">El nombre no puede estar en
+              blanco.</mat-error>
+            <mat-error *ngIf="generalGroup.get('name')?.hasError('minlength')">Mínimo 2 caracteres.</mat-error>
+            <mat-error *ngIf="generalGroup.get('name')?.hasError('maxlength')">Máximo 100 caracteres.</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Precio</mat-label>
-            <input matInput type="number" formControlName="price" required min="0" />
+            <input matInput type="number" formControlName="price" required />
+            <mat-hint *ngIf="!isEdit">Máximo 100,000,000</mat-hint>
+            <mat-hint *ngIf="isEdit">Máximo 1,000,000</mat-hint>
             <mat-error *ngIf="generalGroup.get('price')?.hasError('required')">Obligatorio</mat-error>
-            <mat-error *ngIf="generalGroup.get('price')?.hasError('min')">No negativo</mat-error>
+            <mat-error *ngIf="generalGroup.get('price')?.hasError('positive')">Debe ser mayor a 0.</mat-error>
+            <mat-error *ngIf="generalGroup.get('price')?.hasError('max')">Supera el máximo permitido.</mat-error>
           </mat-form-field>
         </div>
 
         <div class="row-2">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Unidad</mat-label>
-            <input matInput formControlName="unit" required maxlength="50" placeholder="kg, lb, arroba, etc." />
+            <input matInput formControlName="unit" required maxlength="20" placeholder="kg, lb, arroba, etc." />
             <mat-error *ngIf="generalGroup.get('unit')?.hasError('required')">Obligatorio</mat-error>
+            <mat-error *ngIf="generalGroup.get('unit')?.hasError('whitespace')">La unidad no puede estar en
+              blanco.</mat-error>
+            <mat-error *ngIf="generalGroup.get('unit')?.hasError('maxlength')">Máximo 20 caracteres.</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Producción</mat-label>
-            <input matInput formControlName="production" required maxlength="100" placeholder="Orgánico, convencional, etc." />
+            <input matInput formControlName="production" required [attr.maxlength]="isEdit ? 50 : 150"
+              placeholder="Orgánico, convencional, etc." />
+            <mat-hint *ngIf="!isEdit">Máximo 150</mat-hint>
+            <mat-hint *ngIf="isEdit">Máximo 50</mat-hint>
             <mat-error *ngIf="generalGroup.get('production')?.hasError('required')">Obligatorio</mat-error>
+            <mat-error *ngIf="generalGroup.get('production')?.hasError('whitespace')">No puede estar en
+              blanco.</mat-error>
+            <mat-error *ngIf="generalGroup.get('production')?.hasError('maxlength')">Supera el máximo
+              permitido.</mat-error>
           </mat-form-field>
         </div>
 
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Descripción</mat-label>
-          <textarea matInput rows="3" formControlName="description" required maxlength="1000"></textarea>
+          <textarea matInput rows="3" formControlName="description" required maxlength="500"></textarea>
           <mat-error *ngIf="generalGroup.get('description')?.hasError('required')">Obligatorio</mat-error>
+          <mat-error *ngIf="generalGroup.get('description')?.hasError('whitespace')">No puede estar en
+            blanco.</mat-error>
+          <mat-error *ngIf="generalGroup.get('description')?.hasError('minlength')">Mínimo 5 caracteres.</mat-error>
+          <mat-error *ngIf="generalGroup.get('description')?.hasError('maxlength')">Máximo 500 caracteres.</mat-error>
         </mat-form-field>
 
         <div class="actions">
-          <app-button
-            text="Siguiente"
-            color="primary"
-            [disabled]="generalGroup.invalid"
-            [stepperAction]="'next'">
+          <app-button text="Siguiente" color="primary" [disabled]="generalGroup.invalid" [stepperAction]="'next'">
           </app-button>
         </div>
       </form>
@@ -66,9 +82,11 @@
         <div class="row-2 top">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Stock</mat-label>
-            <input matInput type="number" formControlName="stock" required min="0" />
+            <input matInput type="number" formControlName="stock" required />
+            <mat-hint>Máximo 100,000</mat-hint>
             <mat-error *ngIf="detallesGroup.get('stock')?.hasError('required')">Obligatorio</mat-error>
-            <mat-error *ngIf="detallesGroup.get('stock')?.hasError('min')">No negativo</mat-error>
+            <mat-error *ngIf="detallesGroup.get('stock')?.hasError('min')">No puede ser negativo.</mat-error>
+            <mat-error *ngIf="detallesGroup.get('stock')?.hasError('max')">No puede superar 100,000.</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="w-100">
@@ -88,6 +106,8 @@
               <mat-option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</mat-option>
             </mat-select>
             <mat-error *ngIf="detallesGroup.get('categoryId')?.hasError('required')">Obligatorio</mat-error>
+            <mat-error *ngIf="detallesGroup.get('categoryId')?.hasError('positiveInt')">Debe seleccionar una categoría
+              válida.</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="w-100">
@@ -96,22 +116,15 @@
               <mat-option *ngFor="let f of farms" [value]="f.id">{{ f.name }}</mat-option>
             </mat-select>
             <mat-error *ngIf="detallesGroup.get('farmId')?.hasError('required')">Obligatorio</mat-error>
+            <mat-error *ngIf="detallesGroup.get('farmId')?.hasError('positiveInt')">Debe seleccionar una finca
+              válida.</mat-error>
           </mat-form-field>
         </div>
 
         <div class="actions space-between">
-          <app-button
-            text="Anterior"
-            color="secondary"
-            [stepperAction]="'previous'">
-          </app-button>
-
-          <app-button
-            text="Siguiente"
-            color="primary"
-            [disabled]="detallesGroup.invalid"
-            [stepperAction]="'next'">
-          </app-button>
+          <app-button text="Anterior" color="secondary" [stepperAction]="'previous'"></app-button>
+          <app-button text="Siguiente" color="primary" [disabled]="detallesGroup.invalid"
+            [stepperAction]="'next'"></app-button>
         </div>
       </form>
     </mat-step>
@@ -125,23 +138,20 @@
         <span>Máximo {{ MAX_IMAGES }} imágenes. Tamaño ≤ {{ MAX_FILE_SIZE_MB }} MB.</span>
       </div>
 
-      <div class="drop-zone"
-           (dragover)="onDragOver($event)"
-           (dragleave)="onDragLeave($event)"
-           (drop)="onDropOrInput($event.dataTransfer?.files || null)"
-           [class.dragover]="isDragging"
-           (click)="fileInput.click()">
-
+      <div class="drop-zone" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+        (drop)="onDropOrInput($event.dataTransfer?.files || null)" [class.dragover]="isDragging"
+        (click)="canAddMore && fileInput.click()" [matTooltip]="imagesLimitMsg" matTooltipPosition="above">
         <mat-icon>cloud_upload</mat-icon>
         <p>Arrastra aquí o haz clic para seleccionar</p>
         <small>Formatos: JPG, PNG, WEBP</small>
 
-        <input #fileInput type="file" accept="image/*" multiple hidden
-               (change)="onDropOrInput(fileInput.files)" />
+        <input #fileInput type="file" accept="image/*" multiple hidden (change)="onDropOrInput(fileInput.files)"
+          [disabled]="!canAddMore" />
       </div>
 
-      <div class="image-counter">
-        {{ selectedFiles.length + existingImages.length }}/{{ MAX_IMAGES }} imágenes
+      <div class="image-counter" [class.error]="!canAddMore">
+        {{ totalImages }}/{{ MAX_IMAGES }} imágenes
+        <ng-container *ngIf="!canAddMore"> • Límite alcanzado</ng-container>
       </div>
 
       <div class="compact-image-grid">
@@ -169,25 +179,15 @@
       </div>
 
       <div class="actions space-between">
-        <app-button
-          text="Anterior"
-          color="secondary"
-          [stepperAction]="'previous'">
-        </app-button>
-
-        <app-button
-          [text]="isEdit ? 'Actualizar' : 'Crear'"
-          color="primary"
-          [disabled]="isLoading || (!isEdit && (selectedFiles.length + existingImages.length) === 0)"
-          (clicked)="submit()">
-        </app-button>
+        <app-button text="Anterior" color="secondary" [stepperAction]="'previous'"></app-button>
+        <app-button [text]="isEdit ? 'Actualizar' : 'Crear'" color="primary"
+          [disabled]="isLoading || (!isEdit && totalImages === 0) || totalImages > MAX_IMAGES"
+          (clicked)="submit()"></app-button>
       </div>
     </mat-step>
   </mat-horizontal-stepper>
 
   <div class="footer-actions">
-    <!-- Usa back del historial o tu cancel() -->
     <app-button text="Cancelar" color="secondary" [back]="true"></app-button>
-    <!-- <app-button text="Cancelar" color="secondary" (clicked)="cancel()"></app-button> -->
   </div>
 </div>
