@@ -2,19 +2,22 @@
 <div class="form-wrapper-transparent">
   <h2 class="titleForm">{{ title }}</h2>
 
-  <form (submit)="save()" [formGroup]="form" class="form-container">
+  <form (ngSubmit)="save()" [formGroup]="form" class="form-container">
     <!-- Usuario -->
     <div class="form-field">
       <mat-form-field appearance="outline" class="custom-mat-field">
         <mat-label>Usuario</mat-label>
-        <mat-select [formControl]="form.controls.userId" required>
+        <mat-select formControlName="userId" required>
           <mat-option [value]="0" disabled>Seleccione un usuario</mat-option>
           <mat-option *ngFor="let u of users" [value]="u.id">
-            {{ u.firstName }} {{ u.lastName }} 
+            {{ u.firstName }} {{ u.lastName }}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="form.controls.userId.hasError('required') || form.controls.userId.value === 0">
-          El usuario es obligatorio
+        <mat-error *ngIf="form.get('userId')?.hasError('required')">
+          El usuario es obligatorio.
+        </mat-error>
+        <mat-error *ngIf="form.get('userId')?.hasError('min')">
+          Debe seleccionar un usuario válido.
         </mat-error>
       </mat-form-field>
     </div>
@@ -23,14 +26,17 @@
     <div class="form-field">
       <mat-form-field appearance="outline" class="custom-mat-field">
         <mat-label>Rol</mat-label>
-        <mat-select [formControl]="form.controls.rolId" required>
+        <mat-select formControlName="rolId" required>
           <mat-option [value]="0" disabled>Seleccione un rol</mat-option>
           <mat-option *ngFor="let r of rols" [value]="r.id">
             {{ r.name }}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="form.controls.rolId.hasError('required') || form.controls.rolId.value === 0">
-          El rol es obligatorio
+        <mat-error *ngIf="form.get('rolId')?.hasError('required')">
+          El rol es obligatorio.
+        </mat-error>
+        <mat-error *ngIf="form.get('rolId')?.hasError('min')">
+          Debe seleccionar un rol válido.
         </mat-error>
       </mat-form-field>
     </div>
@@ -41,7 +47,7 @@
         [text]="'Guardar'"
         [icon]="'save'"
         [type]="'submit'"
-        [disabled]="form.invalid || form.controls.userId.value === 0 || form.controls.rolId.value === 0">
+        [disabled]="form.invalid">
       </app-button>
 
       <app-button

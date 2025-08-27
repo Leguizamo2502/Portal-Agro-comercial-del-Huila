@@ -1,28 +1,30 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+// rol-user-form.component.ts
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { ButtonComponent } from '../../../../../shared/components/button/button.component';
+
 import { RolSelectModel } from '../../../models/rol/rol.model';
 import { UserSelectModel } from '../../../../../Core/Models/user.model';
-import { MatInputModule } from "@angular/material/input";
-import { MatSelectModule } from "@angular/material/select";
-import { ButtonComponent } from "../../../../../shared/components/button/button.component";
-import { CommonModule } from '@angular/common';
 
-export interface RolUserSelectModel{
+export interface RolUserSelectModel {
   id: number;
   rolId: number;
   rolName: string;
   userId: number;
   userName: string;
 }
-
-export interface RolUserRegisterModel{
+export interface RolUserRegisterModel {
   rolId: number;
   userId: number;
 }
 
 @Component({
   selector: 'app-rol-user-form',
-  imports: [MatInputModule, MatSelectModule, ButtonComponent,ReactiveFormsModule,CommonModule],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, MatInputModule, MatSelectModule, ButtonComponent],
   templateUrl: './rol-user-form.component.html',
   styleUrl: './rol-user-form.component.css'
 })
@@ -37,7 +39,6 @@ export class RolUserFormComponent {
   @Input() set model(value: RolUserSelectModel | undefined) {
     this._model = value;
     if (value) {
-      // Parchar SOLO las claves que existen en el form
       this.form.patchValue({ userId: value.userId, rolId: value.rolId });
     }
   }
@@ -45,10 +46,10 @@ export class RolUserFormComponent {
 
   @Output() posteoForm = new EventEmitter<RolUserRegisterModel>();
 
-  // Controles no anulables: el form espera números, no null
+  // Non-nullable + min(1) => > 0
   form = this.fb.nonNullable.group({
-    userId: [0, Validators.required],
-    rolId:  [0, Validators.required],
+    userId: [0, [Validators.required, Validators.min(1)]],
+    rolId:  [0, [Validators.required, Validators.min(1)]],
   });
 
   ngOnInit(): void {
@@ -58,7 +59,11 @@ export class RolUserFormComponent {
   }
 
   save() {
-    const form = this.form.value as RolUserSelectModel;
-    this.posteoForm.emit(form);
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    const payload: RolUserRegisterModel = this.form.getRawValue();
+    this.posteoForm.emit(payload);
   }
 }
