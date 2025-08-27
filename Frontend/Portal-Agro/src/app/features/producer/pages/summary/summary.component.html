@@ -1,8 +1,20 @@
-<h1 class="title">Resumen</h1>
+<div class="container">
+    <h1 class="title">Resumen</h1>
 
-<div class="cont-stat-card">
-    <app-stat-card [text]="'Pedidos Pendientes'"></app-stat-card>
-    <app-stat-card [text]="'Pedidos Completado'" [icon]="'check_circle'"></app-stat-card>
+    <div class="cont-stat-card">
+        <app-stat-card [text]="'Pedidos Pendientes'"></app-stat-card>
+        <app-stat-card [text]="'Pedidos Completado'" [icon]="'check_circle'"></app-stat-card>
+    </div>
 
-
+    <div class="row mt-4">
+        <div class="col-md-6 col-sm-8">
+            <div class="chart-container">
+                <canvas baseChart
+                        [data]="barChartData"
+                        [options]="barChartOptions"
+                        [type]="'bar'">
+                </canvas>
+            </div>
+        </div>
+    </div>
 </div>
