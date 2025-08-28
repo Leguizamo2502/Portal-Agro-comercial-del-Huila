@@ -89,6 +89,7 @@ export class ProductDetailComponent implements OnInit {
         this.reviews = list ?? [];
         this.recomputeStats();
         this.loadingReviews = false;
+        console.log(this.reviews);
       },
       error: () => { this.loadingReviews = false; }
     });
