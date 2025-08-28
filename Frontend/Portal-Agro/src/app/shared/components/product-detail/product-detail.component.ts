@@ -73,9 +73,16 @@ export class ProductDetailComponent implements OnInit {
   }
 
   // seleccionar estrellas
+  hoveredRating: number = 0;
+
   setRating(rating: number) {
     this.selectedRating = rating;
   }
+
+  setHoveredRating(rating: number) {
+    this.hoveredRating = rating;
+  }
+
 
   submitReview() {
     if (!this.newReview.trim() || this.selectedRating === 0) return;

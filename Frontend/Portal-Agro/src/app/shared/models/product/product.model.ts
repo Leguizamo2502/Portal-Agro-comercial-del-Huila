@@ -16,7 +16,7 @@ export interface ProductSelectModel {
   cityName: string;
   departmentName: string;
   isFavorite: boolean;
-  // 👇 Opcionales (solo mockup en frontend)
+  // Opcionales (solo mockup en frontend)
   orders?: number;
   categories?: string[];
   moreInfo?: string;

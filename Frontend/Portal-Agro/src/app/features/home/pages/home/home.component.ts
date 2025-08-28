@@ -4,11 +4,12 @@ import { ProductService } from '../../../../shared/services/product/product.serv
 import { ProductSelectModel } from '../../../../shared/models/product/product.model';
 import { CarruselComponent } from '../../../../shared/components/carrusel/carrusel.component';
 import { ContainerCardComponent } from "../../../../shared/components/cards/container-card/container-card.component";
+import { FooterComponent } from "../../../../shared/components/footer/footer.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, CarruselComponent, ContainerCardComponent],
+  imports: [CommonModule, CarruselComponent, ContainerCardComponent, FooterComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })

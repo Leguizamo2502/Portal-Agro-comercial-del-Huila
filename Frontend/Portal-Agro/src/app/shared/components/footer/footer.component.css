@@ -1,0 +1,31 @@
+.footer-container{
+    width: 100%;
+    height: 18rem;
+    background-color: #2e7d32;
+    border-top: 1px solid beige;
+    border-top-left-radius:10px;
+    border-top-right-radius:10px;
+    color: #e0e0e0;
+}
+.location-footer .subtitle{
+    margin: 0;
+    color: #e0e0e0;
+}
+.location-footer .text{
+    margin: 0;
+    color: #e0e0e0;
+}
+.email-footer .subtitle{
+    margin: 0;
+    color: #e0e0e0;
+}
+.email-footer .text{
+    margin: 0;
+    color: #e0e0e0;
+    word-wrap: break-word;
+}
+.banner-h{
+    height: 16vh;
+    width: auto;
+    
+}
