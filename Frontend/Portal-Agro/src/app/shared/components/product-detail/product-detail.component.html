@@ -89,7 +89,7 @@
                 <div>
                   <div class="subtitle">{{ r.userName }}</div>
                   <!-- Fecha en español (ver sección al final) -->
-                  <small class="text-muted">{{ r.createdAt | date:'mediumDate':'':'es-CO' }}</small>
+                  <small class="text-muted">{{ r.createAt | date:'mediumDate':'':'es-CO' }}</small>
                   <div class="mt-1">
                     <span *ngFor="let star of [1,2,3,4,5]">
                       <i class="bi" [ngClass]="star <= r.rating ? 'bi-star-fill text-warning' : 'bi-star text-secondary'"></i>

@@ -90,5 +90,5 @@ export interface ReviewSelectModel {
   userName: string;
   rating: number;         
   comment: string;
-  createdAt: string;       
+  createAt: string;       
 }
