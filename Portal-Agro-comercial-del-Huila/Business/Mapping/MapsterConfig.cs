@@ -1,6 +1,7 @@
 ﻿using Entity.Domain.Models.Implements.Auth;
 using Entity.Domain.Models.Implements.Producers;
-using Entity.Domain.Models.Implements.Products;
+using Entity.Domain.Models.Implements.Producers.Farms;
+using Entity.Domain.Models.Implements.Producers.Products;
 using Entity.Domain.Models.Implements.Security;
 using Entity.DTOs.Auth;
 using Entity.DTOs.Auth.User;
@@ -91,7 +92,14 @@ namespace Business.Mapping
 
 
             //Products
-            config.NewConfig<ProductCreateDto, Product>().Ignore(des => des.ProductImages);
+            // Config global de Mapster
+            config.NewConfig<ProductCreateDto, Product>()
+                .Ignore(dest => dest.ProductImages)
+                .Ignore(dest => dest.ProductFarms)
+                .Ignore(dest => dest.Producer)      // nav
+                .Ignore(dest => dest.Category)      // nav
+                .Ignore(dest => dest.ProducerId);   // lo asignas tú (pid)
+
             config.NewConfig<ProductImage, ProductImageSelectDto>()
                   .MapWith(src => new ProductImageSelectDto(
                       src.Id,
@@ -102,22 +110,54 @@ namespace Business.Mapping
                   ));
             // DTO de actualización → Entidad (ignorar nulos y valores por defecto)
             config.NewConfig<ProductUpdateDto, Product>()
-                .Ignore(dest => dest.ProductImages)   // Se manejan aparte
-                .Ignore(dest => dest.Active)   // No se actualiza desde DTO
+                .Ignore(d => d.ProductImages)
+                .Ignore(d => d.ProductFarms)
+                .Ignore(d => d.Category)   // nav
+                .Ignore(d => d.Producer)// nav  // No se actualiza desde DTO
                 .IgnoreNullValues(true);
 
 
+            // Product -> ProductSelectDto (toma la primera finca asociada)
             config.NewConfig<Product, ProductSelectDto>()
-                  .Map(dest => dest.PersonName,
-                       src => (src.Farm != null && src.Farm.Producer != null &&
-                               src.Farm.Producer.User != null && src.Farm.Producer.User.Person != null)
-                            ? (src.Farm.Producer.User.Person.FirstName + " " +
-                               src.Farm.Producer.User.Person.LastName)
-                            : string.Empty)
-                  // Mapear la colección usando el mapeo ProductImage -> ProductImageSelectDto
-                  .Map(dest => dest.Images, src => src.ProductImages ?? new List<ProductImage>())
-                  .Map(dest => dest.CityName, src => src.Farm.City.Name)
-                  .Map(dest => dest.DepartmentName, src => src.Farm.City.Department.Name);
+                // Copia propiedades homónimas (Id, Name, Description, Price, Unit, Production, Stock, Status, CategoryId)
+                .Map(dest => dest.CategoryName, src => src.Category.Name)
+                .Map(dest => dest.Images, src => src.ProductImages.Where(pi => !pi.IsDeleted))
+
+                // Selecciona UNA finca (la primera por nombre, o por Id para estabilidad)
+                .Map(dest => dest.FarmId,
+                     src => src.ProductFarms
+                                .OrderBy(pf => pf.Farm.Name)    // o .OrderBy(pf => pf.FarmId)
+                                .Select(pf => (int?)pf.FarmId)
+                                .FirstOrDefault() ?? 0)
+
+                .Map(dest => dest.FarmName,
+                     src => src.ProductFarms
+                                .OrderBy(pf => pf.Farm.Name)
+                                .Select(pf => pf.Farm.Name)
+                                .FirstOrDefault() ?? string.Empty)
+
+                .Map(dest => dest.CityName,
+                     src => src.ProductFarms
+                                .OrderBy(pf => pf.Farm.Name)
+                                .Select(pf => pf.Farm.City.Name)
+                                .FirstOrDefault() ?? string.Empty)
+
+                .Map(dest => dest.DepartmentName,
+                     src => src.ProductFarms
+                                .OrderBy(pf => pf.Farm.Name)
+                                .Select(pf => pf.Farm.City.Department.Name)
+                                .FirstOrDefault() ?? string.Empty)
+
+                .Map(dest => dest.PersonName,
+                     src => src.ProductFarms
+                                .OrderBy(pf => pf.Farm.Name)
+                                .Select(pf =>
+                                    pf.Farm.Producer.User.Person != null
+                                        ? (pf.Farm.Producer.User.Person.FirstName + " " + pf.Farm.Producer.User.Person.LastName)
+                                        : null)
+                                .FirstOrDefault() ?? string.Empty);
+
+
 
             //Category
             // Updated mapping to handle potential null references

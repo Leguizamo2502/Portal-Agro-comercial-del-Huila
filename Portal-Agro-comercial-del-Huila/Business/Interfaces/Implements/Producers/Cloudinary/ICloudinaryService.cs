@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CloudinaryDotNet.Actions;
-using Entity.Domain.Models.Implements.Producers;
-using Entity.Domain.Models.Implements.Products;
+﻿using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
 
 namespace Business.Interfaces.Implements.Producers.Cloudinary

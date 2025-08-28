@@ -7,7 +7,8 @@ using Data.Interfaces.Implements.Producers.Products;
 using Data.Interfaces.IRepository;
 using Entity.Domain.Models.Implements.Auth;
 using Entity.Domain.Models.Implements.Favorites;
-using Entity.Domain.Models.Implements.Products;
+using Entity.Domain.Models.Implements.Producers;
+using Entity.Domain.Models.Implements.Producers.Products;
 using Entity.DTOs.Favorites.Create;
 using Entity.DTOs.Products.Create;
 using Entity.DTOs.Products.Select;
@@ -167,17 +168,55 @@ namespace Business.Services.Producers.Products
         }
 
 
-        public async Task<ProductSelectDto> CreateProductAsync(ProductCreateDto dto)
+        public async Task<int> CreateProductAsync(ProductCreateDto dto)
         {
             ValidateMaxImages(dto.Images?.Count ?? 0);
 
-            var entity = dto.Adapt<Product>();
+            // dto.ProducerId viene con el userId; obtenemos el Producer.Id real
+            var pid = await _producerRepository.GetIdProducer(dto.ProducerId)
+                     ?? throw new BusinessException("El usuario no está registrado como productor.");
+
+            // Validaciones
+            var categoryExists = await _context.Category
+                .AnyAsync(c => c.Id == dto.CategoryId && !c.IsDeleted);
+            if (!categoryExists)
+                throw new BusinessException("Categoría inválida.");
+
+            var farmIds = (dto.FarmIds ?? new List<int>()).Distinct().ToList();
+            if (farmIds.Count > 0)
+            {
+                var validCount = await _context.Farms
+                    .CountAsync(f => farmIds.Contains(f.Id) && f.ProducerId == pid && !f.IsDeleted);
+                if (validCount != farmIds.Count)
+                    throw new BusinessException("Una o más fincas no pertenecen al productor.");
+            }
 
             await using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
+                var entity = dto.Adapt<Product>();
+                entity.ProducerId = pid;
+                entity.Active = true;
+                entity.IsDeleted = false;
+                entity.CreateAt = DateTime.UtcNow;
+
                 await _productRepository.AddAsync(entity);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(); // ya tienes entity.Id
+
+                if (farmIds.Count > 0)
+                {
+                    var now = DateTime.UtcNow;
+                    var pivots = farmIds.Select(fid => new ProductFarm
+                    {
+                        ProductId = entity.Id,
+                        FarmId = fid,
+                        Active = true,
+                        IsDeleted = false,
+                        CreateAt = now
+                    });
+                    _context.ProductFarms.AddRange(pivots);
+                    await _context.SaveChangesAsync();
+                }
 
                 var images = await UploadAndMapImagesAsync(dto.Images, entity.Id);
                 if (images.Any())
@@ -187,57 +226,109 @@ namespace Business.Services.Producers.Products
                 }
 
                 await transaction.CommitAsync();
-
-                var result = entity.Adapt<ProductSelectDto>();
-                result.Images = images.Adapt<List<ProductImageSelectDto>>();
-                return result;
+                return entity.Id;
             }
-            catch (Exception ex)
+            catch
             {
-                _logger.LogError(ex, "Error creando producto");
                 await transaction.RollbackAsync();
                 throw;
             }
         }
 
-        public async Task<ProductSelectDto> UpdateProductAsync(ProductUpdateDto dto)
+        public async Task<bool> UpdateProductAsync(ProductUpdateDto dto, int userId)
         {
-            var entity = await _productRepository.GetByIdAsync(dto.Id)
-                ?? throw new Exception($"Product No se encontró el producto {dto.Id}");
+            // Producer del usuario
+            var producerId = await _producerRepository.GetIdProducer(userId)
+                             ?? throw new BusinessException("El usuario no está registrado como productor.");
 
-            await using var transaction = await _context.Database.BeginTransactionAsync();
+            // Cargar producto con tracking
+            var product = await _context.Products
+                .Include(p => p.ProductImages)
+                .Include(p => p.ProductFarms)
+                .FirstOrDefaultAsync(p => p.Id == dto.Id && !p.IsDeleted)
+                ?? throw new BusinessException($"Producto no encontrado: {dto.Id}");
+
+            if (product.ProducerId != producerId)
+                throw new BusinessException("No está autorizado para modificar este producto.");
+
+            // Validaciones
+            var categoryExists = await _context.Category
+                .AnyAsync(c => c.Id == dto.CategoryId && !c.IsDeleted);
+            if (!categoryExists)
+                throw new BusinessException("Categoría inválida.");
+
+            var newFarmIds = (dto.FarmIds ?? new List<int>()).Distinct().ToHashSet();
+
+            if (newFarmIds.Count > 0)
+            {
+                var validCount = await _context.Farms
+                    .CountAsync(f => newFarmIds.Contains(f.Id) && f.ProducerId == producerId && !f.IsDeleted);
+                if (validCount != newFarmIds.Count)
+                    throw new BusinessException("Una o más fincas no pertenecen al productor.");
+            }
+
+            await using var tx = await _context.Database.BeginTransactionAsync();
             try
             {
-                dto.Adapt(entity);
+                // Actualizar escalares (Mapster configurado para no tocar navs)
+                dto.Adapt(product);
 
-                await _productRepository.UpdateAsync(entity);
+                // Sincronizar N–M (soft delete por índice único filtrado)
+                var currentActive = product.ProductFarms
+                    .Where(pf => !pf.IsDeleted)
+                    .Select(pf => pf.FarmId)
+                    .ToHashSet();
 
+                var toAdd = newFarmIds.Except(currentActive).ToList();
+                var toRemove = currentActive.Except(newFarmIds).ToList();
+
+                var now = DateTime.UtcNow;
+
+                foreach (var fid in toAdd)
+                {
+                    _context.ProductFarms.Add(new ProductFarm
+                    {
+                        ProductId = product.Id,
+                        FarmId = fid,
+                        Active = true,
+                        IsDeleted = false,
+                        CreateAt = now
+                    });
+                }
+
+                foreach (var fid in toRemove)
+                {
+                    var pivot = product.ProductFarms.First(pf => pf.FarmId == fid && !pf.IsDeleted);
+                    pivot.IsDeleted = true;
+                    pivot.Active = false;
+                }
+
+                // Imágenes
                 if (dto.ImagesToDelete?.Any() == true)
                     await DeleteImagesAsync(dto.ImagesToDelete);
 
                 if (dto.Images?.Any() == true)
                 {
                     var validFiles = dto.Images.Where(f => f?.Length > 0).ToList();
-
                     var currentCount = (await _productImageRepository.GetByProductIdAsync(dto.Id)).Count;
+
                     ValidateMaxImages(validFiles.Count + currentCount, currentCount);
 
-                    var newImages = await UploadAndMapImagesAsync(validFiles, entity.Id);
+                    var newImages = await UploadAndMapImagesAsync(validFiles, product.Id);
                     await _productImageRepository.AddImages(newImages);
                 }
 
                 await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
-
-                return (await _productRepository.GetByIdAsync(dto.Id))!.Adapt<ProductSelectDto>();
+                await tx.CommitAsync();
+                return true;
             }
-            catch (Exception ex)
+            catch
             {
-                _logger.LogError(ex, "Error actualizando producto ID {Id}", dto.Id);
-                await transaction.RollbackAsync();
+                await tx.RollbackAsync();
                 throw;
             }
         }
+
 
         public async Task<IEnumerable<ProductSelectDto>> GetByProducer(int userId)
         {

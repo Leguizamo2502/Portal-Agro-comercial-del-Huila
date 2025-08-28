@@ -1,6 +1,6 @@
 ﻿using Entity.Domain.Models.Base;
 
-namespace Entity.Domain.Models.Implements.Products
+namespace Entity.Domain.Models.Implements.Producers.Products
 {
     public class ProductImage : BaseModel
     {

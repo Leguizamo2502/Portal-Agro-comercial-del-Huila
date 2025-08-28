@@ -1,6 +1,6 @@
 ﻿using Entity.Domain.Models.Base;
 using Entity.Domain.Models.Implements.Auth;
-using Entity.Domain.Models.Implements.Products;
+using Entity.Domain.Models.Implements.Producers.Products;
 
 namespace Entity.Domain.Models.Implements.Favorites
 {

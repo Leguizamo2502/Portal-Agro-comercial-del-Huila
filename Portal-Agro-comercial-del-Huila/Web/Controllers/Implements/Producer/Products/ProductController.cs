@@ -7,13 +7,14 @@ using Entity.DTOs.Products.Update;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Utilities.Exceptions;
 using Utilities.Helpers.Auth;
 
 namespace Web.Controllers.Implements.Producer.Products
 {
 
     [ApiController]
-    [Authorize]
+    //[Authorize]
     [Route("api/v1/[controller]")]
     public class ProductController : ControllerBase
     {
@@ -85,42 +86,66 @@ namespace Web.Controllers.Implements.Producer.Products
         public async Task<IActionResult> Register([FromForm] ProductCreateDto dto)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return BadRequest(new { IsSuccess = false, Errors = ModelState });
+
+            var userId = HttpContext.GetUserId();
 
             try
             {
-                var result = await _productService.CreateProductAsync(dto);
-                if (result != null)
-                    return Ok(new { IsSuccess = true, message = "Producto creada correctamente" });
-                else
-                    return BadRequest(ModelState);
+                dto.ProducerId = userId;
+
+                var newId = await _productService.CreateProductAsync(dto);
+                if (newId <= 0)
+                    return BadRequest(new { IsSuccess = false, message = "No se pudo crear el producto." });
+
+                return Ok(new { IsSuccess = true, message = "Producto creado correctamente." });
+            }
+            catch (BusinessException bex)
+            {
+                return BadRequest(new { IsSuccess = false, message = bex.Message });
             }
             catch (Exception ex)
             {
-                // Puedes registrar el error para monitoreo
-                // _logger.LogError(ex, "Error al registrar la producto");
-
-                return StatusCode(500, new { IsSuccess = false, message = "Ocurrió un error al registrar la producto", error = ex.Message });
+                _logger.LogError(ex, "Error al registrar el producto");
+                return StatusCode(500, new { IsSuccess = false, message = "Ocurrió un error al registrar el producto." });
             }
         }
 
-        
+
+
 
 
         [HttpPut("{id:int}")]
         [Consumes("multipart/form-data")]
-        public async Task<ActionResult<ProductSelectDto>> Update(int id, [FromForm] ProductUpdateDto dto)
+        public async Task<IActionResult> Update(int id, [FromForm] ProductUpdateDto dto)
         {
             if (dto is not BaseDto identifiableDto)
-                return BadRequest(new { message = "El DTO no implementa IHasId." });
+                return BadRequest(new { IsSuccess = false, message = "El DTO no implementa IHasId." });
 
             identifiableDto.Id = id;
             if (id != dto.Id)
-                return BadRequest("El ID de la URL no coincide con el ID del cuerpo del formulario.");
+                return BadRequest(new { IsSuccess = false, message = "El ID de la URL no coincide con el del cuerpo." });
 
-            var result = await _productService.UpdateProductAsync(dto);
-            return Ok(result);
+            var userId = HttpContext.GetUserId();
+
+            try
+            {
+                var ok = await _productService.UpdateProductAsync(dto, userId);
+                if (!ok) return BadRequest(new { IsSuccess = false, message = "No se pudo actualizar el producto." });
+
+                return Ok(new { IsSuccess = true, message = "Producto actualizado correctamente." });
+            }
+            catch (BusinessException bex)
+            {
+                return BadRequest(new { IsSuccess = false, message = bex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error actualizando producto {Id}", id);
+                return StatusCode(500, new { IsSuccess = false, message = "Error interno al actualizar el producto." });
+            }
         }
+
 
 
         /// <summary>
@@ -141,6 +166,7 @@ namespace Web.Controllers.Implements.Producer.Products
             if (created) return StatusCode(StatusCodes.Status201Created);
             return NoContent();
         }
+
         [HttpDelete("favorite/{productId:int}")]
         public async Task<IActionResult> DeleteFavorite(int productId)
         {

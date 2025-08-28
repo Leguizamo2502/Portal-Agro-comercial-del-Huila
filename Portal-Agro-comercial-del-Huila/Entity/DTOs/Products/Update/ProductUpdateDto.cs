@@ -17,7 +17,7 @@ namespace Entity.DTOs.Products.Update
         public int CategoryId { get; set; }
         public List<IFormFile> Images { get; set; } = new();
 
-        public int FarmId { get; set; }
+        public List<int> FarmIds { get; set; } = new();
         public List<string>? ImagesToDelete { get; set; }
     }
 }

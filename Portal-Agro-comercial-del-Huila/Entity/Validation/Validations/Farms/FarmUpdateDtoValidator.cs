@@ -1,6 +1,5 @@
 ﻿using Entity.DTOs.Producer.Farm.Update;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
 
 public class FarmUpdateDtoValidator : AbstractValidator<FarmUpdateDto>
 {

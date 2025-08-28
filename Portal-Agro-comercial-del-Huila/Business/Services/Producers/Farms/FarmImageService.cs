@@ -3,7 +3,7 @@ using Business.Interfaces.Implements.Producers.Farms;
 using Business.Repository;
 using Data.Interfaces.Implements.Producers.Farms;
 using Data.Interfaces.IRepository;
-using Entity.Domain.Models.Implements.Producers;
+using Entity.Domain.Models.Implements.Producers.Farms;
 using Entity.DTOs.Producer.Farm.Select;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;

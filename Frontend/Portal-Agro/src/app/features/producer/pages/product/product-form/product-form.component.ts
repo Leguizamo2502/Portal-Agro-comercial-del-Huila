@@ -1,16 +1,19 @@
+// product-form.component.ts
 import { CommonModule } from '@angular/common';
 import {
   Component,
   EventEmitter,
-  Input,
   OnInit,
   Output,
   inject,
 } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -23,6 +26,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+
 import {
   ProductSelectModel,
   ProductImageSelectModel,
@@ -39,7 +43,25 @@ import Swal from 'sweetalert2';
 import { ProductImageService } from '../../../../../shared/services/productImage/product-image.service';
 import { catchError, finalize, of, take } from 'rxjs';
 
+// ---- Validadores utilitarios (alineados con backend) ----
+const notWhiteSpaceValidator = (label: string): ValidatorFn =>
+  (c: AbstractControl): ValidationErrors | null =>
+    (typeof c.value === 'string' && c.value.trim().length === 0)
+      ? { whitespace: `${label} no puede estar en blanco.` } : null;
 
+const positiveNumberValidator = (label: string): ValidatorFn =>
+  (c: AbstractControl): ValidationErrors | null => {
+    const n = Number(c.value);
+    if (!Number.isFinite(n) || n <= 0) return { positive: `${label} debe ser mayor a 0.` };
+    return null;
+  };
+
+const positiveIntValidator = (label: string): ValidatorFn =>
+  (c: AbstractControl): ValidationErrors | null => {
+    const n = Number(c.value);
+    if (!Number.isInteger(n) || n <= 0) return { positiveInt: `Debe seleccionar ${label.toLowerCase()} válida.` };
+    return null;
+  };
 
 @Component({
   selector: 'app-product-form',
@@ -67,48 +89,25 @@ export class ProductFormComponent implements OnInit {
   private productSrv = inject(ProductService);
   private imageSrv = inject(ProductImageService);
   private farmService = inject(FarmService);
-  farms: FarmSelectModel[] = [];
   private categoryService = inject(CategoryService);
+
+  farms: FarmSelectModel[] = [];
   categories: CategorySelectModel[] = [];
 
-  loadFarm() {
-    this.farmService.getByProducer().subscribe((dara) => {
-      this.farms = dara;
-    });
-  }
-  loadCategories() {
-    this.categoryService.getAll().subscribe((data) => {
-      this.categories = data;
-    });
-  }
-
-  /** Modo edición si llega productId o initialData */
-  // @Input() productId?: number;
-  // @Input() initialData?: ProductSelectModel;
-
-  /** Listas externas para selects */
-  // @Input({ required: true }) categories: CategoryOption[] = [];
-  // @Input({ required: true }) farms: FarmOption[] = [];
-
-  /** Emite cuando se crea/actualiza */
   @Output() saved = new EventEmitter<ProductSelectModel>();
 
-  // Step groups
   generalGroup!: FormGroup;
   detallesGroup!: FormGroup;
 
-  // Estado UI
   isEdit = false;
   isLoading = false;
   isDragging = false;
   isDeletingImage = false;
 
-  // Límites
   readonly MAX_IMAGES = 5;
   readonly MAX_FILE_SIZE_MB = 5;
   readonly MAX_FILE_SIZE_BYTES = this.MAX_FILE_SIZE_MB * 1024 * 1024;
 
-  // Imágenes
   selectedFiles: File[] = [];
   imagesPreview: string[] = [];
   existingImages: ProductImageSelectModel[] = [];
@@ -116,12 +115,27 @@ export class ProductFormComponent implements OnInit {
 
   productId?: number;
 
+  // === Helpers para el límite de imágenes ===
+  get totalImages(): number {
+    return this.selectedFiles.length + this.existingImages.length;
+  }
+
+  get canAddMore(): boolean {
+    return this.totalImages < this.MAX_IMAGES;
+  }
+
+  get imagesLimitMsg(): string {
+    return this.canAddMore
+      ? `Puedes agregar hasta ${this.MAX_IMAGES - this.totalImages} imagen(es) más`
+      : `Límite alcanzado: ${this.MAX_IMAGES} imágenes`;
+  }
+
   ngOnInit(): void {
     this.initForms();
     this.loadCategories();
     this.loadFarm();
 
-    // Escucha cambios del :id (soporta navegar de update/5 a update/6 sin destruir componente)
+    // Cambia validaciones según modo (create/update)
     this.route.paramMap.subscribe((params) => {
       const idParam = params.get('id');
 
@@ -130,44 +144,80 @@ export class ProductFormComponent implements OnInit {
         this.productId = Number(idParam);
         this.isEdit = true;
 
-        // Limpia estados previos por si venías de 'create' o de otro 'id'
+        // Reset estados
         this.resetForm();
         this.existingImages = [];
         this.imagesToDelete = [];
         this.selectedFiles = [];
         this.imagesPreview = [];
 
-        // Carga el producto y sus imágenes
+        // Ajustar límites de UPDATE: price ≤ 1,000,000; production ≤ 50
+        const priceCtrl = this.generalGroup.get('price');
+        priceCtrl?.clearValidators();
+        priceCtrl?.addValidators([Validators.required, positiveNumberValidator('El precio'), Validators.max(1_000_000)]);
+        priceCtrl?.updateValueAndValidity({ emitEvent: false });
+
+        const prodCtrl = this.generalGroup.get('production');
+        prodCtrl?.clearValidators();
+        prodCtrl?.addValidators([Validators.required, Validators.maxLength(50), notWhiteSpaceValidator('El tipo de producción')]);
+        prodCtrl?.updateValueAndValidity({ emitEvent: false });
+
+        // Cargar el producto + imágenes
         this.loadProduct(this.productId);
       } else {
         // ---- MODO CREACIÓN ----
         this.productId = undefined;
         this.isEdit = false;
 
-        // Deja el form listo para crear
+        // Reset estados
         this.resetForm();
         this.existingImages = [];
         this.imagesToDelete = [];
         this.selectedFiles = [];
         this.imagesPreview = [];
+
+        // Asegurar límites de CREATE: price ≤ 100,000,000; production ≤ 150
+        const priceCtrl = this.generalGroup.get('price');
+        priceCtrl?.clearValidators();
+        priceCtrl?.addValidators([Validators.required, positiveNumberValidator('El precio'), Validators.max(100_000_000)]);
+        priceCtrl?.updateValueAndValidity({ emitEvent: false });
+
+        const prodCtrl = this.generalGroup.get('production');
+        prodCtrl?.clearValidators();
+        prodCtrl?.addValidators([Validators.required, Validators.maxLength(150), notWhiteSpaceValidator('El tipo de producción')]);
+        prodCtrl?.updateValueAndValidity({ emitEvent: false });
       }
     });
   }
 
   private initForms(): void {
     this.generalGroup = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(120)]],
-      description: ['', [Validators.required, Validators.maxLength(1000)]],
-      price: [0, [Validators.required, Validators.min(0)]],
-      unit: ['', [Validators.required, Validators.maxLength(50)]],
-      production: ['', [Validators.required, Validators.maxLength(100)]],
+      name: ['', [
+        Validators.required, Validators.minLength(2), Validators.maxLength(100),
+        notWhiteSpaceValidator('El nombre')
+      ]],
+      description: ['', [
+        Validators.required, Validators.minLength(5), Validators.maxLength(500),
+        notWhiteSpaceValidator('La descripción')
+      ]],
+      // Por defecto (create); en ngOnInit se ajusta si es edición
+      price: [null, [
+        Validators.required, positiveNumberValidator('El precio'), Validators.max(100_000_000)
+      ]],
+      unit: ['', [
+        Validators.required, Validators.maxLength(20), notWhiteSpaceValidator('La unidad')
+      ]],
+      // Por defecto (create); en ngOnInit se ajusta si es edición
+      production: ['', [
+        Validators.required, Validators.maxLength(150), notWhiteSpaceValidator('El tipo de producción')
+      ]],
     });
 
     this.detallesGroup = this.fb.group({
-      stock: [0, [Validators.required, Validators.min(0)]],
+      stock: [0, [Validators.required, Validators.min(0), Validators.max(100_000)]],
       status: [true, [Validators.required]],
-      categoryId: [null, [Validators.required]],
-      farmId: [null, [Validators.required]],
+      categoryId: [null, [Validators.required, positiveIntValidator('Categoría')]],
+      farmId: [null, [Validators.required, positiveIntValidator('Finca')]],
     });
   }
 
@@ -176,7 +226,6 @@ export class ProductFormComponent implements OnInit {
     this.productSrv.getById(id).subscribe({
       next: (p) => {
         this.patchFromSelect(p);
-        // Cargar imágenes existentes del producto (si tu select ya trae publicId y url, úsalo directo)
         this.imageSrv.getImagesByProductId(p.id).subscribe({
           next: (imgs) => (this.existingImages = imgs ?? []),
           complete: () => (this.isLoading = false),
@@ -204,6 +253,18 @@ export class ProductFormComponent implements OnInit {
     });
   }
 
+  loadFarm() {
+    this.farmService.getByProducer().subscribe((data) => {
+      this.farms = data ?? [];
+    });
+  }
+
+  loadCategories() {
+    this.categoryService.getAll().subscribe((data) => {
+      this.categories = data ?? [];
+    });
+  }
+
   // Drag & Drop
   onDragOver(e: DragEvent): void {
     e.preventDefault();
@@ -224,24 +285,30 @@ export class ProductFormComponent implements OnInit {
   }
 
   private processFiles(files: FileList): void {
-    const total = this.selectedFiles.length + this.existingImages.length;
-    const remaining = this.MAX_IMAGES - total;
+    const remaining = this.MAX_IMAGES - this.totalImages;
     if (remaining <= 0) {
-      alert(`Máximo ${this.MAX_IMAGES} imágenes permitidas`);
+      alert(`Límite alcanzado: máximo ${this.MAX_IMAGES} imágenes`);
       return;
     }
 
     const newFiles: File[] = [];
     const errors: string[] = [];
 
-    Array.from(files).forEach((f) => {
+    Array.from(files).some((f) => {
       if (!f.type.startsWith('image/')) {
         errors.push(`"${f.name}" no es una imagen`);
-      } else if (f.size > this.MAX_FILE_SIZE_BYTES) {
-        errors.push(`"${f.name}" excede ${this.MAX_FILE_SIZE_MB} MB`);
-      } else if (newFiles.length < remaining) {
-        newFiles.push(f);
+        return false;
       }
+      if (f.size > this.MAX_FILE_SIZE_BYTES) {
+        errors.push(`"${f.name}" excede ${this.MAX_FILE_SIZE_MB} MB`);
+        return false;
+      }
+      if (newFiles.length >= remaining) {
+        // ya no agregamos más para no pasarnos del total
+        return true; // corta el bucle .some
+      }
+      newFiles.push(f);
+      return false;
     });
 
     if (errors.length) alert(errors.join('\n'));
@@ -250,8 +317,7 @@ export class ProductFormComponent implements OnInit {
     newFiles.forEach((file) => {
       const reader = new FileReader();
       reader.onload = (ev) => {
-        if (ev.target?.result)
-          this.imagesPreview.push(ev.target.result as string);
+        if (ev.target?.result) this.imagesPreview.push(ev.target.result as string);
       };
       reader.readAsDataURL(file);
     });
@@ -263,7 +329,6 @@ export class ProductFormComponent implements OnInit {
     if (isExisting) {
       const img = this.existingImages[index];
       if (!img?.publicId) {
-        // Si tu modelo no trae publicId, adapta el servicio/DTO
         this.existingImages.splice(index, 1);
         return;
       }
@@ -271,7 +336,7 @@ export class ProductFormComponent implements OnInit {
       this.imageSrv.deleteImagesByPublicIds([img.publicId]).subscribe({
         next: () => {
           this.existingImages.splice(index, 1);
-          // Registrar para el update por si prefieres delegar borrado en PUT
+          // Alternativa: delegar borrado en PUT
           // this.imagesToDelete.push(img.publicId);
         },
         complete: () => (this.isDeletingImage = false),
@@ -285,107 +350,99 @@ export class ProductFormComponent implements OnInit {
 
   // Submit
   submit(): void {
-  // Evita doble submit
-  if (this.isLoading) return;
+    if (this.isLoading) return;
 
-  // Forzar visualización de errores en formularios
-  this.generalGroup.markAllAsTouched();
-  this.detallesGroup.markAllAsTouched();
+    this.generalGroup.markAllAsTouched();
+    this.detallesGroup.markAllAsTouched();
+    if (this.generalGroup.invalid || this.detallesGroup.invalid) return;
 
-  if (this.generalGroup.invalid || this.detallesGroup.invalid) return;
+    // Límite total y requisito de imagen en CREATE
+    if (this.totalImages > this.MAX_IMAGES) {
+      Swal.fire({ icon: 'warning', title: 'Límite de imágenes', text: `Máximo ${this.MAX_IMAGES} imágenes en total.` });
+      return;
+    }
+    if (!this.isEdit && this.totalImages === 0) {
+      Swal.fire({ icon: 'warning', title: 'Falta imagen', text: 'Debes agregar al menos una imagen para crear el producto.' });
+      return;
+    }
 
-  // Al crear, requiere al menos una imagen
-  if (!this.isEdit && this.selectedFiles.length === 0) {
+    this.isLoading = true;
+
+    const g = this.generalGroup.value;
+    const d = this.detallesGroup.value;
+
+    const base = {
+      name: (g.name ?? '').trim(),
+      description: (g.description ?? '').trim(),
+      price: Number(g.price),
+      unit: (g.unit ?? '').trim(),
+      production: (g.production ?? '').trim(),
+      stock: Number(d.stock),
+      status: Boolean(d.status),
+      categoryId: Number(d.categoryId),
+      farmId: Number(d.farmId),
+    };
+
+    const dtoUpdate: ProductUpdateModel = {
+      id: this.productId!,
+      ...base,
+      images: this.selectedFiles.length ? this.selectedFiles : undefined,
+      imagesToDelete: this.imagesToDelete.length ? this.imagesToDelete : undefined,
+    };
+
+    const dtoCreate: ProductRegisterModel = {
+      ...base,
+      images: this.selectedFiles.length ? this.selectedFiles : undefined,
+    };
+
     Swal.fire({
-      icon: 'warning',
-      title: 'Falta imagen',
-      text: 'Debes agregar al menos una imagen para crear el producto.',
-      confirmButtonText: 'Entendido',
+      title: this.isEdit ? 'Actualizando producto...' : 'Creando producto...',
+      text: 'Por favor espera',
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
     });
-    return;
-  }
 
-  this.isLoading = true;
+    const request$ = this.isEdit
+      ? this.productSrv.update(dtoUpdate)
+      : this.productSrv.create(dtoCreate);
 
-  const g = this.generalGroup.value;
-  const d = this.detallesGroup.value;
+    request$
+      .pipe(
+        take(1),
+        catchError((err) => {
+          const msg =
+            err?.error?.message ||
+            err?.message ||
+            (this.isEdit
+              ? 'No se pudo actualizar el producto.'
+              : 'No se pudo registrar el producto.');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: msg,
+            confirmButtonText: 'Cerrar',
+          });
+          return of(null);
+        }),
+        finalize(() => (this.isLoading = false))
+      )
+      .subscribe((resp) => {
+        if (!resp) return;
 
-  // Datos base comunes
-  const base = {
-    name: (g.name ?? '').trim(),
-    description: (g.description ?? '').trim(),
-    price: Number(g.price),
-    unit: g.unit,
-    production: g.production,
-    stock: Number(d.stock),
-    status: Boolean(d.status),
-    categoryId: Number(d.categoryId),
-    farmId: Number(d.farmId),
-  };
-
-  // DTOs
-  const dtoUpdate: ProductUpdateModel = {
-    id: this.productId!,
-    ...base,
-    images: this.selectedFiles.length ? this.selectedFiles : undefined,
-    imagesToDelete: this.imagesToDelete.length ? this.imagesToDelete : undefined,
-  };
-
-  const dtoCreate: ProductRegisterModel = {
-    ...base,
-    images: this.selectedFiles.length ? this.selectedFiles : undefined,
-  };
-
-  // Swal loading
-  Swal.fire({
-    title: this.isEdit ? 'Actualizando producto...' : 'Creando producto...',
-    text: 'Por favor espera',
-    allowOutsideClick: false,
-    didOpen: () => Swal.showLoading(),
-  });
-
-  const request$ = this.isEdit
-    ? this.productSrv.update(dtoUpdate)
-    : this.productSrv.create(dtoCreate);
-
-  request$
-    .pipe(
-      take(1),
-      catchError((err) => {
-        const msg =
-          err?.error?.message ||
-          err?.message ||
-          (this.isEdit
-            ? 'No se pudo actualizar el producto.'
-            : 'No se pudo registrar el producto.');
         Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: msg,
-          confirmButtonText: 'Cerrar',
+          icon: 'success',
+          title: this.isEdit ? '¡Actualizado!' : '¡Creado!',
+          text: this.isEdit
+            ? 'El producto se actualizó con éxito.'
+            : 'El producto se registró con éxito.',
+          confirmButtonText: 'Aceptar',
+        }).then(() => {
+          this.saved.emit(resp);
+          this.resetAfterSave();
+          this.router.navigateByUrl('/account/producer/management/product');
         });
-        return of(null);
-      }),
-      finalize(() => (this.isLoading = false))
-    )
-    .subscribe((resp) => {
-      if (!resp) return; // ya se mostró el error
-
-      Swal.fire({
-        icon: 'success',
-        title: this.isEdit ? '¡Actualizado!' : '¡Creado!',
-        text: this.isEdit
-          ? 'El producto se actualizó con éxito.'
-          : 'El producto se registró con éxito.',
-        confirmButtonText: 'Aceptar',
-      }).then(() => {
-        this.saved.emit(resp);
-        this.resetAfterSave();
-        this.router.navigateByUrl('/account/producer/management/product');
       });
-    });
-}
-
+  }
 
   cancel(): void {
     this.resetForm();
@@ -397,7 +454,7 @@ export class ProductFormComponent implements OnInit {
   }
 
   private resetForm(): void {
-    this.generalGroup.reset({ price: 0 });
+    this.generalGroup.reset();
     this.detallesGroup.reset({ stock: 0, status: true });
     this.selectedFiles = [];
     this.imagesPreview = [];

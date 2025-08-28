@@ -1,7 +1,7 @@
 ﻿using Data.Interfaces.Implements.Producers.Farms;
 using Data.Repository;
 using Entity.Domain.Models.Implements.Producers;
-using Entity.Domain.Models.Implements.Products;
+using Entity.Domain.Models.Implements.Producers.Farms;
 using Entity.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 

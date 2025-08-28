@@ -1,6 +1,6 @@
 ﻿using Entity.Domain.Models.Base;
 
-namespace Entity.Domain.Models.Implements.Producers
+namespace Entity.Domain.Models.Implements.Producers.Farms
 {
     public class FarmImage : BaseModel
     {

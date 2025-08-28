@@ -11,11 +11,12 @@ namespace Entity.DTOs.Products.Create
         public string Production { get; set; }
         public int Stock { get; set; }
         public bool Status { get; set; }
-
-        //public string Status { get; set; } = "Disponible";
         public int CategoryId { get; set; }
+        public int ProducerId { get; set; }
+
         public List<IFormFile> Images { get; set; } = new();
 
-        public int FarmId { get; set; }
+        // Nuevo: varias fincas
+        public List<int> FarmIds { get; set; } = new();
     }
 }

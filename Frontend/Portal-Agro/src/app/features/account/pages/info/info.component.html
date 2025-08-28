@@ -22,8 +22,14 @@
 
 <div class="actions-section">
   <h2 class="info-title">Acciones</h2>
+  <div class="space-button">
 
-  <app-button [text]="'Actualizar Información'" [color]="'primary'" [icon]="'edit'" [redirectTo]="'/account/info/updateDataBasic'"/>
+    <app-button [text]="'Actualizar Información'" [color]="'primary'" [icon]="'edit'"
+      [redirectTo]="'/account/info/updateDataBasic'" />
 
-  <app-button [text]="'Cambiar Contraseña'" [color]="'primary'" [icon]="'lock'" redirectTo="/account/info/changePassword"/>
+    <app-button [text]="'Cambiar Contraseña'" [color]="'primary'" [icon]="'lock'"
+      redirectTo="/account/info/changePassword" />
+
+  </div>
+
 </div>

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Data.Interfaces.Implements.Producers.Products;
 using Data.Repository;
-using Entity.Domain.Models.Implements.Products;
+using Entity.Domain.Models.Implements.Producers.Products;
 using Entity.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using static System.Net.Mime.MediaTypeNames;
