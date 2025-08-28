@@ -1,4 +1,3 @@
-// form-form.component.ts
 import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -9,10 +8,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { ButtonComponent } from '../../../../../shared/components/button/button.component';
 import { FormRegisterModel, FormSelectModel } from '../../../models/form/form.model';
 
-const noWhitespace = (label: string): ValidatorFn => (c: AbstractControl): ValidationErrors | null => {
-  const v = (c.value ?? '') as string;
-  return v.trim().length === 0 ? { whitespace: `${label} no puede estar en blanco.` } : null;
-};
+//
+// 🔹 Validadores personalizados
+//
+const noWhitespaceOrInvalidStart = (label: string): ValidatorFn =>
+  (c: AbstractControl): ValidationErrors | null => {
+    const v = (c.value ?? '') as string;
+
+    if (!/^[A-Z]/.test(v)) {
+      return { startsWithUppercase: `${label} debe comenzar con una letra mayúscula.` };
+    }
+    return null;
+  };
 
 const absoluteUrl: ValidatorFn = (c: AbstractControl): ValidationErrors | null => {
   const v = (c.value ?? '') as string;
@@ -23,6 +30,11 @@ const absoluteUrl: ValidatorFn = (c: AbstractControl): ValidationErrors | null =
   } catch {
     return { urlInvalid: true };
   }
+};
+
+const noSpaces: ValidatorFn = (c: AbstractControl): ValidationErrors | null => {
+  const v = (c.value ?? '') as string;
+  return /\s/.test(v) ? { noSpaces: true } : null;
 };
 
 @Component({
@@ -38,7 +50,7 @@ const absoluteUrl: ValidatorFn = (c: AbstractControl): ValidationErrors | null =
     ButtonComponent,
   ],
   templateUrl: './form-form.component.html',
-  styleUrl: './form-form.component.css',
+  styleUrls: ['./form-form.component.css'],
 })
 export class FormFormComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -53,26 +65,63 @@ export class FormFormComponent implements OnInit {
   }
   get model() { return this._model; }
 
-  // ⬅️ Volvemos a emitir FormRegisterModel
   @Output() posteoForm = new EventEmitter<FormRegisterModel>();
 
   form: FormGroup = this.fb.group({
     name: [
       '',
-      [Validators.required, Validators.minLength(5), Validators.maxLength(100), noWhitespace('El nombre')],
+      [
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(100),
+        noWhitespaceOrInvalidStart('El nombre'),
+      ],
     ],
     description: [
       '',
-      [Validators.required, Validators.minLength(10), Validators.maxLength(300), noWhitespace('La descripción')],
+      [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(300),
+        noWhitespaceOrInvalidStart('La descripción'),
+      ],
     ],
     url: [
       '',
-      [Validators.required, Validators.maxLength(200), absoluteUrl],
+      [Validators.required, Validators.maxLength(200), absoluteUrl, noSpaces],
     ],
   });
 
   ngOnInit(): void {
     if (this.model) this.form.patchValue(this.model);
+  }
+
+  // - Elimina espacios iniciales
+  // - Fuerza primera letra en mayúscula cuando el usuario escribe el primer carácter
+  onInputChange(event: Event, controlName: 'name' | 'description'): void {
+    const input = event.target as HTMLInputElement | HTMLTextAreaElement;
+    let value = input.value ?? '';
+
+    if (value.startsWith(' ')) {
+      value = value.trimStart();
+    }
+
+    if (value.length === 1) {
+      value = value.toUpperCase();
+    }
+
+    this.form.get(controlName)?.setValue(value, { emitEvent: false });
+  }
+
+  //Elimina espacios si se pegan desde el portapapeles + previene espacios por teclado
+  onUrlInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.value) return;
+    const cleaned = input.value.replace(/\s/g, '');
+    if (cleaned !== input.value) {
+      input.value = cleaned;
+      this.form.get('url')?.setValue(cleaned, { emitEvent: false });
+    }
   }
 
   save() {
@@ -83,7 +132,6 @@ export class FormFormComponent implements OnInit {
 
     const raw = this.form.value as { name: string; description: string; url: string };
 
-    // Si hay model, usamos su id (update); si no, id: 0 (create). Ajusta si tu backend prefiere null u omitirlo.
     const payload: FormRegisterModel = {
       id: this.model?.id ?? 0,
       name: (raw.name ?? '').trim(),
