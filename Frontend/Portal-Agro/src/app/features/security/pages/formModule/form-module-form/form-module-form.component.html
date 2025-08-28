@@ -2,35 +2,43 @@
 <div class="form-wrapper-transparent">
   <h2 class="titleForm">{{ title }}</h2>
 
-  <form (submit)="save()" [formGroup]="form" class="form-container">
+  <form (ngSubmit)="save()" [formGroup]="form" class="form-container">
     <!-- Formulario -->
     <div class="form-field">
       <mat-form-field appearance="outline" class="custom-mat-field">
         <mat-label>Formulario</mat-label>
-        <mat-select [formControl]="form.controls.formId" required>
+        <mat-select formControlName="formId" required>
           <mat-option [value]="0" disabled>Seleccione un formulario</mat-option>
           <mat-option *ngFor="let u of forms" [value]="u.id">
             {{ u.name }}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="form.controls.formId.hasError('required') || form.controls.formId.value === 0">
-          El formulario es obligatorio
+
+        <mat-error *ngIf="form.get('formId')?.hasError('required')">
+          El formulario es obligatorio.
+        </mat-error>
+        <mat-error *ngIf="form.get('formId')?.hasError('min')">
+          Debe seleccionar un formulario válido.
         </mat-error>
       </mat-form-field>
     </div>
 
-    <!-- Modulo -->
+    <!-- Módulo -->
     <div class="form-field">
       <mat-form-field appearance="outline" class="custom-mat-field">
-        <mat-label>Modulo</mat-label>
-        <mat-select [formControl]="form.controls.moduleId" required>
-          <mat-option [value]="0" disabled>Seleccione un rol</mat-option>
+        <mat-label>Módulo</mat-label>
+        <mat-select formControlName="moduleId" required>
+          <mat-option [value]="0" disabled>Seleccione un módulo</mat-option>
           <mat-option *ngFor="let r of modules" [value]="r.id">
             {{ r.name }}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="form.controls.moduleId.hasError('required') || form.controls.moduleId.value === 0">
-          El rol es obligatorio
+
+        <mat-error *ngIf="form.get('moduleId')?.hasError('required')">
+          El módulo es obligatorio.
+        </mat-error>
+        <mat-error *ngIf="form.get('moduleId')?.hasError('min')">
+          Debe seleccionar un módulo válido.
         </mat-error>
       </mat-form-field>
     </div>
@@ -41,7 +49,7 @@
         [text]="'Guardar'"
         [icon]="'save'"
         [type]="'submit'"
-        [disabled]="form.invalid || form.controls.formId.value === 0 || form.controls.moduleId.value === 0">
+        [disabled]="form.invalid">
       </app-button>
 
       <app-button

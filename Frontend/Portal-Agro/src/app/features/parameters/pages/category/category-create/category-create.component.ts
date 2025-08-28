@@ -1,9 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
+import { CategoryFormComponent } from "../category-form/category-form.component";
 import { CategoryService } from '../../../services/category/category.service';
 import { CategoryRegistertModel, CategorySelectModel } from '../../../models/category/category.model';
-import Swal from 'sweetalert2';
-import { Router } from '@angular/router';
-import { CategoryFormComponent } from "../category-form/category-form.component";
+
+// lo que emite el form (sin id)
+type CategoryPayload = Omit<CategoryRegistertModel, 'id'>;
 
 @Component({
   selector: 'app-category-create',
@@ -11,40 +14,34 @@ import { CategoryFormComponent } from "../category-form/category-form.component"
   templateUrl: './category-create.component.html',
   styleUrl: './category-create.component.css'
 })
-export class CategoryCreateComponent implements OnInit{
-  router = inject(Router);
-  
-  formService = inject(CategoryService);
+export class CategoryCreateComponent implements OnInit {
+  private router = inject(Router);
+  private formService = inject(CategoryService);
+
   parentList: CategorySelectModel[] = [];
+
   ngOnInit(): void {
-    this.formService.getAll().subscribe((data)=>{
+    this.formService.getAll().subscribe(data => {
       this.parentList = data;
-    })
+    });
   }
 
+  // <<-- recibe payload sin id desde el form
+  saveChange(payload: CategoryPayload) {
+    // el service espera CategoryRegistertModel con id -> mandamos id=0
+    const body: CategoryRegistertModel = { id: 0, ...payload };
 
-  saveChange(form: CategoryRegistertModel) {
-    this.formService.create(form).subscribe({
+    this.formService.create(body).subscribe({
       next: () => {
-        console.log(form)
         Swal.fire({
           icon: 'success',
           title: 'Categoria creada',
-          text: 'la categoria se ha guardado correctamente',
+          text: 'La categoria se ha guardado correctamente',
           confirmButtonText: 'Aceptar',
-        }).then(() => {
-          this.router.navigate(['/account/parameters/category']);
-        });
-        
-        console.log(form);
+        }).then(() => this.router.navigate(['/account/parameters/category']));
       },
       error: (error) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo guardar la categoria.',
-        });
-
+        Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo guardar la categoria.' });
         console.error(error);
       },
     });

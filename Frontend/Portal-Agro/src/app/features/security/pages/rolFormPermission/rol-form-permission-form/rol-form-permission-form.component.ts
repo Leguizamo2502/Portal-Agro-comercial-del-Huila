@@ -1,21 +1,25 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+// rol-form-permission-form.component.ts
+import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { ButtonComponent } from '../../../../../shared/components/button/button.component';
+
 import { PermissionSelectModel } from '../../../models/permission/permission.model';
 import { FormSelectModel } from '../../../models/form/form.model';
 import { RolSelectModel } from '../../../models/rol/rol.model';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RolFormPermissionRegisterModel, RolFormPermissionSelectModel } from '../../../models/rolFormPermission/rolFormPermission.model';
-import { CommonModule } from '@angular/common';
-import { MatInputModule } from "@angular/material/input";
-import { MatSelectModule } from "@angular/material/select";
-import { ButtonComponent } from "../../../../../shared/components/button/button.component";
 
 @Component({
   selector: 'app-rol-form-permission-form',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MatInputModule, MatSelectModule, ButtonComponent],
   templateUrl: './rol-form-permission-form.component.html',
   styleUrl: './rol-form-permission-form.component.css'
 })
-export class RolFormPermissionFormComponent implements OnInit{
+export class RolFormPermissionFormComponent implements OnInit {
   private fb = inject(FormBuilder);
 
   @Input({ required: true }) title!: string;
@@ -23,27 +27,26 @@ export class RolFormPermissionFormComponent implements OnInit{
   @Input() rols: RolSelectModel[] = [];
   @Input() permissions: PermissionSelectModel[] = [];
 
-
   private _model?: RolFormPermissionSelectModel;
   @Input() set model(value: RolFormPermissionSelectModel | undefined) {
     this._model = value;
     if (value) {
-      // Parchar SOLO las claves que existen en el form
-      this.form.patchValue({ rolId: value.rolId, formId: value.formId, permissionId:value.permissionId});
+      this.form.patchValue({
+        rolId: value.rolId,
+        formId: value.formId,
+        permissionId: value.permissionId,
+      });
     }
   }
-  get model() {
-    return this._model;
-  }
+  get model() { return this._model; }
 
   @Output() posteoForm = new EventEmitter<RolFormPermissionRegisterModel>();
 
-  // Contformes no anulables: el form espera números, no null
+  // Non-nullable y con min(1) => > 0
   form = this.fb.nonNullable.group({
-    rolId: [0, Validators.required],
-    formId: [0, Validators.required],
-    permissionId: [0, Validators.required],
-
+    rolId:        [0, [Validators.required, Validators.min(1)]],
+    formId:       [0, [Validators.required, Validators.min(1)]],
+    permissionId: [0, [Validators.required, Validators.min(1)]],
   });
 
   ngOnInit(): void {
@@ -51,13 +54,17 @@ export class RolFormPermissionFormComponent implements OnInit{
       this.form.patchValue({
         rolId: this._model.rolId,
         formId: this._model.formId,
-        permissionId:this._model.permissionId
+        permissionId: this._model.permissionId,
       });
     }
   }
 
   save() {
-    const form = this.form.value as RolFormPermissionRegisterModel;
-    this.posteoForm.emit(form);
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    const payload: RolFormPermissionRegisterModel = this.form.getRawValue();
+    this.posteoForm.emit(payload);
   }
 }
