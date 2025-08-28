@@ -114,24 +114,62 @@ namespace Data.Service.Producers.Products
 
         public async Task<IEnumerable<Product>> GetByProducer(int? producerId)
         {
-            return await _dbSet
-                .AsNoTracking()
-                .Where(p => !p.IsDeleted && p.ProducerId == producerId)
+            return await BaseQuery()
                 .OrderByDescending(p => p.CreateAt)
                 .ThenByDescending(p => p.Id)
-                .Include(p => p.Category)
-                .Include(p => p.ProductImages.Where(pi => !pi.IsDeleted))
-                .Include(p => p.ProductFarms)
-                    .ThenInclude(pf => pf.Farm)
-                        .ThenInclude(f => f.City)
-                            .ThenInclude(c => c.Department)
-                .Include(p => p.ProductFarms)
-                    .ThenInclude(pf => pf.Farm)
-                        .ThenInclude(f => f.Producer)
-                            .ThenInclude(prod => prod.User)
-                                .ThenInclude(u => u.Person)
-                .AsSplitQuery()
+                .Where(p => !p.IsDeleted && p.ProducerId == producerId)
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetByCategoryAsync(int categoryId)
+        {
+            if (categoryId <= 0) return Enumerable.Empty<Product>();
+            return await GetByCategoriesAsync(new List<int> { categoryId }, includeDescendants: true);
+        }
+
+        public async Task<IEnumerable<Product>> GetByCategoriesAsync(List<int> categoryIds, bool includeDescendants)
+        {
+            if (categoryIds is null || categoryIds.Count == 0)
+                return Enumerable.Empty<Product>();
+
+            var ids = categoryIds.Where(id => id > 0).Distinct().ToList();
+            if (ids.Count == 0) return Enumerable.Empty<Product>();
+
+            IReadOnlyCollection<int> filterIds = ids;
+
+            if (includeDescendants)
+                filterIds = await GetAllDescendantCategoryIdsAsync(ids);
+
+            return await BaseQuery()                          // ⬅️ se usa tu BaseQuery()
+                .Where(p => filterIds.Contains(p.CategoryId))
+                .OrderBy(p => p.Name)
+                .ThenBy(p => p.Id)
+                .ToListAsync();
+        }
+
+        private async Task<IReadOnlyCollection<int>> GetAllDescendantCategoryIdsAsync(List<int> rootIds)
+        {
+            var all = await _context.Category
+                .AsNoTracking()
+                .Where(c => !c.IsDeleted && c.Active)
+                .Select(c => new { c.Id, c.ParentCategoryId })
+                .ToListAsync();
+
+            var result = new HashSet<int>(rootIds);
+            var lookup = all.ToLookup(c => c.ParentCategoryId);
+
+            var stack = new Stack<int>(rootIds);
+            while (stack.Count > 0)
+            {
+                var parentId = stack.Pop();
+                foreach (var child in lookup[parentId])
+                {
+                    if (result.Add(child.Id))
+                        stack.Push(child.Id);
+                }
+            }
+
+            return result;
         }
     }
 }

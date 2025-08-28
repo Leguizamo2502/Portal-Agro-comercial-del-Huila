@@ -19,10 +19,12 @@ namespace Web.Controllers.Implements.Producer.Products
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
+        private readonly IProductReadService _productReadService;
         private readonly ILogger<ProductController> _logger;
-        public ProductController(IProductService productService, ILogger<ProductController> logger)
+        public ProductController(IProductService productService, ILogger<ProductController> logger, IProductReadService productReadService)
         {
             _productService = productService;
+            _productReadService = productReadService;
             _logger = logger;
         }
 
@@ -33,7 +35,7 @@ namespace Web.Controllers.Implements.Producer.Products
         {
             try
             {
-                var result = await _productService.GetAllAsync();
+                var result = await _productReadService.GetAllAsync();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -51,7 +53,7 @@ namespace Web.Controllers.Implements.Producer.Products
         {
             try
             {
-                var result = await _productService.GetByIdAsync(id);
+                var result = await _productReadService.GetByIdAsync(id);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -70,7 +72,7 @@ namespace Web.Controllers.Implements.Producer.Products
             var userId = HttpContext.GetUserId();
             try
             {
-                var result = await _productService.GetByProducer(userId);
+                var result = await _productReadService.GetByProducerAsync(userId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -196,7 +198,7 @@ namespace Web.Controllers.Implements.Producer.Products
             var userId = HttpContext.GetUserId();
             try
             {
-                var result = await _productService.GetAllForUsersAsync(userId);
+                var result = await _productReadService.GetAllForUserAsync(userId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -215,7 +217,7 @@ namespace Web.Controllers.Implements.Producer.Products
             var userId = HttpContext.GetUserId();
             try
             {
-                var result = await _productService.GetFavoritesForUsersAsync(userId);
+                var result = await _productReadService.GetFavoritesForUserAsync(userId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -225,6 +227,27 @@ namespace Web.Controllers.Implements.Producer.Products
             }
 
         }
+
+        [HttpGet("by-category/{categoryId:int}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetByCategory(int categoryId)
+        {
+
+            try
+            {
+                var result = await _productReadService.GetByCategoryAsync(categoryId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error obteniendo datos");
+                return StatusCode(500, new { message = "Error interno del servidor." });
+            }
+
+        }
+
+
 
     }
 }

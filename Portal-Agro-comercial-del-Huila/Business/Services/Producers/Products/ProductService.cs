@@ -5,11 +5,9 @@ using Data.Interfaces.Implements.Favorites;
 using Data.Interfaces.Implements.Producers;
 using Data.Interfaces.Implements.Producers.Products;
 using Data.Interfaces.IRepository;
-using Entity.Domain.Models.Implements.Auth;
 using Entity.Domain.Models.Implements.Favorites;
 using Entity.Domain.Models.Implements.Producers;
 using Entity.Domain.Models.Implements.Producers.Products;
-using Entity.DTOs.Favorites.Create;
 using Entity.DTOs.Products.Create;
 using Entity.DTOs.Products.Select;
 using Entity.DTOs.Products.Update;
@@ -21,8 +19,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Utilities.Exceptions;
 using Utilities.Helpers.Business;
-using static System.Net.Mime.MediaTypeNames;
-using static Dapper.SqlMapper;
 
 namespace Business.Services.Producers.Products
 {
@@ -52,80 +48,7 @@ namespace Business.Services.Producers.Products
             _favoriteRepository = favoriteRepository;
         }
 
-        public override async Task<IEnumerable<ProductSelectDto>> GetAllAsync()
-        {
-            try
-            {
-                var entities = await _productRepository.GetAllAsync();
-                return _mapper.Map<IEnumerable<ProductSelectDto>>(entities);
-            }
-            catch (Exception ex)
-            {
-                throw new BusinessException("Error al obtener todos los registros de productos.", ex);
-            }
-        }
 
-        public async Task<IEnumerable<ProductSelectDto>> GetAllForUsersAsync(int userId)
-        {
-            try
-            {
-                var entities = await _productRepository.GetAllAsync();
-
-                // Llamas al repo de favoritos (sin LINQ aquí)
-                var favoriteIds = await _favoriteRepository.GetFavoriteProductIdsByUserAsync(userId);
-
-                var dtos = _mapper.Map<List<ProductSelectDto>>(entities); // <= LIST en vez de IEnumerable
-
-                foreach (var dto in dtos)
-                    dto.IsFavorite = favoriteIds.Contains(dto.Id); // dto.Id = ProductId
-
-                return dtos;
-            }
-            catch (Exception ex)
-            {
-                throw new BusinessException("Error al obtener todos los registros de productos.", ex);
-            }
-        }
-
-        public async Task<IEnumerable<ProductSelectDto>> GetFavoritesForUsersAsync(int userId)
-        {
-            try
-            {
-                var favoriteIds = await _favoriteRepository.GetFavoriteProductIdsByUserAsync(userId);
-
-                if (favoriteIds == null || !favoriteIds.Any())
-                    return Enumerable.Empty<ProductSelectDto>();
-
-                var favoriteProducts = await _productRepository.GetByIdsFavoritesAsync(favoriteIds);
-
-                var dtos = _mapper.Map<List<ProductSelectDto>>(favoriteProducts);
-
-
-                foreach (var dto in dtos)
-                    dto.IsFavorite = true;
-
-                return dtos;
-            }
-            catch (Exception ex)
-            {
-                throw new BusinessException("Error al obtener productos favoritos del usuario.", ex);
-            }
-        }
-
-        public override async Task<ProductSelectDto?> GetByIdAsync(int id)
-        {
-            try
-            {
-                BusinessValidationHelper.ThrowIfZeroOrLess(id, "El ID debe ser mayor que cero.");
-
-                var entity = await _productRepository.GetByIdAsync(id);
-                return entity == null ? default : _mapper.Map<ProductSelectDto>(entity);
-            }
-            catch (Exception ex)
-            {
-                throw new BusinessException($"Error al obtener el rproducto con ID {id}.", ex);
-            }
-        }
         public override async Task<bool> DeleteAsync(int id)
         {
             var entity = await _productRepository.GetByIdAsync(id);
@@ -330,21 +253,6 @@ namespace Business.Services.Producers.Products
         }
 
 
-        public async Task<IEnumerable<ProductSelectDto>> GetByProducer(int userId)
-        {
-            try
-            {
-                var producerId = await _producerRepository.GetIdProducer(userId);
-                if (producerId == null)
-                    throw new BusinessException("El usuario no está registrado como productor.");
-                var entities = await _productRepository.GetByProducer(producerId);
-                return _mapper.Map<IEnumerable<ProductSelectDto>>(entities);
-            }
-            catch (Exception ex)
-            {
-                throw new BusinessException("Error al obtener todos los registros de productos del productor {producerId}.", ex);
-            }
-        }
 
 
         public async Task<bool> AddFavoriteAsync(int userId, int productId)

@@ -1,2 +1,6 @@
-<p>product works!</p>
-ccccccccccccccccccccccc
+<div class="container-fluid">
+    <!-- <app-category-pill></app-category-pill> -->
+    <app-category-pill *ngFor="let category of categories" [category]="category"></app-category-pill>
+    <app-container-card-flex [items]="products" [type]="'product'"></app-container-card-flex>
+
+</div>

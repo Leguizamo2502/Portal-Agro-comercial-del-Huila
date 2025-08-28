@@ -129,6 +129,7 @@ namespace Web.ProgramService
 
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IProductReadService, ProductReadService>();
 
             services.AddScoped<IFavoriteRepository, FavoriteRepository>();
 
