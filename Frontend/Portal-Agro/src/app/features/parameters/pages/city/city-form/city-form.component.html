@@ -17,9 +17,9 @@
         <mat-error *ngIf="form.get('name')?.hasError('required')">
           El nombre es obligatorio.
         </mat-error>
-        <mat-error *ngIf="form.get('name')?.hasError('whitespace')">
+        <!--<mat-error *ngIf="form.get('name')?.hasError('whitespace')">
           El nombre no puede estar en blanco.
-        </mat-error>
+        </mat-error> -->
         <mat-error *ngIf="form.get('name')?.hasError('trimLength')">
           El nombre debe tener entre 3 y 100 caracteres.
         </mat-error>
