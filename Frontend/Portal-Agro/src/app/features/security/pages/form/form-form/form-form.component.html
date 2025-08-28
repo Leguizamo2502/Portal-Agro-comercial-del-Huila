@@ -18,9 +18,9 @@
         <mat-error *ngIf="form.get('name')?.hasError('required')">
           El nombre es obligatorio.
         </mat-error>
-        <mat-error *ngIf="form.get('name')?.hasError('whitespace')">
-          El nombre no puede estar en blanco.
-        </mat-error>
+          <!-- <mat-error *ngIf="form.get('description')?.hasError('whitespace')">
+          La descripción no puede estar en blanco.
+        </mat-error>-->
         <mat-error *ngIf="form.get('name')?.hasError('minlength')">
           El nombre debe tener al menos 5 caracteres.
         </mat-error>
@@ -46,9 +46,9 @@
         <mat-error *ngIf="form.get('description')?.hasError('required')">
           La descripción es obligatoria.
         </mat-error>
-        <mat-error *ngIf="form.get('description')?.hasError('whitespace')">
+         <!-- <mat-error *ngIf="form.get('description')?.hasError('whitespace')">
           La descripción no puede estar en blanco.
-        </mat-error>
+        </mat-error>-->
         <mat-error *ngIf="form.get('description')?.hasError('minlength')">
           La descripción debe tener al menos 10 caracteres.
         </mat-error>
@@ -64,7 +64,7 @@
         <mat-label>URL</mat-label>
         <input
           matInput
-          placeholder="https://tu-dominio.com/ruta"
+          placeholder="https://ruta/"
           formControlName="url"
           required
           maxlength="200"

@@ -1,28 +1,35 @@
+<!-- city-form.component.html -->
 <div class="form-wrapper-transparent">
   <h2 class="titleForm">{{ title }}</h2>
 
-  <form (submit)="save()" [formGroup]="form" class="form-container">
+  <form [formGroup]="form" (ngSubmit)="save()" class="form-container">
+    <!-- Nombre -->
     <div class="form-field">
       <mat-form-field appearance="outline" class="custom-mat-field">
         <mat-label>Nombre</mat-label>
         <input
           matInput
-          [formControl]="form.controls.name"
-          placeholder="Ingrese el nombre del permiso"
+          formControlName="name"
+          placeholder="Nombre de la ciudad"
+          maxlength="100"
           required
         />
-        <mat-error *ngIf="form.controls.name.hasError('required')">
-          El nombre es obligatorio
+        <mat-error *ngIf="form.get('name')?.hasError('required')">
+          El nombre es obligatorio.
         </mat-error>
-        <mat-error *ngIf="form.controls.name.hasError('minlength')">
-          El nombre debe tener al menos 3 caracteres
+        <mat-error *ngIf="form.get('name')?.hasError('whitespace')">
+          El nombre no puede estar en blanco.
         </mat-error>
-        <mat-error *ngIf="form.controls.name.hasError('maxlength')">
-          El nombre no puede exceder los 50 caracteres
+        <mat-error *ngIf="form.get('name')?.hasError('trimLength')">
+          El nombre debe tener entre 3 y 100 caracteres.
+        </mat-error>
+        <mat-error *ngIf="form.get('name')?.hasError('backend')">
+          {{ form.get('name')?.getError('backend') }}
         </mat-error>
       </mat-form-field>
     </div>
 
+    <!-- Departamento -->
     <div class="form-field">
       <mat-form-field appearance="outline" class="custom-mat-field">
         <mat-label>Departamento</mat-label>
@@ -31,12 +38,19 @@
             {{ dpto.name }}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="form.controls.departmentId.hasError('required')">
-          El departamento es obligatorio
+        <mat-error *ngIf="form.get('departmentId')?.hasError('required')">
+          El departamento es obligatorio.
+        </mat-error>
+        <mat-error *ngIf="form.get('departmentId')?.hasError('positiveInt')">
+          Debe seleccionar un departamento válido.
+        </mat-error>
+        <mat-error *ngIf="form.get('departmentId')?.hasError('backend')">
+          {{ form.get('departmentId')?.getError('backend') }}
         </mat-error>
       </mat-form-field>
     </div>
 
+    <!-- Acciones -->
     <div class="form-actions cont-botones">
       <app-button
         [text]="'Guardar'"
@@ -45,22 +59,12 @@
         [disabled]="form.invalid">
       </app-button>
 
-      <!-- Opción A: volver atrás -->
       <app-button
         [text]="'Cancelar'"
         [icon]="'cancel'"
         [color]="'secondary'"
         [back]="true">
       </app-button>
-
-      <!-- Opción B: ir fijo a la lista de ciudades
-      <app-button
-        [text]="'Cancelar'"
-        [icon]="'cancel'"
-        [color]="'secondary'"
-        redirectTo="/account/parameters/city">
-      </app-button>
-      -->
     </div>
   </form>
 </div>

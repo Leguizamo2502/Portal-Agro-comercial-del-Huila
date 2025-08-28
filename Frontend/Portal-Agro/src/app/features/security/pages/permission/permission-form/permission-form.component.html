@@ -46,9 +46,9 @@
         <mat-error *ngIf="form.get('description')?.hasError('required')">
           La descripción es obligatoria.
         </mat-error>
-        <mat-error *ngIf="form.get('description')?.hasError('whitespace')">
+        <!-- <mat-error *ngIf="form.get('description')?.hasError('whitespace')">
           La descripción no puede estar en blanco.
-        </mat-error>
+        </mat-error>-->
         <mat-error *ngIf="form.get('description')?.hasError('minlength')">
           La descripción debe tener al menos 10 caracteres.
         </mat-error>

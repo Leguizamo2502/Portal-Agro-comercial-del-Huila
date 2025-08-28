@@ -1,3 +1,4 @@
+<!-- category-form.component.html -->
 <div class="u-form-wrapper--transparent">
     <h2 class="u-title-form">{{ title }}</h2>
 
@@ -6,13 +7,19 @@
         <div class="form-field">
             <mat-form-field appearance="outline" class="u-mat-field-bg" style="width:100%">
                 <mat-label>Nombre</mat-label>
-                <input matInput formControlName="name" placeholder="Nombre de la categoría">
-                <mat-error *ngIf="form.controls.name?.hasError('required')">
-                    El nombre es obligatorio
+                <input matInput formControlName="name" placeholder="Nombre de la categoría" maxlength="100" />
+
+                <mat-error *ngIf="form.get('name')?.hasError('required')">
+                    El nombre es obligatorio.
+                </mat-error>
+                <mat-error *ngIf="form.get('name')?.hasError('whitespace')">
+                    El nombre no puede estar en blanco.
+                </mat-error>
+                <mat-error *ngIf="form.get('name')?.hasError('trimLength')">
+                    El nombre debe tener entre 5 y 100 caracteres.
                 </mat-error>
             </mat-form-field>
         </div>
-
 
         <!-- Categoría padre -->
         <div class="form-field">
@@ -22,13 +29,15 @@
                     <mat-option [value]="null">Sin padre</mat-option>
                     <mat-option *ngFor="let c of parents" [value]="c.id">{{ c.name }}</mat-option>
                 </mat-select>
+
+                <mat-error *ngIf="form.get('parentCategoryId')?.hasError('positiveIntOrNull')">
+                    La categoría padre debe ser un identificador válido (&gt; 0) o estar vacía.
+                </mat-error>
             </mat-form-field>
         </div>
 
-
         <!-- Acciones -->
         <div class="u-actions-row cont-botones">
-            <!-- Usa tu button component para mantener consistencia -->
             <app-button [text]="'Guardar'" [icon]="'save'" [type]="'submit'" [disabled]="form.invalid">
             </app-button>
 
