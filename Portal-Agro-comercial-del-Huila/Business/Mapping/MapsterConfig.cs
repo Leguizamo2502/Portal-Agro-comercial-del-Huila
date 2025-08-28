@@ -1,10 +1,12 @@
 ﻿using Entity.Domain.Models.Implements.Auth;
+using Entity.Domain.Models.Implements.Orders;
 using Entity.Domain.Models.Implements.Producers;
 using Entity.Domain.Models.Implements.Producers.Farms;
 using Entity.Domain.Models.Implements.Producers.Products;
 using Entity.Domain.Models.Implements.Security;
 using Entity.DTOs.Auth;
 using Entity.DTOs.Auth.User;
+using Entity.DTOs.Order.Reviews;
 using Entity.DTOs.Producer.Categories;
 using Entity.DTOs.Producer.Farm.Create;
 using Entity.DTOs.Producer.Farm.Select;
@@ -59,6 +61,14 @@ namespace Business.Mapping
                 .Map(dest => dest.Identification, src => src.Person.Identification)
                 .Map(dest => dest.CityId, src => src.Person.CityId)
                 .Map(dest => dest.CityName, src => src.Person.City.Name);
+
+
+
+            //Reviews
+            config.NewConfig<Review, ReviewSelectDto>()
+                .Map(dest => dest.UserName, src => $"{src.User.Person.FirstName} {src.User.Person.LastName}");
+
+            
 
 
 
@@ -117,45 +127,55 @@ namespace Business.Mapping
                 .IgnoreNullValues(true);
 
 
-            // Product -> ProductSelectDto (toma la primera finca asociada)
+            // Product -> ProductSelectDto (toma la primera finca asociada como legacy)
             config.NewConfig<Product, ProductSelectDto>()
-                // Copia propiedades homónimas (Id, Name, Description, Price, Unit, Production, Stock, Status, CategoryId)
                 .Map(dest => dest.CategoryName, src => src.Category.Name)
                 .Map(dest => dest.Images, src => src.ProductImages.Where(pi => !pi.IsDeleted))
 
-                // Selecciona UNA finca (la primera por nombre, o por Id para estabilidad)
+                // NUEVO: lista completa de fincas activas
+                .Map(dest => dest.FarmIds,
+                     src => src.ProductFarms
+                               .Where(pf => !pf.IsDeleted)
+                               .Select(pf => pf.FarmId)
+                               .ToList())
+
+                // Legacy: una sola finca (primera por Id para estabilidad)
                 .Map(dest => dest.FarmId,
                      src => src.ProductFarms
-                                .OrderBy(pf => pf.Farm.Name)    // o .OrderBy(pf => pf.FarmId)
-                                .Select(pf => (int?)pf.FarmId)
-                                .FirstOrDefault() ?? 0)
+                               .Where(pf => !pf.IsDeleted)
+                               .OrderBy(pf => pf.FarmId)
+                               .Select(pf => (int?)pf.FarmId)
+                               .FirstOrDefault() ?? 0)
 
                 .Map(dest => dest.FarmName,
                      src => src.ProductFarms
-                                .OrderBy(pf => pf.Farm.Name)
-                                .Select(pf => pf.Farm.Name)
-                                .FirstOrDefault() ?? string.Empty)
+                               .Where(pf => !pf.IsDeleted)
+                               .OrderBy(pf => pf.FarmId)
+                               .Select(pf => pf.Farm.Name)
+                               .FirstOrDefault() ?? string.Empty)
 
                 .Map(dest => dest.CityName,
                      src => src.ProductFarms
-                                .OrderBy(pf => pf.Farm.Name)
-                                .Select(pf => pf.Farm.City.Name)
-                                .FirstOrDefault() ?? string.Empty)
+                               .Where(pf => !pf.IsDeleted)
+                               .OrderBy(pf => pf.FarmId)
+                               .Select(pf => pf.Farm.City.Name)
+                               .FirstOrDefault() ?? string.Empty)
 
                 .Map(dest => dest.DepartmentName,
                      src => src.ProductFarms
-                                .OrderBy(pf => pf.Farm.Name)
-                                .Select(pf => pf.Farm.City.Department.Name)
-                                .FirstOrDefault() ?? string.Empty)
+                               .Where(pf => !pf.IsDeleted)
+                               .OrderBy(pf => pf.FarmId)
+                               .Select(pf => pf.Farm.City.Department.Name)
+                               .FirstOrDefault() ?? string.Empty)
 
                 .Map(dest => dest.PersonName,
                      src => src.ProductFarms
-                                .OrderBy(pf => pf.Farm.Name)
-                                .Select(pf =>
-                                    pf.Farm.Producer.User.Person != null
-                                        ? (pf.Farm.Producer.User.Person.FirstName + " " + pf.Farm.Producer.User.Person.LastName)
-                                        : null)
-                                .FirstOrDefault() ?? string.Empty);
+                               .Where(pf => !pf.IsDeleted)
+                               .OrderBy(pf => pf.FarmId)
+                               .Select(pf => pf.Farm.Producer.User.Person != null
+                                     ? (pf.Farm.Producer.User.Person.FirstName + " " + pf.Farm.Producer.User.Person.LastName)
+                                     : null)
+                               .FirstOrDefault() ?? string.Empty);
 
 
 

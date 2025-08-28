@@ -3,6 +3,6 @@ import { ProductDetailComponent } from "../../shared/components/product-detail/p
 import { ProductComponent } from "./pages/product/product.component";
 
 export const PRODUCTS_ROUTES: Routes=[
-    {path:'product',component:ProductComponent},
+    {path:'',component:ProductComponent},
     {path:':id', component: ProductDetailComponent},
 ];

@@ -1,78 +1,54 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CategoryService } from '../../../services/category/category.service';
-import {
-  CategoryRegistertModel,
-  CategorySelectModel,
-} from '../../../models/category/category.model';
+import { Router, ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
-import { ActivatedRoute, Router } from '@angular/router';
-import { CategoryFormComponent } from '../category-form/category-form.component';
-import { forkJoin } from 'rxjs';
+import { CategoryFormComponent } from "../category-form/category-form.component";
+import { CategoryService } from '../../../services/category/category.service';
+import { CategoryRegistertModel, CategorySelectModel } from '../../../models/category/category.model';
+
+type CategoryPayload = Omit<CategoryRegistertModel, 'id'>;
 
 @Component({
   selector: 'app-category-update',
   imports: [CategoryFormComponent],
   templateUrl: './category-update.component.html',
-  styleUrl: './category-update.component.css',
+  styleUrl: './category-update.component.css'
 })
 export class CategoryUpdateComponent implements OnInit {
-  categoryService = inject(CategoryService);
-  router = inject(Router);
-  route = inject(ActivatedRoute);
-
-  parentList: CategorySelectModel[] = [];
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private formService = inject(CategoryService);
 
   id!: number;
   model?: CategorySelectModel;
+  parentList: CategorySelectModel[] = [];
 
   ngOnInit(): void {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
     if (!this.id) return;
 
-    forkJoin({
-      parents: this.categoryService.getAll(),
-      model: this.categoryService.getById(this.id),
-    }).subscribe({
-      next: ({ parents, model }) => {
-        this.parentList = parents.filter((p) => p.id !== this.id);
-
-        const parentId: number | null =
-          model.parentCategoryId == null
-            ? null
-            : Number(model.parentCategoryId);
-
-        this.model = { ...model, parentCategoryId: parentId }; // ahora cuadra con el tipo
-      },
+    this.formService.getAll().subscribe(data => {
+      // evita ofrecerse a sí misma como padre
+      this.parentList = data.filter(c => c.id !== this.id);
     });
+
+    this.formService.getById(this.id).subscribe(m => (this.model = m));
   }
 
-  loadCategories() {
-    this.categoryService.getAll().subscribe((data) => {
-      this.parentList = data;
-    });
-  }
+  // <<-- recibe payload sin id desde el form
+  save(payload: CategoryPayload) {
+    const body: CategoryRegistertModel = { id: this.id, ...payload };
 
-  save(category: CategoryRegistertModel) {
-    this.categoryService.update(this.id, category).subscribe({
+    this.formService.update(this.id, body).subscribe({
       next: () => {
         Swal.fire({
           icon: 'success',
-          title: 'Categoria Actualizado',
-          text: 'la Categoria se ha actualiazo correctamente',
+          title: 'Categoria Actualizada',
+          text: 'La categoria se ha actualizado correctamente',
           confirmButtonText: 'Aceptar',
-        }).then(() => {
-          this.router.navigate(['/account/parameters/category']);
-        });
-
-        console.log(category);
+        }).then(() => this.router.navigate(['/account/parameters/category']));
       },
       error: (error) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudo actualizar la Categoria.',
-        });
-
+        Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo actualizar la categoria.' });
         console.error(error);
       },
     });

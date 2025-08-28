@@ -48,9 +48,9 @@ public class ProductCreateDtoValidator : AbstractValidator<ProductCreateDto>
         RuleFor(x => x.CategoryId)
             .GreaterThan(0).WithMessage("Debe seleccionar una categoría válida.");
 
-        // Granja
-        RuleFor(x => x.ProducerId)
-            .GreaterThan(0).WithMessage("Debe seleccionar una prodcutor válida.");
+        //// Granja
+        //RuleFor(x => x.ProducerId)
+        //    .GreaterThan(0).WithMessage("Debe seleccionar una prodcutor válida.");
 
         // Imágenes
         RuleFor(x => x.Images)

@@ -1,3 +1,9 @@
+export interface ApiOk {
+  isSuccess: boolean;   // si tu backend devuelve PascalCase, ver nota abajo
+  message: string;
+  id?: number;
+}
+
 export interface ProductSelectModel {
   id: number;
   name: string;
@@ -11,17 +17,24 @@ export interface ProductSelectModel {
   categoryName: string;
   images: ProductImageSelectModel[];
   personName: string;
-  farmId: number;
+
+  // Legacy (compat)
+  farmId?: number;
   farmName: string;
   cityName: string;
   departmentName: string;
+
+  // NUEVO: todas las fincas asociadas
+  farmIds?: number[];
+
   isFavorite: boolean;
-  // Opcionales (solo mockup en frontend)
-  orders?: number;
-  categories?: string[];
-  moreInfo?: string;
-  location?: string;
-  reviews?: ReviewModel[];
+
+  // mockups opcionales
+  // orders?: number;
+  // categories?: string[];
+  // moreInfo?: string;
+  // location?: string;
+  // reviews?: ReviewModel[];
 }
 
 export interface ProductImageSelectModel {
@@ -42,7 +55,7 @@ export interface ProductRegisterModel {
   status: boolean;
   categoryId: number;
   images?: File[];
-  farmId: number;
+  farmIds: number[];           
 }
 
 export interface ProductUpdateModel {
@@ -55,21 +68,27 @@ export interface ProductUpdateModel {
   stock: number;
   status: boolean;
   categoryId: number;
-  images?: File[]; // Archivos nuevos a subir
-  farmId: number;
-  imagesToDelete?: string[]; // PublicId o nombres de archivos a eliminar
+  images?: File[];
+  farmIds: number[];               
+  imagesToDelete?: string[];
 }
 
-export interface FavoriteCreateRequest{
-  productId:number
+export interface FavoriteCreateRequest {
+  productId: number;
 }
 
-export interface ReviewModel {
-  user: string;
-  avatar: string;
-  date: Date;
+export interface ReviewRegisterModel {
+  productId: number;
+  rating: number;         
   comment: string;
+}
 
-  // prueba de calificacion
-  rating: number;
+export interface ReviewSelectModel {
+  id: number;              
+  productId: number;
+  userId: number;
+  userName: string;
+  rating: number;         
+  comment: string;
+  createAt: string;       
 }

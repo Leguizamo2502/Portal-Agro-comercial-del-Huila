@@ -6,13 +6,11 @@ import {
   ProductRegisterModel,
   ProductSelectModel,
   ProductUpdateModel,
+  ApiOk,
 } from './../../models/product/product.model';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ProductService {
-  /** Base URL del API (apiUrl + /Product) */
   private readonly urlBase = `${environment.apiUrl}Product`;
 
   constructor(private http: HttpClient) {}
@@ -25,86 +23,58 @@ export class ProductService {
   getFavorites(): Observable<ProductSelectModel[]> {
     return this.http.get<ProductSelectModel[]>(this.urlBase + '/favorites');
   }
-  /** --------------------------------------------------  CRUD  ----------------------------------------------------- */
-  /** Obtener todos los productos  */
 
+  /** --------------------------------------------------  CRUD  ----------------------------------------------------- */
   getAll(): Observable<ProductSelectModel[]> {
     return this.http.get<ProductSelectModel[]>(this.urlBase);
   }
-  /** Obtener productos por productor (requiere endpoint GET /Product/by-producer */
+
   getByProducerId(): Observable<ProductSelectModel[]> {
     return this.http.get<ProductSelectModel[]>(this.urlBase + '/by-producer');
   }
 
-  /** Obtener un producto por ID */
   getById(id: number): Observable<ProductSelectModel> {
     return this.http.get<ProductSelectModel>(`${this.urlBase}/${id}`);
   }
 
-  /** Obtener productos por productor (requiere endpoint GET /Product/by-producer/{producerId:int}) */
-  // getByProducer(producerId: number): Observable<ProductSelectModel[]> {
-  //   return this.http.get<ProductSelectModel[]>(
-  //     `${this.urlBase}/by-producer/${producerId}`
-  //   );
-  // }
-
-  /** Eliminar un producto por ID */
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.urlBase}/${id}`);
   }
 
   /** ------------------------  CREATE  ------------------------- */
-  /** POST /Product/register/product  (FromForm ProductCreateDto) */
-  create(dto: ProductRegisterModel): Observable<ProductSelectModel> {
+  create(dto: ProductRegisterModel): Observable<ApiOk> {
     const fd = this.buildFormData(dto);
-    return this.http.post<ProductSelectModel>(
-      `${this.urlBase}/register/product`,
-      fd
-    );
+    return this.http.post<ApiOk>(`${this.urlBase}/register/product`, fd);
   }
 
   /** ------------------------  UPDATE  ------------------------- */
-  /** PUT /Product/{id:int} (FromForm ProductUpdateDto) */
-  update(dto: ProductUpdateModel): Observable<ProductSelectModel> {
+  update(dto: ProductUpdateModel): Observable<ApiOk> {
     if (!dto.id) throw new Error('ID del producto es obligatorio');
-
     const fd = this.buildFormData(dto);
-    return this.http.put<ProductSelectModel>(`${this.urlBase}/${dto.id}`, fd);
+    return this.http.put<ApiOk>(`${this.urlBase}/${dto.id}`, fd);
   }
 
   /**
-   * *FormData* de multipart/form-data
+   * Multipart FormData que el backend espera.
    *
-   * Se encarga de montar el objeto que el *ASP.NET Core* espera.
-   * <br><br>
-   * <b>Campos que envía</b>
-   * | Campo         | Tipo      | Comentario                                   |
-   * |---------------|-----------|-----------------------------------------------|
-   * | id            | number    | (solo en Update)                              |
-   * | name          | string    | obligatorio                                   |
-   * | description   | string    | obligatorio                                   |
-   * | price         | number    | obligatorio                                   |
-   * | unit          | string    | obligatorio                                   |
-   * | production    | string    | obligatorio                                   |
-   * | stock         | number    | obligatorio                                   |
-   * | status        | boolean   | obligatorio                                   |
-   * | categoryId    | number    | obligatorio                                   |
-   * | farmId        | number    | obligatorio                                   |
-   * | images        | File[]    | nuevos archivos (Create y Update)             |
-   * | imagesToDelete| string[]  | PublicId a borrar (solo en Update)            |
-   *
-   * • En *CREATE* y *UPDATE* los archivos se envían en la clave `images` (coincide con tu DTO).<br>
-   * • En *UPDATE* además se envían `imagesToDelete` como claves repetidas para List<string>.
+   * Campos:
+   * - id             (solo en Update)
+   * - name
+   * - description
+   * - price
+   * - unit
+   * - production
+   * - stock
+   * - status
+   * - categoryId
+   * - FarmIds        (varias claves repetidas)
+   * - images         (File[])
+   * - imagesToDelete (varias claves repetidas)
    */
-  private buildFormData(
-    dto: ProductRegisterModel | ProductUpdateModel
-  ): FormData {
+  private buildFormData(dto: ProductRegisterModel | ProductUpdateModel): FormData {
     const data = new FormData();
 
-    /* ---------------------------------  Campos básicos  -------------------------------- */
-    if ('id' in dto && dto.id !== undefined) {
-      data.append('id', String(dto.id));
-    }
+    if ('id' in dto && dto.id !== undefined) data.append('id', String(dto.id));
 
     data.append('name', dto.name);
     data.append('description', dto.description);
@@ -114,23 +84,19 @@ export class ProductService {
     data.append('stock', String(dto.stock));
     data.append('status', String(dto.status));
     data.append('categoryId', String(dto.categoryId));
-    data.append('farmId', String(dto.farmId));
 
-    /* ---------------------------------  Imágenes nuevas  -------------------------------- */
+    // << NUEVO: múltiples fincas
+    (dto.farmIds ?? []).forEach(fid => data.append('FarmIds', String(fid)));
+    // Alternativa válida: data.append('FarmIds[0]', '1'), etc. (el binder es case-insensitive)
+
+    // Imágenes nuevas
     if (dto.images?.length) {
-      dto.images.forEach((file) => data.append('images', file, file.name));
+      dto.images.forEach(file => data.append('images', file, file.name));
     }
 
-    /* -------  Lista de publicId a borrar (solo en Update; List<string> en ASP.NET Core)  ------- */
+    // Imágenes a borrar (PublicId)
     if ('imagesToDelete' in dto && dto.imagesToDelete?.length) {
-      // Enviar como claves repetidas permite el binding directo a List<string>
-      dto.imagesToDelete.forEach((pubId) =>
-        data.append('imagesToDelete', pubId)
-      );
-
-      // Si prefieres JSON, cambia la línea anterior por:
-      // data.append('imagesToDelete', JSON.stringify(dto.imagesToDelete));
-      // y deserializa manualmente en el backend.
+      dto.imagesToDelete.forEach(pubId => data.append('imagesToDelete', pubId));
     }
 
     return data;

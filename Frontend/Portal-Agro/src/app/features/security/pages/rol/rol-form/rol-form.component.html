@@ -1,43 +1,64 @@
+<!-- rol-form.component.html -->
 <div class="form-wrapper-transparent">
   <h2 class="titleForm">{{ title }}</h2>
 
-  <form (submit)="save()" [formGroup]="form" class="form-container">
+  <form (ngSubmit)="save()" [formGroup]="form" class="form-container">
+    <!-- Nombre -->
     <div class="form-field">
       <mat-form-field appearance="outline" class="custom-mat-field">
         <mat-label>Nombre</mat-label>
         <input
           matInput
-          [formControl]="form.controls.name"
           placeholder="Ingrese el nombre del rol"
+          formControlName="name"
           required
+          minlength="5"
+          maxlength="100"
         />
-        <mat-error *ngIf="form.controls.name.hasError('required')">
-          El nombre es obligatorio
+        <mat-error *ngIf="form.get('name')?.hasError('required')">
+          El nombre es obligatorio.
         </mat-error>
-        <mat-error *ngIf="form.controls.name.hasError('minlength')">
-          El nombre debe tener al menos 3 caracteres
+        <!-- Acciones <mat-error *ngIf="form.get('name')?.hasError('whitespace')">
+          El nombre no puede estar en blanco.
+        </mat-error>-->
+        <mat-error *ngIf="form.get('name')?.hasError('minlength')">
+          El nombre debe tener al menos 5 caracteres.
         </mat-error>
-        <mat-error *ngIf="form.controls.name.hasError('maxlength')">
-          El nombre no puede exceder los 50 caracteres
+        <mat-error *ngIf="form.get('name')?.hasError('maxlength')">
+          El nombre no puede exceder 100 caracteres.
         </mat-error>
       </mat-form-field>
     </div>
 
+    <!-- Descripción -->
     <div class="form-field">
       <mat-form-field appearance="outline" class="custom-mat-field">
         <mat-label>Descripción</mat-label>
         <textarea
           matInput
-          [formControl]="form.controls.description"
           placeholder="Describa el propósito del rol"
           rows="3"
+          formControlName="description"
+          required
+          minlength="10"
+          maxlength="300"
         ></textarea>
-        <mat-error *ngIf="form.controls.description.hasError('maxlength')">
-          La descripción no puede exceder los 255 caracteres
+        <mat-error *ngIf="form.get('description')?.hasError('required')">
+          La descripción es obligatoria.
+        </mat-error>
+         <!-- Acciones  <mat-error *ngIf="form.get('description')?.hasError('whitespace')">
+          La descripción no puede estar en blanco.
+        </mat-error>-->
+        <mat-error *ngIf="form.get('description')?.hasError('minlength')">
+          La descripción debe tener al menos 10 caracteres.
+        </mat-error>
+        <mat-error *ngIf="form.get('description')?.hasError('maxlength')">
+          La descripción no puede exceder 300 caracteres.
         </mat-error>
       </mat-form-field>
     </div>
 
+    <!-- Acciones -->
     <div class="form-actions cont-botones">
       <app-button
         [text]="'Guardar'"
@@ -52,14 +73,6 @@
         [color]="'secondary'"
         [back]="true">
       </app-button>
-      <!-- Si prefieres ir fijo a la lista en lugar de back:
-      <app-button
-        [text]="'Cancelar'"
-        [icon]="'cancel'"
-        [color]="'secondary'"
-        redirectTo="/account/security/permission">
-      </app-button>
-      -->
     </div>
   </form>
 </div>

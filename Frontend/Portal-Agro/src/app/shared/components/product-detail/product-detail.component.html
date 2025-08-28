@@ -1,146 +1,164 @@
-    <app-button [type]="'button'" [color]="'primary'" [text]="'Volver'" [icon]="'arrow_back'" [back]="true" style="z-index: 10;"></app-button>
-    <div *ngIf="product" class="container my-5">
-        <div class="row justify-content-center">
-            <div class="row gap-4 col-lg-10 ">
+<app-button [type]="'button'" [color]="'primary'" [text]="'Volver'" [icon]="'arrow_back'" [back]="true" style="z-index: 10;"></app-button>
 
-                <div class="d-flex flex-wrap gap-4 justify-content-around">
+<div *ngIf="product" class="container my-5">
+  <div class="row justify-content-center">
+    <div class="row gap-4 col-lg-10">
 
-                    <div class="content-image-product d-flex gap-4">
+      <!-- Galería -->
+      <div class="d-flex flex-wrap gap-4 justify-content-around">
+        <div class="content-image-product d-flex gap-4">
+          <!-- Miniaturas -->
+          <div *ngIf="product.images.length" class="d-flex flex-column gap-2">
+            <img *ngFor="let img of product.images"
+                 [src]="img.imageUrl"
+                 (click)="changeMainImage(img.imageUrl)"
+                 class="img-thumbnail"
+                 style="width: 60px; height: 60px; object-fit: cover; cursor: pointer;">
+          </div>
 
-                        <!-- Miniaturas -->
-                        <div *ngIf="product.images.length" class="d-flex flex-column gap-2">
-                            <img *ngFor="let img of product.images" [src]="img.imageUrl" (click)="changeMainImage(img.imageUrl)"
-                                class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover; cursor: pointer;">
-                        </div>
-
-                        <!-- Imagen principal -->
-                        <div class="flex-fill d-flex align-items-center justify-content-center" style="max-width: 400px;">
-                            <img [src]="selectedImage || (product.images.length ? product.images[0].imageUrl : '')"
-                                class="img-fluid rounded shadow" style="max-height: 350px; object-fit: cover;">
-                        </div>
-                        
-                    </div>
-
-                    <!-- Información del producto -->
-                    <div class="info-product border rounded p-3 shadow-sm" style="min-width: 434px;">
-                        <h3 class="mb-3 title">{{ product.name }}</h3>
-                        <div class="mb-1 subtitle">Productor: <div class="text"> {{ product.personName }} </div></div>
-                        <div class="mb-1 subtitle">Finca: <div class="text"> {{ product.farmName }} </div></div>
-                        <div class="mb-1 subtitle">Categoría: <div class="text d-flex flex-wrap"> {{ product.categoryName }} </div></div>
-                        <div class="mb-1 subtitle">Stock: <div class="text"> {{ product.stock }} {{ product.unit }} </div></div>
-                        <div class="mb-1 subtitle">Precio: <div class="text">{{ product.price | currency:'COP':'symbol' }}</div></div>
-                        <!-- <button class="btn btn-success w-100">Añadir al Pedido</button> -->
-                        <app-button  [text]="'Añadir al Pedido'" [type]="'button'" [icon]="'shopping_cart'"></app-button>
-                    </div>
-                </div>
-
-                <!-- descripción del producto -->
-                <div class="product-description">
-                    <div class="mb-0">
-                        <h5 class="title title-Desc">Descripción</h5>
-                        <div class="text">{{ product.description }}</div>
-                    </div>
-
-                    <div class="mb-0 row more-information">
-                        <h5 class="title">Más Información</h5>
-
-                        <!-- Botón que abre/cierra -->
-                        <button class="btn btn-sm btn-outline-success my-2" 
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#moreInfoContent">
-                            Ver detalles
-                        </button>
-
-                        <!-- Contenido oculto -->
-                        <div class="collapse mt-2" id="moreInfoContent">
-                            <div class="information-product">
-                            <div class="subtitle">Información de Producción:</div>
-                            <div class="text">{{ product.production }}</div>
-                            </div>
-                            <div class="location-inf">
-                            <div class="subtitle">Ubicación:</div>
-                            <div class="text">{{ product.cityName }}, {{ product.departmentName }}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Resumen de calificaciones -->
-                <div class="rating-summary mb-4 ">
-                    <h5 class="title">Calificación</h5>
-                    
-                    <div class="d-flex align-items-center mb-2">
-                        <h2 class="me-2">{{ averageRating | number:'1.1-1' }}</h2>
-                        <div>
-                            <span *ngFor="let star of [1,2,3,4,5]">
-                                <i class="bi"
-                                [ngClass]="star <= Math.round(averageRating) ? 'bi-star-fill text-warning' : 'bi-star text-secondary'"></i>
-                            </span>
-                        <p class="text-muted small m-0">{{ totalReviews }} reviews</p>
-                        </div>
-                    </div>
-
-                    <div *ngFor="let item of distribution" class="d-flex align-items-center mb-1">
-                        <span class="me-2">{{ item.star }}</span>
-                        <div class="progress flex-grow-1 me-2" style="height: 8px;">
-                        <div class="progress-bar bg-dark" role="progressbar"
-                            [style.width.%]="item.percentage"></div>
-                        </div>
-                        <span>{{ item.percentage | number:'1.0-0' }}%</span>
-                    </div>
-                    
-                </div>
-
-                <!-- Lista de reseñas -->
-                <div class="container-review">
-                    <div class="mb-3 review-cont overflow-y-auto">
-                        <h5 class="title">Reseñas</h5>
-                        <div *ngFor="let review of product.reviews" class="review pb-2 mb-2">
-                            <div class="d-flex">
-                                <div class="avatar-review">
-                                    <img [src]="review.avatar" class="rounded-circle me-2" width="40" height="40">
-                                    <div class="start">
-                                        <span *ngFor="let star of [1,2,3,4,5]">
-                                        <i class="bi"
-                                            [ngClass]="star <= review.rating ? 'bi-star-fill text-warning' : 'bi-star text-secondary'"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            <div class="to-overlay">
-                                <div class="subtitle">{{ review.user }}</div>
-                                <small class="text-muted ">{{ review.date | date }}</small>
-                            </div>
-                        </div>
-                    <p class="mb-1 text">{{ review.comment }}</p>
-                </div>
-                    </div>
-
-                    <!-- sección donde el consumidor pondrá su calificación -->
-                    <div class="mb-2 container-review-rating">
-                        <span *ngFor="let star of stars; let i = index">
-                            <i
-                                class="bi"
-                                [ngClass]="{
-                                'bi-star-fill text-warning': i < (hoveredRating || selectedRating), 
-                                'bi-star text-secondary': i >= (hoveredRating || selectedRating)
-                                }"
-                                (click)="setRating(i + 1)"
-                                (mouseenter)="setHoveredRating(i + 1)"
-                                (mouseleave)="setHoveredRating(0)">
-                            </i>
-                        </span>
-                    </div>
-
-                    <!-- simulador de opinión -->
-                    <div class="mb-3">
-                        <textarea [(ngModel)]="newReview"
-                                class="form-control text mb-2"
-                                placeholder="Escribe tu reseña"></textarea>
-                        <button (click)="submitReview()" class="btn btn-success">Enviar reseña</button>
-                    </div>
-                </div>
-
-            </div>
+          <!-- Imagen principal -->
+          <div class="flex-fill d-flex align-items-center justify-content-center" style="max-width: 400px;">
+            <img [src]="selectedImage || (product.images.length ? product.images[0].imageUrl : '')"
+                 class="img-fluid rounded shadow"
+                 style="max-height: 350px; object-fit: cover;">
+          </div>
         </div>
+
+        <!-- Información del producto -->
+        <div class="info-product border rounded p-3 shadow-sm" style="min-width: 434px;">
+          <h3 class="mb-3 title">{{ product.name }}</h3>
+          <div class="mb-1 subtitle">Productor: <div class="text">{{ product.personName }}</div></div>
+          <div class="mb-1 subtitle">Finca: <div class="text">{{ product.farmName }}</div></div>
+          <div class="mb-1 subtitle">Categoría: <div class="text">{{ product.categoryName }}</div></div>
+          <div class="mb-1 subtitle">Stock: <div class="text">{{ product.stock }} {{ product.unit }}</div></div>
+          <div class="mb-1 subtitle">Precio: <div class="text">{{ product.price | currency:'COP':'symbol' }}</div></div>
+          <app-button [text]="'Añadir al Pedido'" [type]="'button'" [icon]="'shopping_cart'"></app-button>
+        </div>
+      </div>
+
+      <!-- Descripción -->
+      <div class="product-description">
+        <div class="mb-0">
+          <h5 class="subtitle">Descripción</h5>
+          <div class="text">{{ product.description }}</div>
+        </div>
+        <div class="mb-0 row">
+          <h5 class="title">Más Información</h5>
+          <div class="information-product">
+            <div class="subtitle">Información de Producción:</div>
+            <div class="text">{{ product.production }}</div>
+          </div>
+          <div class="location-inf">
+            <div class="subtitle">Ubicación:</div>
+            <div class="text">{{ product.cityName }}, {{ product.departmentName }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumen de calificaciones -->
+      <div class="rating-summary mb-4">
+        <h5 class="title">Calificación</h5>
+
+        <div class="d-flex align-items-center mb-2">
+          <h2 class="me-2">{{ averageRating | number:'1.1-1' }}</h2>
+          <div>
+            <span *ngFor="let star of [1,2,3,4,5]">
+              <i class="bi" [ngClass]="star <= Math.round(averageRating) ? 'bi-star-fill text-warning' : 'bi-star text-secondary'"></i>
+            </span>
+            <p class="text-muted small m-0">{{ totalReviews }} reseñas</p>
+          </div>
+        </div>
+
+        <div *ngFor="let item of distribution" class="d-flex align-items-center mb-1">
+          <span class="me-2">{{ item.star }}</span>
+          <div class="progress flex-grow-1 me-2" style="height: 8px;">
+            <div class="progress-bar bg-dark" role="progressbar" [style.width.%]="item.percentage"></div>
+          </div>
+          <span>{{ item.percentage | number:'1.0-0' }}%</span>
+        </div>
+      </div>
+
+      <!-- Lista de reseñas -->
+      <div class="container-review w-100">
+        <h5 class="title">Reseñas</h5>
+
+        <ng-container *ngIf="!loadingReviews; else loadingTpl">
+          <div *ngIf="reviews.length; else emptyTpl">
+            <div *ngFor="let r of reviews; trackBy: trackByReview" class="review border-bottom pb-2 mb-2">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <div class="subtitle">{{ r.userName }}</div>
+                  <!-- Fecha en español (ver sección al final) -->
+                  <small class="text-muted">{{ r.createAt | date:'mediumDate':'':'es-CO' }}</small>
+                  <div class="mt-1">
+                    <span *ngFor="let star of [1,2,3,4,5]">
+                      <i class="bi" [ngClass]="star <= r.rating ? 'bi-star-fill text-warning' : 'bi-star text-secondary'"></i>
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Eliminar solo si es el autor -->
+                <!-- <button
+                  *ngIf="(me$ | async)?.id === r.userId"
+                  class="btn btn-sm btn-outline-danger"
+                  (click)="deleteReview(r.id)">
+                  Eliminar
+                </button> -->
+                <app-button
+                  *ngIf="(me$ | async)?.id === r.userId"
+                  [text]="'Eliminar'"
+                  [type]="'button'"
+                  [color]="'danger'"
+                  (click)="deleteReview(r.id)">
+                </app-button>
+              </div>
+              <p class="mb-1 text">{{ r.comment }}</p>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #loadingTpl>
+          <p class="text-muted">Cargando reseñas…</p>
+        </ng-template>
+
+        <ng-template #emptyTpl>
+          <p class="text-muted">Aún no hay reseñas para este producto.</p>
+        </ng-template>
+
+        <!-- Crear reseña: solo si hay usuario -->
+        <ng-container *ngIf="(me$ | async) as me; else mustLogin">
+          <div class="mt-3">
+            <div class="mb-2">
+              <span *ngFor="let _ of stars; let i = index">
+                <i class="bi"
+                   [ngClass]="i < selectedRating ? 'bi-star-fill text-warning' : 'bi-star text-secondary'"
+                   (click)="setRating(i + 1)"
+                   style="cursor: pointer; font-size: 24px;"></i>
+              </span>
+            </div>
+
+            <textarea [(ngModel)]="newReview" class="form-control text mb-2" placeholder="Escribe tu reseña"></textarea>
+            <!-- <button
+              (click)="submitReview()"
+              class="btn btn-success"
+              [disabled]="selectedRating === 0 || !newReview.trim()">
+              Enviar reseña
+            </button> -->
+            <app-button
+              [text]="'Enviar reseña'"
+              [type]="'button'"
+              [color]="'primary'"
+              (click)="submitReview()"
+              [disabled]="selectedRating === 0 || !newReview.trim()">
+            </app-button>
+          </div>
+        </ng-container>
+
+        <ng-template #mustLogin>
+          <p class="text-muted">Inicia sesión para dejar una reseña.</p>
+        </ng-template>
+      </div>
+
     </div>
+  </div>
+</div>

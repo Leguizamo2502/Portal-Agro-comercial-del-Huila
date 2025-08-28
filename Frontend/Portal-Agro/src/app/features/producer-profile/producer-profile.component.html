@@ -14,7 +14,6 @@
           <h4 class="fw-bold">{{ p.user.name }}</h4>
           <p class="text-muted">{{ p.user.email }}</p>
         </div>
-
         <!-- QR -->
         <div class="col-md-6 d-flex justify-content-md-end justify-content-center">
           <img
@@ -25,7 +24,7 @@
         </div>
       </div>
     </div>
-
+    <hr>
     <!-- Descripción -->
     <section class="my-4" *ngIf="p.description">
       <h5 class="title">Descripción</h5>
@@ -44,16 +43,15 @@
 
 
   <!-- PRODUCTOS (usa app-card, NO container-card) -->
-  <section class="my-4">
-    <h5 class="mb-3 title">Últimos Agregados</h5>
-    <div class="d-flex flex-nowrap gap-4 overflow-x-auto justify-content-start justify-content-md-center">
-      <div *ngFor="let product of p.products" class="flex-shrink-0">
-        <app-card
-          [product]="product"
-          [showActions]="false"
-          [showFavorite]="false">
-        </app-card>
-      </div>
+<section class="my-4">
+  <h5 class="fw-bold mb-3">Últimoso Agregados</h5>
+  <div class="row g-3">
+    <div class="col-md-3" *ngFor="let product of p.products">
+      <app-card
+        [product]="product"
+        [showActions]="false"
+        [showFavorite]="false">
+      </app-card>
     </div>
-  </section>
-</div>
+  </div>
+</section>
