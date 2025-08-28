@@ -5,7 +5,7 @@ public static class CommonRuleExtensions
     public static IRuleBuilderOptions<T, string> NameRules<T>(this IRuleBuilder<T, string> rule) =>
         rule.NotEmpty().WithMessage("El nombre es obligatorio.")
             .Must(s => !string.IsNullOrWhiteSpace(s)).WithMessage("El nombre no puede estar en blanco.")
-            .Length(2, 100).WithMessage("El nombre debe tener entre 2 y 100 caracteres.");
+            .Length(5, 100).WithMessage("El nombre debe tener entre 5 y 100 caracteres.");
 
     public static IRuleBuilderOptions<T, string> DescriptionRules<T>(this IRuleBuilder<T, string> rule) =>
         rule.NotEmpty().WithMessage("La descripción es obligatoria.")

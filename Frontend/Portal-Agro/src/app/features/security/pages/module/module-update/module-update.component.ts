@@ -16,7 +16,7 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-module-update',
-  imports: [ModuleModuleComponent],
+  imports: [],
   templateUrl: './module-update.component.html',
   styleUrl: './module-update.component.css',
 })
