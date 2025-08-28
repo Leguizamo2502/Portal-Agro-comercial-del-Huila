@@ -1,10 +1,12 @@
 ﻿using Entity.Domain.Models.Implements.Auth;
+using Entity.Domain.Models.Implements.Orders;
 using Entity.Domain.Models.Implements.Producers;
 using Entity.Domain.Models.Implements.Producers.Farms;
 using Entity.Domain.Models.Implements.Producers.Products;
 using Entity.Domain.Models.Implements.Security;
 using Entity.DTOs.Auth;
 using Entity.DTOs.Auth.User;
+using Entity.DTOs.Order.Reviews;
 using Entity.DTOs.Producer.Categories;
 using Entity.DTOs.Producer.Farm.Create;
 using Entity.DTOs.Producer.Farm.Select;
@@ -59,6 +61,14 @@ namespace Business.Mapping
                 .Map(dest => dest.Identification, src => src.Person.Identification)
                 .Map(dest => dest.CityId, src => src.Person.CityId)
                 .Map(dest => dest.CityName, src => src.Person.City.Name);
+
+
+
+            //Reviews
+            config.NewConfig<Review, ReviewSelectDto>()
+                .Map(dest => dest.UserName, src => $"{src.User.Person.FirstName} {src.User.Person.LastName}");
+
+            
 
 
 

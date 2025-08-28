@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Entity.DTOs.BaseDTO;
 
 namespace Entity.DTOs.Order.Reviews
 {
-    public class ReviewCreateDto
+    public class ReviewCreateDto : BaseDto
     {
         public int ProductId { get; set; }
         public byte Rating { get; set; }      // 1..5

@@ -1,6 +1,7 @@
 ﻿using Business.CustomJwt;
 using Business.Interfaces.Implements.Auth;
 using Business.Interfaces.Implements.Location;
+using Business.Interfaces.Implements.Orders.Reviews;
 using Business.Interfaces.Implements.Producers.Categories;
 using Business.Interfaces.Implements.Producers.Cloudinary;
 using Business.Interfaces.Implements.Producers.Farms;
@@ -10,6 +11,7 @@ using Business.Interfaces.Implements.Security.Mes;
 using Business.Mapping;
 using Business.Services.AuthService;
 using Business.Services.Location;
+using Business.Services.Orders.Reviews;
 using Business.Services.Producers.Categories;
 using Business.Services.Producers.Cloudinary;
 using Business.Services.Producers.Farms;
@@ -18,6 +20,7 @@ using Business.Services.Security;
 using Data.Interfaces.Implements.Auth;
 using Data.Interfaces.Implements.Favorites;
 using Data.Interfaces.Implements.Location;
+using Data.Interfaces.Implements.Orders.Reviews;
 using Data.Interfaces.Implements.Producers;
 using Data.Interfaces.Implements.Producers.Categories;
 using Data.Interfaces.Implements.Producers.Farms;
@@ -30,6 +33,7 @@ using Data.Repository;
 using Data.Service.Auth;
 using Data.Service.Favorites;
 using Data.Service.Location;
+using Data.Service.Orders.Reviews;
 using Data.Service.Producers;
 using Data.Service.Producers.Categories;
 using Data.Service.Producers.Farms;
@@ -106,6 +110,9 @@ namespace Web.ProgramService
 
             services.AddScoped<IRolFormPermissionRepository, RolFormPermissionRepository>();   
             services.AddScoped<IRolFormPermissionService,RolFormPermissionService>();
+
+            services.AddScoped<IReviewRepository, ReviewRepository>();
+            services.AddScoped<IReviewService, ReviewService>();
 
 
             //Producer

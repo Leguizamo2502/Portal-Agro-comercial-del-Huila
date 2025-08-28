@@ -30,11 +30,11 @@ export interface ProductSelectModel {
   isFavorite: boolean;
 
   // mockups opcionales
-  orders?: number;
-  categories?: string[];
-  moreInfo?: string;
-  location?: string;
-  reviews?: ReviewModel[];
+  // orders?: number;
+  // categories?: string[];
+  // moreInfo?: string;
+  // location?: string;
+  // reviews?: ReviewModel[];
 }
 
 export interface ProductImageSelectModel {
@@ -55,7 +55,7 @@ export interface ProductRegisterModel {
   status: boolean;
   categoryId: number;
   images?: File[];
-  farmIds: number[];               // << antes: farmId
+  farmIds: number[];           
 }
 
 export interface ProductUpdateModel {
@@ -69,7 +69,7 @@ export interface ProductUpdateModel {
   status: boolean;
   categoryId: number;
   images?: File[];
-  farmIds: number[];               // << antes: farmId
+  farmIds: number[];               
   imagesToDelete?: string[];
 }
 
@@ -77,10 +77,18 @@ export interface FavoriteCreateRequest {
   productId: number;
 }
 
-export interface ReviewModel {
-  user: string;
-  avatar: string;
-  date: Date;
+export interface ReviewRegisterModel {
+  productId: number;
+  rating: number;         
   comment: string;
-  rating: number;
+}
+
+export interface ReviewSelectModel {
+  id: number;              
+  productId: number;
+  userId: number;
+  userName: string;
+  rating: number;         
+  comment: string;
+  createdAt: string;       
 }

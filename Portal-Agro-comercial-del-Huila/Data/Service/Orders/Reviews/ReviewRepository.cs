@@ -12,13 +12,32 @@ namespace Data.Service.Orders.Reviews
         {
         }
 
+        private IQueryable<Review> BaseQuery()
+        {
+            return _dbSet
+                .AsNoTracking()
+                .Include(r => r.User)
+                    .ThenInclude(u => u.Person)
+                .AsSplitQuery(); 
+        }
+
         public override async Task<IEnumerable<Review>> GetAllAsync()
         {
-            return await _dbSet
-                .Include(r => r.User)
-                    .ThenInclude(u=>u.Person)
+            return await BaseQuery()
                 .ToListAsync();
                 
+        }
+        public override async Task<Review?> GetByIdAsync(int id)
+        {
+            return await BaseQuery()
+                .FirstOrDefaultAsync(r => r.Id == id);
+        }
+
+        public async Task<IEnumerable<Review>> GetAllByProductId(int productId)
+        {
+            return await BaseQuery()
+                .Where(r=>r.ProductId == productId)
+                .ToListAsync();
         }
     }
 }

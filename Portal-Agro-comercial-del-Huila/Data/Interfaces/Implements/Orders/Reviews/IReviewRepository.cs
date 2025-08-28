@@ -10,5 +10,6 @@ namespace Data.Interfaces.Implements.Orders.Reviews
 {
     public interface IReviewRepository : IDataGeneric<Review>
     {
+        Task<IEnumerable<Review>> GetAllByProductId(int productId);
     }
 }
