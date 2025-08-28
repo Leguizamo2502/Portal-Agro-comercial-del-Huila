@@ -23,11 +23,11 @@ public class ProducerWithFarmRegisterDtoValidator : AbstractValidator<ProducerWi
             .GreaterThanOrEqualTo(0).WithMessage("La altitud no puede ser negativa.")
             .LessThanOrEqualTo(9000).WithMessage("La altitud no debe superar 9000 msnm.");
 
-        RuleFor(x => x.Latitude)
-            .InclusiveBetween(-90, 90).WithMessage("Latitud fuera de rango (-90 a 90).");
+        //RuleFor(x => x.Latitude)
+        //    .InclusiveBetween(-90, 90).WithMessage("Latitud fuera de rango (-90 a 90).");
 
-        RuleFor(x => x.Longitude)
-            .InclusiveBetween(-180, 180).WithMessage("Longitud fuera de rango (-180 a 180).");
+        //RuleFor(x => x.Longitude)
+        //    .InclusiveBetween(-180, 180).WithMessage("Longitud fuera de rango (-180 a 180).");
 
         RuleFor(x => x.CityId)
             .GreaterThan(0).WithMessage("Debe seleccionar una ciudad válida.");

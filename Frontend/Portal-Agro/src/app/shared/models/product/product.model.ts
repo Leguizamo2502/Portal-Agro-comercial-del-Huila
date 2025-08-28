@@ -1,3 +1,9 @@
+export interface ApiOk {
+  isSuccess: boolean;   // si tu backend devuelve PascalCase, ver nota abajo
+  message: string;
+  id?: number;
+}
+
 export interface ProductSelectModel {
   id: number;
   name: string;
@@ -11,12 +17,19 @@ export interface ProductSelectModel {
   categoryName: string;
   images: ProductImageSelectModel[];
   personName: string;
-  farmId: number;
+
+  // Legacy (compat)
+  farmId?: number;
   farmName: string;
   cityName: string;
   departmentName: string;
+
+  // NUEVO: todas las fincas asociadas
+  farmIds?: number[];
+
   isFavorite: boolean;
-  // 👇 Opcionales (solo mockup en frontend)
+
+  // mockups opcionales
   orders?: number;
   categories?: string[];
   moreInfo?: string;
@@ -42,7 +55,7 @@ export interface ProductRegisterModel {
   status: boolean;
   categoryId: number;
   images?: File[];
-  farmId: number;
+  farmIds: number[];               // << antes: farmId
 }
 
 export interface ProductUpdateModel {
@@ -55,13 +68,13 @@ export interface ProductUpdateModel {
   stock: number;
   status: boolean;
   categoryId: number;
-  images?: File[]; // Archivos nuevos a subir
-  farmId: number;
-  imagesToDelete?: string[]; // PublicId o nombres de archivos a eliminar
+  images?: File[];
+  farmIds: number[];               // << antes: farmId
+  imagesToDelete?: string[];
 }
 
-export interface FavoriteCreateRequest{
-  productId:number
+export interface FavoriteCreateRequest {
+  productId: number;
 }
 
 export interface ReviewModel {
@@ -69,7 +82,5 @@ export interface ReviewModel {
   avatar: string;
   date: Date;
   comment: string;
-
-  // prueba de calificacion
   rating: number;
 }

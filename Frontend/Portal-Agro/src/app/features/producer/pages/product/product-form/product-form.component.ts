@@ -10,6 +10,7 @@ import {
 import {
   AbstractControl,
   FormBuilder,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
   ValidationErrors,
@@ -32,6 +33,7 @@ import {
   ProductImageSelectModel,
   ProductRegisterModel,
   ProductUpdateModel,
+  ApiOk,
 } from '../../../../../shared/models/product/product.model';
 import { ProductService } from '../../../../../shared/services/product/product.service';
 import { FarmService } from '../../../../../shared/services/farm/farm.service';
@@ -61,6 +63,13 @@ const positiveIntValidator = (label: string): ValidatorFn =>
     const n = Number(c.value);
     if (!Number.isInteger(n) || n <= 0) return { positiveInt: `Debe seleccionar ${label.toLowerCase()} válida.` };
     return null;
+  };
+
+// Lista con al menos N elementos
+const arrayMinLen = (min: number): ValidatorFn =>
+  (c: AbstractControl): ValidationErrors | null => {
+    const v = c.value as number[] | null | undefined;
+    return Array.isArray(v) && v.length >= min ? null : { arrayMinLen: { required: min, actual: (v?.length ?? 0) } };
   };
 
 @Component({
@@ -94,7 +103,8 @@ export class ProductFormComponent implements OnInit {
   farms: FarmSelectModel[] = [];
   categories: CategorySelectModel[] = [];
 
-  @Output() saved = new EventEmitter<ProductSelectModel>();
+  // Ya no emitimos el producto; basta el evento de éxito
+  @Output() saved = new EventEmitter<void>();
 
   generalGroup!: FormGroup;
   detallesGroup!: FormGroup;
@@ -217,7 +227,9 @@ export class ProductFormComponent implements OnInit {
       stock: [0, [Validators.required, Validators.min(0), Validators.max(100_000)]],
       status: [true, [Validators.required]],
       categoryId: [null, [Validators.required, positiveIntValidator('Categoría')]],
-      farmId: [null, [Validators.required, positiveIntValidator('Finca')]],
+
+      // << NUEVO: selección múltiple de fincas (mínimo 1)
+      farmIds: new FormControl<number[]>([], { nonNullable: true, validators: [arrayMinLen(1)] }),
     });
   }
 
@@ -245,11 +257,14 @@ export class ProductFormComponent implements OnInit {
       production: p.production,
     });
 
+    // Preferir p.farmIds; si el backend aún manda solo farmId, usarlo como array
+    const farms = (p.farmIds && p.farmIds.length ? p.farmIds : (p.farmId ? [p.farmId] : []));
+
     this.detallesGroup.patchValue({
       stock: p.stock,
       status: p.status,
       categoryId: p.categoryId,
-      farmId: p.farmId,
+      farmIds: farms,
     });
   }
 
@@ -304,7 +319,6 @@ export class ProductFormComponent implements OnInit {
         return false;
       }
       if (newFiles.length >= remaining) {
-        // ya no agregamos más para no pasarnos del total
         return true; // corta el bucle .some
       }
       newFiles.push(f);
@@ -336,8 +350,7 @@ export class ProductFormComponent implements OnInit {
       this.imageSrv.deleteImagesByPublicIds([img.publicId]).subscribe({
         next: () => {
           this.existingImages.splice(index, 1);
-          // Alternativa: delegar borrado en PUT
-          // this.imagesToDelete.push(img.publicId);
+          // Alternativa: delegar borrado en PUT con imagesToDelete.push(img.publicId)
         },
         complete: () => (this.isDeletingImage = false),
         error: () => (this.isDeletingImage = false),
@@ -380,7 +393,7 @@ export class ProductFormComponent implements OnInit {
       stock: Number(d.stock),
       status: Boolean(d.status),
       categoryId: Number(d.categoryId),
-      farmId: Number(d.farmId),
+      farmIds: (d.farmIds as number[]) ?? [],   // << NUEVO
     };
 
     const dtoUpdate: ProductUpdateModel = {
@@ -426,18 +439,21 @@ export class ProductFormComponent implements OnInit {
         }),
         finalize(() => (this.isLoading = false))
       )
-      .subscribe((resp) => {
+      .subscribe((resp: ApiOk | null) => {
         if (!resp) return;
+        const ok = (resp as any).isSuccess ?? (resp as any).IsSuccess;
+        if (!ok) return;
+
+        const msg = (resp as any).message ?? (resp as any).Message
+          ?? (this.isEdit ? 'Producto actualizado.' : 'Producto creado.');
 
         Swal.fire({
           icon: 'success',
           title: this.isEdit ? '¡Actualizado!' : '¡Creado!',
-          text: this.isEdit
-            ? 'El producto se actualizó con éxito.'
-            : 'El producto se registró con éxito.',
+          text: msg,
           confirmButtonText: 'Aceptar',
         }).then(() => {
-          this.saved.emit(resp);
+          this.saved.emit(); // ya no emitimos el producto
           this.resetAfterSave();
           this.router.navigateByUrl('/account/producer/management/product');
         });
@@ -455,7 +471,7 @@ export class ProductFormComponent implements OnInit {
 
   private resetForm(): void {
     this.generalGroup.reset();
-    this.detallesGroup.reset({ stock: 0, status: true });
+    this.detallesGroup.reset({ stock: 0, status: true, farmIds: [] });
     this.selectedFiles = [];
     this.imagesPreview = [];
     this.existingImages = this.isEdit ? this.existingImages : [];

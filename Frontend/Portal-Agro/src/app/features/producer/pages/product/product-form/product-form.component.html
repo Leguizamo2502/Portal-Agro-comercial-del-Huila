@@ -110,15 +110,32 @@
               válida.</mat-error>
           </mat-form-field>
 
+          <!-- Fincas (multi-selección) -->
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Finca</mat-label>
-            <mat-select formControlName="farmId" required>
-              <mat-option *ngFor="let f of farms" [value]="f.id">{{ f.name }}</mat-option>
+            <mat-label>Fincas</mat-label>
+            <mat-select formControlName="farmIds" multiple required>
+              <!-- Trigger: muestra un resumen de selección -->
+              <mat-select-trigger>
+                {{
+                (detallesGroup.get('farmIds')?.value?.length || 0) === 0
+                ? 'Selecciona al menos una'
+                : (detallesGroup.get('farmIds')?.value?.length + ' seleccionada(s)')
+                }}
+              </mat-select-trigger>
+
+              <mat-option *ngFor="let f of farms" [value]="f.id">
+                {{ f.name }}
+              </mat-option>
             </mat-select>
-            <mat-error *ngIf="detallesGroup.get('farmId')?.hasError('required')">Obligatorio</mat-error>
-            <mat-error *ngIf="detallesGroup.get('farmId')?.hasError('positiveInt')">Debe seleccionar una finca
-              válida.</mat-error>
+
+            <mat-hint>Selecciona una o varias fincas (mínimo 1).</mat-hint>
+
+            <!-- Validación para array con mínimo 1 elemento -->
+            <mat-error *ngIf="detallesGroup.get('farmIds')?.hasError('arrayMinLen')">
+              Debes seleccionar al menos una finca.
+            </mat-error>
           </mat-form-field>
+
         </div>
 
         <div class="actions space-between">
