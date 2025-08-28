@@ -98,12 +98,19 @@
                 </div>
 
                 <!-- Eliminar solo si es el autor -->
-                <button
+                <!-- <button
                   *ngIf="(me$ | async)?.id === r.userId"
                   class="btn btn-sm btn-outline-danger"
                   (click)="deleteReview(r.id)">
                   Eliminar
-                </button>
+                </button> -->
+                <app-button
+                  *ngIf="(me$ | async)?.id === r.userId"
+                  [text]="'Eliminar'"
+                  [type]="'button'"
+                  [color]="'danger'"
+                  (click)="deleteReview(r.id)">
+                </app-button>
               </div>
               <p class="mb-1 text">{{ r.comment }}</p>
             </div>
@@ -131,12 +138,19 @@
             </div>
 
             <textarea [(ngModel)]="newReview" class="form-control text mb-2" placeholder="Escribe tu reseña"></textarea>
-            <button
+            <!-- <button
               (click)="submitReview()"
               class="btn btn-success"
               [disabled]="selectedRating === 0 || !newReview.trim()">
               Enviar reseña
-            </button>
+            </button> -->
+            <app-button
+              [text]="'Enviar reseña'"
+              [type]="'button'"
+              [color]="'primary'"
+              (click)="submitReview()"
+              [disabled]="selectedRating === 0 || !newReview.trim()">
+            </app-button>
           </div>
         </ng-container>
 
