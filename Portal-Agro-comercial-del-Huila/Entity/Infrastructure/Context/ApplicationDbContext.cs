@@ -2,6 +2,7 @@
 using Entity.Domain.Models.Implements.Auth;
 using Entity.Domain.Models.Implements.Auth.Token;
 using Entity.Domain.Models.Implements.Favorites;
+using Entity.Domain.Models.Implements.Orders;
 using Entity.Domain.Models.Implements.Producers;
 using Entity.Domain.Models.Implements.Producers.Farms;
 using Entity.Domain.Models.Implements.Producers.Products;
@@ -143,6 +144,7 @@ namespace Entity.Infrastructure.Context
         public DbSet<ProductFarm> ProductFarms { get; set; }
 
         public DbSet<Favorite> Favorites { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
 
     }

@@ -1,12 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Entity.Domain.Models.Base;
+using Entity.Domain.Models.Implements.Auth;
+using Entity.Domain.Models.Implements.Producers.Products;
 
 namespace Entity.Domain.Models.Implements.Orders
 {
-    internal class Review
+    public class Review : BaseModel
     {
+        public int ProductId { get; set; }
+        public int UserId { get; set; }       // consumidor que reseña
+        public byte Rating { get; set; }      // 1..5
+        public string Comment { get; set; }   // requerido
+
+        public Product Product { get; set; } = null!;
+        public User User { get; set; } = null!;
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Entity.Domain.Models.Base;
 using Entity.Domain.Models.Implements.Favorites;
+using Entity.Domain.Models.Implements.Orders;
 using Entity.Domain.Models.Implements.Producers.Farms;
 
 namespace Entity.Domain.Models.Implements.Producers.Products
@@ -31,5 +32,7 @@ namespace Entity.Domain.Models.Implements.Producers.Products
 
         // Relación N–M vía pivote
         public ICollection<ProductFarm> ProductFarms { get; set; } = [];
+        public ICollection<Review> Reviews { get; set; } = [];
+
     }
 }
