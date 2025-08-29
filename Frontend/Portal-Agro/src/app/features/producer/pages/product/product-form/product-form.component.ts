@@ -212,7 +212,10 @@ export class ProductFormComponent implements OnInit {
       ]],
       // Por defecto (create); en ngOnInit se ajusta si es edición
       price: [null, [
-        Validators.required, positiveNumberValidator('El precio'), Validators.max(100_000_000)
+        Validators.required,
+        Validators.min(0), // ⬅️ bloquea negativos
+        Validators.max(100_000_000),
+        Validators.pattern(/^\d+$/)   // Solo números enteros
       ]],
       unit: ['', [
         Validators.required, Validators.maxLength(20), notWhiteSpaceValidator('La unidad')
@@ -224,13 +227,19 @@ export class ProductFormComponent implements OnInit {
     });
 
     this.detallesGroup = this.fb.group({
-      stock: [0, [Validators.required, Validators.min(0), Validators.max(100_000)]],
+      stock: [0, [
+        Validators.required,
+        Validators.pattern(/^[0-9]+$/), // solo números enteros positivos o 0
+        Validators.max(100_000)         // límite superior
+      ]],
       status: [true, [Validators.required]],
       categoryId: [null, [Validators.required, positiveIntValidator('Categoría')]],
-
-      // << NUEVO: selección múltiple de fincas (mínimo 1)
-      farmIds: new FormControl<number[]>([], { nonNullable: true, validators: [arrayMinLen(1)] }),
+      farmIds: new FormControl<number[]>([], {
+        nonNullable: true,
+        validators: [arrayMinLen(1)]
+      }),
     });
+
   }
 
   private loadProduct(id: number): void {
@@ -477,4 +486,26 @@ export class ProductFormComponent implements OnInit {
     this.existingImages = this.isEdit ? this.existingImages : [];
     this.imagesToDelete = [];
   }
+
+  // ✅ Normaliza entradas en tiempo real:
+  // - No permite espacios iniciales
+  // - Fuerza primera letra en mayúscula
+  onInputChange(event: Event, controlName: string): void {
+    const input = event.target as HTMLInputElement | HTMLTextAreaElement;
+    let value = input.value;
+
+    // ❌ Quita espacios al inicio
+    if (value.startsWith(' ')) {
+      value = value.trimStart();
+    }
+
+    // 🔠 Fuerza primera letra en mayúscula
+    if (value.length === 1) {
+      value = value.toUpperCase();
+    }
+
+    // ✅ Actualiza el control sin disparar ciclos infinitos
+    this.generalGroup.get(controlName)?.setValue(value, { emitEvent: false });
+  }
 }
+
