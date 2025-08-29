@@ -1,6 +1,73 @@
-<div class="container-fluid">
-    <!-- <app-category-pill></app-category-pill> -->
-    <app-category-pill *ngFor="let category of categories" [category]="category"></app-category-pill>
-    <app-container-card-flex [items]="products" [type]="'product'"></app-container-card-flex>
+<div class="container py-3">
+    <h1 class="title">Productos Disponibles</h1>
+    <div class="bg-white rounded-3 shadow-sm mb-2 d-flex flex-column flex-md-row
+            align-items-center justify-content gap-2 header-compact">
 
+        <!-- Breadcrumb -->
+        <div class="header-text">
+            <mat-icon fontIcon="filter_list" class="me-1"></mat-icon>
+            
+        </div>
+
+        <div class="d-flex align-items-center gap-2 controls">
+            <mat-form-field appearance="outline" class=" select" subscriptSizing="dynamic">
+                <mat-label>Selecciona una categoría</mat-label>
+                <mat-select [formControl]="categoryCtrl" (selectionChange)="onSelectCategory($event.value)"
+                    [disabled]="isLoadingCategories">
+                    <mat-option *ngFor="let c of categories; trackBy: trackById" [value]="c.id">
+                        <div class="d-flex">
+                            <span>{{ c.name }}</span>
+                            <mat-icon *ngIf="c.hasChildren" fontIcon="chevron_right"></mat-icon>
+                        </div>
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <app-button [text]="''" size="sm" (click)="clearFilter()" [disabled]="!breadcrumb.length"
+                aria-label="Limpiar filtro" [icon]="'refresh'">
+            </app-button>
+        </div>
+
+        <div class="d-flex flex-wrap breadcrumb-wrap">
+            <mat-chip class="chip-link" (click)="clearFilter()" selected disableRipple>
+                Todas
+            </mat-chip>
+
+            <ng-container *ngFor="let crumb of breadcrumb; let i = index; trackBy: trackById">
+                <mat-icon fontIcon="chevron_right" class="crumb-sep"></mat-icon>
+
+                <mat-chip *ngIf="i < breadcrumb.length - 1; else lastCrumb" class="chip-link"
+                    (click)="onBreadcrumbClick(i)" disableRipple>
+                    {{ crumb.name }}
+                </mat-chip>
+
+                <ng-template #lastCrumb>
+                    <mat-chip color="primary" selected disableRipple>{{ crumb.name }}</mat-chip>
+                </ng-template>
+            </ng-container>
+        </div>
+
+        <!-- Texto central -->
+        <!-- <div class="header-text">
+    Productos disponibles
+  </div> -->
+
+        <!-- Controles (derecha) -->
+
+    </div>
+
+
+    <!-- Loading de productos -->
+    <mat-progress-bar *ngIf="isLoadingProducts" mode="indeterminate" class="mb-3"></mat-progress-bar>
+
+    <!-- Resultados -->
+    <div class="bg-white p-3 rounded-3 shadow-sm">
+        <app-container-card-flex [items]="products" [type]="'product'">
+        </app-container-card-flex>
+
+        <div *ngIf="!isLoadingProducts && products?.length === 0" class="text-center text-muted py-4">
+            <mat-icon fontIcon="inventory_2" class="mb-2"></mat-icon>
+            <div>Sin productos para esta categoría.</div>
+        </div>
+    </div>
 </div>
