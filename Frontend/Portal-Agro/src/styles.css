@@ -117,6 +117,10 @@ cosas
   flex-direction: column;
 }
 
+.topAlone{
+  margin-top: 1rem;
+}
+
 .leaflet-control-layers-toggle {
   background-image: url("/leaflet/layers.png");
 }

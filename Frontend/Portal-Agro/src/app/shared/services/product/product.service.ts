@@ -24,6 +24,17 @@ export class ProductService {
     return this.http.get<ProductSelectModel[]>(this.urlBase + '/favorites');
   }
 
+  /** ------------------------  FILTER BY CATEGORY  ------------------------- */
+  /**
+   * Productos de la categoría indicada y todas sus subcategorías.
+   * Endpoint: GET /api/v1/categories/{categoryId}/products
+   */
+  getByCategory(categoryId: number): Observable<ProductSelectModel[]> {
+    if (!categoryId || categoryId <= 0) throw new Error('categoryId inválido');
+    const url = `${this.urlBase}/categories/${categoryId}/products`;
+    return this.http.get<ProductSelectModel[]>(url);
+  }
+
   /** --------------------------------------------------  CRUD  ----------------------------------------------------- */
   getAll(): Observable<ProductSelectModel[]> {
     return this.http.get<ProductSelectModel[]>(this.urlBase);
@@ -71,7 +82,9 @@ export class ProductService {
    * - images         (File[])
    * - imagesToDelete (varias claves repetidas)
    */
-  private buildFormData(dto: ProductRegisterModel | ProductUpdateModel): FormData {
+  private buildFormData(
+    dto: ProductRegisterModel | ProductUpdateModel
+  ): FormData {
     const data = new FormData();
 
     if ('id' in dto && dto.id !== undefined) data.append('id', String(dto.id));
@@ -86,17 +99,19 @@ export class ProductService {
     data.append('categoryId', String(dto.categoryId));
 
     // << NUEVO: múltiples fincas
-    (dto.farmIds ?? []).forEach(fid => data.append('FarmIds', String(fid)));
+    (dto.farmIds ?? []).forEach((fid) => data.append('FarmIds', String(fid)));
     // Alternativa válida: data.append('FarmIds[0]', '1'), etc. (el binder es case-insensitive)
 
     // Imágenes nuevas
     if (dto.images?.length) {
-      dto.images.forEach(file => data.append('images', file, file.name));
+      dto.images.forEach((file) => data.append('images', file, file.name));
     }
 
     // Imágenes a borrar (PublicId)
     if ('imagesToDelete' in dto && dto.imagesToDelete?.length) {
-      dto.imagesToDelete.forEach(pubId => data.append('imagesToDelete', pubId));
+      dto.imagesToDelete.forEach((pubId) =>
+        data.append('imagesToDelete', pubId)
+      );
     }
 
     return data;
