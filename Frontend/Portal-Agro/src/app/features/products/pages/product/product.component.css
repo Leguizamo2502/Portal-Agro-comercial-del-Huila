@@ -1,0 +1,18 @@
+/* Header más compacto */
+.header-compact { padding: .5rem .75rem; }                  /* antes p-3 */
+.breadcrumb-wrap { min-height: 34px; }
+
+/* Controles: menos ancho y separación */
+.controls { gap: .5rem; }
+.select { width: 250px; }                                    /* 280 -> 220 */
+.controls .mat-mdc-text-field-wrapper { height: 34px; }
+.controls .mat-mdc-form-field-infix { padding-top: 0; padding-bottom: 0; }
+
+/* Sutil divisor inferior para cerrar el bloque */
+.header-compact { border-bottom: 1px solid #eef1f4; }
+.header-text {
+  font-weight: 550;
+  font-size: 1rem;
+  color: #1e4620;   /* gris oscuro */
+  text-align: center;
+}
