@@ -195,10 +195,10 @@ namespace Web.Controllers.Implements.Producer.Products
         [ProducesResponseType(500)]
         public virtual async Task<IActionResult> GetForUser()
         {
-            var userId = HttpContext.GetUserId();
             try
             {
-                var result = await _productReadService.GetAllForUserAsync(userId);
+                int? userId = HttpContext.TryGetUserId();
+                var result = await _productReadService.GetAllHomeAsync(userId); // <- nuevo
                 return Ok(result);
             }
             catch (Exception ex)
@@ -228,12 +228,12 @@ namespace Web.Controllers.Implements.Producer.Products
 
         }
 
-        [HttpGet("by-category/{categoryId:int}")]
-        [ProducesResponseType(200)]
+        // GET /api/v1/categories/{categoryId}/products
+        [HttpGet("categories/{categoryId:int}/products")]
+        [ProducesResponseType(typeof(IEnumerable<ProductSelectDto>), 200)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetByCategory(int categoryId)
+        public async Task<IActionResult> GetProductsByCategory(int categoryId)
         {
-
             try
             {
                 var result = await _productReadService.GetByCategoryAsync(categoryId);
@@ -241,11 +241,12 @@ namespace Web.Controllers.Implements.Producer.Products
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error obteniendo datos");
+                _logger.LogError(ex, "Error obteniendo productos por categoría {CategoryId}", categoryId);
                 return StatusCode(500, new { message = "Error interno del servidor." });
             }
-
         }
+
+      
 
 
 
