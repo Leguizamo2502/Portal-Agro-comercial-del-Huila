@@ -14,6 +14,7 @@ namespace Business.Interfaces.Implements.Producers.Products
         Task<IEnumerable<ProductSelectDto>> GetAllForUserAsync(int userId);
         Task<IEnumerable<ProductSelectDto>> GetFavoritesForUserAsync(int userId);
         Task<IEnumerable<ProductSelectDto>> GetByProducerAsync(int userId);
+        Task<IEnumerable<ProductSelectDto>> GetAllHomeAsync(int? userId);
 
         Task<IEnumerable<ProductSelectDto>> GetByCategoryAsync(int categoryId);
     }

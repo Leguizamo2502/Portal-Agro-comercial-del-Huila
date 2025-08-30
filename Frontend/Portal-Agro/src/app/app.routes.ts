@@ -39,7 +39,7 @@ export const routes: Routes = [
       // Lazy modules que SÍ deben usar layout
       {
         path: 'home',
-        canMatch: [authGuard],
+        // canMatch: [authGuard],
         loadChildren: () =>
           import('./features/home/home.routes').then((m) => m.HOME_ROUTES),
       },
