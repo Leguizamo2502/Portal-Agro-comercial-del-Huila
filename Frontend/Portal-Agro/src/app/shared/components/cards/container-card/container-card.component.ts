@@ -11,33 +11,10 @@ import { FavoriteService } from '../../../services/favorite/favorite.service';
   styleUrl: './container-card.component.css',
 })
 export class ContainerCardComponent {
-  favoriteSrv = inject(FavoriteService);
-
   @Input() title = 'Últimos Agregados';
   @Input() showHeader = true;
+  @Input() showFavorite = true; // <- define si el card muestra el botón
   @Input({ required: true }) products: ProductSelectModel[] = [];
 
   trackById = (_: number, p: ProductSelectModel) => p.id;
-
-  togglingId: number | null = null;
-  onToggleFavorite(p: ProductSelectModel) {
-    if (this.togglingId === p.id) return;
-    this.togglingId = p.id;
-
-    // UI optimista: aplica de inmediato y haz rollback si falla
-    const original = !!p.isFavorite;
-    p.isFavorite = !original;
-
-    this.favoriteSrv.toggle(p.id, original).subscribe({
-      next: (newState) => {
-        p.isFavorite = newState;
-      },
-      error: (_) => {
-        p.isFavorite = original;
-      },
-      complete: () => {
-        this.togglingId = null;
-      },
-    });
-  }
 }

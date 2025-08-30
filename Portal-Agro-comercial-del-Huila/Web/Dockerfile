@@ -13,6 +13,11 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Web/Web.csproj", "Web/"]
+COPY ["Business/Business.csproj", "Business/"]
+COPY ["Custom/Custom.csproj", "Custom/"]
+COPY ["Data/Data.csproj", "Data/"]
+COPY ["Entity/Entity.csproj", "Entity/"]
+COPY ["Utilities/Utilities.csproj", "Utilities/"]
 RUN dotnet restore "./Web/Web.csproj"
 COPY . .
 WORKDIR "/src/Web"

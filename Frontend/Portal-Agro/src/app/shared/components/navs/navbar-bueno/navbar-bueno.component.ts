@@ -5,16 +5,21 @@ import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../Core/services/auth/auth.service';
 import { SidebarService } from '../../../services/sidebar/sidebar.service';
+import { IfLoggedInDirective } from "../../../../Core/directives/if-logged-in.directive";
+import { ButtonComponent } from "../../button/button.component";
+import { IfLoggedOutDirective } from "../../../../Core/directives/if-logged-out.directive";
+import { AuthState } from '../../../../Core/services/auth/auth.state';
 
 @Component({
   selector: 'app-navbar-bueno',
   standalone: true,
-  imports: [RouterLink, MatIcon, CommonModule],
+  imports: [RouterLink, MatIcon, CommonModule, IfLoggedInDirective, ButtonComponent, IfLoggedOutDirective],
   templateUrl: './navbar-bueno.component.html',
   styleUrls: ['./navbar-bueno.component.css']
 })
 export class NavbarBuenoComponent {
   authService = inject(AuthService);
+  ath = inject(AuthState);
   router = inject(Router);
   sidebarService = inject(SidebarService);
 
@@ -29,6 +34,7 @@ export class NavbarBuenoComponent {
   logOut(): void {
     this.authService.LogOut().subscribe({
       next: () => {
+        this.ath.clear();
         Swal.fire({
           icon: 'success',
           title: 'Sesión cerrada',

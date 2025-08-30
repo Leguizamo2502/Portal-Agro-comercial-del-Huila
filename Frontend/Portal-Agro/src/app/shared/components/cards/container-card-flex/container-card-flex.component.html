@@ -3,24 +3,12 @@
     <div class="col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let it of items; trackBy: trackById">
 
       <!-- PRODUCTS -->
-      <app-card
-        *ngIf="isProduct(it)"
-        [product]="it"
-        [showActions]="showActions"
-        [showFavorite]="showFavorite"
-        [isFavorite]="it.isFavorite"
-        [disabledFavorite]="togglingId === it.id"
-        (edit)="editProduct.emit(it)"
-        (delete)="deleteProduct.emit(it)"
-        (toggleFavorite)="toggleFavorite.emit(it)">
+      <app-card *ngIf="isProduct(it)" [product]="it" [showActions]="showActions" [showFavorite]="showFavorite"
+        (edit)="editProduct.emit(it)" (delete)="deleteProduct.emit(it)">
       </app-card>
 
       <!-- FARMS -->
-      <app-card-farm
-        *ngIf="isFarm(it)"
-        [farm]="it"
-        [showActions]="showActions"
-        (edit)="editFarm.emit(it)"
+      <app-card-farm *ngIf="isFarm(it)" [farm]="it" [showActions]="showActions" (edit)="editFarm.emit(it)"
         (delete)="deleteFarm.emit(it)">
       </app-card-farm>
 

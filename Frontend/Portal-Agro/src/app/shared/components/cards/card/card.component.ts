@@ -5,27 +5,28 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ProductSelectModel } from '../../../models/product/product.model';
 import { Router } from '@angular/router';
+import { FavoriteFacadeService } from '../../../services/favorite/favorite-facade.service';
+import { IfLoggedInDirective } from "../../../../Core/directives/if-logged-in.directive";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-card',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, IfLoggedInDirective],
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.css']
 })
 export class CardComponent {
+  private fav = inject(FavoriteFacadeService);
   router = inject(Router);
 
   @Input({ required: true }) product!: ProductSelectModel;
   @Input() showActions = false;
-
   @Input() showFavorite = false;
-  @Input() isFavorite: boolean = false;
-  @Input() disabledFavorite = false;
 
+  // (mantén los outputs si los usas para otras acciones)
   @Output() edit = new EventEmitter<ProductSelectModel>();
   @Output() delete = new EventEmitter<ProductSelectModel>();
-  @Output() toggleFavorite = new EventEmitter<ProductSelectModel>();
 
   private readonly placeholder = 'img/cargaImagen.png';
 
@@ -34,29 +35,27 @@ export class CardComponent {
     return url && url.trim() ? url : this.placeholder;
   }
 
-  onImgError(ev: Event) {
-    (ev.target as HTMLImageElement).src = this.placeholder;
+  get disabledFavorite(): boolean {
+    return this.fav.isToggling(this.product?.id);
   }
 
-  // Navegar al detalle
-  onDetail(item: ProductSelectModel) {
-    this.router.navigate(['/home/product', item.id]);
-  }
+  onImgError(ev: Event) { (ev.target as HTMLImageElement).src = this.placeholder; }
+  onDetail(item: ProductSelectModel) { this.router.navigate(['/home/product', item.id]); }
+  onEditClick(ev: Event) { ev.stopPropagation(); this.edit.emit(this.product); }
+  onDeleteClick(ev: Event) { ev.stopPropagation(); this.delete.emit(this.product); }
 
-  // Click favorito: detener propagación y emitir
+  // favorito con UI optimista centralizada
   onFavoriteClick(ev: Event) {
-    ev.stopPropagation();
-    this.toggleFavorite.emit(this.product);
-  }
-
-  // Click editar/eliminar: detener propagación y emitir
-  onEditClick(ev: Event) {
-    ev.stopPropagation();
-    this.edit.emit(this.product);
-  }
-
-  onDeleteClick(ev: Event) {
-    ev.stopPropagation();
-    this.delete.emit(this.product);
-  }
+  ev.stopPropagation();
+  this.fav.toggle(this.product).subscribe({
+    next: (isFav) => {
+      Swal.fire({ toast: true, position: 'bottom-end', timer: 1500, showConfirmButton: false,
+                  icon: 'success', title: isFav ? 'Añadido a favoritos' : 'Quitado de favoritos' });
+    },
+    error: () => {
+      Swal.fire({ toast: true, position: 'top-end', timer: 2000, showConfirmButton: false,
+                  icon: 'error', title: 'No se pudo actualizar el favorito' });
+    }
+  });
+}
 }
