@@ -10,17 +10,17 @@
           <!-- Miniaturas -->
           <div *ngIf="product.images.length" class="d-flex flex-column gap-2">
             <img *ngFor="let img of product.images"
-                 [src]="img.imageUrl"
-                 (click)="changeMainImage(img.imageUrl)"
-                 class="img-thumbnail"
-                 style="width: 60px; height: 60px; object-fit: cover; cursor: pointer;">
+                [src]="img.imageUrl"
+                (click)="changeMainImage(img.imageUrl)"
+                class="img-thumbnail"
+                style="width: 60px; height: 60px; object-fit: cover; cursor: pointer;">
           </div>
 
           <!-- Imagen principal -->
           <div class="flex-fill d-flex align-items-center justify-content-center" style="max-width: 400px;">
             <img [src]="selectedImage || (product.images.length ? product.images[0].imageUrl : '')"
-                 class="img-fluid rounded shadow"
-                 style="max-height: 350px; object-fit: cover;">
+                class="img-fluid rounded shadow"
+                style="max-height: 350px; object-fit: cover;">
           </div>
         </div>
 
@@ -83,7 +83,7 @@
         <h5 class="title">Reseñas</h5>
 
         <ng-container *ngIf="!loadingReviews; else loadingTpl">
-          <div *ngIf="reviews.length; else emptyTpl">
+          <div class="review-content-design scroll-y-auto" *ngIf="reviews.length; else emptyTpl">
             <div *ngFor="let r of reviews; trackBy: trackByReview" class="review border-bottom pb-2 mb-2">
               <div class="d-flex justify-content-between align-items-start">
                 <div>
@@ -131,9 +131,9 @@
             <div class="mb-2">
               <span *ngFor="let _ of stars; let i = index">
                 <i class="bi"
-                   [ngClass]="i < selectedRating ? 'bi-star-fill text-warning' : 'bi-star text-secondary'"
-                   (click)="setRating(i + 1)"
-                   style="cursor: pointer; font-size: 24px;"></i>
+                  [ngClass]="i < selectedRating ? 'bi-star-fill text-warning' : 'bi-star text-secondary'"
+                  (click)="setRating(i + 1)"
+                  style="cursor: pointer; font-size: 24px;"></i>
               </span>
             </div>
 
