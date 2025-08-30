@@ -195,10 +195,10 @@ namespace Web.Controllers.Implements.Producer.Products
         [ProducesResponseType(500)]
         public virtual async Task<IActionResult> GetForUser()
         {
-            var userId = HttpContext.GetUserId();
             try
             {
-                var result = await _productReadService.GetAllForUserAsync(userId);
+                int? userId = HttpContext.TryGetUserId();
+                var result = await _productReadService.GetAllHomeAsync(userId); // <- nuevo
                 return Ok(result);
             }
             catch (Exception ex)

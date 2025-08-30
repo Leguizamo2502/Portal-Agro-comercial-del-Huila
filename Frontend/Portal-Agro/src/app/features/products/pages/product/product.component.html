@@ -62,7 +62,7 @@
 
     <!-- Resultados -->
     <div class="bg-white p-3 rounded-3 shadow-sm">
-        <app-container-card-flex [items]="products" [type]="'product'">
+        <app-container-card-flex [items]="products" [type]="'product'" [showFavorite]="true">
         </app-container-card-flex>
 
         <div *ngIf="!isLoadingProducts && products?.length === 0" class="text-center text-muted py-4">

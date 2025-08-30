@@ -89,6 +89,8 @@ export class AuthState {
     this._me$.next(null);
   }
 
+
+
   hasRole(role: string): boolean {
     const me = this._me$.value;
     if (!me?.roles?.length) return false;

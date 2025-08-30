@@ -15,7 +15,6 @@ export class AppComponent implements OnInit{
   private authState = inject(AuthState);
    ngOnInit() {
     this.authState.hydrateFromStorage();
-    // Opcional: refrescar desde el backend si hay cookie/sesión
-    // this.authState.loadMe().pipe(take(1)).subscribe({ next: () => {} , error: () => {} });
+    
   }
 }
