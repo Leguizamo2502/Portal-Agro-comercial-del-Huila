@@ -117,8 +117,8 @@ cosas
   flex-direction: column;
 }
 
-.topAlone{
-  margin-top: 1rem;
+.bottom{
+  margin-bottom: 1rem;
 }
 
 .leaflet-control-layers-toggle {

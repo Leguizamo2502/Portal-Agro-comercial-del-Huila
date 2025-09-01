@@ -6,6 +6,7 @@ using Entity.Domain.Models.Implements.Producers.Products;
 using Entity.Domain.Models.Implements.Security;
 using Entity.DTOs.Auth;
 using Entity.DTOs.Auth.User;
+using Entity.DTOs.Order.Create;
 using Entity.DTOs.Order.Reviews;
 using Entity.DTOs.Producer.Categories;
 using Entity.DTOs.Producer.Farm.Create;
@@ -176,6 +177,37 @@ namespace Business.Mapping
                                      ? (pf.Farm.Producer.User.Person.FirstName + " " + pf.Farm.Producer.User.Person.LastName)
                                      : null)
                                .FirstOrDefault() ?? string.Empty);
+
+
+            //Orders
+
+            config.NewConfig<OrderCreateDto, Order>()
+            // Ignoramos propiedades que no deben mapearse directamente
+                .Ignore(dest => dest.Id)
+                .Ignore(dest => dest.UserId)
+                .Ignore(dest => dest.ProductId)
+                .Ignore(dest => dest.ProducerIdSnapshot)
+                .Ignore(dest => dest.ProductNameSnapshot)
+                .Ignore(dest => dest.UnitPriceSnapshot)
+                .Ignore(dest => dest.Status)
+                .Ignore(dest => dest.Subtotal)
+                .Ignore(dest => dest.DeliveryFee)
+                .Ignore(dest => dest.DeliveryFeeCurrency)
+                .Ignore(dest => dest.Total)
+                .Ignore(dest => dest.PaymentImageUrl)
+                .Ignore(dest => dest.PaymentUploadedAt)
+                .Ignore(dest => dest.CreateAt)
+                //.Ignore(dest => dest.UpdatedAt)
+                .Ignore(dest => dest.RowVersion)
+                // El IFormFile tampoco se mapea a la entidad
+                .IgnoreNonMapped(true);
+
+            config.NewConfig<Order, OrderResultDto>()
+               .Map(d => d.ProductName, s => s.ProductNameSnapshot)
+               .Map(d => d.UnitPrice, s => s.UnitPriceSnapshot)
+               .Map(d => d.Status, s => s.Status.ToString())
+               .Map(d => d.CreatedAt, s => s.CreateAt); // CreateAt -> CreatedA
+
 
 
 

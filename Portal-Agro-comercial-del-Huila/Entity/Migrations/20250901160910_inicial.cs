@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Entity.Migrations
 {
     /// <inheritdoc />
-    public partial class Inicial : Migration
+    public partial class inicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -392,7 +392,7 @@ namespace Entity.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<double>(type: "float", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     Unit = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Production = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Stock = table.Column<int>(type: "int", nullable: false),
@@ -472,6 +472,61 @@ namespace Entity.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    ProducerIdSnapshot = table.Column<int>(type: "int", nullable: false),
+                    ProductNameSnapshot = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    UnitPriceSnapshot = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    QuantityRequested = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    PaymentImageUrl = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
+                    PaymentUploadedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ProducerDecisionAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ProducerDecisionReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeliveryFee = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    DeliveryFeeCurrency = table.Column<string>(type: "nvarchar(8)", maxLength: 8, nullable: false),
+                    DeliveryFeeSetAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeliveryNotes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    RecipientName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    ContactPhone = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    AddressLine1 = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    AddressLine2 = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    CityId = table.Column<int>(type: "int", nullable: false),
+                    AdditionalNotes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Subtotal = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    Total = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    UserConfirmEnabledAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UserReceivedAnswer = table.Column<int>(type: "int", nullable: false),
+                    UserReceivedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    AutoCloseAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false),
+                    CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    Active = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Orders_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -852,28 +907,28 @@ namespace Entity.Migrations
                 columns: new[] { "Id", "Active", "CategoryId", "CreateAt", "Description", "IsDeleted", "Name", "Price", "ProducerId", "Production", "Status", "Stock", "Unit" },
                 values: new object[,]
                 {
-                    { 1, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cafe con el mejor sabor del campo", false, "Cafe el sabor", 30000.0, 1, "300 lb cada tres meses", true, 250, "lb" },
-                    { 2, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cultivado sin químicos, sabor intenso", false, "Café Orgánico Premium", 35000.0, 1, "200 lb por trimestre", true, 180, "lb" },
-                    { 3, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Tueste medio con notas frutales", false, "Café Tostado Suave", 32000.0, 1, "150 lb cada mes", true, 120, "lb" },
-                    { 4, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Grano seleccionado de alta montaña", false, "Café Grano Oscuro", 34000.0, 1, "180 lb bimestral", true, 210, "lb" },
-                    { 5, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cosechado a mano en clima fresco", false, "Café El Mirador", 30000.0, 1, "220 lb trimestral", true, 190, "lb" },
-                    { 6, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Sabor balanceado, aroma suave", false, "Café Clásico de los Andes", 31000.0, 1, "250 lb trimestral", true, 170, "lb" },
-                    { 7, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Mezcla selecta de granos", false, "Café Supremo", 36000.0, 1, "300 lb cada 2 meses", true, 260, "lb" },
-                    { 8, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cultivo en altitudes extremas", false, "Café los Alpes", 37000.0, 1, "280 lb trimestral", true, 250, "lb" },
-                    { 9, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Mezcla con notas cítricas", false, "Café Lulo Blend", 33000.0, 1, "230 lb bimestral", true, 200, "lb" },
-                    { 10, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Tueste natural, suave al paladar", false, "Café del Bosque", 30000.0, 1, "180 lb mensual", true, 160, "lb" },
-                    { 11, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Grano seleccionado manualmente", false, "Café Reserva Especial", 38000.0, 1, "150 lb cada tres meses", true, 130, "lb" },
-                    { 12, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cultivo bajo sombra natural", false, "Café Sierra Verde", 31000.0, 1, "200 lb cada 2 meses", true, 140, "lb" },
-                    { 13, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Grano joven de excelente aroma", false, "Café del Amanecer", 30500.0, 1, "160 lb mensual", true, 150, "lb" },
-                    { 14, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Tueste lento en horno de barro", false, "Café Tostado Artesanal", 34000.0, 1, "190 lb bimestral", true, 175, "lb" },
-                    { 15, true, 9, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Mezcla suave con aroma a chocolate", false, "Café con Cacao", 33000.0, 1, "210 lb trimestral", true, 160, "lb" },
-                    { 16, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Sabor intenso con notas amaderadas", false, "Café Gourmet del Campo", 37000.0, 1, "280 lb bimestral", true, 210, "lb" },
-                    { 17, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Proceso húmedo tradicional", false, "Café Lavado", 32000.0, 1, "190 lb mensual", true, 160, "lb" },
-                    { 18, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Secado al sol directamente", false, "Café Natural", 31000.0, 1, "220 lb cada 3 meses", true, 180, "lb" },
-                    { 19, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Granos cultivados a 1600msnm", false, "Café de Altura", 35000.0, 1, "270 lb trimestral", true, 200, "lb" },
-                    { 20, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Versión fuerte ideal para espresso", false, "Café Lulo Espresso", 35500.0, 1, "160 lb mensual", true, 190, "lb" },
-                    { 21, true, 9, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Mezcla gourmet café y cacao", false, "Café Cacao Fusion", 39000.0, 1, "240 lb trimestral", true, 150, "lb" },
-                    { 22, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Selección premium para exportación", false, "Café de Exportación", 40000.0, 1, "300 lb cada 2 meses", true, 220, "lb" }
+                    { 1, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cafe con el mejor sabor del campo", false, "Cafe el sabor", 30000m, 1, "300 lb cada tres meses", true, 250, "lb" },
+                    { 2, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cultivado sin químicos, sabor intenso", false, "Café Orgánico Premium", 35000m, 1, "200 lb por trimestre", true, 180, "lb" },
+                    { 3, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Tueste medio con notas frutales", false, "Café Tostado Suave", 32000m, 1, "150 lb cada mes", true, 120, "lb" },
+                    { 4, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Grano seleccionado de alta montaña", false, "Café Grano Oscuro", 34000m, 1, "180 lb bimestral", true, 210, "lb" },
+                    { 5, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cosechado a mano en clima fresco", false, "Café El Mirador", 30000m, 1, "220 lb trimestral", true, 190, "lb" },
+                    { 6, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Sabor balanceado, aroma suave", false, "Café Clásico de los Andes", 31000m, 1, "250 lb trimestral", true, 170, "lb" },
+                    { 7, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Mezcla selecta de granos", false, "Café Supremo", 36000m, 1, "300 lb cada 2 meses", true, 260, "lb" },
+                    { 8, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cultivo en altitudes extremas", false, "Café los Alpes", 37000m, 1, "280 lb trimestral", true, 250, "lb" },
+                    { 9, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Mezcla con notas cítricas", false, "Café Lulo Blend", 33000m, 1, "230 lb bimestral", true, 200, "lb" },
+                    { 10, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Tueste natural, suave al paladar", false, "Café del Bosque", 30000m, 1, "180 lb mensual", true, 160, "lb" },
+                    { 11, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Grano seleccionado manualmente", false, "Café Reserva Especial", 38000m, 1, "150 lb cada tres meses", true, 130, "lb" },
+                    { 12, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cultivo bajo sombra natural", false, "Café Sierra Verde", 31000m, 1, "200 lb cada 2 meses", true, 140, "lb" },
+                    { 13, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Grano joven de excelente aroma", false, "Café del Amanecer", 30500m, 1, "160 lb mensual", true, 150, "lb" },
+                    { 14, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Tueste lento en horno de barro", false, "Café Tostado Artesanal", 34000m, 1, "190 lb bimestral", true, 175, "lb" },
+                    { 15, true, 9, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Mezcla suave con aroma a chocolate", false, "Café con Cacao", 33000m, 1, "210 lb trimestral", true, 160, "lb" },
+                    { 16, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Sabor intenso con notas amaderadas", false, "Café Gourmet del Campo", 37000m, 1, "280 lb bimestral", true, 210, "lb" },
+                    { 17, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Proceso húmedo tradicional", false, "Café Lavado", 32000m, 1, "190 lb mensual", true, 160, "lb" },
+                    { 18, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Secado al sol directamente", false, "Café Natural", 31000m, 1, "220 lb cada 3 meses", true, 180, "lb" },
+                    { 19, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Granos cultivados a 1600msnm", false, "Café de Altura", 35000m, 1, "270 lb trimestral", true, 200, "lb" },
+                    { 20, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Versión fuerte ideal para espresso", false, "Café Lulo Espresso", 35500m, 1, "160 lb mensual", true, 190, "lb" },
+                    { 21, true, 9, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Mezcla gourmet café y cacao", false, "Café Cacao Fusion", 39000m, 1, "240 lb trimestral", true, 150, "lb" },
+                    { 22, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Selección premium para exportación", false, "Café de Exportación", 40000m, 1, "300 lb cada 2 meses", true, 220, "lb" }
                 });
 
             migrationBuilder.InsertData(
@@ -993,6 +1048,16 @@ namespace Entity.Migrations
                 column: "ModuleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Orders_ProductId",
+                table: "Orders",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_UserId",
+                table: "Orders",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Persons_CityId",
                 table: "Persons",
                 column: "CityId");
@@ -1084,6 +1149,9 @@ namespace Entity.Migrations
 
             migrationBuilder.DropTable(
                 name: "FormModules");
+
+            migrationBuilder.DropTable(
+                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "PasswordResetCodes");

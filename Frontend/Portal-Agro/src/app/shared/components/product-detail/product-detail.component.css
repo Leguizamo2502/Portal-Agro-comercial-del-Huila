@@ -127,3 +127,8 @@ textarea {
   cursor: pointer;
   font-size: 1.2rem;
 }
+
+.container-comments{
+  max-height: 600px;
+  overflow-y: auto;
+}

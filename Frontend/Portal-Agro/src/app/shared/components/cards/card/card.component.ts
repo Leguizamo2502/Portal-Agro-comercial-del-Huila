@@ -49,7 +49,7 @@ export class CardComponent {
   ev.stopPropagation();
   this.fav.toggle(this.product).subscribe({
     next: (isFav) => {
-      Swal.fire({ toast: true, position: 'bottom-end', timer: 1500, showConfirmButton: false,
+      Swal.fire({ toast: true, position: 'top-end', timer: 1500, showConfirmButton: false,
                   icon: 'success', title: isFav ? 'Añadido a favoritos' : 'Quitado de favoritos' });
     },
     error: () => {

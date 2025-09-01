@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Entity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250828020634_Inicial")]
-    partial class Inicial
+    [Migration("20250901160910_inicial")]
+    partial class inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -932,6 +932,137 @@ namespace Entity.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Orders.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("AdditionalNotes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("AddressLine1")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("AddressLine2")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime?>("AutoCloseAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ContactPhone")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("DeliveryFee")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("DeliveryFeeCurrency")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
+
+                    b.Property<DateTime?>("DeliveryFeeSetAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeliveryNotes")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PaymentImageUrl")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
+
+                    b.Property<DateTime?>("PaymentUploadedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ProducerDecisionAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ProducerDecisionReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProducerIdSnapshot")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProductNameSnapshot")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("QuantityRequested")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RecipientName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Subtotal")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Total")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("UnitPriceSnapshot")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("UserConfirmEnabledAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserReceivedAnswer")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UserReceivedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders");
+                });
+
             modelBuilder.Entity("Entity.Domain.Models.Implements.Orders.Review", b =>
                 {
                     b.Property<int>("Id")
@@ -1618,8 +1749,9 @@ namespace Entity.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ProducerId")
                         .HasColumnType("int");
@@ -1657,7 +1789,7 @@ namespace Entity.Migrations
                             Description = "Cafe con el mejor sabor del campo",
                             IsDeleted = false,
                             Name = "Cafe el sabor",
-                            Price = 30000.0,
+                            Price = 30000m,
                             ProducerId = 1,
                             Production = "300 lb cada tres meses",
                             Status = true,
@@ -1673,7 +1805,7 @@ namespace Entity.Migrations
                             Description = "Cultivado sin químicos, sabor intenso",
                             IsDeleted = false,
                             Name = "Café Orgánico Premium",
-                            Price = 35000.0,
+                            Price = 35000m,
                             ProducerId = 1,
                             Production = "200 lb por trimestre",
                             Status = true,
@@ -1689,7 +1821,7 @@ namespace Entity.Migrations
                             Description = "Tueste medio con notas frutales",
                             IsDeleted = false,
                             Name = "Café Tostado Suave",
-                            Price = 32000.0,
+                            Price = 32000m,
                             ProducerId = 1,
                             Production = "150 lb cada mes",
                             Status = true,
@@ -1705,7 +1837,7 @@ namespace Entity.Migrations
                             Description = "Grano seleccionado de alta montaña",
                             IsDeleted = false,
                             Name = "Café Grano Oscuro",
-                            Price = 34000.0,
+                            Price = 34000m,
                             ProducerId = 1,
                             Production = "180 lb bimestral",
                             Status = true,
@@ -1721,7 +1853,7 @@ namespace Entity.Migrations
                             Description = "Cosechado a mano en clima fresco",
                             IsDeleted = false,
                             Name = "Café El Mirador",
-                            Price = 30000.0,
+                            Price = 30000m,
                             ProducerId = 1,
                             Production = "220 lb trimestral",
                             Status = true,
@@ -1737,7 +1869,7 @@ namespace Entity.Migrations
                             Description = "Sabor balanceado, aroma suave",
                             IsDeleted = false,
                             Name = "Café Clásico de los Andes",
-                            Price = 31000.0,
+                            Price = 31000m,
                             ProducerId = 1,
                             Production = "250 lb trimestral",
                             Status = true,
@@ -1753,7 +1885,7 @@ namespace Entity.Migrations
                             Description = "Mezcla selecta de granos",
                             IsDeleted = false,
                             Name = "Café Supremo",
-                            Price = 36000.0,
+                            Price = 36000m,
                             ProducerId = 1,
                             Production = "300 lb cada 2 meses",
                             Status = true,
@@ -1769,7 +1901,7 @@ namespace Entity.Migrations
                             Description = "Cultivo en altitudes extremas",
                             IsDeleted = false,
                             Name = "Café los Alpes",
-                            Price = 37000.0,
+                            Price = 37000m,
                             ProducerId = 1,
                             Production = "280 lb trimestral",
                             Status = true,
@@ -1785,7 +1917,7 @@ namespace Entity.Migrations
                             Description = "Mezcla con notas cítricas",
                             IsDeleted = false,
                             Name = "Café Lulo Blend",
-                            Price = 33000.0,
+                            Price = 33000m,
                             ProducerId = 1,
                             Production = "230 lb bimestral",
                             Status = true,
@@ -1801,7 +1933,7 @@ namespace Entity.Migrations
                             Description = "Tueste natural, suave al paladar",
                             IsDeleted = false,
                             Name = "Café del Bosque",
-                            Price = 30000.0,
+                            Price = 30000m,
                             ProducerId = 1,
                             Production = "180 lb mensual",
                             Status = true,
@@ -1817,7 +1949,7 @@ namespace Entity.Migrations
                             Description = "Grano seleccionado manualmente",
                             IsDeleted = false,
                             Name = "Café Reserva Especial",
-                            Price = 38000.0,
+                            Price = 38000m,
                             ProducerId = 1,
                             Production = "150 lb cada tres meses",
                             Status = true,
@@ -1833,7 +1965,7 @@ namespace Entity.Migrations
                             Description = "Cultivo bajo sombra natural",
                             IsDeleted = false,
                             Name = "Café Sierra Verde",
-                            Price = 31000.0,
+                            Price = 31000m,
                             ProducerId = 1,
                             Production = "200 lb cada 2 meses",
                             Status = true,
@@ -1849,7 +1981,7 @@ namespace Entity.Migrations
                             Description = "Grano joven de excelente aroma",
                             IsDeleted = false,
                             Name = "Café del Amanecer",
-                            Price = 30500.0,
+                            Price = 30500m,
                             ProducerId = 1,
                             Production = "160 lb mensual",
                             Status = true,
@@ -1865,7 +1997,7 @@ namespace Entity.Migrations
                             Description = "Tueste lento en horno de barro",
                             IsDeleted = false,
                             Name = "Café Tostado Artesanal",
-                            Price = 34000.0,
+                            Price = 34000m,
                             ProducerId = 1,
                             Production = "190 lb bimestral",
                             Status = true,
@@ -1881,7 +2013,7 @@ namespace Entity.Migrations
                             Description = "Mezcla suave con aroma a chocolate",
                             IsDeleted = false,
                             Name = "Café con Cacao",
-                            Price = 33000.0,
+                            Price = 33000m,
                             ProducerId = 1,
                             Production = "210 lb trimestral",
                             Status = true,
@@ -1897,7 +2029,7 @@ namespace Entity.Migrations
                             Description = "Sabor intenso con notas amaderadas",
                             IsDeleted = false,
                             Name = "Café Gourmet del Campo",
-                            Price = 37000.0,
+                            Price = 37000m,
                             ProducerId = 1,
                             Production = "280 lb bimestral",
                             Status = true,
@@ -1913,7 +2045,7 @@ namespace Entity.Migrations
                             Description = "Proceso húmedo tradicional",
                             IsDeleted = false,
                             Name = "Café Lavado",
-                            Price = 32000.0,
+                            Price = 32000m,
                             ProducerId = 1,
                             Production = "190 lb mensual",
                             Status = true,
@@ -1929,7 +2061,7 @@ namespace Entity.Migrations
                             Description = "Secado al sol directamente",
                             IsDeleted = false,
                             Name = "Café Natural",
-                            Price = 31000.0,
+                            Price = 31000m,
                             ProducerId = 1,
                             Production = "220 lb cada 3 meses",
                             Status = true,
@@ -1945,7 +2077,7 @@ namespace Entity.Migrations
                             Description = "Granos cultivados a 1600msnm",
                             IsDeleted = false,
                             Name = "Café de Altura",
-                            Price = 35000.0,
+                            Price = 35000m,
                             ProducerId = 1,
                             Production = "270 lb trimestral",
                             Status = true,
@@ -1961,7 +2093,7 @@ namespace Entity.Migrations
                             Description = "Versión fuerte ideal para espresso",
                             IsDeleted = false,
                             Name = "Café Lulo Espresso",
-                            Price = 35500.0,
+                            Price = 35500m,
                             ProducerId = 1,
                             Production = "160 lb mensual",
                             Status = true,
@@ -1977,7 +2109,7 @@ namespace Entity.Migrations
                             Description = "Mezcla gourmet café y cacao",
                             IsDeleted = false,
                             Name = "Café Cacao Fusion",
-                            Price = 39000.0,
+                            Price = 39000m,
                             ProducerId = 1,
                             Production = "240 lb trimestral",
                             Status = true,
@@ -1993,7 +2125,7 @@ namespace Entity.Migrations
                             Description = "Selección premium para exportación",
                             IsDeleted = false,
                             Name = "Café de Exportación",
-                            Price = 40000.0,
+                            Price = 40000m,
                             ProducerId = 1,
                             Production = "300 lb cada 2 meses",
                             Status = true,
@@ -3426,6 +3558,25 @@ namespace Entity.Migrations
                         .IsRequired();
 
                     b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Orders.Order", b =>
+                {
+                    b.HasOne("Entity.Domain.Models.Implements.Producers.Products.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entity.Domain.Models.Implements.Auth.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Orders.Review", b =>
