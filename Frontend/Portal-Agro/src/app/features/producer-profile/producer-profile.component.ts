@@ -72,7 +72,7 @@ export class ProducerProfileComponent implements OnInit {
             })
           );
 
-          // FINCAS: el endpoint puede devolver OBJETO o ARRAY -> normalizamos a array
+          // FINCAS: normaliza objeto/array -> array (sin límite)
           const farms$ = this.farmService.getFarmByCodeProducer(code).pipe(
             tap(res => console.log('[ProducerProfile] raw farm =', res)),
             map((res: any) => {
@@ -83,8 +83,7 @@ export class ProducerProfileComponent implements OnInit {
                 ...f,
                 imageUrl: f?.images?.[0]?.imageUrl ?? 'assets/default-farm.jpg',
               }));
-              // limita a 3 si quieres
-              return vms.slice(0, 3);
+              return vms; // ← sin slice: trae todas
             }),
             catchError(err => {
               console.error('[ProducerProfile] error farm =', err);
@@ -92,7 +91,7 @@ export class ProducerProfileComponent implements OnInit {
             })
           );
 
-          // PRODUCTOS: el endpoint puede devolver OBJETO o ARRAY -> normalizamos a array
+          // PRODUCTOS: normaliza objeto/array -> array (sin límite)
           const products$ = this.productService.getProductByCodeProducer(code).pipe(
             tap(res => console.log('[ProducerProfile] raw product =', res)),
             map((res: any) => {
@@ -103,8 +102,7 @@ export class ProducerProfileComponent implements OnInit {
                 ...p,
                 imageUrl: p?.images?.[0]?.imageUrl ?? 'assets/default-product.jpg',
               }));
-              // limita a 3 si quieres
-              return vms.slice(0, 3);
+              return vms; // ← sin slice: trae todas
             }),
             catchError(err => {
               console.error('[ProducerProfile] error product =', err);
