@@ -200,7 +200,9 @@ export class ProductDetailComponent implements OnInit {
     });
   }
 
-  onDetail(item: ProductSelectModel) { this.router.navigate(['/product/profile', item.producerCode]); }
+  onDetail(item: ProductSelectModel) { this.router.navigate(['home/product/profile', item.producerCode]); 
+    console.log(item.producerCode);
+  }
 
   private recomputeStats(): void {
     const n = this.reviews.length;
