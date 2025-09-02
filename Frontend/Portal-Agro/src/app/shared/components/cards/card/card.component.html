@@ -2,14 +2,14 @@
 <mat-card class="product-card" role="button" tabindex="0" (click)="onDetail(product)"
   (keydown.enter)="onDetail(product)" (keydown.space)="onDetail(product); $event.preventDefault()">
   <!-- FAVORITO -->
-  <div *appIfLoggedIn> 
+  <div *appIfLoggedIn>
     <button *ngIf="showFavorite" mat-icon-button class="fav-btn" [disabled]="disabledFavorite"
       (click)="onFavoriteClick($event)" (keydown.enter)="$event.stopPropagation()"
       (keydown.space)="$event.stopPropagation(); $event.preventDefault()" aria-label="Favorito">
       <!-- usa product.isFavorite, NO @Input isFavorite -->
       <mat-icon [fontIcon]="product.isFavorite ? 'star' : 'star_border'"></mat-icon>
     </button>
-  </div> 
+  </div>
 
 
   <!-- resto igual -->
