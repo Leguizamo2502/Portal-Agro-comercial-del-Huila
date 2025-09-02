@@ -16,6 +16,7 @@ import {
   ValidationErrors,
   ValidatorFn,
   Validators,
+  
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -238,6 +239,7 @@ export class ProductFormComponent implements OnInit {
         nonNullable: true,
         validators: [arrayMinLen(1)]
       }),
+      shippingIncluded: [false],
     });
 
   }
@@ -274,6 +276,7 @@ export class ProductFormComponent implements OnInit {
       status: p.status,
       categoryId: p.categoryId,
       farmIds: farms,
+      shippingIncluded: p.shippingIncluded,
     });
   }
 
@@ -401,6 +404,7 @@ export class ProductFormComponent implements OnInit {
       production: (g.production ?? '').trim(),
       stock: Number(d.stock),
       status: Boolean(d.status),
+      shippingIncluded : Boolean(d.shippingIncluded),
       categoryId: Number(d.categoryId),
       farmIds: (d.farmIds as number[]) ?? [],   // << NUEVO
     };
@@ -480,11 +484,12 @@ export class ProductFormComponent implements OnInit {
 
   private resetForm(): void {
     this.generalGroup.reset();
-    this.detallesGroup.reset({ stock: 0, status: true, farmIds: [] });
+    this.detallesGroup.reset({ stock: 0, status: true, farmIds: [], shippingIncluded: false});
     this.selectedFiles = [];
     this.imagesPreview = [];
     this.existingImages = this.isEdit ? this.existingImages : [];
     this.imagesToDelete = [];
+    
   }
 
   // ✅ Normaliza entradas en tiempo real:

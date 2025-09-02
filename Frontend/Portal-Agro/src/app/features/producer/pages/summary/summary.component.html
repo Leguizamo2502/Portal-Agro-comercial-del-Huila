@@ -1,9 +1,8 @@
-<<<<<<< HEAD
-<div class="container">
-    <h1 class="title">Resumen</h1>
-=======
-<h1 class="title top">Resumen</h1>
->>>>>>> c0dce11a56f7c980d6dcb8a4fcebf47b00921b84
+
+    <h1 class="title top">Resumen</h1>
+
+
+
 
     <div class="cont-stat-card">
         <app-stat-card [text]="'Pedidos Pendientes'"></app-stat-card>
@@ -13,12 +12,8 @@
     <div class="row mt-4">
         <div class="col-md-6 col-sm-8">
             <div class="chart-container">
-                <canvas baseChart
-                        [data]="barChartData"
-                        [options]="barChartOptions"
-                        [type]="'bar'">
+                <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="'bar'">
                 </canvas>
             </div>
         </div>
     </div>
-</div>

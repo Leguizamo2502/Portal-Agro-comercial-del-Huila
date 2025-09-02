@@ -12,6 +12,7 @@ namespace Entity.DTOs.Products.Select
         public string Production { get; set; }
         public int Stock { get; set; }
         public bool Status { get; set; }
+        public bool ShippingIncluded { get; set; }
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
         public List<ProductImageSelectDto> Images { get; set; } = new();

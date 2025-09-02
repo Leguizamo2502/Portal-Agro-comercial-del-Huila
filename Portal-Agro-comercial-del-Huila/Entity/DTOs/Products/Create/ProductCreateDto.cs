@@ -11,6 +11,7 @@ namespace Entity.DTOs.Products.Create
         public string Production { get; set; }
         public int Stock { get; set; }
         public bool Status { get; set; }
+        public bool ShippingIncluded { get; set; }
         public int CategoryId { get; set; }
         public int ProducerId { get; set; }
 

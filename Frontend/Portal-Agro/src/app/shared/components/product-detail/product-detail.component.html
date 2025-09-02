@@ -1,6 +1,6 @@
-
 <div *ngIf="product" class="container my-5">
-<app-button [type]="'button'" [color]="'primary'" [text]="'Volver'" [icon]="'arrow_back'" [back]="true" style="z-index: 10;"></app-button>
+  <app-button [type]="'button'" [color]="'primary'" [text]="'Volver'" [icon]="'arrow_back'" [back]="true"
+    style="z-index: 10;"></app-button>
 
   <div class="row justify-content-center">
     <div class="row gap-4 col-lg-10">
@@ -10,29 +10,45 @@
         <div class="content-image-product d-flex gap-4">
           <!-- Miniaturas -->
           <div *ngIf="product.images.length" class="d-flex flex-column gap-2">
-            <img *ngFor="let img of product.images"
-                [src]="img.imageUrl"
-                (click)="changeMainImage(img.imageUrl)"
-                class="img-thumbnail"
-                style="width: 60px; height: 60px; object-fit: cover; cursor: pointer;">
+            <img *ngFor="let img of product.images" [src]="img.imageUrl" (click)="changeMainImage(img.imageUrl)"
+              class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover; cursor: pointer;">
           </div>
 
           <!-- Imagen principal -->
           <div class="flex-fill d-flex align-items-center justify-content-center" style="max-width: 400px;">
             <img [src]="selectedImage || (product.images.length ? product.images[0].imageUrl : '')"
-                class="img-fluid rounded shadow"
-                style="max-height: 350px; object-fit: cover;">
+              class="img-fluid rounded shadow" style="max-height: 350px; object-fit: cover;">
           </div>
         </div>
 
         <!-- Información del producto -->
         <div class="info-product border rounded p-3 shadow-sm" style="min-width: 434px;">
           <h3 class="mb-3 title">{{ product.name }}</h3>
-          <div class="mb-1 subtitle">Productor: <div class="text" (click)="onDetail(product)">{{ product.personName }} </div></div>
-          <div class="mb-1 subtitle">Finca: <div class="text">{{ product.farmName }}</div></div>
-          <div class="mb-1 subtitle">Categoría: <div class="text">{{ product.categoryName }}</div></div>
-          <div class="mb-1 subtitle">Stock: <div class="text">{{ product.stock }} {{ product.unit }}</div></div>
-          <div class="mb-1 subtitle">Precio: <div class="text">{{ product.price | currency:'COP':'symbol' }}</div></div>
+          
+          <div class="mb-1 subtitle d-flex align-items-center">
+            <div class="me-1">Productor:</div>
+            <div class="text-primary fw-semibold d-inline-flex align-items-center" style="cursor: pointer;"
+              (click)="onDetail(product)">
+              <i class="bi bi-person-circle me-1"></i>
+              {{ product.personName }}
+            </div>
+          </div>
+
+
+          <div class="mb-1 subtitle">Finca: <div class="text">{{ product.farmName }}</div>
+          </div>
+          <div class="mb-1 subtitle">Categoría: <div class="text">{{ product.categoryName }}</div>
+          </div>
+          <div class="mb-1 subtitle">Stock: <div class="text">{{ product.stock }} {{ product.unit }}</div>
+          </div>
+          <div class="mb-1 subtitle">Precio: <div class="text">{{ product.price | currency:'COP':'symbol' }}</div>
+          </div>
+          <div class="mb-1 subtitle">
+            Envío:
+            <div class="text">
+              {{ product.shippingIncluded ? 'Envío gratis' : 'No incluye envío' }}
+            </div>
+          </div>
           <app-button [text]="'Añadir al Pedido'" [type]="'button'" [icon]="'shopping_cart'"></app-button>
         </div>
       </div>
@@ -64,7 +80,8 @@
           <h2 class="me-2">{{ averageRating | number:'1.1-1' }}</h2>
           <div>
             <span *ngFor="let star of [1,2,3,4,5]">
-              <i class="bi" [ngClass]="star <= Math.round(averageRating) ? 'bi-star-fill text-warning' : 'bi-star text-secondary'"></i>
+              <i class="bi"
+                [ngClass]="star <= Math.round(averageRating) ? 'bi-star-fill text-warning' : 'bi-star text-secondary'"></i>
             </span>
             <p class="text-muted small m-0">{{ totalReviews }} reseñas</p>
           </div>
@@ -83,16 +100,14 @@
       <div class="container-review w-100">
         <h5 class="title">Reseñas</h5>
 
-         <!-- Crear reseña: solo si hay usuario -->
+        <!-- Crear reseña: solo si hay usuario -->
         <ng-container *ngIf="(me$ | async) as me; else mustLogin">
           <div class="mt-3 bottom">
             <div class="mb-2">
               <span *ngFor="let _ of stars; let i = index">
                 <i class="bi"
                   [ngClass]="(i + 1) <= (hoverRating || selectedRating) ? 'bi-star-fill text-warning' : 'bi-star text-secondary'"
-                  (click)="setRating(i + 1)"
-                  (mouseenter)="onMouseEnter(i + 1)"
-                  (mouseleave)="onMouseLeave()"
+                  (click)="setRating(i + 1)" (mouseenter)="onMouseEnter(i + 1)" (mouseleave)="onMouseLeave()"
                   style="cursor: pointer; font-size: 24px; transition: transform 0.2s ease;">
                 </i>
               </span>
@@ -105,11 +120,7 @@
               [disabled]="selectedRating === 0 || !newReview.trim()">
               Enviar reseña
             </button> -->
-            <app-button
-              [text]="'Enviar reseña'"
-              [type]="'button'"
-              [color]="'primary'"
-              (click)="submitReview()"
+            <app-button [text]="'Enviar reseña'" [type]="'button'" [color]="'primary'" (click)="submitReview()"
               [disabled]="selectedRating === 0 || !newReview.trim()">
             </app-button>
           </div>
@@ -125,17 +136,14 @@
                   <small class="text-muted">{{ r.createAt | date:'mediumDate':'':'es-CO' }}</small>
                   <div class="mt-1">
                     <span *ngFor="let star of [1,2,3,4,5]">
-                      <i class="bi" [ngClass]="star <= r.rating ? 'bi-star-fill text-warning' : 'bi-star text-secondary'"></i>
+                      <i class="bi"
+                        [ngClass]="star <= r.rating ? 'bi-star-fill text-warning' : 'bi-star text-secondary'"></i>
                     </span>
                   </div>
                 </div>
 
-                <app-button
-                  *ngIf="(me$ | async)?.id === r.userId"
-                  [text]="'Eliminar'"
-                  [type]="'button'"
-                  [color]="'danger'"
-                  (click)="deleteReview(r.id)">
+                <app-button *ngIf="(me$ | async)?.id === r.userId" [text]="'Eliminar'" [type]="'button'"
+                  [color]="'danger'" (click)="deleteReview(r.id)">
                 </app-button>
               </div>
               <p class="mb-1 text">{{ r.comment }}</p>
@@ -151,7 +159,7 @@
           <p class="text-muted">Aún no hay reseñas para este producto.</p>
         </ng-template>
 
-       
+
 
         <ng-template #mustLogin>
           <p class="text-muted">Inicia sesión para dejar una reseña.</p>

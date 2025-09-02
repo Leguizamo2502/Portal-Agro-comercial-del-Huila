@@ -95,93 +95,104 @@
     </mat-step>
 
 
- <!-- Paso 2: Detalles -->
-<mat-step [stepControl]="detallesGroup">
-  <form [formGroup]="detallesGroup">
-    <ng-template matStepLabel>Detalles</ng-template>
+    <!-- Paso 2: Detalles -->
+    <mat-step [stepControl]="detallesGroup">
+      <form [formGroup]="detallesGroup">
+        <ng-template matStepLabel>Detalles</ng-template>
 
-    <div class="row-2 top">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Stock</mat-label>
-        <input 
-          matInput 
-          type="number" 
-          formControlName="stock" 
-          required
-          min="0"         
-        />
-        <mat-hint>Máximo 100,000</mat-hint>
+        <div class="row-2 top">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Stock</mat-label>
+            <input matInput type="number" formControlName="stock" required min="0" />
+            <mat-hint>Máximo 100,000</mat-hint>
 
-        <mat-error *ngIf="detallesGroup.get('stock')?.hasError('required')">
-          Obligatorio
-        </mat-error>
-        <mat-error *ngIf="detallesGroup.get('stock')?.hasError('min')">
-          No puede ser negativo.
-        </mat-error>
-        <mat-error *ngIf="detallesGroup.get('stock')?.hasError('max')">
-          No puede superar 100,000.
-        </mat-error>
-      </mat-form-field>
+            <mat-error *ngIf="detallesGroup.get('stock')?.hasError('required')">
+              Obligatorio
+            </mat-error>
+            <mat-error *ngIf="detallesGroup.get('stock')?.hasError('min')">
+              No puede ser negativo.
+            </mat-error>
+            <mat-error *ngIf="detallesGroup.get('stock')?.hasError('max')">
+              No puede superar 100,000.
+            </mat-error>
+          </mat-form-field>
 
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Estado</mat-label>
-        <mat-select formControlName="status" required>
-          <mat-option [value]="true">Activo</mat-option>
-          <mat-option [value]="false">Inactivo</mat-option>
-        </mat-select>
-        <mat-error *ngIf="detallesGroup.get('status')?.hasError('required')">
-          Obligatorio
-        </mat-error>
-      </mat-form-field>
-    </div>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Estado</mat-label>
+            <mat-select formControlName="status" required>
+              <mat-option [value]="true">Activo</mat-option>
+              <mat-option [value]="false">Inactivo</mat-option>
+            </mat-select>
+            <mat-error *ngIf="detallesGroup.get('status')?.hasError('required')">
+              Obligatorio
+            </mat-error>
+          </mat-form-field>
 
-    <div class="row-2">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Categoría</mat-label>
-        <mat-select formControlName="categoryId" required>
-          <mat-option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</mat-option>
-        </mat-select>
-        <mat-error *ngIf="detallesGroup.get('categoryId')?.hasError('required')">
-          Obligatorio
-        </mat-error>
-        <mat-error *ngIf="detallesGroup.get('categoryId')?.hasError('positiveInt')">
-          Debe seleccionar una categoría válida.
-        </mat-error>
-      </mat-form-field>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Incluye envío</mat-label>
+            <mat-select formControlName="shippingIncluded" required>
+              <mat-option [value]="true">Sí</mat-option>
+              <mat-option [value]="false">No</mat-option>
+            </mat-select>
+            <mat-error *ngIf="detallesGroup.get('shippingIncluded')?.hasError('required')">
+              Obligatorio
+            </mat-error>
+          </mat-form-field>
 
-      <!-- Fincas (multi-selección) -->
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Fincas</mat-label>
-        <mat-select formControlName="farmIds" multiple required>
-          <!-- Trigger: muestra un resumen de selección -->
-          <mat-select-trigger>
-            {{
-              (detallesGroup.get('farmIds')?.value?.length || 0) === 0
-              ? 'Selecciona al menos una'
-              : (detallesGroup.get('farmIds')?.value?.length + ' seleccionada(s)')
-            }}
-          </mat-select-trigger>
+           <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Categoría</mat-label>
+            <mat-select formControlName="categoryId" required>
+              <mat-option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="detallesGroup.get('categoryId')?.hasError('required')">
+              Obligatorio
+            </mat-error>
+            <mat-error *ngIf="detallesGroup.get('categoryId')?.hasError('positiveInt')">
+              Debe seleccionar una categoría válida.
+            </mat-error>
+          </mat-form-field>
 
-          <mat-option *ngFor="let f of farms" [value]="f.id">
-            {{ f.name }}
-          </mat-option>
-        </mat-select>
 
-        <mat-hint>Selecciona una o varias fincas (mínimo 1).</mat-hint>
 
-        <!-- Validación para array con mínimo 1 elemento -->
-        <mat-error *ngIf="detallesGroup.get('farmIds')?.hasError('arrayMinLen')">
-          Debes seleccionar al menos una finca.
-        </mat-error>
-      </mat-form-field>
-    </div>
 
-    <div class="actions space-between">
-      <app-button text="Anterior" color="secondary" [stepperAction]="'previous'"></app-button>
-      <app-button text="Siguiente" color="primary" [disabled]="detallesGroup.invalid" [stepperAction]="'next'"></app-button>
-    </div>
-  </form>
-</mat-step>
+        </div>
+
+        <div class="row-2">
+         
+          <!-- Fincas (multi-selección) -->
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Fincas</mat-label>
+            <mat-select formControlName="farmIds" multiple required>
+              <!-- Trigger: muestra un resumen de selección -->
+              <mat-select-trigger>
+                {{
+                (detallesGroup.get('farmIds')?.value?.length || 0) === 0
+                ? 'Selecciona al menos una'
+                : (detallesGroup.get('farmIds')?.value?.length + ' seleccionada(s)')
+                }}
+              </mat-select-trigger>
+
+              <mat-option *ngFor="let f of farms" [value]="f.id">
+                {{ f.name }}
+              </mat-option>
+            </mat-select>
+
+            <mat-hint>Selecciona una o varias fincas (mínimo 1).</mat-hint>
+
+            <!-- Validación para array con mínimo 1 elemento -->
+            <mat-error *ngIf="detallesGroup.get('farmIds')?.hasError('arrayMinLen')">
+              Debes seleccionar al menos una finca.
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="actions space-between">
+          <app-button text="Anterior" color="secondary" [stepperAction]="'previous'"></app-button>
+          <app-button text="Siguiente" color="primary" [disabled]="detallesGroup.invalid"
+            [stepperAction]="'next'"></app-button>
+        </div>
+      </form>
+    </mat-step>
 
 
     <!-- Paso 3: Imágenes -->
