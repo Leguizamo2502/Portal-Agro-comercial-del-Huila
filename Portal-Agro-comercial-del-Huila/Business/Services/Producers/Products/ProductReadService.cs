@@ -143,6 +143,22 @@ public class ProductReadService : IProductReadService
         }
     }
 
+    public async Task<IEnumerable<ProductSelectDto>> GetByProducerCodeAsync(string codeProducer)
+    {
+        try
+        {
+            
+
+            var entities = await _productRepo.GetByProducerCode(codeProducer);
+            return _mapper.Map<IEnumerable<ProductSelectDto>>(entities);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error al obtener productos del productor para el usuario {UserId}", codeProducer);
+            throw new BusinessException("Error al obtener los productos del productor.", ex);
+        }
+    }
+
 
     public async Task<IEnumerable<ProductSelectDto>> GetByCategoryAsync(int categoryId)
     {

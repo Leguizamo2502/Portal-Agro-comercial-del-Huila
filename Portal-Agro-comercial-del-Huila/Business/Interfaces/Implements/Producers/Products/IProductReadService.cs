@@ -16,6 +16,8 @@ namespace Business.Interfaces.Implements.Producers.Products
         Task<IEnumerable<ProductSelectDto>> GetByProducerAsync(int userId);
         Task<IEnumerable<ProductSelectDto>> GetAllHomeAsync(int? userId);
 
+        Task<IEnumerable<ProductSelectDto>> GetByProducerCodeAsync(string codeProducer);
+
         Task<IEnumerable<ProductSelectDto>> GetByCategoryAsync(int categoryId);
     }
 }

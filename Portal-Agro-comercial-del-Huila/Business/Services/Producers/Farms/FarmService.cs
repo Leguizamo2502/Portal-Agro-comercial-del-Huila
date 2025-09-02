@@ -284,6 +284,20 @@ namespace Business.Services.Producers.Farms
             }
         }
 
+        public async Task<IEnumerable<FarmSelectDto>> GetByProducerCodeAsync(string codeProducer)
+        {
+            try
+            {
+               
+                var entities = await _farmRepository.GetByProducerCode(codeProducer);
+                return _mapper.Map<IEnumerable<FarmSelectDto>>(entities);
+            }
+            catch (Exception ex)
+            {
+                throw new BusinessException("Error al obtener todos los registros de fincas del productor {producerId}.", ex);
+            }
+        }
+
 
         public async Task<FarmSelectDto> UpdateFarmAsync(FarmUpdateDto dto)
         {

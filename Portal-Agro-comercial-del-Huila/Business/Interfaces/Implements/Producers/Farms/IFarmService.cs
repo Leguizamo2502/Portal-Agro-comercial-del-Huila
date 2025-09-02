@@ -13,6 +13,8 @@ namespace Business.Interfaces.Implements.Producers.Farms
         Task<IEnumerable<FarmSelectDto>> GetByProducer(int producerId);
         Task<FarmRegisterDto> CreateFarmAsync(FarmRegisterDto dto);
         Task<FarmSelectDto> UpdateFarmAsync(FarmUpdateDto dto);
+        Task<IEnumerable<FarmSelectDto>> GetByProducerCodeAsync(string codeProducer);
+
 
     }
 }
