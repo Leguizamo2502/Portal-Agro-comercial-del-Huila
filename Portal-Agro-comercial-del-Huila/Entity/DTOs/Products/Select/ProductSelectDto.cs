@@ -16,6 +16,7 @@ namespace Entity.DTOs.Products.Select
         public string CategoryName { get; set; }
         public List<ProductImageSelectDto> Images { get; set; } = new();
         public string PersonName { get; set; }
+        public string ProducerCode { get; set; }
         public string CityName { get; set; }
         public string DepartmentName { get; set; }
 
@@ -27,5 +28,6 @@ namespace Entity.DTOs.Products.Select
         public List<int> FarmIds { get; set; } = new();
 
         public bool IsFavorite { get; set; }
+        
     }
 }
