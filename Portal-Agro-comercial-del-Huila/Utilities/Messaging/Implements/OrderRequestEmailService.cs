@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entity.Domain.Models.Implements.Orders
+namespace Utilities.Messaging.Implements
 {
-    internal class OrderDetail
+    internal class OrderRequestEmailService
     {
     }
 }

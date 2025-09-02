@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Entity.Domain.Models.Implements.Producers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Utilities.Helpers.Code;
 
 namespace Entity.Infrastructure.DataInit.Producers
 {
@@ -18,9 +19,10 @@ namespace Entity.Infrastructure.DataInit.Producers
                 new Producer
                 {
                     Id = 1,
-                    Code = "PENDIENTE",
-                    Description= "Hola vendo papa",
+                    Code = "M3QPD6Y8ZR",
+                    Description = "Hola vendo papa",
                     UserId = 3,
+                    QrUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1756782308/qr_png_e6xgom.png",
                     Active = true,
                     IsDeleted = true,
                     CreateAt = new DateTime(2025, 1, 1)
@@ -28,9 +30,10 @@ namespace Entity.Infrastructure.DataInit.Producers
                 new Producer
                 {
                     Id = 2,
-                    Code = "PENDIENTE",
+                    Code = "AB7KX92TQF",
                     Description = "Hola vendo papa modo admin",
                     UserId = 1,
+                    QrUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1756782308/qr_png_e6xgom.png",
                     Active = true,
                     IsDeleted = true,
                     CreateAt = new DateTime(2025, 1, 1)

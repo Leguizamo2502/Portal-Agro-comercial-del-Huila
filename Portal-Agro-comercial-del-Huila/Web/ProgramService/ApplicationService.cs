@@ -1,6 +1,8 @@
 ﻿using Business.CustomJwt;
+using Business.Interfaces.Implements;
 using Business.Interfaces.Implements.Auth;
 using Business.Interfaces.Implements.Location;
+using Business.Interfaces.Implements.Orders;
 using Business.Interfaces.Implements.Orders.Reviews;
 using Business.Interfaces.Implements.Producers.Categories;
 using Business.Interfaces.Implements.Producers.Cloudinary;
@@ -11,7 +13,9 @@ using Business.Interfaces.Implements.Security.Mes;
 using Business.Mapping;
 using Business.Services.AuthService;
 using Business.Services.Location;
+using Business.Services.Orders;
 using Business.Services.Orders.Reviews;
+using Business.Services.Producers;
 using Business.Services.Producers.Categories;
 using Business.Services.Producers.Cloudinary;
 using Business.Services.Producers.Farms;
@@ -20,6 +24,7 @@ using Business.Services.Security;
 using Data.Interfaces.Implements.Auth;
 using Data.Interfaces.Implements.Favorites;
 using Data.Interfaces.Implements.Location;
+using Data.Interfaces.Implements.Orders;
 using Data.Interfaces.Implements.Orders.Reviews;
 using Data.Interfaces.Implements.Producers;
 using Data.Interfaces.Implements.Producers.Categories;
@@ -33,6 +38,7 @@ using Data.Repository;
 using Data.Service.Auth;
 using Data.Service.Favorites;
 using Data.Service.Location;
+using Data.Service.Orders;
 using Data.Service.Orders.Reviews;
 using Data.Service.Producers;
 using Data.Service.Producers.Categories;
@@ -44,6 +50,8 @@ using Data.Service.Security.Token;
 using Mapster;
 using Utilities.Messaging.Implements;
 using Utilities.Messaging.Interfaces;
+using Utilities.QR.Interfaces;
+using Utilities.QR.Services;
 using Web.Infrastructures;
 
 namespace Web.ProgramService
@@ -114,6 +122,9 @@ namespace Web.ProgramService
             services.AddScoped<IReviewRepository, ReviewRepository>();
             services.AddScoped<IReviewService, ReviewService>();
 
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IOrderService, OrderService>();
+
 
             //Producer
             services.AddScoped<IProducerRepository, ProducerRepository>();
@@ -135,6 +146,12 @@ namespace Web.ProgramService
 
             services.AddScoped<IProductImageRepository, ProductImageRepository>();
             services.AddScoped<IProductImageService, ProductImageService>();
+
+            //Qr
+            services.AddScoped<IQrCodeService, QrCodeService>();
+
+            //Producer
+            services.AddScoped<IProducerService, ProducerService>();
 
 
             //Data Generica

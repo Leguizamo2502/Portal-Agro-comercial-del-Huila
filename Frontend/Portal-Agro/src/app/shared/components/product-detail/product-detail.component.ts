@@ -7,11 +7,15 @@ import { ActivatedRoute } from '@angular/router';
 import { ProductSelectModel } from '../../models/product/product.model';
 import { ProductService } from '../../services/product/product.service';
 import { ReviewService } from '../../services/review/review.service';
-import { ReviewRegisterModel, ReviewSelectModel } from '../../models/product/product.model'; // o desde review.models
+import {
+  ReviewRegisterModel,
+  ReviewSelectModel,
+} from '../../models/product/product.model'; // o desde review.models
 import { ButtonComponent } from '../button/button.component';
-import { Observable, of } from 'rxjs';
+import { firstValueFrom, Observable, of } from 'rxjs';
 import { UserMeDto } from '../../../Core/Models/login.model';
 import { AuthState } from '../../../Core/services/auth/auth.state';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-product-detail',
@@ -21,7 +25,6 @@ import { AuthState } from '../../../Core/services/auth/auth.state';
   styleUrls: ['./product-detail.component.css'],
 })
 export class ProductDetailComponent implements OnInit {
-
   private route = inject(ActivatedRoute);
   private productService = inject(ProductService);
   private reviewService = inject(ReviewService);
@@ -78,7 +81,9 @@ export class ProductDetailComponent implements OnInit {
           this.selectedImage = this.product.images[0].imageUrl;
         }
       },
-      error: () => { this.loadingProduct = false; }
+      error: () => {
+        this.loadingProduct = false;
+      },
     });
   }
 
@@ -89,9 +94,11 @@ export class ProductDetailComponent implements OnInit {
         this.reviews = list ?? [];
         this.recomputeStats();
         this.loadingReviews = false;
-        console.log(this.reviews);
+        // console.log(this.reviews);
       },
-      error: () => { this.loadingReviews = false; }
+      error: () => {
+        this.loadingReviews = false;
+      },
     });
   }
 
@@ -121,27 +128,73 @@ export class ProductDetailComponent implements OnInit {
     const payload: ReviewRegisterModel = {
       productId: this.productId,
       rating: this.selectedRating,
-      comment
+      comment,
     };
 
     this.reviewService.createReview(payload).subscribe({
       next: (created) => {
-        // El backend devuelve el ReviewSelectModel completo (id, userName, createdAt, etc.)
         this.reviews.unshift(created);
-        // Reset UI
         this.newReview = '';
         this.selectedRating = 0;
-        // Recalcular métricas
         this.recomputeStats();
-      }
+
+        Swal.fire({
+          toast: true,
+          position: 'bottom-end',
+          timer: 1500,
+          showConfirmButton: false,
+          icon: 'success',
+          title: 'Reseña publicada',
+        });
+      },
+      error: (err) => {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          timer: 2000,
+          showConfirmButton: false,
+          icon: 'error',
+          title: err?.error?.message ?? 'No se pudo publicar la reseña',
+        });
+      },
     });
   }
 
   deleteReview(reviewId: number): void {
-    this.reviewService.deleteReview(reviewId).subscribe({
-      next: () => {
-        this.reviews = this.reviews.filter(r => r.id !== reviewId);
+    Swal.fire({
+      title: '¿Eliminar reseña?',
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+      showLoaderOnConfirm: true,
+      allowOutsideClick: () => !Swal.isLoading(),
+      preConfirm: async () => {
+        try {
+          await firstValueFrom(this.reviewService.deleteReview(reviewId));
+        } catch (err: any) {
+          Swal.showValidationMessage(
+            err?.error?.message ?? 'No se pudo eliminar la reseña'
+          );
+          throw err; // mantiene el modal abierto si falla
+        }
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // éxito: ya se eliminó en el preConfirm
+        this.reviews = this.reviews.filter((r) => r.id !== reviewId);
         this.recomputeStats();
+
+        Swal.fire({
+          toast: true,
+          position: 'bottom-end',
+          timer: 1500,
+          showConfirmButton: false,
+          icon: 'success',
+          title: 'Reseña eliminada',
+        });
       }
     });
   }
@@ -152,17 +205,22 @@ export class ProductDetailComponent implements OnInit {
 
     if (n === 0) {
       this.averageRating = 0;
-      this.distribution = [5,4,3,2,1].map(star => ({ star, count: 0, percentage: 0 }));
+      this.distribution = [5, 4, 3, 2, 1].map((star) => ({
+        star,
+        count: 0,
+        percentage: 0,
+      }));
       return;
     }
 
     const sum = this.reviews.reduce((acc, r) => acc + (r.rating || 0), 0);
     this.averageRating = sum / n;
 
-    const counts: Record<number, number> = { 1:0, 2:0, 3:0, 4:0, 5:0 };
-    for (const r of this.reviews) counts[r.rating] = (counts[r.rating] ?? 0) + 1;
+    const counts: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    for (const r of this.reviews)
+      counts[r.rating] = (counts[r.rating] ?? 0) + 1;
 
-    this.distribution = [5,4,3,2,1].map(star => {
+    this.distribution = [5, 4, 3, 2, 1].map((star) => {
       const count = counts[star] ?? 0;
       const percentage = (count / n) * 100;
       return { star, count, percentage };

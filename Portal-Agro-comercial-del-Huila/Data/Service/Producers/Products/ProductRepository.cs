@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Data.Interfaces.Implements.Producers.Products;
 using Data.Repository;
+using Entity.Domain.Models.Implements.Producers;
 using Entity.Domain.Models.Implements.Producers.Products;
 using Entity.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
@@ -170,6 +171,15 @@ namespace Data.Service.Producers.Products
             }
 
             return result;
+        }
+
+        public async Task<IEnumerable<Product>> GetByProducerCode(string producerCode)
+        {
+            return await BaseQuery()
+                .OrderByDescending(p => p.CreateAt)
+                .ThenByDescending(p => p.Id)
+                .Where(p => !p.IsDeleted && p.Producer.Code == producerCode)
+                .ToListAsync();
         }
     }
 }

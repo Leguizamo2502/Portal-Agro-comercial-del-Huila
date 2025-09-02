@@ -246,7 +246,25 @@ namespace Web.Controllers.Implements.Producer.Products
             }
         }
 
-      
+        [HttpGet("by-producerCode/{producerCode}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public virtual async Task<IActionResult> GetByProducerCode([FromRoute] string producerCode)
+        {
+            try
+            {
+                var result = await _productReadService.GetByProducerCodeAsync(producerCode);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error obteniendo datos");
+                return StatusCode(500, new { message = "Error interno del servidor." });
+            }
+
+        }
+
+
 
 
 

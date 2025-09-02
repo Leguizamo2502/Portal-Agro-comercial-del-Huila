@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entity.DTOs.Order
+namespace Entity.DTOs.Order.Create
 {
-    internal class CreateOrderDto
+    public class OrderConfirmDto
     {
+        public string Answer { get; set; } = null!;
     }
 }

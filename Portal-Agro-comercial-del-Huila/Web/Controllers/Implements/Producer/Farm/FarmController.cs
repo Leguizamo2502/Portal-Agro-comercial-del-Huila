@@ -129,6 +129,25 @@ namespace Web.Controllers.Implements.Producer.Farm
 
         }
 
+
+        [HttpGet("by-producerCode/{producerCode}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public virtual async Task<IActionResult> GetByProducerCode([FromRoute] string producerCode)
+        {
+            try
+            {
+                var result = await _farmService.GetByProducerCodeAsync(producerCode);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error obteniendo datos");
+                return StatusCode(500, new { message = "Error interno del servidor." });
+            }
+
+        }
+
         [HttpPut("{id:int}")]
         [Consumes("multipart/form-data")]
         public async Task<ActionResult<ProductSelectDto>> Update(int id, [FromForm] FarmUpdateDto dto)
