@@ -1,4 +1,4 @@
-<div class="container my-5" *ngIf="profile as p">
+<div class="container my-3 profile-container" *ngIf="profile as p">
   <div class="card shadow-lg p-4 rounded-4">
 
     <!-- HEADER -->
@@ -13,6 +13,13 @@
             width="150" height="150">
           <h4 class="fw-bold">{{ p.user.name }}</h4>
           <p class="text-muted">{{ p.user.email }}</p>
+             <!-- NUEVO: teléfono -->
+          <p class="mb-1">
+            <span>
+              📞 {{ p.phoneNumber || 'Sin teléfono' }}
+            </span>
+          </p>
+          
         </div>
         <!-- QR -->
         <div class="col-md-6 d-flex justify-content-md-end justify-content-center">
@@ -26,16 +33,18 @@
     </div>
     <hr>
     <!-- Descripción -->
+     
+       
     <section class="my-4" *ngIf="p.description">
-      <h5 class="fw-bold">Descripción</h5>
+      <h5 class="title">Descripción</h5>
       <p class="text-secondary">{{ p.description }}</p>
     </section>
 
     <!-- FINCAS con componente -->
     <section class="my-4">
-      <h5 class="fw-bold mb-3">Fincas</h5>
-      <div class="row g-3">
-        <div class="col-md-3" *ngFor="let farm of p.farms">
+      <h5 class="mb-3 title">Fincas</h5>
+      <div class="d-flex flex-nowrap gap-4 overflow-x-auto justify-content-start justify-content-md-center">
+        <div *ngFor="let farm of p.farms" class="flex-shrink-0">
           <app-card-farm [farm]="farm"></app-card-farm>
         </div>
       </div>

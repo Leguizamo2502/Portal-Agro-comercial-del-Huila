@@ -4,6 +4,8 @@ import { ProductSelectModel } from '../../../../shared/models/product/product.mo
 import { FavoriteService } from '../../../../shared/services/favorite/favorite.service';
 import { CommonModule } from '@angular/common';
 import { ContainerCardFlexComponent } from "../../../../shared/components/cards/container-card-flex/container-card-flex.component";
+import { FavoriteFacadeService } from '../../../../shared/services/favorite/favorite-facade.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-favorite',
@@ -12,41 +14,34 @@ import { ContainerCardFlexComponent } from "../../../../shared/components/cards/
   styleUrl: './favorite.component.css',
 })
 export class FavoriteComponent implements OnInit {
-  private productService = inject(ProductService);
-  private favoriteSrv = inject(FavoriteService);
+   private productService = inject(ProductService);
+  private fav = inject(FavoriteFacadeService);
+  private destroy$ = new Subject<void>();
 
   products: ProductSelectModel[] = [];
-  togglingId: number | null = null;
 
   ngOnInit(): void {
     this.loadFavorites();
+
+    // Quita de la lista cuando deje de ser favorito en cualquier parte
+    this.fav.changes$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(({ id, isFavorite }) => {
+        // if (!isFavorite) {
+        //   this.products = this.products.filter(p => p.id !== id);
+        // }
+      });
   }
 
-  loadFavorites(): void {
-    this.productService.getFavorites().subscribe((data) => {
-      // Asegura que vengan marcados (el backend debería hacerlo)
-      this.products = data.map((p) => ({ ...p, isFavorite: true }));
-    });
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
-  onToggleFavorite(p: ProductSelectModel) {
-    if (this.togglingId === p.id) return;
-    this.togglingId = p.id;
-
-    // UI optimista: aplica de inmediato y haz rollback si falla
-    const original = !!p.isFavorite;
-    p.isFavorite = !original;
-
-    this.favoriteSrv.toggle(p.id, original).subscribe({
-      next: (newState) => {
-        p.isFavorite = newState;
-      },
-      error: (_) => {
-        p.isFavorite = original;
-      },
-      complete: () => {
-        this.togglingId = null;
-      },
+  private loadFavorites(): void {
+    this.productService.getFavorites().subscribe(data => {
+      // Normaliza el flag por si el backend no lo setea
+      this.products = data.map(p => ({ ...p, isFavorite: true }));
     });
   }
 }

@@ -1,6 +1,7 @@
-<app-button [type]="'button'" [color]="'primary'" [text]="'Volver'" [icon]="'arrow_back'" [back]="true" style="z-index: 10;"></app-button>
 
 <div *ngIf="product" class="container my-5">
+<app-button [type]="'button'" [color]="'primary'" [text]="'Volver'" [icon]="'arrow_back'" [back]="true" style="z-index: 10;"></app-button>
+
   <div class="row justify-content-center">
     <div class="row gap-4 col-lg-10">
 
@@ -10,17 +11,17 @@
           <!-- Miniaturas -->
           <div *ngIf="product.images.length" class="d-flex flex-column gap-2">
             <img *ngFor="let img of product.images"
-                 [src]="img.imageUrl"
-                 (click)="changeMainImage(img.imageUrl)"
-                 class="img-thumbnail"
-                 style="width: 60px; height: 60px; object-fit: cover; cursor: pointer;">
+                [src]="img.imageUrl"
+                (click)="changeMainImage(img.imageUrl)"
+                class="img-thumbnail"
+                style="width: 60px; height: 60px; object-fit: cover; cursor: pointer;">
           </div>
 
           <!-- Imagen principal -->
           <div class="flex-fill d-flex align-items-center justify-content-center" style="max-width: 400px;">
             <img [src]="selectedImage || (product.images.length ? product.images[0].imageUrl : '')"
-                 class="img-fluid rounded shadow"
-                 style="max-height: 350px; object-fit: cover;">
+                class="img-fluid rounded shadow"
+                style="max-height: 350px; object-fit: cover;">
           </div>
         </div>
 
@@ -39,7 +40,7 @@
       <!-- Descripción -->
       <div class="product-description">
         <div class="mb-0">
-          <h5 class="subtitle">Descripción</h5>
+          <h5 class="title">Descripción</h5>
           <div class="text">{{ product.description }}</div>
         </div>
         <div class="mb-0 row">
@@ -82,13 +83,42 @@
       <div class="container-review w-100">
         <h5 class="title">Reseñas</h5>
 
+         <!-- Crear reseña: solo si hay usuario -->
+        <ng-container *ngIf="(me$ | async) as me; else mustLogin">
+          <div class="mt-3 bottom">
+            <div class="mb-2">
+              <span *ngFor="let _ of stars; let i = index">
+                <i class="bi"
+                  [ngClass]="i < selectedRating ? 'bi-star-fill text-warning' : 'bi-star text-secondary'"
+                  (click)="setRating(i + 1)"
+                  style="cursor: pointer; font-size: 24px;"></i>
+              </span>
+            </div>
+
+            <textarea [(ngModel)]="newReview" class="form-control text mb-2" placeholder="Escribe tu reseña"></textarea>
+            <!-- <button
+              (click)="submitReview()"
+              class="btn btn-success"
+              [disabled]="selectedRating === 0 || !newReview.trim()">
+              Enviar reseña
+            </button> -->
+            <app-button
+              [text]="'Enviar reseña'"
+              [type]="'button'"
+              [color]="'primary'"
+              (click)="submitReview()"
+              [disabled]="selectedRating === 0 || !newReview.trim()">
+            </app-button>
+          </div>
+        </ng-container>
+
         <ng-container *ngIf="!loadingReviews; else loadingTpl">
-          <div *ngIf="reviews.length; else emptyTpl">
+          <div class="review-content-design scroll-y-auto container-comments" *ngIf="reviews.length; else emptyTpl">
             <div *ngFor="let r of reviews; trackBy: trackByReview" class="review border-bottom pb-2 mb-2">
+
               <div class="d-flex justify-content-between align-items-start">
                 <div>
                   <div class="subtitle">{{ r.userName }}</div>
-                  <!-- Fecha en español (ver sección al final) -->
                   <small class="text-muted">{{ r.createAt | date:'mediumDate':'':'es-CO' }}</small>
                   <div class="mt-1">
                     <span *ngFor="let star of [1,2,3,4,5]">
@@ -97,13 +127,6 @@
                   </div>
                 </div>
 
-                <!-- Eliminar solo si es el autor -->
-                <!-- <button
-                  *ngIf="(me$ | async)?.id === r.userId"
-                  class="btn btn-sm btn-outline-danger"
-                  (click)="deleteReview(r.id)">
-                  Eliminar
-                </button> -->
                 <app-button
                   *ngIf="(me$ | async)?.id === r.userId"
                   [text]="'Eliminar'"
@@ -125,34 +148,7 @@
           <p class="text-muted">Aún no hay reseñas para este producto.</p>
         </ng-template>
 
-        <!-- Crear reseña: solo si hay usuario -->
-        <ng-container *ngIf="(me$ | async) as me; else mustLogin">
-          <div class="mt-3">
-            <div class="mb-2">
-              <span *ngFor="let _ of stars; let i = index">
-                <i class="bi"
-                   [ngClass]="i < selectedRating ? 'bi-star-fill text-warning' : 'bi-star text-secondary'"
-                   (click)="setRating(i + 1)"
-                   style="cursor: pointer; font-size: 24px;"></i>
-              </span>
-            </div>
-
-            <textarea [(ngModel)]="newReview" class="form-control text mb-2" placeholder="Escribe tu reseña"></textarea>
-            <!-- <button
-              (click)="submitReview()"
-              class="btn btn-success"
-              [disabled]="selectedRating === 0 || !newReview.trim()">
-              Enviar reseña
-            </button> -->
-            <app-button
-              [text]="'Enviar reseña'"
-              [type]="'button'"
-              [color]="'primary'"
-              (click)="submitReview()"
-              [disabled]="selectedRating === 0 || !newReview.trim()">
-            </app-button>
-          </div>
-        </ng-container>
+       
 
         <ng-template #mustLogin>
           <p class="text-muted">Inicia sesión para dejar una reseña.</p>

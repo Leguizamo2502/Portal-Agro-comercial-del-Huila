@@ -11,6 +11,16 @@ namespace Business.Interfaces.Implements.Producers.Cloudinary
         Task<ImageUploadResult> UploadProductImagesAsync(IFormFile file, int productid);
         string ExtractPublicId(string imageUrl);
 
+        Task<ImageUploadResult> UploadOrderPaymentImageAsync(IFormFile file, int orderId);
+
+        Task<ImageUploadResult> UploadBytesAsync(
+            byte[] data,
+            string folder,
+            string publicId,
+            string fileNameWithExtension,
+            string contentType,
+            bool overwrite = true);
+
 
     }
 }

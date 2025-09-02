@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entity.DTOs.Order
+namespace Utilities.QR.Interfaces
 {
-    internal class CreateOrderDto
+    public interface IQrCodeService
     {
+        byte[] GeneratePng(string content);
     }
 }

@@ -1,3 +1,4 @@
+// product.component.ts
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
@@ -6,29 +7,31 @@ import { ProductService } from '../../../../shared/services/product/product.serv
 import { ProductSelectModel } from '../../../../shared/models/product/product.model';
 import { CategoryService } from '../../../parameters/services/category/category.service';
 
-// Tus cards
+// Cards
 import { ContainerCardFlexComponent } from '../../../../shared/components/cards/container-card-flex/container-card-flex.component';
 
 // Angular Material
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule }     from '@angular/material/select';
-import { MatButtonModule }     from '@angular/material/button';
-import { MatIconModule }       from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatChipsModule }      from '@angular/material/chips';
-import { MatDividerModule }    from '@angular/material/divider';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+
 import { CategoryNodeModel } from '../../../parameters/models/category/category.model';
-import { ButtonComponent } from "../../../../shared/components/button/button.component";
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-product',
   standalone: true,
   imports: [
     CommonModule, ReactiveFormsModule,
-    MatFormFieldModule, MatSelectModule, MatButtonModule, MatIconModule, MatProgressBarModule, MatChipsModule, MatDividerModule,
-    ContainerCardFlexComponent,
-    ButtonComponent
-],
+    MatFormFieldModule, MatSelectModule, MatButtonModule, MatIconModule,
+    MatProgressBarModule, MatChipsModule, MatDividerModule, MatPaginatorModule,
+    ContainerCardFlexComponent, ButtonComponent
+  ],
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css']
 })
@@ -44,12 +47,21 @@ export class ProductComponent implements OnInit {
 
   categoryCtrl = new FormControl<number | null>(null, { nonNullable: false });
 
-  // estados de carga por tipo
+  // loading
   isLoadingProducts = false;
   isLoadingCategories = false;
-
-  // true cuando el nivel actual NO tiene hijos
   atLeaf = false;
+
+  // paginación (front)
+  pageIndex = 0;
+  pageSize = 12;
+  pageSizeOptions = [8, 12, 24, 48];
+
+  // items visibles (slice)
+  get pagedProducts(): ProductSelectModel[] {
+    const start = this.pageIndex * this.pageSize;
+    return this.products.slice(start, start + this.pageSize);
+  }
 
   ngOnInit(): void {
     this.loadRootCategories();
@@ -60,16 +72,24 @@ export class ProductComponent implements OnInit {
   private loadProductsHome(): void {
     this.isLoadingProducts = true;
     this.productService.getAllHome().subscribe({
-      next: items => { this.products = items; this.isLoadingProducts = false; },
-      error: err   => { console.error(err);  this.isLoadingProducts = false; }
+      next: items => {
+        this.products = items;
+        this.resetPaginator();
+        this.isLoadingProducts = false;
+      },
+      error: err => { console.error(err); this.isLoadingProducts = false; }
     });
   }
 
   private loadProductsByCategory(categoryId: number): void {
     this.isLoadingProducts = true;
     this.productService.getByCategory(categoryId).subscribe({
-      next: items => { this.products = items; this.isLoadingProducts = false; },
-      error: err   => { console.error(err);  this.isLoadingProducts = false; }
+      next: items => {
+        this.products = items;
+        this.resetPaginator();
+        this.isLoadingProducts = false;
+      },
+      error: err => { console.error(err); this.isLoadingProducts = false; }
     });
   }
 
@@ -79,7 +99,7 @@ export class ProductComponent implements OnInit {
     this.categoryService.getNodes(null).subscribe({
       next: nodes => {
         this.categories = nodes;
-        this.atLeaf = nodes.length === 0; // normalmente false en raíces
+        this.atLeaf = nodes.length === 0;
         this.isLoadingCategories = false;
       },
       error: err => { console.error(err); this.isLoadingCategories = false; }
@@ -91,8 +111,7 @@ export class ProductComponent implements OnInit {
     this.categoryService.getNodes(parentId).subscribe({
       next: nodes => {
         this.categories = nodes;
-        this.atLeaf = nodes.length === 0; // si no hay hijos -> hoja
-        // si es hoja, ocultaremos el selector de nivel y la barra de carga de categorías
+        this.atLeaf = nodes.length === 0;
         this.isLoadingCategories = false;
       },
       error: err => { console.error(err); this.isLoadingCategories = false; }
@@ -125,6 +144,18 @@ export class ProductComponent implements OnInit {
     this.categoryCtrl.reset(null, { emitEvent: false });
     this.loadRootCategories();
     this.loadProductsHome();
+  }
+
+  onPageChange(e: PageEvent): void {
+    this.pageIndex = e.pageIndex;
+    this.pageSize  = e.pageSize;
+    // no llamamos al servidor: solo re-slice en getter
+  }
+
+  private resetPaginator(): void {
+    this.pageIndex = 0;
+    // opcional: si quieres ajustar pageSize según cantidad
+    // this.pageSize = Math.min(this.pageSize, Math.max(8, this.products.length));
   }
 
   private pushToBreadcrumb(id: number, name: string): void {

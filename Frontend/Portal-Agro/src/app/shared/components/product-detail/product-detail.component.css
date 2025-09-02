@@ -76,15 +76,28 @@ textarea {
 .rating-summary{
   width: 32rem;
 }
+
+.title-Desc{
+  margin:0;
+}
+
+.review{
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px;
+}
+
 .review .subtitle{
   margin: 0;
+}
+.info-product{
+  background-color: beige;
 }
 .info-product .mb-1 .text{
   margin: 0;
 }
 
 .avatar-review .start{
-  height: 2rem;
+  height: 1.5rem;
   margin-top: 0.5rem;
 }
 
@@ -92,4 +105,30 @@ textarea {
   position: relative;
   z-index: 1;
   right: 2rem;
+}
+.more-information{
+  padding: 10px;
+  background-color: beige;
+  border-radius: 8px;
+}
+.more-information .title{
+  margin: 0;
+  width:13rem;
+}
+.review-cont{
+  height: 19rem;
+}
+
+.review-content-design{
+  max-height: 340px;
+}
+
+.container-review-rating .bi{
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.container-comments{
+  max-height: 600px;
+  overflow-y: auto;
 }

@@ -11,5 +11,6 @@ namespace Data.Interfaces.Implements.Producers
     public interface IProducerRepository : IDataGeneric<Producer>
     {
         Task<int?> GetIdProducer(int userId);
+        Task<Producer?> GetByCodeProducer(string codeProducer);
     }
 }

@@ -6,21 +6,21 @@ using Data.Interfaces.Implements.Auth;
 using Data.Interfaces.Implements.Producers;
 using Data.Interfaces.Implements.Producers.Farms;
 using Data.Interfaces.IRepository;
-using Entity.Domain.Models.Implements.Auth;
 using Entity.Domain.Models.Implements.Producers;
 using Entity.Domain.Models.Implements.Producers.Farms;
 using Entity.DTOs.Producer.Farm.Create;
 using Entity.DTOs.Producer.Farm.Select;
 using Entity.DTOs.Producer.Farm.Update;
-using Entity.DTOs.Products.Select;
 using Entity.Infrastructure.Context;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Utilities.Custom.Code;
 using Utilities.Exceptions;
 using Utilities.Helpers.Business;
+using Utilities.QR.Interfaces;
 
 namespace Business.Services.Producers.Farms
 {
@@ -34,6 +34,8 @@ namespace Business.Services.Producers.Farms
         private readonly IProducerRepository _producerRepository;
         private readonly ICloudinaryService _cloudinaryService;
         private readonly ILogger<FarmService> _logger;
+        private readonly IQrCodeService _qr;
+        private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _context;
 
         private const int MaxImages = 5;
@@ -47,7 +49,9 @@ namespace Business.Services.Producers.Farms
                            ICloudinaryService cloudinaryService,
                            ILogger<FarmService> logger,
                            IFarmImageRepository imageRepository,
-                           ApplicationDbContext context
+                           ApplicationDbContext context,
+                           IQrCodeService qr,
+                           IConfiguration configuration
                             ) : base(data, mapper)
         {
             _farmRepository = farmRepository;
@@ -58,6 +62,8 @@ namespace Business.Services.Producers.Farms
             _logger = logger;
             _farmImageRepository = imageRepository;
             _context = context;
+            _qr = qr;
+            _configuration = configuration;
         }
 
         public override async Task<IEnumerable<FarmSelectDto>> GetAllAsync()
@@ -129,7 +135,7 @@ namespace Business.Services.Producers.Farms
             }
         }
 
-        public async Task<FarmSelectDto> RegisterWithProducer(ProducerWithFarmRegisterDto dto,int userId)
+        public async Task<FarmSelectDto> RegisterWithProducer(ProducerWithFarmRegisterDto dto, int userId)
         {
             // 0) Validaciones iniciales
             var user = await _userRepository.GetByIdAsync(userId)
@@ -150,7 +156,7 @@ namespace Business.Services.Producers.Farms
                 producer.Id = 0;                     // asegurar nuevo
                 producer.UserId = user.Id;           // evita tracking raro con navigation
                 producer.User = null;                // no adjuntar la entidad user al grafo
-                producer.Code = "PENDIENTE";
+                producer.Code = CodeGenerator.Generate(10);
 
                 await _producerRepository.AddAsync(producer);
                 await _context.SaveChangesAsync();   // necesitas el Id del producer
@@ -177,6 +183,41 @@ namespace Business.Services.Producers.Farms
 
                 // 5) Commit
                 await transaction.CommitAsync();
+
+                // 5.1) === QR: generar PNG con QRCoder, subir a Cloudinary y guardar URL ===
+                //     (fuera de la transacción; si falla, NO rompemos el flujo)
+                try
+                {
+                    var baseUrl = (_configuration["PublicBaseUrl"] ?? string.Empty).TrimEnd('/');
+                    if (string.IsNullOrWhiteSpace(baseUrl))
+                    {
+                        _logger.LogWarning("PublicBaseUrl no configurado. No se generará QR para productor {ProducerId}", producer.Id);
+                    }
+                    else
+                    {
+                        var qrTargetUrl = $"{baseUrl}/p/{producer.Code}";
+                        var pngBytes = _qr.GeneratePng(qrTargetUrl);
+
+                        var folder = $"producers/{producer.Id}"; // quedará producers/{id}/qr_png
+                        var upload = await _cloudinaryService.UploadBytesAsync(
+                            data: pngBytes,
+                            folder: folder,
+                            publicId: "qr_png",                         // public_id ESTABLE → permite regenerar
+                            fileNameWithExtension: $"qr_{producer.Code}.png",
+                            contentType: "image/png",
+                            overwrite: true
+                        );
+
+                        producer.QrUrl = upload.SecureUrl?.AbsoluteUri;
+                        await _producerRepository.UpdateAsync(producer);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Falló generación/subida de QR para productor {ProducerId}", producer.Id);
+                }
+                // 5.1) === fin QR ===
 
                 // 6) DTO de salida consistente con CreateFarmAsync
                 var result = farm.Adapt<FarmSelectDto>();
@@ -235,6 +276,20 @@ namespace Business.Services.Producers.Farms
                 if (producerId == null)
                     throw new BusinessException("El usuario no está registrado como productor.");
                 var entities = await _farmRepository.GetByProducer(producerId);
+                return _mapper.Map<IEnumerable<FarmSelectDto>>(entities);
+            }
+            catch (Exception ex)
+            {
+                throw new BusinessException("Error al obtener todos los registros de fincas del productor {producerId}.", ex);
+            }
+        }
+
+        public async Task<IEnumerable<FarmSelectDto>> GetByProducerCodeAsync(string codeProducer)
+        {
+            try
+            {
+               
+                var entities = await _farmRepository.GetByProducerCode(codeProducer);
                 return _mapper.Map<IEnumerable<FarmSelectDto>>(entities);
             }
             catch (Exception ex)

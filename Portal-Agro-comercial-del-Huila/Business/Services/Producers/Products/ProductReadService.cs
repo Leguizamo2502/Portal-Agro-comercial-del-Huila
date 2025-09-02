@@ -76,6 +76,37 @@ public class ProductReadService : IProductReadService
         }
     }
 
+    public async Task<IEnumerable<ProductSelectDto>> GetAllHomeAsync(int? userId)
+    {
+        try
+        {
+            // Trae todos los productos con tu BaseQuery/Includes habituales
+            var products = await _productRepo.GetAllAsync();
+            var dtos = _mapper.Map<List<ProductSelectDto>>(products);
+
+            // Invitado: siempre false
+            if (userId is null)
+            {
+                foreach (var d in dtos) d.IsFavorite = false;
+                return dtos;
+            }
+
+            var ids = dtos.Select(d => d.Id).ToArray();
+            var favIds = await _favoriteRepo.GetFavoriteProductIdsByUserAsync(userId.Value);
+            var favSet = favIds.ToHashSet();
+
+            foreach (var d in dtos)
+                d.IsFavorite = favSet.Contains(d.Id);
+
+            return dtos;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error al obtener Home (userId: {UserId})", userId);
+            throw;
+        }
+    }
+
     public async Task<IEnumerable<ProductSelectDto>> GetFavoritesForUserAsync(int userId)
     {
         try
@@ -108,6 +139,22 @@ public class ProductReadService : IProductReadService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error al obtener productos del productor para el usuario {UserId}", userId);
+            throw new BusinessException("Error al obtener los productos del productor.", ex);
+        }
+    }
+
+    public async Task<IEnumerable<ProductSelectDto>> GetByProducerCodeAsync(string codeProducer)
+    {
+        try
+        {
+            
+
+            var entities = await _productRepo.GetByProducerCode(codeProducer);
+            return _mapper.Map<IEnumerable<ProductSelectDto>>(entities);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error al obtener productos del productor para el usuario {UserId}", codeProducer);
             throw new BusinessException("Error al obtener los productos del productor.", ex);
         }
     }

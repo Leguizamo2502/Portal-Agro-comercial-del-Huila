@@ -12,6 +12,7 @@ namespace Data.Interfaces.Implements.Producers.Products
     public interface IProductRepository : IDataGeneric<Product>
     {
         Task<IEnumerable<Product>> GetByProducer(int? producerId);
+        Task<IEnumerable<Product>> GetByProducerCode(string producerCode);
         Task<IEnumerable<Product>> GetByIdsFavoritesAsync(IEnumerable<int> ids);
         Task<IEnumerable<Product>> GetByCategoryAsync(int categoryId);
         Task<IEnumerable<Product>> GetByCategoriesAsync(List<int> categoryIds, bool includeDescendants);

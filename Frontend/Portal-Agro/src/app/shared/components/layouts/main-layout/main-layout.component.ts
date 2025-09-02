@@ -4,11 +4,12 @@ import { Router, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DashboardComponent } from '../../dashboard/dashboard.component';
 import { NavbarBuenoComponent } from '../../navs/navbar-bueno/navbar-bueno.component';
+import { FooterComponent } from '../../footer/footer.component';
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, DashboardComponent, NavbarBuenoComponent],
+  imports: [CommonModule, RouterOutlet, DashboardComponent, NavbarBuenoComponent, FooterComponent],
   templateUrl: './main-layout.component.html',
   styleUrls: ['./main-layout.component.css']
 })

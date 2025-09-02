@@ -6,11 +6,14 @@ using Entity.Domain.Models.Implements.Producers.Products;
 using Entity.Domain.Models.Implements.Security;
 using Entity.DTOs.Auth;
 using Entity.DTOs.Auth.User;
+using Entity.DTOs.Order.Create;
 using Entity.DTOs.Order.Reviews;
+using Entity.DTOs.Order.Select;
 using Entity.DTOs.Producer.Categories;
 using Entity.DTOs.Producer.Farm.Create;
 using Entity.DTOs.Producer.Farm.Select;
 using Entity.DTOs.Producer.Farm.Update;
+using Entity.DTOs.Producer.Producer.Select;
 using Entity.DTOs.Products.Create;
 using Entity.DTOs.Products.Select;
 using Entity.DTOs.Products.Update;
@@ -100,6 +103,13 @@ namespace Business.Mapping
                 .IgnoreNullValues(true);
 
 
+            //Producer
+            config.NewConfig<Producer, ProducerSelectDto>()
+                .Map(dest => dest.FullName, src => $"{src.User.Person.FirstName} {src.User.Person.LastName}")
+                .Map(dest => dest.Email, src => src.User.Email)
+                .Map(dest => dest.PhoneNumber, src => src.User.Person.PhoneNumber);
+                
+
 
             //Products
             // Config global de Mapster
@@ -176,6 +186,26 @@ namespace Business.Mapping
                                      ? (pf.Farm.Producer.User.Person.FirstName + " " + pf.Farm.Producer.User.Person.LastName)
                                      : null)
                                .FirstOrDefault() ?? string.Empty);
+
+
+            //Orders
+
+            config.NewConfig<OrderCreateDto, Order>();
+
+            config.NewConfig<Order, OrderSelectDto>()
+                .Map(d => d.ProductName, s => s.ProductNameSnapshot) // tomamos el snapshot
+                .Map(d => d.QuantityRequested, s => s.QuantityRequested)
+                .Map(d => d.Subtotal, s => s.Subtotal)
+                .Map(d => d.Status, s => s.Status.ToString())        // de enum a string
+                .Map(d => d.PaymentImageUrl, s => s.PaymentImageUrl)
+                .Map(d => d.CreateAt, s => s.CreateAt);
+
+            config.NewConfig<Order, OrderResultDto>()
+               .Map(d => d.ProductName, s => s.ProductNameSnapshot)
+               .Map(d => d.UnitPrice, s => s.UnitPriceSnapshot)
+               .Map(d => d.Status, s => s.Status.ToString())
+               .Map(d => d.CreatedAt, s => s.CreateAt); // CreateAt -> CreatedA
+
 
 
 

@@ -8,7 +8,7 @@ import { ContainerCardComponent } from "../../../../shared/components/cards/cont
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, CarruselComponent, ContainerCardComponent],
+  imports: [CommonModule, CarruselComponent, ContainerCardComponent,],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })

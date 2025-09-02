@@ -24,50 +24,6 @@ namespace Business.Services.Producers.Cloudinary
          
          
          */
-        //public async Task<List<FarmImage>> UploadFarmImagesAsync(List<IFormFile> files, int farmid)
-        //{
-        //    if (files == null || files.Count == 0)
-        //        throw new BusinessException("Debe subir al menos una imagen.");
-
-        //    if (files.Count > 5)
-        //        throw new BusinessException("Solo se permiten hasta 5 imágenes por finca.");
-
-        //    var images = new List<FarmImage>();
-
-        //    foreach (var file in files)
-        //    {
-        //        if (file.Length <= 0)
-        //            continue;
-
-        //        //var safeName = name.Replace(" ", "_").ToLowerInvariant();
-        //        var fileName = $"farm_{farmid}_{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-        //        var folder = $"farms/{farmid}";
-
-        //        var uploadParams = new ImageUploadParams
-        //        {
-        //            PublicId = $"img_{Guid.NewGuid()}",
-        //            File = new FileDescription(file.FileName, file.OpenReadStream()),
-        //            Folder = folder,
-        //            Transformation = new Transformation()
-        //            .Quality("auto")            // Ajusta calidad automáticamente
-        //            .FetchFormat("auto")        // Cambia el formato a WebP/AVIF si el cliente lo soporta
-        //            .Width(1200)                // Escala la imagen a 1200px de ancho (ajusta si quieres menos)
-        //            .Crop("limit")              // No agranda, solo reduce si es necesario
-        //        };
-
-        //        var uploadResult = await _cloudinary.UploadAsync(uploadParams);
-
-        //        if (uploadResult.Error != null)
-        //            throw new BusinessException($"Error al subir la imagen: {uploadResult.Error.Message}");
-
-        //        images.Add(new FarmImage
-        //        {
-        //            ImageUrl = uploadResult.SecureUrl.ToString()
-        //        });
-        //    }
-
-        //    return images;
-        //}
         public async Task<ImageUploadResult> UploadFarmImagesAsync(IFormFile file, int farmid)
         {
             ValidateImage(file);
@@ -110,9 +66,6 @@ namespace Business.Services.Producers.Cloudinary
          Products
          */
 
-
-
-
         public async Task<ImageUploadResult> UploadProductImagesAsync(IFormFile file, int productid)
         {
 
@@ -149,6 +102,70 @@ namespace Business.Services.Producers.Cloudinary
             return result;
 
         }
+
+        public async Task<ImageUploadResult> UploadOrderPaymentImageAsync(IFormFile file, int orderId)
+        {
+            ValidateImage(file);
+
+            var folder = $"orders/{orderId}";
+            await using var stream = file.OpenReadStream();
+
+            var uploadParams = new ImageUploadParams
+            {
+                PublicId = $"payment_{orderId}_{Guid.NewGuid()}",
+                File = new FileDescription(file.FileName, stream),
+                Folder = folder,
+                Transformation = new Transformation()
+                    .Quality("auto")
+                    .FetchFormat("auto")
+                    .Width(1600) // suficiente para comprobantes; ajusta si quieres
+                    .Crop("limit")
+            };
+
+            var result = await _cloudinary.UploadAsync(uploadParams);
+
+            if (result.Error != null || string.IsNullOrWhiteSpace(result.SecureUrl?.AbsoluteUri))
+                throw new BusinessException($"Error al subir imagen: {result.Error?.Message ?? "Respuesta inválida"}");
+
+            return result;
+        }
+
+        public async Task<ImageUploadResult> UploadBytesAsync(
+             byte[] data,
+             string folder,
+             string publicId,                 // sin extensión
+             string fileNameWithExtension,    // ej: "qr_ABC123.png"
+             string contentType,              // no lo usa Cloudinary; se infiere por extensión
+             bool overwrite = true)
+        {
+            if (data is null || data.Length == 0)
+                throw new BusinessException("No hay datos para subir.");
+
+            using var ms = new MemoryStream(data);
+
+            var uploadParams = new ImageUploadParams
+            {
+                File = new FileDescription(fileNameWithExtension, ms),
+                Folder = folder?.Trim('/'),          // p.ej. "producers/42"
+                PublicId = publicId,                  // p.ej. "qr_png"
+                Overwrite = overwrite,                // permite regenerar
+                UseFilename = false,
+                UniqueFilename = false,
+                Type = "upload",
+                Invalidate = true                     // opcional: fuerza invalidación CDN
+                                                      // ResourceType: NO asignar; es readonly y ya es "image"
+            };
+
+            var result = await _cloudinary.UploadAsync(uploadParams);
+
+            if (result.Error != null || string.IsNullOrWhiteSpace(result.SecureUrl?.AbsoluteUri))
+                throw new BusinessException($"Error al subir QR: {result.Error?.Message ?? "Respuesta inválida"}");
+
+            return result;
+        }
+
+
+
 
 
         //Helpers

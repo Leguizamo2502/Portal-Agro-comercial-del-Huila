@@ -20,13 +20,15 @@
             <div class="desktop-icons">
                 <a class="nav-link custom-text" routerLink="/home/inicio">Inicio</a>
                 <a class="nav-link custom-text" routerLink="/home/product">Productos</a>
-                <a class="nav-link custom-text" routerLink="/home/inicio">
+
+                <app-button [text]="'Inicia Sersion/Registrate'" [redirectTo]="'/auth/login'" *appIfLoggedOut></app-button>
+                <a class="nav-link custom-text" routerLink="/home/inicio" *appIfLoggedIn>
                     <mat-icon>notifications</mat-icon>
                 </a>
                 <!-- <a class="nav-link custom-text" routerLink="/home/inicio">
                     <mat-icon>shopping_cart</mat-icon>
                 </a> -->
-                <div class="dropdown">
+                <div class="dropdown" *appIfLoggedIn>
                     <a class="nav-link custom-text dropdown-toggle" role="button" data-bs-toggle="dropdown">
                         <mat-icon>account_circle</mat-icon>
                     </a>
@@ -61,9 +63,9 @@
                     <a class="custom-text" routerLink="/account">
                         <mat-icon>account_circle</mat-icon>
                     </a>
-                    <a class="custom-text" routerLink="/home/inicio">
+                    <!-- <a class="custom-text" routerLink="/home/inicio">
                         <mat-icon>shopping_cart</mat-icon>
-                    </a>
+                    </a> -->
                 </div>
             </div>
             

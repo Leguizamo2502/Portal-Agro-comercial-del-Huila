@@ -2,9 +2,9 @@ import { Component, inject, OnInit, OnDestroy, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SidebarService } from '../../services/sidebar/sidebar.service';
-import { HasRoleDirective } from '../../directives/has-role.directive';
 import { AuthService } from '../../../Core/services/auth/auth.service';
 import { UserSelectModel } from '../../../Core/Models/user.model';
+import { HasRoleDirective } from '../../../Core/directives/has-role.directive';
 
 @Component({
   selector: 'app-dashboard',

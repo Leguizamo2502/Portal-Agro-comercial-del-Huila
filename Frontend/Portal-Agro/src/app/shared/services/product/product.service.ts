@@ -44,6 +44,15 @@ export class ProductService {
     return this.http.get<ProductSelectModel[]>(this.urlBase + '/by-producer');
   }
 
+  /** Obtener fincas de prodcutor por code */
+  public getProductByCodeProducer(
+    codeProducer: string
+  ): Observable<ProductSelectModel> {
+    return this.http.get<ProductSelectModel>(
+      `${this.urlBase}/by-producerCode/${codeProducer}`
+    );
+  }
+
   getById(id: number): Observable<ProductSelectModel> {
     return this.http.get<ProductSelectModel>(`${this.urlBase}/${id}`);
   }

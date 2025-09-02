@@ -3,24 +3,23 @@
 
 <div class="layout" [class.with-sidebar]="showSidebarOnDesktop">
   <!-- Backdrop para móvil (solo en /account) -->
-  <div
-    *ngIf="isAccountRoute && sidebarService.sidebarOpen() && sidebarService.getIsMobile()"
-    class="sidebar-backdrop"
+  <div *ngIf="isAccountRoute && sidebarService.sidebarOpen() && sidebarService.getIsMobile()" class="sidebar-backdrop"
     (click)="onBackdropClick()">
   </div>
 
   <!-- Contenedor sidebar - solo en /account -->
-  <aside
-    *ngIf="isAccountRoute"
-    [class.hidden]="!sidebarService.sidebarOpen()"
+  <aside *ngIf="isAccountRoute" [class.hidden]="!sidebarService.sidebarOpen()"
     [class.mobile]="sidebarService.getIsMobile()">
     <app-dashboard></app-dashboard>
   </aside>
 
   <!-- Contenido dinámico -->
-  <main
-    class="content"
-    [class.with-sidebar]="showSidebarOnDesktop">
-    <router-outlet></router-outlet>
+  <main class="content" [class.with-sidebar]="showSidebarOnDesktop">
+    
+      <div class="content-body">
+      <router-outlet></router-outlet>
+    </div>
+
+    <app-footer *ngIf="!isAccountRoute"></app-footer>
   </main>
 </div>

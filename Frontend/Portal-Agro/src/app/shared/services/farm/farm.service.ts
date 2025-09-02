@@ -1,11 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
-import { FarmRegisterModel, FarmSelectModel, FarmUpdateModel, FarmWithProducerRegisterModel } from '../../models/farm/farm.model';
+import {
+  FarmRegisterModel,
+  FarmSelectModel,
+  FarmUpdateModel,
+  FarmWithProducerRegisterModel,
+} from '../../models/farm/farm.model';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FarmService {
   private http = inject(HttpClient);
@@ -14,6 +19,13 @@ export class FarmService {
   /** Obtener todas las fincas */
   public getAll(): Observable<FarmSelectModel[]> {
     return this.http.get<FarmSelectModel[]>(this.urlBase);
+  }
+
+  /** Obtener fincas de prodcutor por code */
+  public getFarmByCodeProducer(codeProducer: string): Observable<FarmSelectModel> {
+    return this.http.get<FarmSelectModel>(
+      `${this.urlBase}/by-producerCode/${codeProducer}`
+    );
   }
 
   /** Obtener una finca por ID */
@@ -27,7 +39,9 @@ export class FarmService {
   }
 
   /** Crear finca junto con productor */
-  public createWithProducer(dto: FarmWithProducerRegisterModel): Observable<any> {
+  public createWithProducer(
+    dto: FarmWithProducerRegisterModel
+  ): Observable<any> {
     const fd = this.buildFormData(dto);
     return this.http.post<any>(`${this.urlBase}/registrar/producer`, fd);
   }

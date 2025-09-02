@@ -15,7 +15,7 @@ namespace Entity.Infrastructure.Context
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-            
+
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -59,6 +59,35 @@ namespace Entity.Infrastructure.Context
                 .WithMany(c => c.Products)                 // IMPORTANTE para evitar CategoryId1
                 .HasForeignKey(p => p.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // ----- Order -----
+            modelBuilder.Entity<Order>(e =>
+            {
+                e.Property(x => x.UnitPriceSnapshot).HasPrecision(18, 2);
+                e.Property(x => x.Subtotal).HasPrecision(18, 2);
+                e.Property(x => x.DeliveryFee).HasPrecision(18, 2);
+                e.Property(x => x.Total).HasPrecision(18, 2);
+
+                // RowVersion (concurrencia optimista)
+                e.Property(x => x.RowVersion).IsRowVersion().IsConcurrencyToken();
+
+                // (Opcional) longitudes sugeridas para strings
+                e.Property(x => x.ProductNameSnapshot).HasMaxLength(200);
+                e.Property(x => x.DeliveryFeeCurrency).HasMaxLength(8);
+                e.Property(x => x.RecipientName).HasMaxLength(100);
+                e.Property(x => x.ContactPhone).HasMaxLength(30);
+                e.Property(x => x.AddressLine1).HasMaxLength(200);
+                e.Property(x => x.AddressLine2).HasMaxLength(200);
+                e.Property(x => x.AdditionalNotes).HasMaxLength(500);
+                e.Property(x => x.DeliveryNotes).HasMaxLength(500);
+                e.Property(x => x.PaymentImageUrl).HasMaxLength(512);
+            });
+
+            // ----- Product -----
+            modelBuilder.Entity<Product>(e =>
+            {
+                e.Property(x => x.Price).HasPrecision(18, 2);
+            });
 
             // --- Category autorrelación (Parent ↔ SubCategories) ---
             modelBuilder.Entity<Category>()
@@ -147,5 +176,7 @@ namespace Entity.Infrastructure.Context
         public DbSet<Review> Reviews { get; set; }
 
 
+        //Order
+        public DbSet<Order> Orders { get; set; }
     }
 }

@@ -8,6 +8,7 @@ import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { credentialsInterceptor } from './Core/interceptors/credentials.interceptor';
 import { authInterceptor } from './Core/interceptors/auth/auth.interceptor';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 
 import { registerLocaleData } from '@angular/common';
@@ -21,6 +22,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withInterceptors([credentialsInterceptor, authInterceptor])
     ),
-    { provide: LOCALE_ID, useValue: 'es-CO' },
+    { provide: LOCALE_ID, useValue: 'es-CO' }, provideCharts(withDefaultRegisterables())
   ],
 };

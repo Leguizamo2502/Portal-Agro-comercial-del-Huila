@@ -1,18 +1,21 @@
+/* product.component.css */
 /* Header más compacto */
-.header-compact { padding: .5rem .75rem; }                  /* antes p-3 */
+.header-compact { padding: .5rem .75rem; border-bottom: 1px solid #eef1f4; }
 .breadcrumb-wrap { min-height: 34px; }
 
-/* Controles: menos ancho y separación */
+/* Controles */
 .controls { gap: .5rem; }
-.select { width: 250px; }                                    /* 280 -> 220 */
+.select { width: 250px; }
 .controls .mat-mdc-text-field-wrapper { height: 34px; }
 .controls .mat-mdc-form-field-infix { padding-top: 0; padding-bottom: 0; }
 
-/* Sutil divisor inferior para cerrar el bloque */
-.header-compact { border-bottom: 1px solid #eef1f4; }
+/* Texto cabecera */
 .header-text {
   font-weight: 550;
   font-size: 1rem;
-  color: #1e4620;   /* gris oscuro */
+  color: #1e4620;
   text-align: center;
 }
+
+/* Espaciado paginador */
+mat-paginator { margin-top: .5rem; }

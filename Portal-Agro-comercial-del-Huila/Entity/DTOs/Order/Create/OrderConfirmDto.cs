@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entity.DTOs.Order
+namespace Entity.DTOs.Order.Create
 {
-    internal class OrderDetailDto
+    internal class OrderConfirmDto
     {
     }
 }
