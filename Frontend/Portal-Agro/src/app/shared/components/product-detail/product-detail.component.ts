@@ -46,7 +46,7 @@ export class ProductDetailComponent implements OnInit {
   newReview = '';
   selectedRating = 0;
   stars = Array(5).fill(0);
-
+  
   // Métricas
   averageRating = 0;
   distribution: { star: number; count: number; percentage: number }[] = [];
@@ -99,9 +99,18 @@ export class ProductDetailComponent implements OnInit {
     this.selectedImage = url;
   }
 
+  hoverRating = 0;
   // Selección de estrellas
   setRating(value: number): void {
     this.selectedRating = value;
+  }
+
+  onMouseEnter(rating: number) {
+  this.hoverRating = rating;
+  }
+
+  onMouseLeave() {
+  this.hoverRating = 0;
   }
 
   submitReview(): void {

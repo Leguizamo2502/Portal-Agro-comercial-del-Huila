@@ -26,7 +26,7 @@ textarea {
   object-fit: cover;
   border-radius: 8px;
   cursor: pointer;
-  border: 1px solid #ddd;
+  border: 1px solid #dddddd;
 }
 
 .main-image {
@@ -43,7 +43,7 @@ textarea {
 }
 
 .product-info {
-  border: 1px solid #ddd;
+  border: 1px solid #dddddd;
   padding: 0;
   border-radius: 10px;
   width: 250px;
@@ -90,7 +90,7 @@ textarea {
   margin: 0;
 }
 .info-product{
-  background-color: beige;
+  background-color: #efffe1;
 }
 .info-product .mb-1 .text{
   margin: 0;
@@ -106,12 +106,13 @@ textarea {
   z-index: 1;
   right: 2rem;
 }
-.more-information{
+.more-info{
   padding: 10px;
-  background-color: beige;
+  background-color: #efffe1;
   border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px;
 }
-.more-information .title{
+.more-info .title{
   margin: 0;
   width:13rem;
 }
@@ -126,4 +127,24 @@ textarea {
 .container-review-rating .bi{
   cursor: pointer;
   font-size: 1.2rem;
+}
+.review-content-design {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: calc(2 * 140px);
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+/* scrollbar con estilo */
+.review-content-design::-webkit-scrollbar {
+  width: 6px;
+}
+.review-content-design::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+.review-content-design::-webkit-scrollbar-thumb:hover {
+  background: #999;
 }
