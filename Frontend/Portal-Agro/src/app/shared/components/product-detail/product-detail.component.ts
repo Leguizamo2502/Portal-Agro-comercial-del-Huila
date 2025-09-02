@@ -2,7 +2,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { ProductSelectModel } from '../../models/product/product.model';
 import { ProductService } from '../../services/product/product.service';
@@ -26,6 +26,7 @@ import Swal from 'sweetalert2';
 })
 export class ProductDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private productService = inject(ProductService);
   private reviewService = inject(ReviewService);
   private authState = inject(AuthState);
@@ -198,6 +199,8 @@ export class ProductDetailComponent implements OnInit {
       }
     });
   }
+
+  onDetail(item: ProductSelectModel) { this.router.navigate(['/product/profile', item.producerCode]); }
 
   private recomputeStats(): void {
     const n = this.reviews.length;

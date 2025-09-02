@@ -26,6 +26,7 @@ namespace Data.Service.Producers.Products
                 .AsNoTracking()
                 .Where(p => !p.IsDeleted)
                 .Include(p => p.Category)
+                .Include(p => p.Producer)
                 .Include(p => p.ProductImages.Where(pi => !pi.IsDeleted))
                 .Include(p => p.ProductFarms)
                     .ThenInclude(pf => pf.Farm)

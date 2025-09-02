@@ -141,6 +141,7 @@ namespace Business.Mapping
             config.NewConfig<Product, ProductSelectDto>()
                 .Map(dest => dest.CategoryName, src => src.Category.Name)
                 .Map(dest => dest.Images, src => src.ProductImages.Where(pi => !pi.IsDeleted))
+                .Map(dest => dest.ProducerCode, src => src.Producer.Code)
 
                 // NUEVO: lista completa de fincas activas
                 .Map(dest => dest.FarmIds,

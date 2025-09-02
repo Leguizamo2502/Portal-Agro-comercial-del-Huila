@@ -29,12 +29,7 @@ export interface ProductSelectModel {
 
   isFavorite: boolean;
 
-  // mockups opcionales
-  // orders?: number;
-  // categories?: string[];
-  // moreInfo?: string;
-  // location?: string;
-  // reviews?: ReviewModel[];
+  producerCode: string;  
 }
 
 export interface ProductImageSelectModel {
