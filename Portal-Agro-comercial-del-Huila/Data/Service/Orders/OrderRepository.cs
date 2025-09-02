@@ -1,5 +1,6 @@
 ﻿using Data.Interfaces.Implements.Orders;
 using Data.Repository;
+using Entity.Domain.Enums;
 using Entity.Domain.Models.Implements.Orders;
 using Entity.Domain.Models.Implements.Producers.Products;
 using Entity.Infrastructure.Context;
@@ -35,6 +36,29 @@ namespace Data.Service.Orders
 
             
             return true; // SaveChanges afuera
+        }
+
+        // Todos los pedidos del productor (activos y no eliminados)
+        public async Task<IEnumerable<Order>> GetOrdersByProducer(int producerId)
+        {
+            return await _dbSet
+                .AsNoTracking()
+                .Where(o => o.ProducerIdSnapshot == producerId && !o.IsDeleted && o.Active)
+                .OrderByDescending(o => o.CreateAt)
+                .ToListAsync();
+        }
+
+        // Solo pedidos pendientes de revisión del productor
+        public async Task<IEnumerable<Order>> GetPendingOrdersByProducer(int producerId)
+        {
+            return await _dbSet
+                .AsNoTracking()
+                .Where(o => o.ProducerIdSnapshot == producerId
+                            && !o.IsDeleted
+                            && o.Active
+                            && o.Status == OrderStatus.PendingReview)
+                .OrderByDescending(o => o.CreateAt)
+                .ToListAsync();
         }
     }
 }
