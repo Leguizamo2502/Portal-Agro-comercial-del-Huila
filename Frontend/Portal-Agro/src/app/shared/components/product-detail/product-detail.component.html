@@ -28,7 +28,7 @@
         <!-- Información del producto -->
         <div class="info-product border rounded p-3 shadow-sm" style="min-width: 434px;">
           <h3 class="mb-3 title">{{ product.name }}</h3>
-          <div class="mb-1 subtitle">Productor: <div class="text">{{ product.personName }}</div></div>
+          <div class="mb-1 subtitle">Productor: <div class="text" (click)="onDetail(product)">{{ product.personName }} </div></div>
           <div class="mb-1 subtitle">Finca: <div class="text">{{ product.farmName }}</div></div>
           <div class="mb-1 subtitle">Categoría: <div class="text">{{ product.categoryName }}</div></div>
           <div class="mb-1 subtitle">Stock: <div class="text">{{ product.stock }} {{ product.unit }}</div></div>
