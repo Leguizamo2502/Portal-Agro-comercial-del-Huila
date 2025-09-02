@@ -22,7 +22,7 @@ namespace Entity.Infrastructure.DataInit.Producers
                     Code = "M3QPD6Y8ZR",
                     Description = "Hola vendo papa",
                     UserId = 3,
-                    QrUrl = "https://example.com/qr1.png",
+                    QrUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1756782308/qr_png_e6xgom.png",
                     Active = true,
                     IsDeleted = true,
                     CreateAt = new DateTime(2025, 1, 1)
@@ -33,7 +33,7 @@ namespace Entity.Infrastructure.DataInit.Producers
                     Code = "AB7KX92TQF",
                     Description = "Hola vendo papa modo admin",
                     UserId = 1,
-                    QrUrl = "https://example.com/qr1.png",
+                    QrUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1756782308/qr_png_e6xgom.png",
                     Active = true,
                     IsDeleted = true,
                     CreateAt = new DateTime(2025, 1, 1)
