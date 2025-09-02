@@ -13,6 +13,13 @@
             width="150" height="150">
           <h4 class="fw-bold">{{ p.user.name }}</h4>
           <p class="text-muted">{{ p.user.email }}</p>
+             <!-- NUEVO: teléfono -->
+          <p class="mb-1">
+            <span>
+              📞 {{ p.phoneNumber || 'Sin teléfono' }}
+            </span>
+          </p>
+          
         </div>
         <!-- QR -->
         <div class="col-md-6 d-flex justify-content-md-end justify-content-center">
@@ -26,6 +33,7 @@
     </div>
     <hr>
     <!-- Descripción -->
+     
     <section class="my-4" *ngIf="p.description">
       <h5 class="title">Descripción</h5>
       <p class="text-secondary">{{ p.description }}</p>

@@ -19,6 +19,7 @@ import { authGuard, guestGuard } from './Core/guards/auth/guest.guard';
 import { FormChangePasswordComponent } from './features/account/components/form-change-password/form-change-password.component';
 import { ProducerProfileComponent } from './features/producer-profile/producer-profile.component';
 import { SummaryComponent } from './features/producer/pages/summary/summary.component';
+import { FarmDetailComponent } from './features/farm-detail/farm-detail.component';
 
 export const routes: Routes = [
   // Redirección inicial
@@ -64,8 +65,9 @@ export const routes: Routes = [
       { path: 'navbar-bueno', component: NavbarBuenoComponent },
       { path: 'carrusel', component: CarruselComponent },
       {path: 'change', component:FormChangePasswordComponent},
-      {path: 'producer', component:ProducerProfileComponent},
-      {path: 'summary', component:SummaryComponent}
+      { path: 'producer/:code', component: ProducerProfileComponent },
+      {path: 'summary', component:SummaryComponent},
+       {path: 'farm-detail', component:FarmDetailComponent}
     ],
   },
 

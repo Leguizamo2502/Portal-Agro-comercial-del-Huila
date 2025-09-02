@@ -9,8 +9,8 @@ public class CategoryRegisterDtoValidator : AbstractValidator<CategoryRegisterDt
 
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("El nombre es obligatorio.")
-            .Must(s => !string.IsNullOrWhiteSpace(s))
-                .WithMessage("El nombre no puede estar en blanco.")
+            //.Must(s => !string.IsNullOrWhiteSpace(s))
+              //  .WithMessage("El nombre no puede estar en blanco.")
             // Validar longitud sobre el valor recortado
             .Must(s =>
             {
