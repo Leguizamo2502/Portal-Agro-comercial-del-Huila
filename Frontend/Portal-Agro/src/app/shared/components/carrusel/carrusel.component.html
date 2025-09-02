@@ -1,11 +1,11 @@
-<div class="carousel-wrapper">
+<div class="carousel-wrapper w-100">
   <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
     <div class="carousel-inner">
       <div *ngFor="let slide of slides; let i = index" [class.active]="i === 0" class="carousel-item">
         <img [src]="slide.src" class="d-block w-100 carousel-img" [alt]="slide.title">
         <div class="carousel-caption d-flex flex-column justify-content-center align-items-center">
           <h2 class="fw-bold">{{ slide.title }}</h2>
-          <a href="#" class="btn btn-success mt-3">Explorar Productos</a>
+          <!-- <a href="#" class="btn btn-success mt-3">Explorar Productos</a> -->
         </div>
       </div>
     </div>

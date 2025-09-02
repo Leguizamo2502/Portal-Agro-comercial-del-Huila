@@ -1,13 +1,3 @@
-.footer-container{
-    width: 100%;
-    height: 100vh;
-    background-color: #2e7d32;
-    border-top: 1px solid beige;
-    border-top-left-radius:10px;
-    border-top-right-radius:10px;
-    color: #e0e0e0;
-}
-
 .us{
     width: 250px;
 }
@@ -34,7 +24,6 @@
 .banner-h{
     height: 16vh;
     width: auto;
-    
 }
 .footer-container {
     width: 100%;

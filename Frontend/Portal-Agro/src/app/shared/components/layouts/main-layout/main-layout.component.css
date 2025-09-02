@@ -38,9 +38,9 @@ aside.hidden {
 
 .content {
   flex: 1;
-  height: calc(100vh - 60px);  
-  overflow-y: auto;            
-  background: #f8fafc;
+  height: calc(100vh - 60px);
+  overflow-y: auto;
+  background: #fff;
   margin-left: 0;
   transition: margin-left 0.3s ease;
 }
