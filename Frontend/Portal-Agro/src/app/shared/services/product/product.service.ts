@@ -105,6 +105,7 @@ export class ProductService {
     data.append('production', dto.production);
     data.append('stock', String(dto.stock));
     data.append('status', String(dto.status));
+    data.append('shippingIncluded', String(dto.shippingIncluded));
     data.append('categoryId', String(dto.categoryId));
 
     // << NUEVO: múltiples fincas

@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ButtonComponent } from "../button/button.component";
 
 @Component({
   selector: 'app-carrusel',
-  imports: [CommonModule],
+  imports: [CommonModule, ButtonComponent],
   templateUrl: './carrusel.component.html',
   styleUrl: './carrusel.component.css'
 })

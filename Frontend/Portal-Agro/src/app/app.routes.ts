@@ -72,5 +72,5 @@ export const routes: Routes = [
   },
 
   // 404 (ajusta según tu app)
-  // { path: '**', redirectTo: 'notFound' },
+  { path: '**', redirectTo: 'notFound' },
 ];

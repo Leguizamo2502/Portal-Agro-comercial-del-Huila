@@ -9,6 +9,7 @@ namespace Entity.DTOs.Products.Update
         public string Description { get; set; }
         public double Price { get; set; }
         public string Unit { get; set; }
+        public bool ShippingIncluded { get; set; }
         public string Production { get; set; }
         public int Stock { get; set; }
         public bool Status { get; set; }

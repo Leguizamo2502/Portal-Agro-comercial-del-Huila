@@ -13,6 +13,7 @@ export interface ProductSelectModel {
   production: string;
   stock: number;
   status: boolean;
+  shippingIncluded : boolean;
   categoryId: number;
   categoryName: string;
   images: ProductImageSelectModel[];
@@ -47,6 +48,7 @@ export interface ProductRegisterModel {
   unit: string;
   production: string;
   stock: number;
+  shippingIncluded : boolean;
   status: boolean;
   categoryId: number;
   images?: File[];
@@ -61,6 +63,7 @@ export interface ProductUpdateModel {
   unit: string;
   production: string;
   stock: number;
+  shippingIncluded : boolean;
   status: boolean;
   categoryId: number;
   images?: File[];
