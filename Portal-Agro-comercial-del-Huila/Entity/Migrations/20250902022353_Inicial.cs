@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Entity.Migrations
 {
     /// <inheritdoc />
-    public partial class inicial : Migration
+    public partial class Inicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -304,6 +304,7 @@ namespace Entity.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    QrUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -870,11 +871,11 @@ namespace Entity.Migrations
 
             migrationBuilder.InsertData(
                 table: "Producers",
-                columns: new[] { "Id", "Active", "Code", "CreateAt", "Description", "IsDeleted", "UserId" },
+                columns: new[] { "Id", "Active", "Code", "CreateAt", "Description", "IsDeleted", "QrUrl", "UserId" },
                 values: new object[,]
                 {
-                    { 1, true, "PENDIENTE", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hola vendo papa", true, 3 },
-                    { 2, true, "PENDIENTE", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hola vendo papa modo admin", true, 1 }
+                    { 1, true, "M3QPD6Y8ZR", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hola vendo papa", true, "https://example.com/qr1.png", 3 },
+                    { 2, true, "AB7KX92TQF", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hola vendo papa modo admin", true, "https://example.com/qr1.png", 1 }
                 });
 
             migrationBuilder.InsertData(

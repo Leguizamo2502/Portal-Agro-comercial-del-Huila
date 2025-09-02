@@ -1340,6 +1340,9 @@ namespace Entity.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("QrUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -1355,20 +1358,22 @@ namespace Entity.Migrations
                         {
                             Id = 1,
                             Active = true,
-                            Code = "PENDIENTE",
+                            Code = "M3QPD6Y8ZR",
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Hola vendo papa",
                             IsDeleted = true,
+                            QrUrl = "https://example.com/qr1.png",
                             UserId = 3
                         },
                         new
                         {
                             Id = 2,
                             Active = true,
-                            Code = "PENDIENTE",
+                            Code = "AB7KX92TQF",
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Hola vendo papa modo admin",
                             IsDeleted = true,
+                            QrUrl = "https://example.com/qr1.png",
                             UserId = 1
                         });
                 });

@@ -130,6 +130,41 @@ namespace Business.Services.Producers.Cloudinary
             return result;
         }
 
+        public async Task<ImageUploadResult> UploadBytesAsync(
+             byte[] data,
+             string folder,
+             string publicId,                 // sin extensión
+             string fileNameWithExtension,    // ej: "qr_ABC123.png"
+             string contentType,              // no lo usa Cloudinary; se infiere por extensión
+             bool overwrite = true)
+        {
+            if (data is null || data.Length == 0)
+                throw new BusinessException("No hay datos para subir.");
+
+            using var ms = new MemoryStream(data);
+
+            var uploadParams = new ImageUploadParams
+            {
+                File = new FileDescription(fileNameWithExtension, ms),
+                Folder = folder?.Trim('/'),          // p.ej. "producers/42"
+                PublicId = publicId,                  // p.ej. "qr_png"
+                Overwrite = overwrite,                // permite regenerar
+                UseFilename = false,
+                UniqueFilename = false,
+                Type = "upload",
+                Invalidate = true                     // opcional: fuerza invalidación CDN
+                                                      // ResourceType: NO asignar; es readonly y ya es "image"
+            };
+
+            var result = await _cloudinary.UploadAsync(uploadParams);
+
+            if (result.Error != null || string.IsNullOrWhiteSpace(result.SecureUrl?.AbsoluteUri))
+                throw new BusinessException($"Error al subir QR: {result.Error?.Message ?? "Respuesta inválida"}");
+
+            return result;
+        }
+
+
 
 
 

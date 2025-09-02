@@ -5,5 +5,6 @@ namespace Data.Interfaces.Implements.Orders
 {
     public interface IOrderRepository : IDataGeneric<Order>
     {
+        Task<bool> UpdateOrderAsync(Order entity);
     }
 }

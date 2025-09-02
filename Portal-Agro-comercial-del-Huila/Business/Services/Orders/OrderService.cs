@@ -40,7 +40,7 @@ namespace Business.Services.Orders
 
             var now = DateTime.UtcNow;
 
-            var order = dto.Adapt<Order>();
+            var order = _mapper.Map<Order>(dto);
             order.UserId = userId;
             order.ProductId = product.Id;
 
@@ -54,6 +54,7 @@ namespace Business.Services.Orders
             order.DeliveryFee = 0m;
             order.DeliveryFeeCurrency = "COP";
             order.Total = order.Subtotal;
+            order.AddressLine1 = dto.AddressLine1;
 
             order.CreateAt = now;
 
@@ -61,11 +62,14 @@ namespace Business.Services.Orders
 
             await _orderRepository.AddAsync(order);
 
+            await _db.SaveChangesAsync();
+
+
             var upload = await _cloudinaryService.UploadOrderPaymentImageAsync(dto.PaymentImage!, order.Id);
             order.PaymentImageUrl = upload.SecureUrl.AbsoluteUri;
             order.PaymentUploadedAt = now;
 
-            await _orderRepository.UpdateAsync(order);
+            await _orderRepository.UpdateOrderAsync(order);
             await _db.SaveChangesAsync();
 
             await tx.CommitAsync();

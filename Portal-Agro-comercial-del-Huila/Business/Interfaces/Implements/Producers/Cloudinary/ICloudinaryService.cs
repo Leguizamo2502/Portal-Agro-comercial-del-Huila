@@ -13,6 +13,14 @@ namespace Business.Interfaces.Implements.Producers.Cloudinary
 
         Task<ImageUploadResult> UploadOrderPaymentImageAsync(IFormFile file, int orderId);
 
+        Task<ImageUploadResult> UploadBytesAsync(
+            byte[] data,
+            string folder,
+            string publicId,
+            string fileNameWithExtension,
+            string contentType,
+            bool overwrite = true);
+
 
     }
 }

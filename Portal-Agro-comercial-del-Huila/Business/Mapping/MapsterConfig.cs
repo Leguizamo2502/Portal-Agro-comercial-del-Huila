@@ -12,6 +12,7 @@ using Entity.DTOs.Producer.Categories;
 using Entity.DTOs.Producer.Farm.Create;
 using Entity.DTOs.Producer.Farm.Select;
 using Entity.DTOs.Producer.Farm.Update;
+using Entity.DTOs.Producer.Producer.Select;
 using Entity.DTOs.Products.Create;
 using Entity.DTOs.Products.Select;
 using Entity.DTOs.Products.Update;
@@ -101,6 +102,13 @@ namespace Business.Mapping
                 .IgnoreNullValues(true);
 
 
+            //Producer
+            config.NewConfig<Producer, ProducerSelectDto>()
+                .Map(dest => dest.FullName, src => $"{src.User.Person.FirstName} {src.User.Person.LastName}")
+                .Map(dest => dest.Email, src => src.User.Email)
+                .Map(dest => dest.PhoneNumber, src => src.User.Person.PhoneNumber);
+                
+
 
             //Products
             // Config global de Mapster
@@ -181,26 +189,26 @@ namespace Business.Mapping
 
             //Orders
 
-            config.NewConfig<OrderCreateDto, Order>()
+            config.NewConfig<OrderCreateDto, Order>();
             // Ignoramos propiedades que no deben mapearse directamente
-                .Ignore(dest => dest.Id)
-                .Ignore(dest => dest.UserId)
-                .Ignore(dest => dest.ProductId)
-                .Ignore(dest => dest.ProducerIdSnapshot)
-                .Ignore(dest => dest.ProductNameSnapshot)
-                .Ignore(dest => dest.UnitPriceSnapshot)
-                .Ignore(dest => dest.Status)
-                .Ignore(dest => dest.Subtotal)
-                .Ignore(dest => dest.DeliveryFee)
-                .Ignore(dest => dest.DeliveryFeeCurrency)
-                .Ignore(dest => dest.Total)
-                .Ignore(dest => dest.PaymentImageUrl)
-                .Ignore(dest => dest.PaymentUploadedAt)
-                .Ignore(dest => dest.CreateAt)
-                //.Ignore(dest => dest.UpdatedAt)
-                .Ignore(dest => dest.RowVersion)
-                // El IFormFile tampoco se mapea a la entidad
-                .IgnoreNonMapped(true);
+                //.Ignore(dest => dest.Id)
+                //.Ignore(dest => dest.UserId)
+                //.Ignore(dest => dest.ProductId)
+                //.Ignore(dest => dest.ProducerIdSnapshot)
+                //.Ignore(dest => dest.ProductNameSnapshot)
+                //.Ignore(dest => dest.UnitPriceSnapshot)
+                //.Ignore(dest => dest.Status)
+                //.Ignore(dest => dest.Subtotal)
+                //.Ignore(dest => dest.DeliveryFee)
+                //.Ignore(dest => dest.DeliveryFeeCurrency)
+                //.Ignore(dest => dest.Total)
+                //.Ignore(dest => dest.PaymentImageUrl)
+                //.Ignore(dest => dest.PaymentUploadedAt)
+                //.Ignore(dest => dest.CreateAt)
+                ////.Ignore(dest => dest.UpdatedAt)
+                //.Ignore(dest => dest.RowVersion)
+                //// El IFormFile tampoco se mapea a la entidad
+                //.IgnoreNonMapped(true);
 
             config.NewConfig<Order, OrderResultDto>()
                .Map(d => d.ProductName, s => s.ProductNameSnapshot)

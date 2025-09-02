@@ -1,7 +1,9 @@
 ﻿using Data.Interfaces.Implements.Orders;
 using Data.Repository;
 using Entity.Domain.Models.Implements.Orders;
+using Entity.Domain.Models.Implements.Producers.Products;
 using Entity.Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data.Service.Orders
 {
@@ -9,6 +11,30 @@ namespace Data.Service.Orders
     {
         public OrderRepository(ApplicationDbContext context) : base(context)
         {
+        }
+
+        public override async Task<Order> AddAsync(Order entity)
+        {
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+            _dbSet.Add(entity);
+            return await Task.FromResult(entity); // SaveChanges afuera
+        }
+
+
+        public async Task<bool> UpdateOrderAsync(Order entity)
+        {
+            if (entity == null) throw new ArgumentNullException(nameof(entity));
+
+            var existing = await _dbSet
+                .FirstOrDefaultAsync(e => e.Id == entity.Id && !e.IsDeleted);
+
+            if (existing == null)
+                throw new InvalidOperationException($"No se encontró la orden con ID {entity.Id}.");
+
+            _context.Entry(existing).CurrentValues.SetValues(entity);
+
+            
+            return true; // SaveChanges afuera
         }
     }
 }

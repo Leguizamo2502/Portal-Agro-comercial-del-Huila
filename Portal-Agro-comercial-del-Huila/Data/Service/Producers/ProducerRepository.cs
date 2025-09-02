@@ -16,6 +16,15 @@ namespace Data.Service.Producers
         public ProducerRepository(ApplicationDbContext context) : base(context)
         {
         }
+
+        public async Task<Producer?> GetByCodeProducer(string codeProducer)
+        {
+            return await _dbSet
+                .Include(p=>p.User)
+                    .ThenInclude(u=> u.Person)
+                .FirstOrDefaultAsync(p => p.Code == codeProducer);
+        }
+
         public async Task<int?> GetIdProducer(int userId)
         {
             return await _dbSet
