@@ -43,13 +43,13 @@
           <h5 class="title">Descripción</h5>
           <div class="text">{{ product.description }}</div>
         </div>
-        <div class="mb-0 row">
+        <div class="mb-0 more-info row">
           <h5 class="title">Más Información</h5>
           <div class="information-product">
             <div class="subtitle">Información de Producción:</div>
             <div class="text">{{ product.production }}</div>
           </div>
-          <div class="location-inf">
+          <div class="location-inf ">
             <div class="subtitle">Ubicación:</div>
             <div class="text">{{ product.cityName }}, {{ product.departmentName }}</div>
           </div>
@@ -89,9 +89,12 @@
             <div class="mb-2">
               <span *ngFor="let _ of stars; let i = index">
                 <i class="bi"
-                  [ngClass]="i < selectedRating ? 'bi-star-fill text-warning' : 'bi-star text-secondary'"
+                  [ngClass]="(i + 1) <= (hoverRating || selectedRating) ? 'bi-star-fill text-warning' : 'bi-star text-secondary'"
                   (click)="setRating(i + 1)"
-                  style="cursor: pointer; font-size: 24px;"></i>
+                  (mouseenter)="onMouseEnter(i + 1)"
+                  (mouseleave)="onMouseLeave()"
+                  style="cursor: pointer; font-size: 24px; transition: transform 0.2s ease;">
+                </i>
               </span>
             </div>
 
