@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Entity.DTOs.Order.Create
 {
-    internal class OrderConfirmDto
+    public class OrderConfirmDto
     {
+        public string Answer { get; set; } = null!;
     }
 }

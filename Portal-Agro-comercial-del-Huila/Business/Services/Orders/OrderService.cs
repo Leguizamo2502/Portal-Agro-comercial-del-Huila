@@ -153,5 +153,122 @@ namespace Business.Services.Orders
                 throw new BusinessException("Error al obtener todos los registros.", ex);
             }
         }
+
+        public async Task<OrderSelectDto> AcceptOrder(int userId, int orderId, OrderAcceptDto dto)
+        {
+            // 1) Productor dueño
+            var producerId = await _producerRepository.GetIdProducer(userId)
+                             ?? throw new BusinessException("El usuario no está registrado como productor.");
+
+            // 2) Orden válida y perteneciente
+            var order = await _orderRepository.GetByIdAsync(orderId)
+                       ?? throw new BusinessException("Orden no encontrada.");
+
+            if (order.ProducerIdSnapshot != producerId)
+                throw new BusinessException("No está autorizado para aceptar esta orden.");
+
+            // 3) Estado correcto + comprobante presente
+            if (order.Status != OrderStatus.PendingReview)
+                throw new BusinessException("Solo se pueden aceptar órdenes en estado pendiente.");
+
+            if (string.IsNullOrWhiteSpace(order.PaymentImageUrl))
+                throw new BusinessException("No se puede aceptar sin comprobante de pago.");
+
+            // 4) Reglas de negocio (Fluent ya validó dto.DeliveryFee y DeliveryNotes)
+            var now = DateTime.UtcNow;
+            order.DeliveryFee = dto.DeliveryFee;
+            order.DeliveryFeeCurrency = "COP";
+            order.DeliveryFeeSetAt = now;
+            order.DeliveryNotes = dto.DeliveryNotes;
+
+            order.Total = order.Subtotal + order.DeliveryFee;
+
+            order.ProducerDecisionAt = now;
+            order.Status = OrderStatus.AcceptedAwaitingUser;
+
+            await _orderRepository.UpdateAsync(order);
+
+            // 5) Salida
+            return _mapper.Map<OrderSelectDto>(order);
+        }
+
+        public async Task<OrderSelectDto> RejectOrder(int userId, int orderId, OrderRejectDto dto)
+        {
+            // 1) Productor dueño
+            var producerId = await _producerRepository.GetIdProducer(userId)
+                             ?? throw new BusinessException("El usuario no está registrado como productor.");
+
+            // 2) Orden válida y perteneciente
+            var order = await _orderRepository.GetByIdAsync(orderId)
+                       ?? throw new BusinessException("Orden no encontrada.");
+
+            if (order.ProducerIdSnapshot != producerId)
+                throw new BusinessException("No está autorizado para rechazar esta orden.");
+
+            // 3) Estado correcto
+            if (order.Status != OrderStatus.PendingReview)
+                throw new BusinessException("Solo se pueden rechazar órdenes en estado pendiente.");
+
+            // 4) Aplicar rechazo (Fluent validó Reason)
+            var now = DateTime.UtcNow;
+            order.ProducerDecisionAt = now;
+            order.ProducerDecisionReason = dto.Reason;
+            order.Status = OrderStatus.Rejected;
+
+            await _orderRepository.UpdateAsync(order);
+
+            // 5) Salida
+            return _mapper.Map<OrderSelectDto>(order);
+        }
+
+        public async Task<OrderSelectDto> ConfirmOrderAsync(int userId, int orderId, OrderConfirmDto dto)
+        {
+            // 1) Cargar orden
+            var order = await _orderRepository.GetByIdAsync(orderId)
+                       ?? throw new BusinessException("Orden no encontrada.");
+
+            // 2) Verificar pertenencia (solo el cliente dueño puede confirmar)
+            if (order.UserId != userId)
+                throw new BusinessException("No está autorizado para confirmar esta orden.");
+
+            // 3) Estado correcto
+            if (order.Status != OrderStatus.AcceptedAwaitingUser)
+                throw new BusinessException("Solo se pueden confirmar órdenes aceptadas por el productor.");
+
+            // 4) Verificar ventana de confirmación (>= 48h)
+            var decisionAt = order.ProducerDecisionAt
+                             ?? throw new BusinessException("Orden inválida: falta la fecha de decisión del productor.");
+
+            var enabledAt = order.UserConfirmEnabledAt ?? decisionAt.AddHours(48);
+            if (DateTime.UtcNow < enabledAt)
+                throw new BusinessException("Aún no está habilitada la confirmación de recepción.");
+
+            // 5) Aplicar confirmación
+            var now = DateTime.UtcNow;
+            var answer = dto.Answer?.Trim().ToLowerInvariant();
+
+            if (answer == "yes")
+            {
+                order.UserReceivedAnswer = UserReceivedAnswer.Yes;
+                order.UserReceivedAt = now;
+                order.Status = OrderStatus.Completed;
+            }
+            else if (answer == "no")
+            {
+                order.UserReceivedAnswer = UserReceivedAnswer.No;
+                order.UserReceivedAt = now;
+                order.Status = OrderStatus.Disputed;
+            }
+            else
+            {
+                throw new BusinessException("Answer debe ser 'Yes' o 'No'.");
+            }
+
+            // 6) Persistir
+            await _orderRepository.UpdateAsync(order);
+
+            // 7) Respuesta
+            return _mapper.Map<OrderSelectDto>(order);
+        }
     }
 }

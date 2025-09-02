@@ -12,5 +12,8 @@ namespace Business.Interfaces.Implements.Orders
 
         Task<IEnumerable<OrderSelectDto>> GetOrdersByProducer(int userId);
         Task<IEnumerable<OrderSelectDto>> GetPendingOrdersByProducer(int userId);
+        Task<OrderSelectDto> AcceptOrder(int userId, int orderId, OrderAcceptDto dto);
+        Task<OrderSelectDto> RejectOrder(int userId, int orderId, OrderRejectDto dto);
+        Task<OrderSelectDto> ConfirmOrderAsync(int userId, int orderId, OrderConfirmDto dto);
     }
 }
