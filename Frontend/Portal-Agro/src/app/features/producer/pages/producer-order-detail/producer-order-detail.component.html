@@ -1,0 +1,80 @@
+<!-- src/app/features/producer/orders/detail/producer-order-detail.component.html -->
+<div class="wrapper" *ngIf="!loading && detail; else loadingTpl">
+  <div class="header">
+    <h2>Pedido #{{ detail!.id }}</h2>
+    <span class="chip" [class.pending]="detail!.status==='PendingReview'"
+                      [class.accepted]="detail!.status==='AcceptedAwaitingUser'"
+                      [class.completed]="detail!.status==='Completed'"
+                      [class.rejected]="detail!.status==='Rejected'"
+                      [class.disputed]="detail!.status==='Disputed'">
+      {{ detail!.status | statusTranslate }}
+    </span>
+  </div>
+
+  <div class="grid">
+    <!-- Columna izquierda: info -->
+    <section class="card">
+      <h3>Resumen</h3>
+      <div class="row">
+        <div><strong>Producto:</strong> {{ detail!.productName }}</div>
+        <div><strong>Cantidad:</strong> {{ detail!.quantityRequested }}</div>
+      </div>
+      <div class="row">
+        <div><strong>Precio unitario:</strong> {{ detail!.unitPrice | currency:'COP' }}</div>
+        <div><strong>Subtotal:</strong> {{ detail!.subtotal | currency:'COP' }}</div>
+      </div>
+      <div class="row total">
+        <div><strong>Total:</strong> {{ detail!.total | currency:'COP' }}</div>
+      </div>
+
+      <h3 class="mt">Entrega</h3>
+      <div class="row">
+        <div><strong>Destinatario:</strong> {{ detail!.recipientName }}</div>
+        <div><strong>Teléfono:</strong> {{ detail!.contactPhone }}</div>
+      </div>
+      <div class="row">
+        <div class="col-span-2">
+          <strong>Dirección:</strong>
+          {{ detail!.addressLine1 }}
+          <ng-container *ngIf="detail!.addressLine2">, {{ detail!.addressLine2 }}</ng-container>
+          <ng-container *ngIf="detail!.cityName">, {{ detail!.cityName }}</ng-container>
+        </div>
+      </div>
+
+      <h3 class="mt">Tiempos</h3>
+      <div class="row">
+        <div><strong>Creado:</strong> {{ detail!.createdAt | date:'medium' }}</div>
+        <div *ngIf="detail!.producerDecisionAt"><strong>Decisión productor:</strong> {{ detail!.producerDecisionAt | date:'medium' }}</div>
+      </div>
+    </section>
+
+    <!-- Columna derecha: acciones / comprobante -->
+    <section class="card actions">
+      <h3>Comprobante</h3>
+      <div class="receipt" *ngIf="detail!.paymentImageUrl; else noReceipt">
+        <img [src]="detail!.paymentImageUrl!" alt="Comprobante" (click)="openReceipt()">
+        <small class="muted">Clic para abrir en nueva pestaña</small>
+      </div>
+      <ng-template #noReceipt>
+        <p class="muted">Sin comprobante</p>
+      </ng-template>
+
+      <div class="btns" *ngIf="canAct">
+        <app-button text="Rechazar" color="danger" (clicked)="reject()"></app-button>
+        <app-button text="Aceptar" color="primary" (clicked)="accept()"></app-button>
+      </div>
+
+      <div *ngIf="!canAct" class="muted">
+        Acciones no disponibles para el estado actual.
+      </div>
+
+      <div class="mt">
+        <app-button text="Volver" color="secondary" [back]="true"></app-button>
+      </div>
+    </section>
+  </div>
+</div>
+
+<ng-template #loadingTpl>
+  <p class="muted">Cargando detalle…</p>
+</ng-template>

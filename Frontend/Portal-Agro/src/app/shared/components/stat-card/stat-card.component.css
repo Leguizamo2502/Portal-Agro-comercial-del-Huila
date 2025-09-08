@@ -1,43 +1,50 @@
+:host { --card-color:#19b361; }
 
-/* src/app/shared/components/stat-card/stat-card.component.css */
+/* Variantes */
+.stat-card.success { --card-color:#19b361; }   /* verde */
+.stat-card.warning { --card-color:#f59e0b; }   /* ámbar */
+.stat-card.info    { --card-color:#2563eb; }   /* azul */
+.stat-card.neutral { --card-color:#64748b; }   /* gris */
+
 .stat-card {
   display: grid;
   place-items: center;
   gap: 6px;
   padding: 14px 18px;
-  border: 1.5px solid #19b361;          /* verde */
+  border: 1.5px solid var(--card-color);
   border-radius: 12px;
   background: #fff;
   min-width: 180px;
   min-height: 96px;
-  max-width: 200px;
+  max-width: 220px;
+  text-decoration: none;
+  color: inherit;
   box-shadow: 0 0 0 rgba(0,0,0,0);
-  transition: box-shadow .15s ease, transform .15s ease;
+  transition: box-shadow .15s ease, transform .15s ease, border-color .2s ease;
   text-align: center;
 }
 
-.stat-card:hover {
-  box-shadow: 0 4px 14px rgba(0,0,0,.08);
-  transform: translateY(-1px);
-}
+.stat-card.clickable { cursor: pointer; }
+.stat-card.clickable:hover { box-shadow: 0 6px 18px rgba(0,0,0,.08); transform: translateY(-1px); }
 
 .icon-wrap mat-icon {
-  font-size: 28px;
-  width: 28px;
-  height: 28px;
-  line-height: 28px;
-  color: #19b361;
+  font-size: 28px; width: 28px; height: 28px; line-height: 28px;
+  color: var(--card-color);
 }
 
-.label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-}
+.label { font-size: 14px; font-weight: 600; color: #333; }
+.value { font-size: 20px; font-weight: 800; color: #1f2937; margin-top: -2px; }
 
-.value {
-  font-size: 18px;
-  font-weight: 700;
-  color: #333;
-  margin-top: -2px;
+/* Skeleton */
+.skeleton-icon,
+.skeleton-line {
+  background: linear-gradient(90deg, #f2f2f2 25%, #e9e9e9 37%, #f2f2f2 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.2s ease-in-out infinite;
+  border-radius: 8px;
 }
+.skeleton-icon { width: 28px; height: 28px; }
+.skeleton-line { height: 12px; width: 70%; margin-top: 6px; }
+.skeleton-line.w60 { width: 60%; }
+.skeleton-line.w40 { width: 40%; }
+@keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }

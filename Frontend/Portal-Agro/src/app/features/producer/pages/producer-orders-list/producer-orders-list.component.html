@@ -1,0 +1,76 @@
+<!-- src/app/features/producer/orders/producer-orders-list.component.html -->
+<div class="page">
+  <div class="header">
+    <h2>Pedidos</h2>
+
+    <div class="filters">
+      <button
+        class="chip"
+        [class.active]="statusFilter === 'pending'"
+        (click)="goFilter('pending')">
+        <mat-icon>hourglass_empty</mat-icon>
+        Pendientes
+      </button>
+
+      <button
+        class="chip"
+        [class.active]="statusFilter === 'all'"
+        (click)="goFilter('all')">
+        <mat-icon>list_alt</mat-icon>
+        Todos
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="skeleton" *ngIf="isLoading">
+    <div class="skeleton-card" *ngFor="let _ of [1,2,3]"></div>
+  </div>
+
+  <!-- Lista -->
+  <div class="grid" *ngIf="!isLoading && items.length; else emptyTpl">
+    <div class="card" *ngFor="let o of items">
+      <div class="card-header">
+        <div class="title">
+          <mat-icon>shopping_bag</mat-icon>
+          <span>#{{ o.id }} · {{ o.productName }}</span>
+        </div>
+        <span class="status" [class]="'status ' + statusChipColor(o.status)">
+          {{ o.status | statusTranslate }}
+        </span>
+      </div>
+
+      <div class="card-body">
+        <div class="row">
+          <div>Fecha:</div>
+          <div>{{ o.createdAt| date : "mediumDate" : "" : "es-CO"}}</div>
+        </div>
+        <div class="row">
+          <div>Cantidad:</div>
+          <div>{{ o.quantityRequested }}</div>
+        </div>
+        <div class="row">
+          <div>Subtotal:</div>
+          <div>{{ asCurrency(o.subtotal) }}</div>
+        </div>
+        <div class="row total">
+          <div>Total:</div>
+          <div>{{ asCurrency(o.total) }}</div>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <a class="link" [routerLink]="['/account/producer/orders', o.id]" [queryParams]="{ view: 'for-producer' }">
+          Ver detalle
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #emptyTpl>
+    <div class="empty">
+      <mat-icon>inbox</mat-icon>
+      <p>No hay pedidos para mostrar.</p>
+    </div>
+  </ng-template>
+</div>

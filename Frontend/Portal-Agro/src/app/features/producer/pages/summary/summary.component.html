@@ -1,19 +1,40 @@
+<h1 class="title top">Resumen</h1>
 
-    <h1 class="title top">Resumen</h1>
+<div class="cont-stat-card">
+  <!-- <app-stat-card [text]="'Pedidos Pendientes'"></app-stat-card>
+        <app-stat-card [text]="'Pedidos Completado'" [icon]="'check_circle'"></app-stat-card> -->
+  <app-stat-card
+    icon="hourglass_empty"
+    text="Pedidos pendientes"
+    color="warning"
+    [clickable]="true"
+    [to]="['/account/producer/orders']"
+    [queryParams]="{ status: 'pending' }"
+  >
+  </app-stat-card>
 
+  <!-- Completados -> pestaña 'all' o 'completed' si luego filtras -->
+  <app-stat-card
+    icon="check_circle"
+    text="Pedidos completados"
+    color="success"
+    [clickable]="true"
+    [to]="['/account/producer/orders']"
+    [queryParams]="{ status: 'all' }"
+  >
+  </app-stat-card>
+</div>
 
-
-
-    <div class="cont-stat-card">
-        <app-stat-card [text]="'Pedidos Pendientes'"></app-stat-card>
-        <app-stat-card [text]="'Pedidos Completado'" [icon]="'check_circle'"></app-stat-card>
+<div class="row mt-4">
+  <div class="col-md-6 col-sm-8">
+    <div class="chart-container">
+      <canvas
+        baseChart
+        [data]="barChartData"
+        [options]="barChartOptions"
+        [type]="'bar'"
+      >
+      </canvas>
     </div>
-
-    <div class="row mt-4">
-        <div class="col-md-6 col-sm-8">
-            <div class="chart-container">
-                <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="'bar'">
-                </canvas>
-            </div>
-        </div>
-    </div>
+  </div>
+</div>
