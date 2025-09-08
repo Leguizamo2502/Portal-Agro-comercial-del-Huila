@@ -26,6 +26,8 @@ namespace Entity.Domain.Models.Implements.Auth
         public ICollection<RolUser> RolUsers { get; set; } = [];
         public ICollection<Favorite> Favorites { get; set; } = [];
         public ICollection<Review> Reviews { get; set; } = [];
+        public ICollection<Order> Orders { get; set; } = [];
+
 
 
     }

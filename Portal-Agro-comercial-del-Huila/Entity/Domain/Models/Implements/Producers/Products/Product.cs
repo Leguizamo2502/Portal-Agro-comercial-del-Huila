@@ -34,6 +34,7 @@ namespace Entity.Domain.Models.Implements.Producers.Products
         // Relación N–M vía pivote
         public ICollection<ProductFarm> ProductFarms { get; set; } = [];
         public ICollection<Review> Reviews { get; set; } = [];
+        public ICollection<Order> Orders { get; set; } = [];
 
     }
 }

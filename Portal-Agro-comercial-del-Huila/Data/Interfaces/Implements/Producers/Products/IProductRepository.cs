@@ -10,5 +10,7 @@ namespace Data.Interfaces.Implements.Producers.Products
         Task<IEnumerable<Product>> GetByIdsFavoritesAsync(IEnumerable<int> ids);
         Task<IEnumerable<Product>> GetByCategoryAsync(int categoryId);
         Task<IEnumerable<Product>> GetByCategoriesAsync(List<int> categoryIds, bool includeDescendants);
+        Task<IEnumerable<Product>> GetFeaturedAsync(int limit);
+        Task<IEnumerable<Product>> GetAllWithLimitAsync(int? limit);
     }
 }

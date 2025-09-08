@@ -61,6 +61,8 @@ namespace Data.Service.Auth
         {
             return await _dbSet
                 .Include(u => u.Person)
+                    .ThenInclude(p => p.City)
+                        .ThenInclude(c => c.Department)
                 .FirstOrDefaultAsync(u => u.Id == userId);
         }
 

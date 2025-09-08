@@ -270,9 +270,9 @@ namespace Business.Services.Orders
             var decisionAt = order.ProducerDecisionAt
                              ?? throw new BusinessException("Orden inválida: falta la fecha de decisión del productor.");
 
-            var enabledAt = order.UserConfirmEnabledAt ?? decisionAt.AddHours(48);
-            if (DateTime.UtcNow < enabledAt)
-                throw new BusinessException("Aún no está habilitada la confirmación de recepción.");
+            //var enabledAt = order.UserConfirmEnabledAt ?? decisionAt.AddHours(48);
+            //if (DateTime.UtcNow < enabledAt)
+            //    throw new BusinessException("Aún no está habilitada la confirmación de recepción.");
 
             // Concurrencia: RowVersion del request (Base64 -> byte[])
             order.RowVersion = Convert.FromBase64String(dto.RowVersion);

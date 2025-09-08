@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Entity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250906234739_Inicial")]
+    [Migration("20250908212248_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -1351,7 +1351,7 @@ namespace Entity.Migrations
                             Code = "M3QPD6Y8ZR",
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Hola vendo papa",
-                            IsDeleted = true,
+                            IsDeleted = false,
                             QrUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1756782308/qr_png_e6xgom.png",
                             UserId = 3
                         },
@@ -1362,7 +1362,7 @@ namespace Entity.Migrations
                             Code = "AB7KX92TQF",
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Hola vendo papa modo admin",
-                            IsDeleted = true,
+                            IsDeleted = false,
                             QrUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1756782308/qr_png_e6xgom.png",
                             UserId = 1
                         });
@@ -3580,13 +3580,13 @@ namespace Entity.Migrations
             modelBuilder.Entity("Entity.Domain.Models.Implements.Orders.Order", b =>
                 {
                     b.HasOne("Entity.Domain.Models.Implements.Producers.Products.Product", "Product")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Entity.Domain.Models.Implements.Auth.User", "User")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -3790,6 +3790,8 @@ namespace Entity.Migrations
                 {
                     b.Navigation("Favorites");
 
+                    b.Navigation("Orders");
+
                     b.Navigation("Producer");
 
                     b.Navigation("Reviews");
@@ -3833,6 +3835,8 @@ namespace Entity.Migrations
             modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.Products.Product", b =>
                 {
                     b.Navigation("Favorites");
+
+                    b.Navigation("Orders");
 
                     b.Navigation("ProductFarms");
 

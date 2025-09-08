@@ -1,0 +1,18 @@
+/* Dos columnas con espacio uniforme */
+.row-2cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Opcional: asegurar que los mat-form-field ocupen el ancho */
+.custom-mat-field {
+  width: 100%;
+}
+
+/* Responsivo: en pantallas pequeñas, apilar */
+@media (max-width: 768px) {
+  .row-2cols {
+    grid-template-columns: 1fr;
+  }
+}

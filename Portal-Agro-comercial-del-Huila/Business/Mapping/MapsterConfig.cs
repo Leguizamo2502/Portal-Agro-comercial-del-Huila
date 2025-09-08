@@ -63,6 +63,8 @@ namespace Business.Mapping
                 .Map(dest => dest.Address, src => src.Person.Address)
                 .Map(dest => dest.Identification, src => src.Person.Identification)
                 .Map(dest => dest.CityId, src => src.Person.CityId)
+                .Map(dest => dest.DepartmentId, src => src.Person.City.DepartmentId)
+
                 .Map(dest => dest.CityName, src => src.Person.City.Name);
 
 

@@ -872,8 +872,8 @@ namespace Entity.Migrations
                 columns: new[] { "Id", "Active", "Code", "CreateAt", "Description", "IsDeleted", "QrUrl", "UserId" },
                 values: new object[,]
                 {
-                    { 1, true, "M3QPD6Y8ZR", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hola vendo papa", true, "https://res.cloudinary.com/djj163sc9/image/upload/v1756782308/qr_png_e6xgom.png", 3 },
-                    { 2, true, "AB7KX92TQF", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hola vendo papa modo admin", true, "https://res.cloudinary.com/djj163sc9/image/upload/v1756782308/qr_png_e6xgom.png", 1 }
+                    { 1, true, "M3QPD6Y8ZR", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hola vendo papa", false, "https://res.cloudinary.com/djj163sc9/image/upload/v1756782308/qr_png_e6xgom.png", 3 },
+                    { 2, true, "AB7KX92TQF", new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Hola vendo papa modo admin", false, "https://res.cloudinary.com/djj163sc9/image/upload/v1756782308/qr_png_e6xgom.png", 1 }
                 });
 
             migrationBuilder.InsertData(

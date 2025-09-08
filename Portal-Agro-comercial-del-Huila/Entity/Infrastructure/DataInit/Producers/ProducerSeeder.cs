@@ -24,7 +24,7 @@ namespace Entity.Infrastructure.DataInit.Producers
                     UserId = 3,
                     QrUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1756782308/qr_png_e6xgom.png",
                     Active = true,
-                    IsDeleted = true,
+                    IsDeleted = false,
                     CreateAt = new DateTime(2025, 1, 1)
                 },
                 new Producer
@@ -35,7 +35,7 @@ namespace Entity.Infrastructure.DataInit.Producers
                     UserId = 1,
                     QrUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1756782308/qr_png_e6xgom.png",
                     Active = true,
-                    IsDeleted = true,
+                    IsDeleted = false,
                     CreateAt = new DateTime(2025, 1, 1)
                 }
                 );

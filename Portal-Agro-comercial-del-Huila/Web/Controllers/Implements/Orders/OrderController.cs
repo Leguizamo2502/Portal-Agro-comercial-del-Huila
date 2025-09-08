@@ -113,7 +113,7 @@ namespace Web.Controllers.Implements.Orders
             try
             {
                 var userId = HttpContext.GetUserId();
-                OrderDetailDto dto = await _orderService.GetOrderDetailForUserAsync(userId, id);
+                var dto = await _orderService.GetOrderDetailForUserAsync(userId, id);
                 return Ok(dto);
             }
             catch (BusinessException ex)
