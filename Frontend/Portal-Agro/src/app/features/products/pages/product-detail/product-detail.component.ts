@@ -4,18 +4,16 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ProductSelectModel } from '../../models/product/product.model';
-import { ProductService } from '../../services/product/product.service';
-import { ReviewService } from '../../services/review/review.service';
-import {
-  ReviewRegisterModel,
-  ReviewSelectModel,
-} from '../../models/product/product.model'; // o desde review.models
-import { ButtonComponent } from '../button/button.component';
 import { firstValueFrom, Observable, of } from 'rxjs';
-import { UserMeDto } from '../../../Core/Models/login.model';
-import { AuthState } from '../../../Core/services/auth/auth.state';
 import Swal from 'sweetalert2';
+import { UserMeDto } from '../../../../Core/Models/login.model';
+import { AuthState } from '../../../../Core/services/auth/auth.state';
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { ProductSelectModel, ReviewSelectModel, ReviewRegisterModel } from '../../../../shared/models/product/product.model';
+import { ProductService } from '../../../../shared/services/product/product.service';
+import { ReviewService } from '../../../../shared/services/review/review.service';
+import { MatDialog } from '@angular/material/dialog';
+import { OrderCreateDialogComponent, OrderCreateDialogData } from '../../modals/order-create-dialog/order-create-dialog.component';
 
 @Component({
   selector: 'app-product-detail',
@@ -30,6 +28,7 @@ export class ProductDetailComponent implements OnInit {
   private productService = inject(ProductService);
   private reviewService = inject(ReviewService);
   private authState = inject(AuthState);
+  private dialog = inject(MatDialog); 
 
   // Usuario actual (reactivo)
   me$: Observable<UserMeDto | null> = of(null);
@@ -100,6 +99,63 @@ export class ProductDetailComponent implements OnInit {
       error: () => {
         this.loadingReviews = false;
       },
+    });
+  }
+  async openCreateOrder(): Promise<void> {
+    console.log("Hola")
+    // Requiere login
+    const me = await firstValueFrom(this.me$);
+    if (!me) {
+      const res = await Swal.fire({
+        icon: 'info',
+        title: 'Inicia sesión',
+        text: 'Debes iniciar sesión para crear un pedido.',
+        confirmButtonText: 'Ir a iniciar sesión',
+        showCancelButton: true,
+        cancelButtonText: 'Cancelar',
+      });
+      if (res.isConfirmed) {
+        this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
+      }
+      return;
+    }
+
+    // Guard: sin stock
+    if ((this.product?.stock ?? 0) <= 0) {
+      await Swal.fire({
+        icon: 'warning',
+        title: 'Sin stock',
+        text: 'Este producto no tiene stock disponible.',
+        confirmButtonText: 'Entendido',
+      });
+      return;
+    }
+
+    const data: OrderCreateDialogData = {
+      productId: this.product.id,
+      productName: this.product.name,
+      unitPrice: this.product.price,
+      stock: this.product.stock,
+      shippingNote: this.product.shippingIncluded ? 'Envío gratis' : 'No incluye envío',
+    };
+
+    const ref = this.dialog.open(OrderCreateDialogComponent, {
+      width: '640px',
+      data,
+      disableClose: true,
+    });
+
+    ref.afterClosed().subscribe((res: { IsSuccess: boolean; OrderId: number } | undefined) => {
+      if (res?.IsSuccess) {
+        Swal.fire({
+          toast: true,
+          position: 'bottom-end',
+          timer: 1800,
+          showConfirmButton: false,
+          icon: 'success',
+          title: `Pedido #${res.OrderId} creado`,
+        });
+      }
     });
   }
 

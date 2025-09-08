@@ -1,19 +1,18 @@
-﻿using Business.Interfaces.IBusiness;
-using Entity.Domain.Models.Implements.Orders;
-using Entity.DTOs.Order.Create;
+﻿using Entity.DTOs.Order.Create;
 using Entity.DTOs.Order.Select;
-using Entity.DTOs.Producer.Farm.Select;
 
 namespace Business.Interfaces.Implements.Orders
 {
     public interface IOrderService 
     {
-        Task<OrderResultDto> CreateOrderAsync(int userId, OrderCreateDto dto);
+        Task<int> CreateOrderAsync(int userId, OrderCreateDto dto);
 
-        Task<IEnumerable<OrderSelectDto>> GetOrdersByProducer(int userId);
-        Task<IEnumerable<OrderSelectDto>> GetPendingOrdersByProducer(int userId);
-        Task<OrderSelectDto> AcceptOrder(int userId, int orderId, OrderAcceptDto dto);
-        Task<OrderSelectDto> RejectOrder(int userId, int orderId, OrderRejectDto dto);
-        Task<OrderSelectDto> ConfirmOrderAsync(int userId, int orderId, OrderConfirmDto dto);
+        Task<IEnumerable<OrderListItemDto>> GetOrdersByProducerAsync(int userId);
+        Task<IEnumerable<OrderListItemDto>> GetPendingOrdersByProducerAsync(int userId);
+        Task<OrderDetailDto> GetOrderDetailForProducerAsync(int userId, int orderId);
+        Task<OrderDetailDto> GetOrderDetailForUserAsync(int userId, int orderId);
+        Task AcceptOrderAsync(int userId, int orderId, OrderAcceptDto dto);
+        Task RejectOrderAsync(int userId, int orderId, OrderRejectDto dto);
+        Task ConfirmOrderAsync(int userId, int orderId, OrderConfirmDto dto);
     }
 }

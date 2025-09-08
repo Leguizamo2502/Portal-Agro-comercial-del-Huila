@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Entity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250902132805_Inicial")]
+    [Migration("20250906234739_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -970,22 +970,6 @@ namespace Entity.Migrations
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("DeliveryFee")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("DeliveryFeeCurrency")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("nvarchar(8)");
-
-                    b.Property<DateTime?>("DeliveryFeeSetAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeliveryNotes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -1004,6 +988,9 @@ namespace Entity.Migrations
 
                     b.Property<int>("ProducerIdSnapshot")
                         .HasColumnType("int");
+
+                    b.Property<string>("ProducerNotes")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");

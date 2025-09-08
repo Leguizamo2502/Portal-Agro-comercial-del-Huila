@@ -1,17 +1,25 @@
-﻿// Entity/DTOs/Validations/Orders/OrderRejectDtoValidator.cs
+﻿// Entity.Validations/Orders/OrderRejectDtoValidator.cs
 using Entity.DTOs.Order.Create;
 using FluentValidation;
+using System;
 
-namespace Entity.DTOs.Validations.Orders
+public class OrderRejectDtoValidator : AbstractValidator<OrderRejectDto>
 {
-    public class OrderRejectDtoValidator : AbstractValidator<OrderRejectDto>
+    public OrderRejectDtoValidator()
     {
-        public OrderRejectDtoValidator()
-        {
-            RuleFor(x => x.Reason)
-                .NotEmpty().WithMessage("El motivo es obligatorio.")
-                .MinimumLength(10).WithMessage("El motivo debe tener al menos 10 caracteres.")
-                .MaximumLength(500);
-        }
+        RuleFor(x => x.Reason)
+            .NotEmpty()
+            .MaximumLength(300);
+
+        RuleFor(x => x.RowVersion)
+            .NotEmpty()
+            .Must(IsBase64).WithMessage("RowVersion inválido.");
+    }
+
+    private static bool IsBase64(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value)) return false;
+        try { Convert.FromBase64String(value); return true; }
+        catch { return false; }
     }
 }

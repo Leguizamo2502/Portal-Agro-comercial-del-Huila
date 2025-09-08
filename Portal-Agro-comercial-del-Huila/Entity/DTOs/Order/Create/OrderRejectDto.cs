@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Entity.DTOs.Order.Create
+﻿namespace Entity.DTOs.Order.Create
 {
     public class OrderRejectDto
     {
         public string Reason { get; set; } = null!;
+        public string RowVersion { get; set; } = null!; // Base64 del RowVersion
     }
 }

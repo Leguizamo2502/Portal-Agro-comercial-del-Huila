@@ -6,6 +6,7 @@ namespace Entity.Validation.Validations.Orders.Orders
 {
     public class CreateOrderDtoValidator : AbstractValidator<OrderCreateDto>
     {
+
         public CreateOrderDtoValidator()
         {
             // Producto

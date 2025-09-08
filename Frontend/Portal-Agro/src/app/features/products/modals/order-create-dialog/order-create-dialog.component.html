@@ -1,0 +1,168 @@
+<div class="form-wrapper-transparent">
+  <mat-horizontal-stepper [linear]="true">
+
+    <!-- Paso 1: Producto -->
+    <mat-step [stepControl]="productGroup">
+      <form [formGroup]="productGroup">
+        <ng-template matStepLabel>Producto</ng-template>
+
+        <div class="info">
+          <h3>Resumen del producto</h3>
+          <span>Confirma los datos y la cantidad</span>
+        </div>
+
+        <div class="product-summary">
+          <div class="row-2">
+            <div>
+              <div class="label">Producto</div>
+              <div class="value strong">{{ data.productName }}</div>
+            </div>
+
+            <div>
+              <div class="label">Precio unitario</div>
+              <div class="value">{{ formatCop(data.unitPrice) }}</div>
+            </div>
+          </div>
+
+          <div class="row-2">
+            <div>
+              <div class="label">Disponibilidad</div>
+              <div class="value">{{ data.stock }} en stock</div>
+            </div>
+
+            <div>
+              <div class="label">Envío</div>
+              <div class="value">{{ data.shippingNote }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row-2">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Cantidad</mat-label>
+            <input matInput type="number" formControlName="quantityRequested" required min="1" [max]="data.stock" />
+            <mat-hint>Máximo {{ data.stock }}</mat-hint>
+            <mat-error *ngIf="productGroup.get('quantityRequested')?.hasError('positiveInt')">Debe ser mayor a 0</mat-error>
+            <mat-error *ngIf="productGroup.get('quantityRequested')?.hasError('max')">Excede stock</mat-error>
+          </mat-form-field>
+
+          <div class="totals-box">
+            <div class="label">Subtotal</div>
+            <div class="total">{{ formatCop(subtotal) }}</div>
+            <small class="muted">No se cobra envío en la plataforma</small>
+          </div>
+        </div>
+
+        <div class="actions">
+          <app-button text="Siguiente" color="primary" [disabled]="productGroup.invalid" [stepperAction]="'next'">
+          </app-button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- Paso 2: Entrega -->
+    <mat-step [stepControl]="deliveryGroup">
+      <form [formGroup]="deliveryGroup">
+        <ng-template matStepLabel>Entrega</ng-template>
+
+        <div class="info">
+          <h3>Datos de entrega</h3>
+          <span>Contacto y dirección</span>
+        </div>
+
+        <div class="row-2">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Nombre del destinatario</mat-label>
+            <input matInput formControlName="recipientName" required />
+            <mat-error *ngIf="deliveryGroup.get('recipientName')?.hasError('required')">Obligatorio</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Teléfono de contacto</mat-label>
+            <input matInput formControlName="contactPhone" required />
+            <mat-error *ngIf="deliveryGroup.get('contactPhone')?.invalid">Teléfono inválido</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="row-2 top">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Departamento</mat-label>
+            <mat-select formControlName="departmentId" required (selectionChange)="onDepartmentChange($event.value)">
+              <mat-option *ngFor="let d of departments" [value]="d.id">{{ d.name }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="deliveryGroup.get('departmentId')?.hasError('required')">Obligatorio</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Ciudad</mat-label>
+            <mat-select formControlName="cityId" required>
+              <mat-option *ngFor="let c of cities" [value]="c.id">{{ c.name }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="deliveryGroup.get('cityId')?.invalid">Seleccione ciudad</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="row-2">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Dirección</mat-label>
+            <input matInput formControlName="addressLine1" required />
+            <mat-error *ngIf="deliveryGroup.get('addressLine1')?.hasError('required')">Obligatorio</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Complemento (opcional)</mat-label>
+            <input matInput formControlName="addressLine2" />
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Notas adicionales (opcional)</mat-label>
+          <textarea matInput rows="3" formControlName="additionalNotes"></textarea>
+        </mat-form-field>
+
+        <div class="actions space-between">
+          <app-button text="Anterior" color="secondary" [stepperAction]="'previous'"></app-button>
+          <app-button text="Siguiente" color="primary" [disabled]="deliveryGroup.invalid" [stepperAction]="'next'">
+          </app-button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- Paso 3: Comprobante -->
+    <mat-step [stepControl]="paymentGroup">
+      <form [formGroup]="paymentGroup">
+        <ng-template matStepLabel>Comprobante</ng-template>
+
+        <div class="info">
+          <h3>Comprobante de pago</h3>
+          <span>Formatos: JPG, PNG, WEBP · Máx {{ MAX_FILE_MB }} MB</span>
+        </div>
+
+        <div class="drop-zone" [class.dragover]="false" (click)="fileInput.click()">
+          <mat-icon>cloud_upload</mat-icon>
+          <p>Haz clic para seleccionar una imagen</p>
+          <small>El archivo se enviará como multipart/form-data</small>
+          <input #fileInput type="file" accept="image/*" hidden (change)="onFilePicked(fileInput.files)" />
+        </div>
+
+        <div class="preview" *ngIf="paymentPreview">
+          <img [src]="paymentPreview" alt="Comprobante" />
+          <button mat-icon-button color="warn" class="remove-btn" (click)="removeFile()">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+
+        <div class="actions space-between">
+          <app-button text="Anterior" color="secondary" [stepperAction]="'previous'"></app-button>
+          <app-button text="Crear pedido" color="primary"
+                      [disabled]="isSubmitting || paymentGroup.invalid" (clicked)="submit()">
+          </app-button>
+        </div>
+      </form>
+    </mat-step>
+  </mat-horizontal-stepper>
+
+  <div class="footer-actions">
+    <app-button text="Cancelar" color="secondary" (clicked)="close()"></app-button>
+  </div>
+</div>
