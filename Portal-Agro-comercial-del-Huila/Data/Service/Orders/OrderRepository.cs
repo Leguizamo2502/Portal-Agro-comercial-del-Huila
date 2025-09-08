@@ -67,5 +67,13 @@ namespace Data.Service.Orders
                 .OrderByDescending(o => o.CreateAt)
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<Order>> GetOrdersByUserAsync(int userId)
+        {
+            return await _dbSet.AsNoTracking()
+               .Where(o => o.UserId == userId && !o.IsDeleted && o.Active)
+               .OrderByDescending(o => o.CreateAt)
+               .ToListAsync();
+        }
     }
 }

@@ -1,0 +1,127 @@
+<!-- src/app/pages/orders/order-user-detail.component.html -->
+<div class="wrap">
+  <div class="header">
+    <app-button [text]="'Volver'" [icon]="'arrow_back'" [back]="true"></app-button>
+    <h2>Detalle de Pedido</h2>
+  </div>
+
+  <ng-container *ngIf="!loading && detail; else loadingTpl">
+    <div class="card">
+      <div class="card-head">
+        <div class="id">Pedido #{{ detail!.id }}</div>
+        <span [class]="statusChip.cls">{{ statusChip.text }}</span>
+      </div>
+
+      <div class="grid">
+        <!-- resumen -->
+        <section>
+          <h3>Resumen</h3>
+          <div class="row">
+            <div class="label">Producto</div>
+            <div class="value">{{ detail!.productName }}</div>
+          </div>
+          <div class="row">
+            <div class="label">Precio unitario</div>
+            <div class="value">{{detail!.unitPrice | currency:'COP'}}</div>
+          </div>
+          <div class="row">
+            <div class="label">Cantidad</div>
+            <div class="value">{{ detail!.quantityRequested }}</div>
+          </div>
+          <div class="row">
+            <div class="label">Subtotal</div>
+            <div class="value strong">{{ detail!.subtotal | currency:'COP'}}</div>
+          </div>
+          <div class="row total">
+            <div class="label">Total</div>
+            <div class="value strong">{{ detail!.total | currency:'COP'}}</div>
+          </div>
+          <div class="row">
+            <div class="label">Creado</div>
+            <div class="value">{{ detail!.createdAt | date : "mediumDate" : "" : "es-CO" }}</div>
+          </div>
+        </section>
+
+        <!-- entrega -->
+        <section>
+          <h3>Entrega</h3>
+          <div class="row">
+            <div class="label">Destinatario</div>
+            <div class="value">{{ detail!.recipientName }}</div>
+          </div>
+          <div class="row">
+            <div class="label">Teléfono</div>
+            <div class="value">{{ detail!.contactPhone }}</div>
+          </div>
+          <div class="row">
+            <div class="label">Dirección</div>
+            <div class="value">
+              {{ detail!.addressLine1 }}<ng-container *ngIf="detail!.addressLine2">, {{ detail!.addressLine2 }}</ng-container>
+            </div>
+          </div>
+          <div class="row">
+            <div class="label">Ciudad</div>
+            <div class="value">{{ detail!.cityName || ('#' + detail!.cityId) }}</div>
+          </div>
+        </section>
+
+        <!-- comprobante -->
+        <section>
+          <h3>Comprobante de Pago</h3>
+          <ng-container *ngIf="detail!.paymentImageUrl; else noImg">
+            <img class="receipt" [src]="detail!.paymentImageUrl!" alt="Comprobante"
+                 (click)="showImage = true" />
+            <div class="muted">Subido: {{detail!.paymentUploadedAt | date:'medium'}}</div>
+          </ng-container>
+          <ng-template #noImg>
+            <div class="muted">No disponible.</div>
+          </ng-template>
+        </section>
+      </div>
+
+      <!-- notas/decisión productor -->
+      <div class="producer-block" *ngIf="detail!.producerDecisionAt">
+        <div class="row">
+          <div class="label">Fecha decisión productor</div>
+          <div class="value">{{ detail!.producerDecisionAt | date:'medium'}}</div>
+        </div>
+        <div class="row" *ngIf="detail!.producerNotes">
+          <div class="label">Notas del productor</div>
+          <div class="value">{{ detail!.producerNotes }}</div>
+        </div>
+        <div class="row" *ngIf="detail!.producerDecisionReason">
+          <div class="label">Motivo</div>
+          <div class="value">{{ detail!.producerDecisionReason }}</div>
+        </div>
+      </div>
+
+      <!-- acciones -->
+      <div class="actions" *ngIf="canConfirm">
+        <app-button [text]="'No, hubo problema'" [color]="'danger'"
+                    [disabled]="confirming"
+                    (clicked)="confirm('no')"></app-button>
+
+        <app-button [text]="'Sí, recibido'" [color]="'primary'"
+                    [disabled]="confirming"
+                    (clicked)="confirm('yes')"></app-button>
+      </div>
+
+      <div class="muted" *ngIf="!canConfirm">
+        <i>La confirmación se habilita cuando el productor acepta el pedido.</i>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #loadingTpl>
+    <div class="card skeleton">
+      <div class="line w40"></div>
+      <div class="line"></div>
+      <div class="line w60"></div>
+    </div>
+  </ng-template>
+
+  <!-- visor simple para la imagen -->
+  <div class="lightbox" *ngIf="showImage" (click)="showImage = false">
+    <img [src]="detail?.paymentImageUrl || ''" alt="Comprobante ampliado" />
+  </div>
+</div>

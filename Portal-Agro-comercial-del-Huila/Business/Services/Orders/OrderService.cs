@@ -338,8 +338,14 @@ namespace Business.Services.Orders
             }
         }
 
+        public async Task<IEnumerable<OrderListItemDto>> GetOrdersByUserAsync(int userId)
+        {
+            var entities = await _orderRepository.GetOrdersByUserAsync(userId);
+            return _mapper.Map<IEnumerable<OrderListItemDto>>(entities);
+        }
 
-       
+
+
 
 
         // ===================== Helpers privados =====================

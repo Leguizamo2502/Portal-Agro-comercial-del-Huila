@@ -187,5 +187,27 @@ namespace Web.Controllers.Implements.Orders
                 return StatusCode(500, new { IsSuccess = false, Message = "Error inesperado.", Detail = ex.Message });
             }
         }
+
+        // GET: api/v1/order/mine  (pedidos del cliente autenticado)
+        [HttpGet("mine")]
+        public async Task<IActionResult> GetMine()
+        {
+            try
+            {
+                var userId = HttpContext.GetUserId();
+                var result = await _orderService.GetOrdersByUserAsync(userId);
+                return Ok(result);
+            }
+            catch (BusinessException ex)
+            {
+                return BadRequest(new { IsSuccess = false, Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error inesperado al listar pedidos del usuario");
+                return StatusCode(500, new { IsSuccess = false, Message = "Error inesperado.", Detail = ex.Message });
+            }
+        }
+
     }
 }

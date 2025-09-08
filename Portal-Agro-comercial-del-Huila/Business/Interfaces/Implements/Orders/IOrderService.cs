@@ -14,5 +14,8 @@ namespace Business.Interfaces.Implements.Orders
         Task AcceptOrderAsync(int userId, int orderId, OrderAcceptDto dto);
         Task RejectOrderAsync(int userId, int orderId, OrderRejectDto dto);
         Task ConfirmOrderAsync(int userId, int orderId, OrderConfirmDto dto);
+
+        Task<IEnumerable<OrderListItemDto>> GetOrdersByUserAsync(int userId);
+
     }
 }

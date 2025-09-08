@@ -8,5 +8,8 @@ namespace Data.Interfaces.Implements.Orders
         Task<bool> UpdateOrderAsync(Order entity);
         Task<IEnumerable<Order>> GetOrdersByProducerAsync(int producerId);
         Task<IEnumerable<Order>> GetPendingOrdersByProducerAsync(int producerId);
+        // IOrderRepository
+        Task<IEnumerable<Order>> GetOrdersByUserAsync(int userId);
+
     }
 }

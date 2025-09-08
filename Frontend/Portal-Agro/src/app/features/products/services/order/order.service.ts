@@ -26,43 +26,33 @@ export class OrderService {
     return this.http.post<CreateOrderResponse>(this.urlBase, fd);
   }
 
-  // Producer lists
-    /** Pedidos del productor (todas) */
+  // Producer
   getProducerOrders(): Observable<OrderListItemModel[]> {
     return this.http.get<OrderListItemModel[]>(this.urlBase);
   }
-
-  /** Pedidos del productor en estado pendiente */
   getProducerPendingOrders(): Observable<OrderListItemModel[]> {
     return this.http.get<OrderListItemModel[]>(`${this.urlBase}/pending`);
   }
-
-  // Details
-   getDetailForProducer(id: number): Observable<OrderDetailModel> {
+  getDetailForProducer(id: number): Observable<OrderDetailModel> {
     return this.http.get<OrderDetailModel>(`${this.urlBase}/${id}/for-producer`);
+  }
+
+  // User
+  getMine(): Observable<OrderListItemModel[]> {
+    return this.http.get<OrderListItemModel[]>(`${this.urlBase}/mine`);
   }
   getDetailForUser(id: number): Observable<OrderDetailModel> {
     return this.http.get<OrderDetailModel>(`${this.urlBase}/${id}/for-user`);
   }
-
-  // Aceptar (notas opcionales + rowVersion obligatorio)
-  acceptOrder(
-    id: number,
-    dto: { notes?: string; rowVersion: string }
-  ): Observable<void> {
-    return this.http.post<void>(`${this.urlBase}/${id}/accept`, dto);
-  }
-
-  // Rechazar (reason requerido + rowVersion obligatorio)
-  rejectOrder(
-    id: number,
-    dto: { reason: string; rowVersion: string }
-  ): Observable<void> {
-    return this.http.post<void>(`${this.urlBase}/${id}/reject`, dto);
-  }
-
-  // Action (user)
   confirmReceived(id: number, body: OrderConfirmRequest): Observable<any> {
     return this.http.post<any>(`${this.urlBase}/${id}/confirm-received`, body);
+  }
+
+  // Producer actions
+  acceptOrder(id: number, dto: OrderAcceptRequest): Observable<void> {
+    return this.http.post<void>(`${this.urlBase}/${id}/accept`, dto);
+  }
+  rejectOrder(id: number, dto: OrderRejectRequest): Observable<void> {
+    return this.http.post<void>(`${this.urlBase}/${id}/reject`, dto);
   }
 }
