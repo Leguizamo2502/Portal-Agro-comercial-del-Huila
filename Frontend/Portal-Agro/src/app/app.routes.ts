@@ -12,7 +12,6 @@ import { CardComponent } from './shared/components/cards/card/card.component';
 import { CarruselComponent } from './shared/components/carrusel/carrusel.component';
 import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 import { MainLayoutComponent } from './shared/components/layouts/main-layout/main-layout.component';
-import { NavbarVerticalComponent } from './shared/components/navs/navbar-vertical/navbar-vertical.component';
 import { NavbarBuenoComponent } from './shared/components/navs/navbar-bueno/navbar-bueno.component';
 
 
@@ -57,7 +56,6 @@ export const routes: Routes = [
       { path: 'product-detail', component: ProductDetailComponent },
       { path: 'card', component: CardComponent },
       { path: 'boton', component: ButtonComponent },
-      { path: 'navbar-vertical', component: NavbarVerticalComponent },
       { path: 'navbar-bueno', component: NavbarBuenoComponent },
       { path: 'carrusel', component: CarruselComponent },
       {path: 'change', component:FormChangePasswordComponent},

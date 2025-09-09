@@ -52,7 +52,7 @@ const phoneBasic = (label: string): ValidatorFn => (c: AbstractControl): Validat
 
 @Component({
   selector: 'app-order-create-dialog',
-  imports: [MatInputModule, MatSelectModule, MatDialogContent, CommonModule, ReactiveFormsModule, MatDialogActions, ButtonComponent, MatIconModule, MatStep, MatStepperModule],
+  imports: [MatInputModule, MatSelectModule, CommonModule, ReactiveFormsModule, ButtonComponent, MatIconModule, MatStep, MatStepperModule],
   templateUrl: './order-create-dialog.component.html',
   styleUrl: './order-create-dialog.component.css'
 })
