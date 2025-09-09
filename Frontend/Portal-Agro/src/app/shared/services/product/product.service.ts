@@ -19,7 +19,7 @@ export class ProductService {
   getAllHome(limit?: number): Observable<ProductSelectModel[]> {
     let params = new HttpParams();
     if (limit != null) {
-      params = params.set('limit', limit);
+      params = params.set('limit', String(limit));
     }
     return this.http.get<ProductSelectModel[]>(`${this.urlBase}/home`, {
       params,
