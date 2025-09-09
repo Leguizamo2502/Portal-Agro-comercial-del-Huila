@@ -5,6 +5,8 @@ import { FavoriteComponent } from './pages/favorite/favorite.component';
 import { SupportComponent } from './pages/support/support.component';
 import { FormChangePasswordComponent } from './components/form-change-password/form-change-password.component';
 import { UpdatePersonComponent } from './components/update-person/update-person.component';
+import { UserOrdersListComponent } from './pages/user-orders-list/user-orders-list.component';
+import { UserOrderDetailComponent } from './pages/user-order-detail/user-order-detail.component';
 
 export const ACCOUNT_ROUTES: Routes = [
   {
@@ -45,6 +47,19 @@ export const ACCOUNT_ROUTES: Routes = [
         canMatch: [roleMatchGuard],
         data: { roles: ['Consumer'] },
         component: FavoriteComponent,
+      },
+
+      {path:'orders',
+        title:'Ordenes',
+        canMatch:[roleMatchGuard],
+        data:{roles:['Consumer']},
+        component: UserOrdersListComponent
+      },
+      {path:'orders/:id',
+        title:'Ordenes',
+        canMatch:[roleMatchGuard],
+        data:{roles:['Consumer']},
+        component: UserOrderDetailComponent
       },
 
       {

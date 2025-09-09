@@ -89,12 +89,12 @@ textarea {
 .review .subtitle{
   margin: 0;
 }
-.info-product{
+/* .info-product{
   background-color: #efffe1;
 }
 .info-product .mb-1 .text{
   margin: 0;
-}
+} */
 
 .avatar-review .start{
   height: 1.5rem;
@@ -108,7 +108,7 @@ textarea {
 }
 .more-info{
   padding: 10px;
-  background-color: #efffe1;
+  /* background-color: #efffe1; */
   border-radius: 8px;
   box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px;
 }

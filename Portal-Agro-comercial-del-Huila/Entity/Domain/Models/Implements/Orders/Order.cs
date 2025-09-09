@@ -7,36 +7,29 @@ namespace Entity.Domain.Models.Implements.Orders
 {
     public class Order : BaseModel
     {
-        // Relaciones mínimas
+        // Relaciones
         public int UserId { get; set; }
         public int ProductId { get; set; }
 
-        // Snapshots (inmutables respecto a cambios futuros)
+        // Snapshots del producto
         public int ProducerIdSnapshot { get; set; }
         public string ProductNameSnapshot { get; set; } = null!;
         public decimal UnitPriceSnapshot { get; set; }
 
-        // Cantidad solicitada
+        // Cantidad y estado
         public int QuantityRequested { get; set; }
-
-        // Estado del pedido
         public OrderStatus Status { get; set; } = OrderStatus.PendingReview;
 
-        // Comprobante (una sola imagen)
+        // Comprobante
         public string? PaymentImageUrl { get; set; }
         public DateTime? PaymentUploadedAt { get; set; }
 
         // Decisión del productor
         public DateTime? ProducerDecisionAt { get; set; }
-        public string? ProducerDecisionReason { get; set; }
+        public string? ProducerDecisionReason { get; set; } // si rechaza
+        public string? ProducerNotes { get; set; }          // nota opcional al aceptar (no económica)
 
-        // Envío (se paga al recibir)
-        public decimal DeliveryFee { get; set; } = 0m;
-        public string DeliveryFeeCurrency { get; set; } = "COP";
-        public DateTime? DeliveryFeeSetAt { get; set; }
-        public string? DeliveryNotes { get; set; }
-
-        // Datos de entrega inline
+        // Datos de entrega
         public string RecipientName { get; set; } = null!;
         public string ContactPhone { get; set; } = null!;
         public string AddressLine1 { get; set; } = null!;
@@ -44,7 +37,7 @@ namespace Entity.Domain.Models.Implements.Orders
         public int CityId { get; set; }
         public string? AdditionalNotes { get; set; }
 
-        // Totales
+        // Totales (sin envío: Total = Subtotal)
         public decimal Subtotal { get; set; }
         public decimal Total { get; set; }
 
@@ -53,10 +46,8 @@ namespace Entity.Domain.Models.Implements.Orders
         public UserReceivedAnswer UserReceivedAnswer { get; set; } = UserReceivedAnswer.None;
         public DateTime? UserReceivedAt { get; set; }
 
-        // Autocierre
+        // Autocierre y concurrencia
         public DateTime? AutoCloseAt { get; set; }
-
-        // Concurrencia
         public byte[] RowVersion { get; set; } = Array.Empty<byte>();
 
         // Navegación

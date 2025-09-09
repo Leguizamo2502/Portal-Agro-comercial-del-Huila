@@ -11,68 +11,89 @@
           <span>Complete la información general</span>
         </div>
 
+        <!-- Fila 1: Nombre y Precio -->
         <div class="row-2">
+          <!-- NOMBRE (nuevo) -->
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Nombre</mat-label>
-            <input matInput formControlName="name" required maxlength="100" />
-            <mat-error *ngIf="generalGroup.get('name')?.hasError('required')">Obligatorio</mat-error>
-            <mat-error *ngIf="generalGroup.get('name')?.hasError('whitespace')">El nombre no puede estar en
-              blanco.</mat-error>
-            <mat-error *ngIf="generalGroup.get('name')?.hasError('minlength')">Mínimo 2 caracteres.</mat-error>
-            <mat-error *ngIf="generalGroup.get('name')?.hasError('maxlength')">Máximo 100 caracteres.</mat-error>
+            <input matInput type="text" formControlName="name" placeholder="Ingrese el nombre del producto" required
+              minlength="2" maxlength="100" (input)="onInputChange($event, 'name')" />
+            <mat-error *ngIf="generalGroup.get('name')?.hasError('required')">
+              Obligatorio
+            </mat-error>
+            <mat-error *ngIf="generalGroup.get('name')?.hasError('minlength')">
+              Mínimo 2 caracteres.
+            </mat-error>
+            <mat-error *ngIf="generalGroup.get('name')?.hasError('maxlength')">
+              Máximo 100 caracteres.
+            </mat-error>
           </mat-form-field>
 
+          <!-- PRECIO -->
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Precio</mat-label>
-            <input matInput type="number" formControlName="price" required />
+            <input matInput type="number" formControlName="price" required min="0" />
+
+            <!-- Hints dinámicos -->
             <mat-hint *ngIf="!isEdit">Máximo 100,000,000</mat-hint>
             <mat-hint *ngIf="isEdit">Máximo 1,000,000</mat-hint>
-            <mat-error *ngIf="generalGroup.get('price')?.hasError('required')">Obligatorio</mat-error>
-            <mat-error *ngIf="generalGroup.get('price')?.hasError('positive')">Debe ser mayor a 0.</mat-error>
-            <mat-error *ngIf="generalGroup.get('price')?.hasError('max')">Supera el máximo permitido.</mat-error>
+
+            <!-- Errores -->
+            <mat-error *ngIf="generalGroup.get('price')?.hasError('required')">
+              Obligatorio
+            </mat-error>
+            <mat-error *ngIf="generalGroup.get('price')?.hasError('pattern')">
+              Solo se permiten números.
+            </mat-error>
+            <mat-error *ngIf="generalGroup.get('price')?.hasError('max')">
+              Supera el máximo permitido.
+            </mat-error>
+            <mat-error *ngIf="generalGroup.get('price')?.hasError('min')">
+              No se permiten números negativos.
+            </mat-error>
           </mat-form-field>
+
         </div>
 
+        <!-- Fila 2: Unidad y Producción -->
         <div class="row-2">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Unidad</mat-label>
-            <input matInput formControlName="unit" required maxlength="20" placeholder="kg, lb, arroba, etc." />
+            <input matInput formControlName="unit" required maxlength="20" placeholder="kg, lb, arroba, etc."
+              (input)="onInputChange($event, 'unit')" />
             <mat-error *ngIf="generalGroup.get('unit')?.hasError('required')">Obligatorio</mat-error>
-            <mat-error *ngIf="generalGroup.get('unit')?.hasError('whitespace')">La unidad no puede estar en
-              blanco.</mat-error>
             <mat-error *ngIf="generalGroup.get('unit')?.hasError('maxlength')">Máximo 20 caracteres.</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Producción</mat-label>
             <input matInput formControlName="production" required [attr.maxlength]="isEdit ? 50 : 150"
-              placeholder="Orgánico, convencional, etc." />
+              placeholder="Orgánico, convencional, etc." (input)="onInputChange($event, 'production')" />
             <mat-hint *ngIf="!isEdit">Máximo 150</mat-hint>
             <mat-hint *ngIf="isEdit">Máximo 50</mat-hint>
             <mat-error *ngIf="generalGroup.get('production')?.hasError('required')">Obligatorio</mat-error>
-            <mat-error *ngIf="generalGroup.get('production')?.hasError('whitespace')">No puede estar en
-              blanco.</mat-error>
             <mat-error *ngIf="generalGroup.get('production')?.hasError('maxlength')">Supera el máximo
               permitido.</mat-error>
           </mat-form-field>
         </div>
 
+        <!-- Descripción -->
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Descripción</mat-label>
-          <textarea matInput rows="3" formControlName="description" required maxlength="500"></textarea>
+          <textarea matInput rows="3" formControlName="description" required maxlength="500"
+            (input)="onInputChange($event, 'description')"></textarea>
           <mat-error *ngIf="generalGroup.get('description')?.hasError('required')">Obligatorio</mat-error>
-          <mat-error *ngIf="generalGroup.get('description')?.hasError('whitespace')">No puede estar en
-            blanco.</mat-error>
           <mat-error *ngIf="generalGroup.get('description')?.hasError('minlength')">Mínimo 5 caracteres.</mat-error>
           <mat-error *ngIf="generalGroup.get('description')?.hasError('maxlength')">Máximo 500 caracteres.</mat-error>
         </mat-form-field>
 
         <div class="actions">
-          <app-button text="Siguiente" color="primary" [disabled]="generalGroup.invalid" [stepperAction]="'next'">
-          </app-button>
+          <app-button text="Siguiente" color="primary" [disabled]="generalGroup.invalid"
+            [stepperAction]="'next'"></app-button>
         </div>
       </form>
     </mat-step>
+
 
     <!-- Paso 2: Detalles -->
     <mat-step [stepControl]="detallesGroup">
@@ -82,11 +103,18 @@
         <div class="row-2 top">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Stock</mat-label>
-            <input matInput type="number" formControlName="stock" required />
+            <input matInput type="number" formControlName="stock" required min="0" />
             <mat-hint>Máximo 100,000</mat-hint>
-            <mat-error *ngIf="detallesGroup.get('stock')?.hasError('required')">Obligatorio</mat-error>
-            <mat-error *ngIf="detallesGroup.get('stock')?.hasError('min')">No puede ser negativo.</mat-error>
-            <mat-error *ngIf="detallesGroup.get('stock')?.hasError('max')">No puede superar 100,000.</mat-error>
+
+            <mat-error *ngIf="detallesGroup.get('stock')?.hasError('required')">
+              Obligatorio
+            </mat-error>
+            <mat-error *ngIf="detallesGroup.get('stock')?.hasError('min')">
+              No puede ser negativo.
+            </mat-error>
+            <mat-error *ngIf="detallesGroup.get('stock')?.hasError('max')">
+              No puede superar 100,000.
+            </mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="w-100">
@@ -95,21 +123,42 @@
               <mat-option [value]="true">Activo</mat-option>
               <mat-option [value]="false">Inactivo</mat-option>
             </mat-select>
-            <mat-error *ngIf="detallesGroup.get('status')?.hasError('required')">Obligatorio</mat-error>
+            <mat-error *ngIf="detallesGroup.get('status')?.hasError('required')">
+              Obligatorio
+            </mat-error>
           </mat-form-field>
-        </div>
 
-        <div class="row-2">
           <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Incluye envío</mat-label>
+            <mat-select formControlName="shippingIncluded" required>
+              <mat-option [value]="true">Sí</mat-option>
+              <mat-option [value]="false">No</mat-option>
+            </mat-select>
+            <mat-error *ngIf="detallesGroup.get('shippingIncluded')?.hasError('required')">
+              Obligatorio
+            </mat-error>
+          </mat-form-field>
+
+           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Categoría</mat-label>
             <mat-select formControlName="categoryId" required>
               <mat-option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</mat-option>
             </mat-select>
-            <mat-error *ngIf="detallesGroup.get('categoryId')?.hasError('required')">Obligatorio</mat-error>
-            <mat-error *ngIf="detallesGroup.get('categoryId')?.hasError('positiveInt')">Debe seleccionar una categoría
-              válida.</mat-error>
+            <mat-error *ngIf="detallesGroup.get('categoryId')?.hasError('required')">
+              Obligatorio
+            </mat-error>
+            <mat-error *ngIf="detallesGroup.get('categoryId')?.hasError('positiveInt')">
+              Debe seleccionar una categoría válida.
+            </mat-error>
           </mat-form-field>
 
+
+
+
+        </div>
+
+        <div class="row-2">
+         
           <!-- Fincas (multi-selección) -->
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Fincas</mat-label>
@@ -135,7 +184,6 @@
               Debes seleccionar al menos una finca.
             </mat-error>
           </mat-form-field>
-
         </div>
 
         <div class="actions space-between">
@@ -145,6 +193,7 @@
         </div>
       </form>
     </mat-step>
+
 
     <!-- Paso 3: Imágenes -->
     <mat-step>

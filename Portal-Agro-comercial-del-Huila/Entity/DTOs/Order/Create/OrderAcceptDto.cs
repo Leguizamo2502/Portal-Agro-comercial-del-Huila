@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Entity.DTOs.Order.Create
+﻿namespace Entity.DTOs.Order.Create
 {
     public class OrderAcceptDto
     {
-        public decimal DeliveryFee { get; set; }
-        public string? DeliveryNotes { get; set; }
+        public string? Notes { get; set; }
+        public string RowVersion { get; set; } = null!;
     }
 }

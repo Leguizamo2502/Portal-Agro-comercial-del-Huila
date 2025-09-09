@@ -125,6 +125,8 @@ namespace Web.ProgramService
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderService, OrderService>();
 
+            services.AddScoped<IOrderEmailService, OrderEmailService>();
+
 
             //Producer
             services.AddScoped<IProducerRepository, ProducerRepository>();

@@ -1,0 +1,73 @@
+:root {
+  --primary: #28a745;
+  --text-strong: #2c3e50;
+  --text-muted: #607d8b;
+  --line: #dfe3e8;
+}
+
+.form-wrapper-transparent {
+  background-color: transparent;
+  padding: 1rem 1.25rem 1.25rem;
+  border-radius: 1rem;
+  width: 100%;
+}
+
+.info h3 { margin: 0 0 .25rem; color: var(--text-strong); font-weight: 700; }
+.info span { color: var(--text-muted); }
+
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.w-100 { width: 100%; }
+@media (max-width: 900px) { .row-2 { grid-template-columns: 1fr; } }
+
+.actions, .actions.space-between { display: flex; gap: 12px; }
+.actions { justify-content: flex-end; }
+.actions.space-between { justify-content: space-between; }
+
+.product-summary { border: 1px solid var(--line); border-radius: 10px; padding: 12px; margin: 8px 0 14px; }
+.label { font-size: 12px; color: var(--text-muted); }
+.value { font-size: 14px; }
+.value.strong { font-weight: 600; color: var(--text-strong); }
+
+.totals-box {
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.totals-box .total { font-weight: 700; font-size: 18px; color: var(--text-strong); }
+.muted { color: var(--text-muted); }
+
+.drop-zone {
+  border: 2px dashed #9ccc9c;
+  border-radius: 10px;
+  padding: 18px;
+  text-align: center;
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+  max-width: 100%;
+  background: #f8fff8;
+  margin-top: 10px;
+}
+.drop-zone mat-icon { font-size: 40px; width: 40px; height: 40px; display: block; margin: 0 auto 8px; color: var(--primary); }
+
+.preview {
+  margin-top: 12px;
+  /* position: relative; */
+  width: 50%;
+  max-height: 240px;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  justify-content: center;
+}
+.preview img { width: 100%; height: auto; display: block; }
+.preview .remove-btn { position: absolute; top: 6px; right: 6px; background: rgba(255,255,255,0.85); }
+
+.footer-actions { margin-top: 12px; display: flex; gap: 12px; justify-content: flex-end; }
+
+button[mat-icon-button] {
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}

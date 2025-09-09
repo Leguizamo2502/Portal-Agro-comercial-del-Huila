@@ -6,6 +6,9 @@
         <div class="carousel-caption d-flex flex-column justify-content-center align-items-center">
           <h2 class="fw-bold">{{ slide.title }}</h2>
           <!-- <a href="#" class="btn btn-success mt-3">Explorar Productos</a> -->
+          <app-button [text]="'Explorar Productos'" [type]="'button'" [redirectTo]="'/home/product'"></app-button>
+
+          <!-- <a href="#" class="btn btn-success mt-3">Explorar Productos</a> -->
         </div>
       </div>
     </div>
@@ -19,4 +22,3 @@
     </button>
   </div>
 </div>
-

@@ -1,0 +1,145 @@
+h2 { font-weight: bold; }
+.badge { font-size: 0.85rem; }
+textarea { resize: none; }
+
+/* ===== Contenedor único ===== */
+.farm-card {
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  border-radius: 14px;
+  overflow: hidden; /* para que esquinas del mapa/galería respeten radios */
+}
+
+/* ===== Encabezado dentro del contenedor ===== */
+.farm-header {
+  border-bottom: 1px solid #e9ecef;
+  background: #fff;
+}
+.farm-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+}
+.farm-subtitle {
+  font-size: 0.95rem;
+  margin: 0;
+}
+.farm-tabs {
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 0.25rem;
+}
+.farm-tab {
+  display: inline-block;
+  font-size: 0.9rem;
+  color: #6c757d;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+}
+.farm-tab.active {
+  font-weight: 600;
+  color: #212529;
+}
+
+/* ===== Galería (tu código) ===== */
+.content-image-product {
+  display: flex;
+  gap: 1rem;
+}
+
+.thumbnails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.thumbnail-img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+}
+
+.main-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 10px;
+}
+
+/* ===== Info antigua (si la usas en otro lado) ===== */
+.product-info {
+  border: 1px solid #ddd;
+  padding: 0;
+  border-radius: 10px;
+  width: 100%;
+}
+.info-product .mb-1 .text { margin: 0; }
+
+/* ===== Mapa ===== */
+.map-wrapper {
+  width: 100%;
+  height: 100%;
+  min-height: 340px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+.map-iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 340px;
+  border: 0;
+}
+
+/* ===== Ficha de información debajo del mapa ===== */
+.info-card {
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  border-radius: 12px;
+}
+
+/* Grid 2 columnas en desktop, 1 en móvil */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 2rem;
+}
+@media (max-width: 768px) {
+  .info-grid { grid-template-columns: 1fr; }
+}
+
+/* Cada celda */
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.info-label {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+.info-value {
+  font-weight: 600;
+  color: #212529;
+}
+
+/* ===== Botón volver ===== */
+.detail-header {
+  position: sticky;
+  top: 16px;
+  z-index: 10;
+  padding-bottom: 8px;
+  background: transparent;
+}
+.to-overlay {
+  position: relative;
+  z-index: 1;
+  right: 2rem;
+}

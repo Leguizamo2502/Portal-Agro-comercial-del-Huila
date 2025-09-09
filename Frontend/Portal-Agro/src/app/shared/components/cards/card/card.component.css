@@ -67,7 +67,7 @@
   height: 100%;
   object-fit: contain;
   display: block;
-  transition: transform 0.3s ease; /
+  transition: transform 0.3s ease; 
 }
 
 /* 4) Título: evita el truncado agresivo y permite 2 líneas */
@@ -83,7 +83,7 @@
 }
 .line-2 {
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  /* -webkit-line-clamp: 2; */
   -webkit-box-orient: vertical;
   overflow: hidden;
   /* altura mínima equivalente a 2 líneas para uniformidad */

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Data.Interfaces.IRepository;
-using Entity.Domain.Models.Implements.Producers;
+﻿using Data.Interfaces.IRepository;
 using Entity.Domain.Models.Implements.Producers.Products;
 
 namespace Data.Interfaces.Implements.Producers.Products
@@ -16,5 +10,7 @@ namespace Data.Interfaces.Implements.Producers.Products
         Task<IEnumerable<Product>> GetByIdsFavoritesAsync(IEnumerable<int> ids);
         Task<IEnumerable<Product>> GetByCategoryAsync(int categoryId);
         Task<IEnumerable<Product>> GetByCategoriesAsync(List<int> categoryIds, bool includeDescendants);
+        Task<IEnumerable<Product>> GetFeaturedAsync(int limit);
+        Task<IEnumerable<Product>> GetAllWithLimitAsync(int? limit);
     }
 }

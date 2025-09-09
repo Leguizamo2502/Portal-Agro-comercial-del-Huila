@@ -63,6 +63,8 @@ namespace Business.Mapping
                 .Map(dest => dest.Address, src => src.Person.Address)
                 .Map(dest => dest.Identification, src => src.Person.Identification)
                 .Map(dest => dest.CityId, src => src.Person.CityId)
+                .Map(dest => dest.DepartmentId, src => src.Person.City.DepartmentId)
+
                 .Map(dest => dest.CityName, src => src.Person.City.Name);
 
 
@@ -141,6 +143,7 @@ namespace Business.Mapping
             config.NewConfig<Product, ProductSelectDto>()
                 .Map(dest => dest.CategoryName, src => src.Category.Name)
                 .Map(dest => dest.Images, src => src.ProductImages.Where(pi => !pi.IsDeleted))
+                .Map(dest => dest.ProducerCode, src => src.Producer.Code)
 
                 // NUEVO: lista completa de fincas activas
                 .Map(dest => dest.FarmIds,
@@ -190,23 +193,31 @@ namespace Business.Mapping
 
             //Orders
 
-            config.NewConfig<OrderCreateDto, Order>();
+            // Create -> Entity
+            config.NewConfig<OrderCreateDto, Order>()
+             .Map(d => d.RecipientName, s => (s.RecipientName ?? string.Empty).Trim())
+             .Map(d => d.ContactPhone, s => (s.ContactPhone ?? string.Empty).Trim())
+             .Map(d => d.AddressLine1, s => (s.AddressLine1 ?? string.Empty).Trim())
+             .Map(d => d.AddressLine2, s => string.IsNullOrWhiteSpace(s.AddressLine2) ? null : s.AddressLine2!.Trim())
+             .Map(d => d.AdditionalNotes, s => string.IsNullOrWhiteSpace(s.AdditionalNotes) ? null : s.AdditionalNotes!.Trim());
 
-            config.NewConfig<Order, OrderSelectDto>()
-                .Map(d => d.ProductName, s => s.ProductNameSnapshot) // tomamos el snapshot
-                .Map(d => d.QuantityRequested, s => s.QuantityRequested)
-                .Map(d => d.Subtotal, s => s.Subtotal)
-                .Map(d => d.Status, s => s.Status.ToString())        // de enum a string
-                .Map(d => d.PaymentImageUrl, s => s.PaymentImageUrl)
-                .Map(d => d.CreateAt, s => s.CreateAt);
+            // Salida para listado:
+            config.NewConfig<Order, OrderListItemDto>()
+                  .Map(d => d.ProductName, s => s.ProductNameSnapshot)
+                  .Map(d => d.QuantityRequested, s => s.QuantityRequested)
+                  .Map(d => d.Subtotal, s => s.Subtotal)
+                  .Map(d => d.Total, s => s.Total)
+                  .Map(d => d.Status, s => s.Status.ToString())
+                  .Map(d => d.PaymentImageUrl, s => s.PaymentImageUrl)
+                  .Map(d => d.CreatedAt, s => s.CreateAt);
 
-            config.NewConfig<Order, OrderResultDto>()
-               .Map(d => d.ProductName, s => s.ProductNameSnapshot)
-               .Map(d => d.UnitPrice, s => s.UnitPriceSnapshot)
-               .Map(d => d.Status, s => s.Status.ToString())
-               .Map(d => d.CreatedAt, s => s.CreateAt); // CreateAt -> CreatedA
-
-
+            config.NewConfig<Order, OrderDetailDto>()
+              .Map(d => d.ProductName, s => s.ProductNameSnapshot)
+              .Map(d => d.UnitPrice, s => s.UnitPriceSnapshot)
+              .Map(d => d.Status, s => s.Status.ToString())
+              .Map(d => d.UserReceivedAnswer, s => s.UserReceivedAnswer.ToString())
+              .Map(d => d.CreatedAt, s => s.CreateAt)
+              .Map(d => d.RowVersion, s => Convert.ToBase64String(s.RowVersion ?? Array.Empty<byte>()));
 
 
             //Category

@@ -1,9 +1,44 @@
-<!-- src/app/shared/components/stat-card/stat-card.component.html -->
-<div class="stat-card" [attr.aria-label]="text + ' ' + count">
-  <div class="icon-wrap">
-    <mat-icon aria-hidden="true">{{ icon }}</mat-icon>
-  </div>
+<!-- Si hay ruta, usamos <a>; si no, <div role="button"> -->
+<a *ngIf="isLink"
+   class="stat-card"
+   [class.clickable]="clickable"
+   [class.success]="color === 'success'"
+   [class.warning]="color === 'warning'"
+   [class.info]="color === 'info'"
+   [class.neutral]="color === 'neutral'"
+   [routerLink]="to"
+   [queryParams]="queryParams"
+   [fragment]="fragment"
+   [attr.aria-label]="text + ' ' + formattedCount">
 
-  <div class="label">{{ text }}</div>
-  <div class="value">{{ count }}</div>
+  <ng-container *ngIf="!loading; else skeleton">
+    <div class="icon-wrap"><mat-icon aria-hidden="true">{{ icon }}</mat-icon></div>
+    <div class="label">{{ text }}</div>
+    <div class="value">{{ formattedCount }}</div>
+  </ng-container>
+</a>
+
+<div *ngIf="!isLink"
+     class="stat-card"
+     [class.clickable]="clickable"
+     [class.success]="color === 'success'"
+     [class.warning]="color === 'warning'"
+     [class.info]="color === 'info'"
+     [class.neutral]="color === 'neutral'"
+     role="button"
+     tabindex="0"
+     (click)="onActivateClick()"
+     (keydown)="onKeyDown($event)"
+     [attr.aria-label]="text + ' ' + formattedCount">
+  <ng-container *ngIf="!loading; else skeleton">
+    <div class="icon-wrap"><mat-icon aria-hidden="true">{{ icon }}</mat-icon></div>
+    <div class="label">{{ text }}</div>
+    <div class="value">{{ formattedCount }}</div>
+  </ng-container>
 </div>
+
+<ng-template #skeleton>
+  <div class="skeleton-icon"></div>
+  <div class="skeleton-line w60"></div>
+  <div class="skeleton-line w40"></div>
+</ng-template>

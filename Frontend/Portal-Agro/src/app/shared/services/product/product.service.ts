@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import {
@@ -16,8 +16,18 @@ export class ProductService {
   constructor(private http: HttpClient) {}
 
   /** --------------------------------------------------  Favorites  ----------------------------------------------------- */
-  getAllHome(): Observable<ProductSelectModel[]> {
-    return this.http.get<ProductSelectModel[]>(this.urlBase + '/home');
+  getAllHome(limit?: number): Observable<ProductSelectModel[]> {
+    let params = new HttpParams();
+    if (limit != null) {
+      params = params.set('limit', String(limit));
+    }
+    return this.http.get<ProductSelectModel[]>(`${this.urlBase}/home`, {
+      params,
+    });
+  }
+
+  getFeatured(): Observable<ProductSelectModel[]> {
+    return this.http.get<ProductSelectModel[]>(this.urlBase + '/featured');
   }
 
   getFavorites(): Observable<ProductSelectModel[]> {
@@ -105,6 +115,7 @@ export class ProductService {
     data.append('production', dto.production);
     data.append('stock', String(dto.stock));
     data.append('status', String(dto.status));
+    data.append('shippingIncluded', String(dto.shippingIncluded));
     data.append('categoryId', String(dto.categoryId));
 
     // << NUEVO: múltiples fincas

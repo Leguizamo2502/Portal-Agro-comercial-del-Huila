@@ -6,7 +6,10 @@ namespace Data.Interfaces.Implements.Orders
     public interface IOrderRepository : IDataGeneric<Order>
     {
         Task<bool> UpdateOrderAsync(Order entity);
-        Task<IEnumerable<Order>> GetOrdersByProducer(int producerId);
-        Task<IEnumerable<Order>> GetPendingOrdersByProducer(int producerId);
+        Task<IEnumerable<Order>> GetOrdersByProducerAsync(int producerId);
+        Task<IEnumerable<Order>> GetPendingOrdersByProducerAsync(int producerId);
+        // IOrderRepository
+        Task<IEnumerable<Order>> GetOrdersByUserAsync(int userId);
+
     }
 }

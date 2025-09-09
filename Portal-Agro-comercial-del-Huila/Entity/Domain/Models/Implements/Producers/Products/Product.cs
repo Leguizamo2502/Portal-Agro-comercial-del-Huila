@@ -19,6 +19,7 @@ namespace Entity.Domain.Models.Implements.Producers.Products
         public string Production { get; set; } = default!;
         public int Stock { get; set; }
         public bool Status { get; set; }
+        public bool ShippingIncluded { get; set; }
 
         public int CategoryId { get; set; }
         public Category Category { get; set; } = default!;
@@ -33,6 +34,7 @@ namespace Entity.Domain.Models.Implements.Producers.Products
         // Relación N–M vía pivote
         public ICollection<ProductFarm> ProductFarms { get; set; } = [];
         public ICollection<Review> Reviews { get; set; } = [];
+        public ICollection<Order> Orders { get; set; } = [];
 
     }
 }

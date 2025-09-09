@@ -12,11 +12,11 @@ public class FormRegisterDtoValidator : AbstractValidator<FormRegisterDto>
             .NotEmpty().WithMessage("La URL es obligatoria.")
             .Must(s => Uri.TryCreate(s, UriKind.Absolute, out _))
             .WithMessage("La URL no tiene un formato válido.")
-            .MaximumLength(200).WithMessage("La URL no debe superar 200 caracteres.");
+            .MaximumLength(200).WithMessage("La URL no debe superar 200 caracteres.")
+            .Matches(@"^\S+$").WithMessage("La URL no debe contener espacios."); // <--- esta línea evita espacios
 
         // Reglas comunes reutilizadas
         RuleFor(x => x.Name).NameRules();
         RuleFor(x => x.Description).DescriptionRules();
-
     }
 }

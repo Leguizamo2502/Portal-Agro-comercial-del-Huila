@@ -5,7 +5,7 @@ export const PRODUCER_ROUTES: Routes = [
   {
     path: '',
     title: 'Productor',
-    canActivate: [roleActivateGuard],  
+    canActivate: [roleActivateGuard],
     loadComponent: () =>
       import('./pages/producer-layout/producer-layout.component').then(
         (m) => m.ProducerLayoutComponent
@@ -20,6 +20,23 @@ export const PRODUCER_ROUTES: Routes = [
           import('./pages/summary/summary.component').then(
             (m) => m.SummaryComponent
           ),
+      },
+
+      {
+        path: 'orders',
+        title: 'Ordenes',
+        loadComponent: () =>
+          import(
+            './pages/producer-orders-list/producer-orders-list.component'
+          ).then((m) => m.ProducerOrdersListComponent),
+      },
+      {
+        path: 'orders/:id',
+        title: 'Detalle Orden',
+        loadComponent: () =>
+          import(
+            './pages/producer-order-detail/producer-order-detail.component'
+          ).then((m) => m.ProducerOrderDetailComponent),
       },
 
       {

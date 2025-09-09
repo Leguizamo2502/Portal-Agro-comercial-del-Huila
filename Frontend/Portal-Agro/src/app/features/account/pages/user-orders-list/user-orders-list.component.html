@@ -1,0 +1,36 @@
+<!-- src/app/features/user/orders/list/user-orders-list.component.html -->
+<div class="wrapper">
+  <h2 class="title">Mis pedidos</h2>
+
+  <ng-container *ngIf="!loading; else loadingTpl">
+    <div *ngIf="items.length; else emptyTpl" class="list">
+      <div class="card" *ngFor="let o of items; trackBy: trackById">
+        <div class="row1">
+          <div class="prod">{{ o.productName }}</div>
+          <span class="chip"
+                [class.pending]="o.status==='PendingReview'"
+                [class.accepted]="o.status==='AcceptedAwaitingUser'"
+                [class.completed]="o.status==='Completed'"
+                [class.rejected]="o.status==='Rejected'"
+                [class.disputed]="o.status==='Disputed'">
+            {{ o.status | statusTranslate }}
+          </span>
+        </div>
+
+        <div class="row2">
+          <div><strong>Cant.:</strong> {{ o.quantityRequested }}</div>
+          <div><strong>Total:</strong> {{ o.total | currency:'COP' }}</div>
+          <div class="muted"><strong>Creado:</strong> {{ o.createdAt| date:'medium' }}</div>
+        </div>
+
+        <div class="actions">
+          <app-button text="Ver detalle" color="secondary" (clicked)="view(o.id)"></app-button>
+          <app-button *ngIf="canConfirm(o.status)" text="Confirmar recepción" color="primary" (clicked)="confirm(o.id)"></app-button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #loadingTpl><p class="muted">Cargando…</p></ng-template>
+  <ng-template #emptyTpl><p class="muted">Aún no tienes pedidos.</p></ng-template>
+</div>

@@ -193,12 +193,12 @@ namespace Web.Controllers.Implements.Producer.Products
         [HttpGet("home")]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
-        public virtual async Task<IActionResult> GetForUser()
+        public virtual async Task<IActionResult> GetForUser([FromQuery] int? limit)
         {
             try
             {
                 int? userId = HttpContext.TryGetUserId();
-                var result = await _productReadService.GetAllHomeAsync(userId); // <- nuevo
+                var result = await _productReadService.GetAllHomeAsync(userId,limit);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -262,6 +262,24 @@ namespace Web.Controllers.Implements.Producer.Products
                 return StatusCode(500, new { message = "Error interno del servidor." });
             }
 
+        }
+
+        [HttpGet("featured")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetFeatured([FromQuery] int limit = 10)
+        {
+            try
+            {
+                int? userId = HttpContext.TryGetUserId();
+                var result = await _productReadService.GetFeaturedAsync(userId, limit);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error obteniendo productos destacados");
+                return StatusCode(500, new { message = "Error interno del servidor." });
+            }
         }
 
 

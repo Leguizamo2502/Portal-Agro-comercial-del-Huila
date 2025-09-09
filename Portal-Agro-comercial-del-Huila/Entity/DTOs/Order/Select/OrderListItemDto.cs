@@ -2,13 +2,15 @@
 
 namespace Entity.DTOs.Order.Select
 {
-    public class OrderSelectDto : BaseDto
+    public class OrderListItemDto : BaseDto
     {
+        //public int Id { get; set; }
         public string ProductName { get; set; } = null!;
         public int QuantityRequested { get; set; }
         public decimal Subtotal { get; set; }
+        public decimal Total { get; set; }
         public string Status { get; set; } = null!;
         public string? PaymentImageUrl { get; set; }
-        public DateTime CreateAt { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

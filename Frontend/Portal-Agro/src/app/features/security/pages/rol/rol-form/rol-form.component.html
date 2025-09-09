@@ -18,9 +18,6 @@
         <mat-error *ngIf="form.get('name')?.hasError('required')">
           El nombre es obligatorio.
         </mat-error>
-        <!-- Acciones <mat-error *ngIf="form.get('name')?.hasError('whitespace')">
-          El nombre no puede estar en blanco.
-        </mat-error>-->
         <mat-error *ngIf="form.get('name')?.hasError('minlength')">
           El nombre debe tener al menos 5 caracteres.
         </mat-error>
@@ -46,9 +43,6 @@
         <mat-error *ngIf="form.get('description')?.hasError('required')">
           La descripción es obligatoria.
         </mat-error>
-         <!-- Acciones  <mat-error *ngIf="form.get('description')?.hasError('whitespace')">
-          La descripción no puede estar en blanco.
-        </mat-error>-->
         <mat-error *ngIf="form.get('description')?.hasError('minlength')">
           La descripción debe tener al menos 10 caracteres.
         </mat-error>

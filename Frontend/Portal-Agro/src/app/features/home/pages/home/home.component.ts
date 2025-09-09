@@ -16,15 +16,25 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
 export class HomeComponent implements OnInit {
   private productService = inject(ProductService);
   products: ProductSelectModel[] = [];
+  productFeatured:ProductSelectModel[] = [];
 
   ngOnInit(): void {
     this.loadProduct();
+    this.loadProductFeatured();
   }
 
   loadProduct() {
-    this.productService.getAllHome().subscribe(data => {
+    this.productService.getAllHome(15).subscribe(data => {
       this.products = data;
-      console.log('HomeComponent - productos cargados:', this.products);
+      // console.log('HomeComponent - productos cargados:', this.products);
     });
+  }
+  
+  loadProductFeatured(){
+    this.productService.getFeatured().subscribe((data)=>{
+      this.productFeatured = data;
+      console.log(data);
+      
+    })
   }
 }

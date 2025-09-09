@@ -60,7 +60,7 @@ export class ProductCreateComponent implements OnInit {
       error: () => Swal.fire('Error', 'No se pudieron cargar las categorías.', 'error')
     });
 
-    this.farmService.getFarms().subscribe({
+    this.farmService.getAll().subscribe({
       next: (data) => this.farms = data ?? [],
       error: () => Swal.fire('Error', 'No se pudieron cargar las fincas.', 'error')
     });
