@@ -70,7 +70,7 @@
           <h3>Comprobante de Pago</h3>
           <ng-container *ngIf="detail!.paymentImageUrl; else noImg">
             <img class="receipt" [src]="detail!.paymentImageUrl!" alt="Comprobante"
-                 (click)="showImage = true" />
+                (click)="showImage = true" />
             <div class="muted">Subido: {{detail!.paymentUploadedAt | date:'medium'}}</div>
           </ng-container>
           <ng-template #noImg>

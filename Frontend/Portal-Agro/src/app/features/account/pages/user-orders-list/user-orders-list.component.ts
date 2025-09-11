@@ -11,10 +11,11 @@ import { OrderService } from '../../../products/services/order/order.service';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { StatusTranslatePipe } from "../../../../shared/pipes/statusTranslate/status-translate.pipe";
+import { StatCardComponent } from "../../../../shared/components/stat-card/stat-card.component";
 
 @Component({
   selector: 'app-user-orders-list',
-  imports: [CommonModule, ButtonComponent, StatusTranslatePipe],
+  imports: [CommonModule, ButtonComponent, StatusTranslatePipe, StatCardComponent],
   templateUrl: './user-orders-list.component.html',
   styleUrl: './user-orders-list.component.css',
 })
@@ -25,6 +26,9 @@ export class UserOrdersListComponent implements OnInit {
   loading = true;
   items: OrderListItemModel[] = [];
 
+  // prueba cantidad de pedidos
+  numberOrders = 0;
+  
   ngOnInit(): void {
     this.load();
   }
@@ -37,6 +41,10 @@ export class UserOrdersListComponent implements OnInit {
       .subscribe({
         next: (list) => {
           this.items = list ?? [];
+
+          // prueba cantidad de pedidos
+          this.numberOrders = this.items.length;
+
           this.loading = false;
         },
         error: (err) => {

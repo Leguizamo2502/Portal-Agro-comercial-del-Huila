@@ -1,9 +1,9 @@
 <h1 class="title top">Resumen</h1>
 
-<div class="cont-stat-card">
+<div class="cont-stat-card d-flex flex-wrap">
   <!-- <app-stat-card [text]="'Pedidos Pendientes'"></app-stat-card>
         <app-stat-card [text]="'Pedidos Completado'" [icon]="'check_circle'"></app-stat-card> -->
-  <app-stat-card
+  <!-- <app-stat-card
     icon="hourglass_empty"
     text="Pedidos pendientes"
     color="warning"
@@ -11,10 +11,10 @@
     [to]="['/account/producer/orders']"
     [queryParams]="{ status: 'pending' }"
   >
-  </app-stat-card>
+  </app-stat-card> -->
 
   <!-- Completados -> pestaña 'all' o 'completed' si luego filtras -->
-  <app-stat-card
+  <!-- <app-stat-card
     icon="check_circle"
     text="Pedidos completados"
     color="success"
@@ -22,11 +22,41 @@
     [to]="['/account/producer/orders']"
     [queryParams]="{ status: 'all' }"
   >
+  </app-stat-card> -->
+  <app-stat-card
+    icon="inventory_2"
+    text="Total pedidos"
+    [count]="totalOrders"
+    color="info"
+    [loading]="loading"
+    [to]="['/account/orders']"
+    [queryParams]="{ status: '' }">
+    
   </app-stat-card>
+
+  <app-stat-card
+    icon="check_circle"
+    text="Confirmados"
+    [count]="confirmedOrders"
+    color="success"
+    [loading]="loading">
+  </app-stat-card>
+
+  <app-stat-card
+    icon="hourglass_empty"
+    text="Pendientes"
+    [count]="pendingOrders"
+    color="warning"
+    [loading]="loading"
+    [clickable]="true"
+    [to]="['/account/producer/orders']"
+    [queryParams]="{ status: 'pending' }">
+  </app-stat-card>
+  
 </div>
 
 <div class="row mt-4">
-  <div class="col-md-6 col-sm-8">
+  <div class="col-md-8 col-sm-10">
     <div class="chart-container">
       <canvas
         baseChart
