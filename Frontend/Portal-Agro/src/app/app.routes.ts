@@ -20,6 +20,7 @@ import { FormChangePasswordComponent } from './features/account/components/form-
 import { ProducerProfileComponent } from './features/producer-profile/producer-profile.component';
 import { SummaryComponent } from './features/producer/pages/summary/summary.component';
 import { FarmDetailComponent } from './features/farm-detail/farm-detail.component';
+import { ContainerCardProductorComponent } from './shared/components/cards/container-card-productor/container-card-productor.component';
 
 export const routes: Routes = [
   // Redirección inicial
@@ -54,7 +55,7 @@ export const routes: Routes = [
           ),
       },
       { path: 'forbidden', component: ForbiddenComponent },
-      {path:'notFound',component:NotFoundComponent},
+      { path: 'notFound', component: NotFoundComponent },
 
       // Demos / componentes sueltos (si quieres que usen el layout)
       { path: 'dashboard', component: DashboardComponent },
@@ -64,10 +65,11 @@ export const routes: Routes = [
       { path: 'navbar-vertical', component: NavbarVerticalComponent },
       { path: 'navbar-bueno', component: NavbarBuenoComponent },
       { path: 'carrusel', component: CarruselComponent },
-      {path: 'change', component:FormChangePasswordComponent},
+      { path: 'change', component: FormChangePasswordComponent },
       { path: 'producer/:code', component: ProducerProfileComponent },
-      {path: 'summary', component:SummaryComponent},
-       {path: 'farm-detail', component:FarmDetailComponent}
+      { path: 'summary', component: SummaryComponent },
+      { path: 'farm-detail', component: FarmDetailComponent },
+      { path: 'crm', component: ContainerCardProductorComponent }
     ],
   },
 

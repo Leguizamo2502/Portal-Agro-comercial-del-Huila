@@ -1,0 +1,12 @@
+<div class="container-xxl px-3">
+  <div class="product-container">
+    <div class="item-card" *ngFor="let it of items; trackBy: trackById">
+
+      <!-- PRODUCTS -->
+      <app-card *ngIf="isProduct(it)" [product]="it"></app-card>
+
+      <!-- FARMS -->
+      <app-card-farm *ngIf="isFarm(it)" [farm]="it"></app-card-farm>
+    </div>
+  </div>
+</div>
