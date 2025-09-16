@@ -3,7 +3,6 @@ import { authGuard } from './Core/guards/auth/guest.guard';
 import { ForbiddenComponent } from './Core/page/forbidden/forbidden.component';
 import { NotFoundComponent } from './Core/page/not-found/not-found.component';
 import { FormChangePasswordComponent } from './features/account/components/form-change-password/form-change-password.component';
-import { FarmDetailComponent } from './features/farm-detail/farm-detail.component';
 import { ProducerProfileComponent } from './features/producer-profile/producer-profile.component';
 import { SummaryComponent } from './features/producer/pages/summary/summary.component';
 import { FarmDetailComponent } from './features/farm-detail/farm-detail.component';
