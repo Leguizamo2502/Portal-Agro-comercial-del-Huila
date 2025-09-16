@@ -4,13 +4,16 @@ namespace Entity.DTOs.Order.Select
 {
     public class OrderListItemDto : BaseDto
     {
-        //public int Id { get; set; }
         public string ProductName { get; set; } = null!;
         public int QuantityRequested { get; set; }
         public decimal Subtotal { get; set; }
         public decimal Total { get; set; }
         public string Status { get; set; } = null!;
+
+        // Ahora será null al crear, solo tendrá valor si el comprador ya subió comprobante
         public string? PaymentImageUrl { get; set; }
-        public DateTime CreatedAt { get; set; }
+
+        // Consistencia con otros DTOs
+        public DateTime CreateAt { get; set; }
     }
 }

@@ -17,10 +17,7 @@ namespace Entity.Validation.Validations.Orders.Orders
             RuleFor(x => x.QuantityRequested)
                 .GreaterThan(0).WithMessage("La cantidad debe ser mayor a 0.");
 
-            // Comprobante (imagen)
-            RuleFor(x => x.PaymentImage)
-                .NotNull().WithMessage("El comprobante de pago es obligatorio.")
-                .Must(BeAValidImage).WithMessage("Solo se permiten imágenes JPG o PNG con un máximo de 5MB.");
+           
 
             // Nombre del destinatario
             RuleFor(x => x.RecipientName)

@@ -9,7 +9,7 @@ namespace Entity.DTOs.Order.Select
         public string ProductName { get; set; } = null!;
         public decimal UnitPrice { get; set; }
 
-        // Cantidad y totales (sin envío: Total = Subtotal)
+        // Cantidad y totales (sin envío)
         public int QuantityRequested { get; set; }
         public decimal Subtotal { get; set; }
         public decimal Total { get; set; }
@@ -18,7 +18,7 @@ namespace Entity.DTOs.Order.Select
         public string Status { get; set; } = null!;
         public string UserReceivedAnswer { get; set; } = "None";
 
-        // Comprobante
+        // Comprobante (aún null)
         public string? PaymentImageUrl { get; set; }
         public DateTime? PaymentUploadedAt { get; set; }
 
@@ -33,13 +33,15 @@ namespace Entity.DTOs.Order.Select
         public string AddressLine1 { get; set; } = null!;
         public string? AddressLine2 { get; set; }
         public int CityId { get; set; }
+        public string CityName { get; set; }
+        public string DepartmentName { get; set; }
         public string? AdditionalNotes { get; set; }
 
         // Cliente
         public DateTime? UserReceivedAt { get; set; }
 
         // Metadatos
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreateAt { get; set; }
         public string RowVersion { get; set; } = string.Empty; // Base64
     }
 }

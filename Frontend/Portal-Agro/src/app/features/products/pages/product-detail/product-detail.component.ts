@@ -102,7 +102,7 @@ export class ProductDetailComponent implements OnInit {
     });
   }
   async openCreateOrder(): Promise<void> {
-    console.log("Hola")
+    // console.log("Hola")
     // Requiere login
     const me = await firstValueFrom(this.me$);
     if (!me) {

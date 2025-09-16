@@ -193,31 +193,42 @@ namespace Business.Mapping
 
             //Orders
 
-            // Create -> Entity
-            config.NewConfig<OrderCreateDto, Order>()
-             .Map(d => d.RecipientName, s => (s.RecipientName ?? string.Empty).Trim())
-             .Map(d => d.ContactPhone, s => (s.ContactPhone ?? string.Empty).Trim())
-             .Map(d => d.AddressLine1, s => (s.AddressLine1 ?? string.Empty).Trim())
-             .Map(d => d.AddressLine2, s => string.IsNullOrWhiteSpace(s.AddressLine2) ? null : s.AddressLine2!.Trim())
-             .Map(d => d.AdditionalNotes, s => string.IsNullOrWhiteSpace(s.AdditionalNotes) ? null : s.AdditionalNotes!.Trim());
-
-            // Salida para listado:
+            // Listado
             config.NewConfig<Order, OrderListItemDto>()
                   .Map(d => d.ProductName, s => s.ProductNameSnapshot)
                   .Map(d => d.QuantityRequested, s => s.QuantityRequested)
                   .Map(d => d.Subtotal, s => s.Subtotal)
                   .Map(d => d.Total, s => s.Total)
                   .Map(d => d.Status, s => s.Status.ToString())
-                  .Map(d => d.PaymentImageUrl, s => s.PaymentImageUrl)
-                  .Map(d => d.CreatedAt, s => s.CreateAt);
+                  .Map(d => d.PaymentImageUrl, s => s.PaymentImageUrl)  // quedará null al crear (esperable)
+                  .Map(d => d.CreateAt, s => s.CreateAt);
 
+            // Detalle
             config.NewConfig<Order, OrderDetailDto>()
-              .Map(d => d.ProductName, s => s.ProductNameSnapshot)
-              .Map(d => d.UnitPrice, s => s.UnitPriceSnapshot)
-              .Map(d => d.Status, s => s.Status.ToString())
-              .Map(d => d.UserReceivedAnswer, s => s.UserReceivedAnswer.ToString())
-              .Map(d => d.CreatedAt, s => s.CreateAt)
-              .Map(d => d.RowVersion, s => Convert.ToBase64String(s.RowVersion ?? Array.Empty<byte>()));
+                  .Map(d => d.ProductId, s => s.ProductId)
+                  .Map(d => d.ProductName, s => s.ProductNameSnapshot)
+                  .Map(d => d.UnitPrice, s => s.UnitPriceSnapshot)
+                  .Map(d => d.QuantityRequested, s => s.QuantityRequested)
+                  .Map(d => d.Subtotal, s => s.Subtotal)
+                  .Map(d => d.Total, s => s.Total)
+                  .Map(d => d.Status, s => s.Status.ToString())
+                  .Map(d => d.UserReceivedAnswer, s => s.UserReceivedAnswer.ToString())
+                  .Map(d => d.PaymentImageUrl, s => s.PaymentImageUrl)      // null en creación
+                  .Map(d => d.PaymentUploadedAt, s => s.PaymentUploadedAt)  // null en creación
+                  .Map(d => d.ProducerDecisionAt, s => s.ProducerDecisionAt)
+                  .Map(d => d.ProducerDecisionReason, s => s.ProducerDecisionReason)
+                  .Map(d => d.ProducerNotes, s => s.ProducerNotes)
+                  .Map(d => d.RecipientName, s => s.RecipientName)
+                  .Map(d => d.ContactPhone, s => s.ContactPhone)
+                  .Map(d => d.AddressLine1, s => s.AddressLine1)
+                  .Map(d => d.AddressLine2, s => s.AddressLine2)
+                  .Map(d => d.CityId, s => s.CityId)
+                  .Map(d=> d.CityName, s => s.City.Name)
+                  .Map(d => d.DepartmentName, s => s.City.Department.Name)
+                  .Map(d => d.AdditionalNotes, s => s.AdditionalNotes)
+                  .Map(d => d.UserReceivedAt, s => s.UserReceivedAt)
+                  .Map(d => d.CreateAt, s => s.CreateAt)
+                  .Map(d => d.RowVersion, s => Convert.ToBase64String(s.RowVersion ?? Array.Empty<byte>()));
 
 
             //Category

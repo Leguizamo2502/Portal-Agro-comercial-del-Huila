@@ -1,5 +1,4 @@
-<!-- src/app/features/user/orders/list/user-orders-list.component.html -->
-<div class="wrapper ">
+<div class="wrapper">
   <h2 class="title">Mis pedidos</h2>
 
   <!-- prueba cantidad de pedidos -->
@@ -16,29 +15,45 @@
     <div *ngIf="items.length; else emptyTpl" class="list">
       <div class="card" *ngFor="let o of items; trackBy: trackById">
         <div class="row1">
-          <div class="prod title">{{ o.productName }}</div>
-          <span class="chip"
-                [class.pending]="o.status==='PendingReview'"
-                [class.accepted]="o.status==='AcceptedAwaitingUser'"
-                [class.completed]="o.status==='Completed'"
-                [class.rejected]="o.status==='Rejected'"
-                [class.disputed]="o.status==='Disputed'">
+          <div class="prod">{{ o.productName }}</div>
+          <span class="chip" [ngClass]="chipClass(o.status)">
             {{ o.status | statusTranslate }}
           </span>
         </div>
 
         <div class="row2">
-          <div class="subtitle">Cant.: {{ o.quantityRequested }}</div>
-
-          <div class="content-info-order">
-            <div class="subtitle">Total: {{ o.total | currency:'COP' }}</div>
-            <div class="muted subtitle">Creado: {{ o.createdAt| date:'medium' }}</div>
-          </div>
+          <div><strong>Cant.:</strong> {{ o.quantityRequested }}</div>
+          <div><strong>Total:</strong> {{ o.total | currency:'COP' }}</div>
+          <div class="muted"><strong>Creado:</strong> {{ o.createAt | date:'medium' }}</div>
         </div>
 
         <div class="actions">
-          <app-button text="Ver detalle" (clicked)="view(o.id)"></app-button>
-          <app-button *ngIf="canConfirm(o.status)" text="Confirmar recepción" color="primary" (clicked)="confirm(o.id)"></app-button>
+          <app-button text="Ver detalle" color="secondary" (clicked)="view(o.id)"></app-button>
+
+          <!-- Subir comprobante -->
+          <input type="file" accept="image/*" #uploader hidden (change)="onPickPaymentFile(o.id, $event)" />
+          <app-button
+            *ngIf="canUploadPayment(o.status)"
+            text="Subir comprobante"
+            color="primary"
+            (clicked)="triggerFile(uploader)">
+          </app-button>
+
+          <!-- Cancelar pedido -->
+          <app-button
+            *ngIf="canCancel(o.status)"
+            text="Cancelar"
+            color="danger"
+            (clicked)="cancel(o.id)">
+          </app-button>
+
+          <!-- Confirmar recepción -->
+          <app-button
+            *ngIf="canConfirm(o.status)"
+            text="Confirmar recepción"
+            color="primary"
+            (clicked)="confirm(o.id)">
+          </app-button>
         </div>
       </div>
     </div>
