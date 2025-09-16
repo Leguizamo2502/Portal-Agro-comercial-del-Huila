@@ -74,34 +74,36 @@ namespace Web.Controllers.Implements.Auth
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Login([FromBody] LoginUserDto dto, CancellationToken ct)
         {
-            // Ahora GenerateTokensAsync NO retorna userContext
-            var (access, refresh, csrf) = await _token.GenerateTokensAsync(dto);
-
-            var now = DateTime.UtcNow;
-
-            // Setear cookies usando tu fábrica (mismas opciones para escribir y borrar)
-            Response.Cookies.Append(
-                _cookieSettings.AccessTokenName,
-                access,
-                _cookieFactory.AccessCookieOptions(now.AddMinutes(_jwt.AccessTokenExpirationMinutes)));
-
-            Response.Cookies.Append(
-                _cookieSettings.RefreshTokenName,
-                refresh,
-                _cookieFactory.RefreshCookieOptions(now.AddDays(_jwt.RefreshTokenExpirationDays)));
-
-            Response.Cookies.Append(
-                _cookieSettings.CsrfCookieName,
-                csrf,
-                _cookieFactory.CsrfCookieOptions(now.AddDays(_jwt.RefreshTokenExpirationDays)));
-
-            // Respuesta mínima (el /auth/me devolverá el contexto completo cuando el front lo pida)
-            return Ok(new
+            try
             {
-                isSuccess = true,
-                message = "Login exitoso"
-            });
+                var (access, refresh, csrf) = await _token.GenerateTokensAsync(dto);
+
+                var now = DateTime.UtcNow;
+
+                Response.Cookies.Append(
+                    _cookieSettings.AccessTokenName,
+                    access,
+                    _cookieFactory.AccessCookieOptions(now.AddMinutes(_jwt.AccessTokenExpirationMinutes)));
+
+                Response.Cookies.Append(
+                    _cookieSettings.RefreshTokenName,
+                    refresh,
+                    _cookieFactory.RefreshCookieOptions(now.AddDays(_jwt.RefreshTokenExpirationDays)));
+
+                Response.Cookies.Append(
+                    _cookieSettings.CsrfCookieName,
+                    csrf,
+                    _cookieFactory.CsrfCookieOptions(now.AddDays(_jwt.RefreshTokenExpirationDays)));
+
+                return Ok(new { isSuccess = true, message = "Login exitoso" });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                // Mensaje controlado y status 401
+                return Unauthorized(new { isSuccess = false, message = "Credenciales inválidas" });
+            }
         }
+
 
 
         /// <summary>Renueva tokens (usa refresh cookie + comprobación CSRF double-submit).</summary>

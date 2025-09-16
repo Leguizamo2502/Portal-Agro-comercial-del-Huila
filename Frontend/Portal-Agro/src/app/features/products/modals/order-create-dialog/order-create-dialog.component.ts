@@ -45,7 +45,6 @@ const requiredTrimmed = (label: string): ValidatorFn => (c: AbstractControl): Va
 const phoneBasic = (label: string): ValidatorFn => (c: AbstractControl): ValidationErrors | null => {
   const v = (c.value ?? '').toString().trim();
   if (!v) return { required: `${label} es obligatorio.` };
-  // básico: dígitos + símbolos comunes, 7–20 chars
   if (!/^[0-9 +()\-]{7,20}$/.test(v)) return { pattern: `${label} no es válido.` };
   return null;
 };
@@ -56,8 +55,6 @@ const phoneBasic = (label: string): ValidatorFn => (c: AbstractControl): Validat
   templateUrl: './order-create-dialog.component.html',
   styleUrl: './order-create-dialog.component.css'
 })
-
-
 export class OrderCreateDialogComponent {
   private fb = inject(FormBuilder);
   private dialogRef = inject(MatDialogRef<OrderCreateDialogComponent>);
@@ -66,10 +63,9 @@ export class OrderCreateDialogComponent {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: OrderCreateDialogData) {}
 
-  // Step groups
+  // Step groups (ya sin payment)
   productGroup!: FormGroup;
   deliveryGroup!: FormGroup;
-  paymentGroup!: FormGroup;
 
   // Catálogos
   departments: DepartmentModel[] = [];
@@ -77,17 +73,10 @@ export class OrderCreateDialogComponent {
 
   // Estado UI
   isSubmitting = false;
-  MAX_FILE_MB = 6;
-  MAX_FILE_BYTES = this.MAX_FILE_MB * 1024 * 1024;
-
-  // File
-  paymentFile?: File;
-  paymentPreview?: string; // base64 preview
 
   ngOnInit(): void {
     this.initForms();
     this.loadDepartments();
-    // Pre-carga ciudades si quieres a partir del depto seleccionado (aquí vacío inicialmente)
   }
 
   // ---------- Init Forms ----------
@@ -104,10 +93,6 @@ export class OrderCreateDialogComponent {
       addressLine1: ['', [requiredTrimmed('Dirección')]],
       addressLine2: [''],
       additionalNotes: [''],
-    });
-
-    this.paymentGroup = this.fb.group({
-      paymentImage: [null, [Validators.required]], // solo marcador para estado del stepper
     });
   }
 
@@ -141,51 +126,19 @@ export class OrderCreateDialogComponent {
     return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(n);
   }
 
-  // ---------- File handlers ----------
-  onFilePicked(files: FileList | null): void {
-    if (!files?.length) return;
-    const file = files.item(0)!;
-
-    if (!file.type.startsWith('image/')) {
-      this.toast('El comprobante debe ser una imagen (JPG/PNG/WEBP).', 'warning');
-      return;
-    }
-    if (file.size > this.MAX_FILE_BYTES) {
-      this.toast(`La imagen excede ${this.MAX_FILE_MB} MB.`, 'warning');
-      return;
-    }
-
-    this.paymentFile = file;
-    this.paymentGroup.get('paymentImage')!.setValue('ok');
-    this.readPreview(file);
-  }
-
-  removeFile(): void {
-    this.paymentFile = undefined;
-    this.paymentPreview = undefined;
-    this.paymentGroup.get('paymentImage')!.reset();
-  }
-
-  private readPreview(file: File): void {
-    const reader = new FileReader();
-    reader.onload = (ev) => (this.paymentPreview = ev.target?.result as string);
-    reader.readAsDataURL(file);
-  }
-
   // ---------- Submit ----------
   submit(): void {
     if (this.isSubmitting) return;
 
     this.productGroup.markAllAsTouched();
     this.deliveryGroup.markAllAsTouched();
-    this.paymentGroup.markAllAsTouched();
 
-    if (this.productGroup.invalid || this.deliveryGroup.invalid || !this.paymentFile) return;
+    if (this.productGroup.invalid || this.deliveryGroup.invalid) return;
 
     const qty = Number(this.productGroup.value.quantityRequested);
     const d = this.deliveryGroup.value;
 
-    const dto = {
+    const dto: OrderCreateModel = {
       productId: this.data.productId,
       quantityRequested: qty,
       recipientName: (d.recipientName ?? '').trim(),
@@ -194,7 +147,6 @@ export class OrderCreateDialogComponent {
       addressLine2: (d.addressLine2 ?? '').trim() || undefined,
       cityId: Number(d.cityId),
       additionalNotes: (d.additionalNotes ?? '').trim() || undefined,
-      paymentImage: this.paymentFile,
     };
 
     this.isSubmitting = true;
@@ -202,7 +154,7 @@ export class OrderCreateDialogComponent {
     Swal.fire({ title: 'Creando pedido...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
     this.orderSrv
-      .create(dto)
+      .create(dto) // ENVÍA JSON (no FormData)
       .pipe(
         take(1),
         catchError((err) => {
@@ -216,15 +168,13 @@ export class OrderCreateDialogComponent {
         Swal.close();
         if (!resp) return;
 
-        // Esperamos { IsSuccess: true, OrderId: number } desde el backend
         if (resp.isSuccess) {
-          // this.toast('Pedido Completado.', 'success');
-           Swal.fire({
-                    icon: 'success',
-                    title: 'Pedido Completado.',
-                    text: 'Pedido completado exitosamente.',
-                  });
-          this.dialogRef.close(resp); // El padre muestra el toast de éxito
+          Swal.fire({
+            icon: 'success',
+            title: 'Pedido creado',
+            text: `Tu pedido #${resp.orderId ?? resp.orderId} fue creado. Te enviaremos instrucciones por correo cuando el productor lo revise.`,
+          });
+          this.dialogRef.close(resp);
         } else {
           this.toast('No se pudo crear el pedido.', 'error');
         }

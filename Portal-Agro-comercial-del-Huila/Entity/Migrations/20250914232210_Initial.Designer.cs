@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Entity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250908212248_Inicial")]
-    partial class Inicial
+    [Migration("20250914232210_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -940,6 +940,9 @@ namespace Entity.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime?>("AcceptedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
@@ -976,6 +979,9 @@ namespace Entity.Migrations
                     b.Property<string>("PaymentImageUrl")
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
+
+                    b.Property<DateTime?>("PaymentSubmittedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("PaymentUploadedAt")
                         .HasColumnType("datetime2");
@@ -1043,9 +1049,13 @@ namespace Entity.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CityId");
+
                     b.HasIndex("ProductId");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("Status", "AutoCloseAt", "Active", "IsDeleted");
 
                     b.ToTable("Orders");
                 });
@@ -3579,17 +3589,25 @@ namespace Entity.Migrations
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Orders.Order", b =>
                 {
+                    b.HasOne("Entity.Domain.Models.Implements.Location.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Entity.Domain.Models.Implements.Producers.Products.Product", "Product")
                         .WithMany("Orders")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Entity.Domain.Models.Implements.Auth.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("City");
 
                     b.Navigation("Product");
 

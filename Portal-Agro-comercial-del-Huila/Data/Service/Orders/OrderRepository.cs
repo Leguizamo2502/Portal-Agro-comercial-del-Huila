@@ -2,6 +2,7 @@
 using Data.Repository;
 using Entity.Domain.Enums;
 using Entity.Domain.Models.Implements.Orders;
+using Entity.Domain.Models.Implements.Producers;
 using Entity.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -47,10 +48,21 @@ namespace Data.Service.Orders
             return true;
         }
 
+        public override async Task<Order?> GetByIdAsync(int id)
+        {
+            return await _dbSet
+                .AsNoTracking()
+                .Include(o => o.City)
+                    .ThenInclude(c => c.Department)
+                .FirstOrDefaultAsync(o => o.IsDeleted == false && o.Active == true && o.Id == id);
+        }
+
         public async Task<IEnumerable<Order>> GetOrdersByProducerAsync(int producerId)
         {
             return await _dbSet
                 .AsNoTracking()
+                .Include(o=>o.City)
+                    .ThenInclude(c=>c.Department)
                 .Where(o => !o.IsDeleted && o.Active
                             && o.ProducerIdSnapshot == producerId)
                 .OrderByDescending(o => o.CreateAt)
@@ -61,6 +73,8 @@ namespace Data.Service.Orders
         {
             return await _dbSet
                 .AsNoTracking()
+                .Include(o => o.City)
+                    .ThenInclude(c => c.Department)
                 .Where(o => !o.IsDeleted && o.Active
                             && o.ProducerIdSnapshot == producerId
                             && o.Status == OrderStatus.PendingReview)
@@ -71,6 +85,8 @@ namespace Data.Service.Orders
         public async Task<IEnumerable<Order>> GetOrdersByUserAsync(int userId)
         {
             return await _dbSet.AsNoTracking()
+                .Include(o => o.City)
+                    .ThenInclude(c => c.Department)
                .Where(o => o.UserId == userId && !o.IsDeleted && o.Active)
                .OrderByDescending(o => o.CreateAt)
                .ToListAsync();

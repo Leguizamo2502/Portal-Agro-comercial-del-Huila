@@ -141,6 +141,27 @@ namespace Entity.Infrastructure.Context
 
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+
+            modelBuilder.Entity<Order>(b =>
+            {
+                b.HasIndex(o => new { o.Status, o.AutoCloseAt, o.Active, o.IsDeleted });
+                b.HasOne(o => o.User)
+                 .WithMany(u => u.Orders)
+                 .HasForeignKey(o => o.UserId)
+                 .OnDelete(DeleteBehavior.Restrict); // o DeleteBehavior.NoAction en EF Core 7/8
+
+                b.HasOne(o => o.Product)
+                 .WithMany(p => p.Orders)
+                 .HasForeignKey(o => o.ProductId)
+                 .OnDelete(DeleteBehavior.Restrict);
+
+                b.HasOne(o => o.City)
+                 .WithMany()
+                 .HasForeignKey(o => o.CityId)
+                 .OnDelete(DeleteBehavior.Restrict); // opcional pero recomendable
+            });
+
         }
 
         //Auth

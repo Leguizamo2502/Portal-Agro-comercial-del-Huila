@@ -16,6 +16,13 @@ namespace Business.Interfaces.Implements.Orders
         Task ConfirmOrderAsync(int userId, int orderId, OrderConfirmDto dto);
 
         Task<IEnumerable<OrderListItemDto>> GetOrdersByUserAsync(int userId);
+        Task CancelByUserAsync(int userId, int orderId, string rowVersionBase64);
+        Task UploadPaymentAsync(int userId, int orderId, OrderUploadPaymentDto dto);
+        Task MarkPreparingAsync(int userId, int orderId, string rowVersionBase64);
+        Task MarkDispatchedAsync(int userId, int orderId, string rowVersionBase64);
+        Task MarkDeliveredAsync(int userId, int orderId, string rowVersionBase64);
+
+
 
     }
 }

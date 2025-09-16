@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Entity.Migrations
 {
     /// <inheritdoc />
-    public partial class Inicial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -491,6 +491,8 @@ namespace Entity.Migrations
                     Status = table.Column<int>(type: "int", nullable: false),
                     PaymentImageUrl = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
                     PaymentUploadedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    AcceptedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    PaymentSubmittedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ProducerDecisionAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ProducerDecisionReason = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProducerNotes = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -515,17 +517,23 @@ namespace Entity.Migrations
                 {
                     table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Orders_City_CityId",
+                        column: x => x.CityId,
+                        principalTable: "City",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Orders_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Orders_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -1047,9 +1055,19 @@ namespace Entity.Migrations
                 column: "ModuleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Orders_CityId",
+                table: "Orders",
+                column: "CityId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Orders_ProductId",
                 table: "Orders",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_Status_AutoCloseAt_Active_IsDeleted",
+                table: "Orders",
+                columns: new[] { "Status", "AutoCloseAt", "Active", "IsDeleted" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_UserId",
