@@ -22,8 +22,8 @@ export class FarmService {
   }
 
   /** Obtener fincas de prodcutor por code */
-  public getFarmByCodeProducer(codeProducer: string): Observable<FarmSelectModel> {
-    return this.http.get<FarmSelectModel>(
+  public getFarmByCodeProducer(codeProducer: string): Observable<FarmSelectModel[]> {
+    return this.http.get<FarmSelectModel[]>(
       `${this.urlBase}/by-producerCode/${codeProducer}`
     );
   }

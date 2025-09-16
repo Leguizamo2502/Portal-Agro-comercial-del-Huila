@@ -57,8 +57,8 @@ export class ProductService {
   /** Obtener fincas de prodcutor por code */
   public getProductByCodeProducer(
     codeProducer: string
-  ): Observable<ProductSelectModel> {
-    return this.http.get<ProductSelectModel>(
+  ): Observable<ProductSelectModel[]> {
+    return this.http.get<ProductSelectModel[]>(
       `${this.urlBase}/by-producerCode/${codeProducer}`
     );
   }

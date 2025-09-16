@@ -1,0 +1,22 @@
+/* carrusel horizontal */
+.product-container {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 16px;
+  padding: 8px 0;
+  scroll-behavior: smooth;
+}
+
+/* cada tarjeta ocupa ancho fijo */
+.item-card {
+  flex: 0 0 auto; /* evita que se reduzca */
+  width: 250px;   /* ajusta según tu diseño */
+}
+
+/* scrollbar personalizado */
+.product-container::-webkit-scrollbar { height: 8px; }
+.product-container::-webkit-scrollbar-thumb {
+  background-color: #4caf50;
+  border-radius: 4px;
+}
