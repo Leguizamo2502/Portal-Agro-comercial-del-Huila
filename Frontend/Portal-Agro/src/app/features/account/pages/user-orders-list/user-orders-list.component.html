@@ -1,6 +1,16 @@
 <div class="wrapper">
   <h2 class="title">Mis pedidos</h2>
 
+  <!-- prueba cantidad de pedidos -->
+
+  <!-- <app-stat-card
+    icon="shopping_cart"
+    text="Pedidos"
+    [count]="numberOrders"
+    color="warning"
+    [loading]="loading">
+  </app-stat-card> -->
+  
   <ng-container *ngIf="!loading; else loadingTpl">
     <div *ngIf="items.length; else emptyTpl" class="list">
       <div class="card" *ngFor="let o of items; trackBy: trackById">

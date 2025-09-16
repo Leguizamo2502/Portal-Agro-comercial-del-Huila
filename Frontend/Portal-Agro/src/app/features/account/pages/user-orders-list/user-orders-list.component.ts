@@ -42,6 +42,10 @@ export class UserOrdersListComponent implements OnInit {
       .subscribe({
         next: (list) => {
           this.items = list ?? [];
+
+          // prueba cantidad de pedidos
+          this.numberOrders = this.items.length;
+
           this.loading = false;
         },
         error: (err) => {
