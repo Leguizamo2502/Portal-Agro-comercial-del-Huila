@@ -42,5 +42,13 @@ namespace Business.Services.Producers
                 throw new BusinessException($"Error al obtener el producto con ID {codeProducer}.", ex);
             }
         }
+
+        public Task<int> SalesNumberByCode(string codeProducer)
+        {
+            var count = _producerRepository.SalesNumberByCode(codeProducer);
+            if (count == null) 
+                throw new BusinessException($"No se encontró el productor con código {codeProducer}.");
+            return count;
+        }
     }
 }

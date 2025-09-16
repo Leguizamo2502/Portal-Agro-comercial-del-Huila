@@ -47,6 +47,7 @@ export class ProducerProfileComponent implements OnInit {
   private farmService = inject(FarmService);
   private producerService = inject(ProducerService);
 
+
   profile?: ProfileVM;
 
   ngOnInit(): void {

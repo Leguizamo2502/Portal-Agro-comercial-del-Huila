@@ -5,5 +5,6 @@ namespace Business.Interfaces.Implements
     public interface IProducerService 
     {
         Task<ProducerSelectDto?> GetByCodeProducer(string codeProducer);
+        Task<int> SalesNumberByCode(string codeProducer);
     }
 }

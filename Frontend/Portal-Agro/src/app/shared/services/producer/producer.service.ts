@@ -17,4 +17,10 @@ export class ProducerService {
       `${this.urlBase}/by-code/${codeProducer}`
     );
   }
+
+  getSalesNumberByCode(codeProducer: string): Observable<number> {
+    return this.http.get<number>(
+      `${this.urlBase}/sales-number/${codeProducer}`
+    );
+  }
 }

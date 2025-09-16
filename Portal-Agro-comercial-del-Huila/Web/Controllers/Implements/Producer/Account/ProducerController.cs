@@ -13,7 +13,7 @@ namespace Web.Controllers.Implements.Producer.Cuenta
     {
         private readonly ILogger<ProducerController> _logger;
         private readonly IProducerService _producerService;
-        public ProducerController(ILogger<ProducerController> logger,IProducerService producerService)
+        public ProducerController(ILogger<ProducerController> logger, IProducerService producerService)
         {
             _logger = logger;
             _producerService = producerService;
@@ -52,6 +52,32 @@ namespace Web.Controllers.Implements.Producer.Cuenta
         }
 
 
+        [HttpGet("sales-number/{codeProducer}")]
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetSalesNumberByCode([FromRoute] string codeProducer)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(codeProducer))
+                    return BadRequest(new { message = "El código del productor es requerido." });
+                var salesNumber = await _producerService.SalesNumberByCode(codeProducer);
+                return Ok(salesNumber);
+            }
+            catch (BusinessException be)
+            {
+                _logger.LogWarning(be, "Error de negocio al obtener número de ventas para productor con código {CodeProducer}", codeProducer);
+                return BadRequest(new { message = be.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error inesperado al obtener número de ventas para productor con código {CodeProducer}", codeProducer);
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { message = "Se produjo un error inesperado al consultar el número de ventas del productor." });
+            }
 
+        }
     }
 }

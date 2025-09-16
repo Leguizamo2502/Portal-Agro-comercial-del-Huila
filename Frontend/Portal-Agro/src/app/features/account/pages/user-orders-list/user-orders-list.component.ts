@@ -23,6 +23,8 @@ export class UserOrdersListComponent implements OnInit {
   private ordersSrv = inject(OrderService);
   private router = inject(Router);
 
+  private numberOrders : number = 0;
+
   loading = true;
   items: OrderListItemModel[] = [];
 
@@ -192,7 +194,7 @@ export class UserOrdersListComponent implements OnInit {
   async onPickPaymentFile(id: number, ev: Event) {
     const input = ev.target as HTMLInputElement;
     const file = input.files?.[0];
-    input.value = ''; // limpiar para permitir re-seleccionar luego
+    input.value = ''; 
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {

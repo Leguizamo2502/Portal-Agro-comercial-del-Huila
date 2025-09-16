@@ -1,5 +1,7 @@
 ﻿using Data.Interfaces.Implements.Producers;
 using Data.Repository;
+using Entity.Domain.Enums;
+using Entity.Domain.Models.Implements.Orders;
 using Entity.Domain.Models.Implements.Producers;
 using Entity.Domain.Models.Implements.Producers.Products;
 using Entity.DTOs.Order.Select;
@@ -51,6 +53,12 @@ namespace Data.Service.Producers
 
         }
 
-
+        public async Task<int> SalesNumberByCode(string codeProducer)
+        {
+            return await _context.Set<Order>()
+                .AsNoTracking()
+                .Where(o => o.Product.Producer.Code == codeProducer && o.Status == OrderStatus.Completed)
+                .CountAsync();
+        }
     }
 }
