@@ -1,5 +1,6 @@
 ﻿using Business.Services.BackgroundServices.Options;
 using Entity.Domain.Enums;
+using Entity.Domain.Models.Implements.Orders;
 using Entity.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -69,7 +70,7 @@ namespace Business.Services.BackgroundServices.Implements
             var now = DateTime.UtcNow;
 
             // 1) Selecciona candidatos en lote (solo IDs para reducir payload)
-            var candidateIds = await db.Set<Entity.Domain.Models.Implements.Orders.Order>()
+            var candidateIds = await db.Set<Order>()
                 .AsNoTracking()
                 .Where(o => !o.IsDeleted && o.Active
                             && o.Status == OrderStatus.AcceptedAwaitingPayment

@@ -193,40 +193,53 @@ namespace Business.Services.Orders
             if (order.Status != OrderStatus.PendingReview)
                 throw new BusinessException("Solo se pueden aceptar órdenes en estado pendiente.");
 
-            // Concurrencia: RowVersion desde request (Base64 → byte[])
+            // Concurrencia de la orden
             order.RowVersion = Convert.FromBase64String(dto.RowVersion);
 
             var now = DateTime.UtcNow;
             order.ProducerNotes = string.IsNullOrWhiteSpace(dto.Notes) ? null : dto.Notes.Trim();
-            order.ProducerDecisionAt = now;         // timestamp de decisión
+            order.ProducerDecisionAt = now;
             order.Status = OrderStatus.AcceptedAwaitingPayment;
-            order.AcceptedAt = now;                  // asegúrate de tener este campo en la entidad
-            order.AutoCloseAt = now.AddHours(_paymentUploadDeadlineHours); // si no sube comprobante a tiempo, se auto-cancela/expira
+            order.AcceptedAt = now;
+            order.AutoCloseAt = now.AddHours(_paymentUploadDeadlineHours);
 
+            await using var tx = await _db.Database.BeginTransactionAsync();
             try
             {
+                var ok = await _productRepository.TryDecrementStockAsync(order.ProductId, order.QuantityRequested);
+                if (!ok)
+                    throw new BusinessException("Stock insuficiente o concurrencia detectada. Refresca e inténtalo de nuevo.");
+
+                // 2) Persistir orden
                 await _orderRepository.UpdateOrderAsync(order);
                 await _db.SaveChangesAsync();
 
-                // Notificar al comprador con instrucciones claras para subir comprobante antes del deadline
-                var user = await _userRepository.GetContactUser(order.UserId)
-                          ?? throw new BusinessException("No se pudo obtener el contacto del usuario.");
-
-                // Reutiliza tu servicio de correos. Si no tienes un template específico, crea uno tipo “AcceptedAwaitingPayment”.
-                await _orderEmailService.SendOrderAcceptedAwaitingPaymentToCustomer(
-                    emailReceptor: user.Email,
-                    orderId: order.Id,
-                    productName: order.ProductNameSnapshot,
-                    quantityRequested: order.QuantityRequested,
-                    total: order.Total,
-                    acceptedAtUtc: order.AcceptedAt!.Value,
-                    paymentDeadlineUtc: order.AutoCloseAt!.Value
-                );
+                await tx.CommitAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
+                await tx.RollbackAsync();
                 throw new BusinessException("La orden fue modificada por otro usuario. Refresca y vuelve a intentar.");
             }
+            catch
+            {
+                await tx.RollbackAsync();
+                throw;
+            }
+
+            // 3) Notificar (best-effort, fuera de la transacción)
+            var user = await _userRepository.GetContactUser(order.UserId)
+                      ?? throw new BusinessException("No se pudo obtener el contacto del usuario.");
+
+            await _orderEmailService.SendOrderAcceptedAwaitingPaymentToCustomer(
+                emailReceptor: user.Email,
+                orderId: order.Id,
+                productName: order.ProductNameSnapshot,
+                quantityRequested: order.QuantityRequested,
+                total: order.Total,
+                acceptedAtUtc: order.AcceptedAt!.Value,
+                paymentDeadlineUtc: order.AutoCloseAt!.Value
+            );
         }
 
 

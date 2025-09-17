@@ -217,5 +217,31 @@ namespace Data.Service.Producers.Products
             entity.Stock = newStock;
             return await _context.SaveChangesAsync() > 0;
         }
+
+        public async Task<bool> TryDecrementStockAsync(int productId, int quantity)
+        {
+            var product = await _dbSet
+                .Where(p => p.Id == productId && p.Active && !p.IsDeleted)
+                .FirstOrDefaultAsync();
+
+            if (product == null)
+                return false;
+
+            if (product.Stock < quantity)
+                return false; // No hay suficiente stock
+
+            product.Stock -= quantity;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return false;
+            }
+        }
+
     }
 }

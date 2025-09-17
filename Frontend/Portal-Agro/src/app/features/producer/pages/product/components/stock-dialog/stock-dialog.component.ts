@@ -15,28 +15,9 @@ export interface StockDialogData {
 
 @Component({
   selector: 'app-stock-dialog',
-  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatButtonModule],
-  template: `
-  <h2 mat-dialog-title>Actualizar Stock</h2>
-  <div mat-dialog-content>
-    <p *ngIf="data.productName">Producto: <strong>{{ data.productName }}</strong></p>
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Nuevo stock</mat-label>
-        <input matInput type="number" formControlName="newStock" min="0" />
-        <mat-error *ngIf="form.get('newStock')?.hasError('required')">Requerido</mat-error>
-        <mat-error *ngIf="form.get('newStock')?.hasError('min')">No puede ser negativo</mat-error>
-      </mat-form-field>
-    </form>
-  </div>
-  <div mat-dialog-actions align="end">
-    <button mat-stroked-button (click)="dialogRef.close()">Cancelar</button>
-    <button mat-flat-button color="primary" [disabled]="form.invalid || loading" (click)="onSubmit()">
-      Guardar
-    </button>
-  </div>
-  `
+  templateUrl: './stock-dialog.component.html',
+  styleUrl: './stock-dialog.component.css'
 })
 export class StockDialogComponent {
   loading = false;

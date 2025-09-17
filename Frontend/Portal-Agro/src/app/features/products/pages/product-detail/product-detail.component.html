@@ -100,7 +100,7 @@
             [type]="'button'"
             [icon]="'shopping_cart'"
             (click)="openCreateOrder()"
-            [disabled]="loadingProduct || (product.stock ?? 0) <= 0"
+            [disabled]="loadingProduct || product.stock <= 0"
           >
           </app-button>
         </div>
