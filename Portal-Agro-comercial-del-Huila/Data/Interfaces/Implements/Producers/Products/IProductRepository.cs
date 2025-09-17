@@ -12,5 +12,6 @@ namespace Data.Interfaces.Implements.Producers.Products
         Task<IEnumerable<Product>> GetByCategoriesAsync(List<int> categoryIds, bool includeDescendants);
         Task<IEnumerable<Product>> GetFeaturedAsync(int limit);
         Task<IEnumerable<Product>> GetAllWithLimitAsync(int? limit);
+        Task<bool> UpdateStock(int productId, int newStock);
     }
 }

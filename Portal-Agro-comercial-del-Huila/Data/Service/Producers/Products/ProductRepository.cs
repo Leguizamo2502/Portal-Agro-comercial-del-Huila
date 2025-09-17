@@ -210,6 +210,12 @@ namespace Data.Service.Producers.Products
                 .ToListAsync();
         }
 
-
+        public async Task<bool> UpdateStock(int productId, int newStock)
+        {
+            var entity = await _dbSet.FirstOrDefaultAsync(p => p.Id == productId && !p.IsDeleted);
+            if (entity == null) return false;
+            entity.Stock = newStock;
+            return await _context.SaveChangesAsync() > 0;
+        }
     }
 }

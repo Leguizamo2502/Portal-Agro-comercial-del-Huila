@@ -90,3 +90,8 @@ export interface ReviewSelectModel {
   comment: string;
   createAt: string;       
 }
+
+export interface StockUpdateModel{
+  productId: number;
+  newStock:number
+}

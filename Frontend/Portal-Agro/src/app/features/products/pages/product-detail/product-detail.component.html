@@ -77,6 +77,10 @@
             <div class="text">{{ product.unit }}</div>
           </div>
           <div class="mb-1 subtitle">
+            Stock:
+            <div class="text">{{ product.stock }}</div>
+          </div>
+          <div class="mb-1 subtitle">
             Precio:
             <div class="text">
               {{ product.price | currency : "COP" : "symbol" }}

@@ -1,82 +1,143 @@
-import { Component, OnInit } from '@angular/core';
-import { StatCardComponent } from "../../../../shared/components/stat-card/stat-card.component";
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
-import { CommonModule } from '@angular/common';
+
+import { StatCardComponent } from '../../../../shared/components/stat-card/stat-card.component';
 import { OrderService } from '../../../products/services/order/order.service';
+import { AnalyticService } from '../../../../shared/services/analytics/analytic.service';
+import { forkJoin, catchError, of, finalize } from 'rxjs';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-summary',
   standalone: true,
-  imports: [CommonModule, StatCardComponent, BaseChartDirective],
+  imports: [CommonModule, StatCardComponent, BaseChartDirective,RouterLink],
   templateUrl: './summary.component.html',
-  styleUrl: './summary.component.css'
+  styleUrl: './summary.component.css',
 })
 export class SummaryComponent implements OnInit {
-  // Propiedades para stat-cards
+  @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
+  private orderService = inject(OrderService);
+  private analyticService = inject(AnalyticService);
+
+  // Stat-cards
   totalOrders = 0;
   pendingOrders = 0;
-  confirmedOrders = 0;
+  // confirmedOrders = 0;
   loading = true;
 
-  constructor(private orderService: OrderService) {}
+  // Carga de la gráfica
+  chartLoading = true;
+
+  constructor() {}
 
   ngOnInit(): void {
     this.loadSummary();
+    this.loadTopProductsChart();
   }
 
   private loadSummary() {
     this.loading = true;
 
-    // Primero trae todos los pedidos
-    this.orderService.getProducerOrders().subscribe({
-      next: (orders) => {
-        this.totalOrders = orders.length;
-
-        // Luego trae pendientes
-        this.orderService.getProducerPendingOrders().subscribe({
-          next: (pending) => {
-            this.pendingOrders = pending.length;
-            this.confirmedOrders = this.totalOrders - this.pendingOrders;
-            this.loading = false;
-          },
-          error: (err) => {
-            console.error('Error cargando pedidos pendientes', err);
-            this.loading = false;
-          }
-        });
-      },
-      error: (err) => {
-        console.error('Error cargando pedidos', err);
-        this.loading = false;
-      }
-    });
+    forkJoin({
+      all: this.orderService.getProducerOrders().pipe(catchError(() => of([]))),
+      pending: this.orderService
+        .getProducerPendingOrders()
+        .pipe(catchError(() => of([]))),
+    })
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe(({ all, pending }) => {
+        this.totalOrders = all.length;
+        this.pendingOrders = pending.length;
+        // this.confirmedOrders = this.totalOrders - this.pendingOrders;
+      });
   }
 
-  // Datos del gráfico (por ahora quemados)
+  // ====== Gráfica dinámica (Top productos por pedidos completados) ======
+
+  // Inicia vacío; se llenará con la API de analytics
   barChartData: ChartConfiguration<'bar'>['data'] = {
-    labels: ['Café', 'Maíz', 'Cacao', 'Frijol', 'Arroz'],
+    labels: [],
     datasets: [
       {
-        label: 'Ventas',
-        data: [120, 90, 150, 70, 110],
-        backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726', '#AB47BC'],
-      }
-    ]
+        label: 'Pedidos completados',
+        data: [],
+        // Si quieres mantener colores personalizados, déjalos.
+        // Si prefieres automático de Chart.js, elimina backgroundColor.
+        backgroundColor: [
+          '#42A5F5',
+          '#66BB6A',
+          '#FFA726',
+          '#AB47BC',
+          '#29B6F6',
+          '#EC407A',
+          '#7E57C2',
+        ],
+      },
+    ],
   };
 
   barChartOptions: ChartOptions<'bar'> = {
     responsive: true,
     plugins: {
-      legend: {
-        display: true,
-        position: 'top',
-        align: 'start',
-        labels: {
-          color: '#333',
-          font: { size: 14, weight: 'bold' },
+      legend: { display: true, position: 'top', align: 'start' },
+      tooltip: { enabled: true },
+    },
+    scales: {
+      x: {
+        ticks: {
+          callback: function (value, index, ticks) {
+            const lbl = (this.getLabelForValue as any)?.(value) ?? '';
+            return String(lbl).length > 18
+              ? String(lbl).slice(0, 17) + '…'
+              : lbl;
+          },
         },
       },
+      y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 } },
     },
   };
+
+  private loadTopProductsChart(limit = 5): void {
+    this.chartLoading = true;
+
+    this.analyticService.getTopProducts(limit).subscribe({
+      next: ({ items }) => {
+        if (!items || items.length === 0) {
+          // Estado vacío legible en la UI
+          this.barChartData.labels = ['Sin datos'];
+          this.barChartData.datasets[0].data = [0];
+        } else {
+          this.barChartData.labels = items.map((i) => i.productName);
+          // Por definición pediste “más pedidos completados”
+          this.barChartData.datasets[0].data = items.map(
+            (i) => i.completedOrders
+          );
+
+          // Si en el futuro quieres otro dataset con unidades o ingresos, añade datasets:
+          // {
+          //   label: 'Unidades',
+          //   data: items.map(i => i.totalUnits)
+          // }
+          // {
+          //   label: 'Ingresos',
+          //   data: items.map(i => i.totalRevenue)
+          // }
+        }
+
+        // Forzar redibujo cuando se cambian referencias de data/labels
+        this.chart?.update();
+        this.chartLoading = false;
+      },
+      error: (err) => {
+        console.error('Error cargando top de productos', err);
+        // Falla segura para no romper la vista
+        this.barChartData.labels = ['Error'];
+        this.barChartData.datasets[0].data = [0];
+        this.chart?.update();
+        this.chartLoading = false;
+      },
+    });
+  }
 }

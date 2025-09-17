@@ -289,6 +289,31 @@ namespace Business.Services.Producers.Products
             }
         }
 
+        public async Task<bool> UpdateStockAsync(UpdateStockDto dto)
+        {
+            try
+            {
+                var updated = await _productRepository.UpdateStock(dto.ProductId, dto.NewStock);
+
+                if (!updated)
+                    throw new BusinessException($"No se encontró el producto {dto.ProductId} o no se pudo actualizar el stock.");
+
+                return true;
+            }
+            catch (BusinessException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,
+                    "Error actualizando stock. ProductId={ProductId}, NewStock={NewStock}",
+                    dto.ProductId, dto.NewStock);
+
+                throw new BusinessException("No se pudo actualizar el stock por un error interno.");
+            }
+        }
+
 
         #region Helpers
         private async Task<List<ProductImage>> UploadAndMapImagesAsync(IEnumerable<IFormFile>? files, int productId)
@@ -336,6 +361,8 @@ namespace Business.Services.Producers.Products
                 await _productImageRepository.DeleteLogicalByPublicIdAsync(publicId);
             }
         }
+
+       
 
 
         #endregion

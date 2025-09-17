@@ -1,20 +1,39 @@
 <!-- card.component.html (cambios clave marcados) -->
-<mat-card class="product-card" role="button" tabindex="0" (click)="onDetail(product)"
-  (keydown.enter)="onDetail(product)" (keydown.space)="onDetail(product); $event.preventDefault()">
+<mat-card
+  class="product-card"
+  role="button"
+  tabindex="0"
+  (click)="onDetail(product)"
+  (keydown.enter)="onDetail(product)"
+  (keydown.space)="onDetail(product); $event.preventDefault()"
+>
   <!-- FAVORITO -->
   <div *appIfLoggedIn>
-    <button *ngIf="showFavorite" mat-icon-button class="fav-btn" [disabled]="disabledFavorite"
-      (click)="onFavoriteClick($event)" (keydown.enter)="$event.stopPropagation()"
-      (keydown.space)="$event.stopPropagation(); $event.preventDefault()" aria-label="Favorito">
+    <button
+      *ngIf="showFavorite"
+      mat-icon-button
+      class="fav-btn"
+      [disabled]="disabledFavorite"
+      (click)="onFavoriteClick($event)"
+      (keydown.enter)="$event.stopPropagation()"
+      (keydown.space)="$event.stopPropagation(); $event.preventDefault()"
+      aria-label="Favorito"
+    >
       <!-- usa product.isFavorite, NO @Input isFavorite -->
-      <mat-icon [fontIcon]="product.isFavorite ? 'star' : 'star_border'"></mat-icon>
+      <mat-icon
+        [fontIcon]="product.isFavorite ? 'star' : 'star_border'"
+      ></mat-icon>
     </button>
   </div>
 
-
   <!-- resto igual -->
   <div class="image-wrap">
-    <img class="card-image" [src]="imageUrl" alt="Imagen del producto" (error)="onImgError($event)" />
+    <img
+      class="card-image"
+      [src]="imageUrl"
+      alt="Imagen del producto"
+      (error)="onImgError($event)"
+    />
   </div>
 
   <mat-card-content class="content">
@@ -30,16 +49,33 @@
       {{ product.cityName }}, {{ product.departmentName }}
     </p>
 
-    <p class="price">
-      ${{ product.price | number:'1.0-0' }}
-    </p>
+    <p class="price">${{ product.price | number : "1.0-0" }}</p>
 
     <div *ngIf="showActions" class="actions">
-      <button mat-icon-button color="primary" (click)="onEditClick($event)" aria-label="Editar producto">
+      <button
+        mat-icon-button
+        color="primary"
+        (click)="onEditClick($event)"
+        aria-label="Editar producto"
+      >
         <mat-icon class="icon-edit">edit</mat-icon>
       </button>
 
-      <button mat-icon-button color="warn" (click)="onDeleteClick($event)" aria-label="Eliminar producto">
+      <button
+        mat-icon-button
+        color="accent"
+        (click)="onEditStockClick($event)"
+        aria-label="Actualizar stock"
+      >
+        <mat-icon>inventory_2</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        color="warn"
+        (click)="onDeleteClick($event)"
+        aria-label="Eliminar producto"
+      >
         <mat-icon class="icon-delete">delete</mat-icon>
       </button>
     </div>

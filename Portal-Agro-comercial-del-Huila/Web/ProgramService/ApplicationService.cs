@@ -4,6 +4,7 @@ using Business.Interfaces.Implements.Auth;
 using Business.Interfaces.Implements.Location;
 using Business.Interfaces.Implements.Orders;
 using Business.Interfaces.Implements.Orders.Reviews;
+using Business.Interfaces.Implements.Producers.Analitics;
 using Business.Interfaces.Implements.Producers.Categories;
 using Business.Interfaces.Implements.Producers.Cloudinary;
 using Business.Interfaces.Implements.Producers.Farms;
@@ -16,6 +17,7 @@ using Business.Services.Location;
 using Business.Services.Orders;
 using Business.Services.Orders.Reviews;
 using Business.Services.Producers;
+using Business.Services.Producers.Analytics;
 using Business.Services.Producers.Categories;
 using Business.Services.Producers.Cloudinary;
 using Business.Services.Producers.Farms;
@@ -27,6 +29,7 @@ using Data.Interfaces.Implements.Location;
 using Data.Interfaces.Implements.Orders;
 using Data.Interfaces.Implements.Orders.Reviews;
 using Data.Interfaces.Implements.Producers;
+using Data.Interfaces.Implements.Producers.Analytics;
 using Data.Interfaces.Implements.Producers.Categories;
 using Data.Interfaces.Implements.Producers.Farms;
 using Data.Interfaces.Implements.Producers.Products;
@@ -41,6 +44,7 @@ using Data.Service.Location;
 using Data.Service.Orders;
 using Data.Service.Orders.Reviews;
 using Data.Service.Producers;
+using Data.Service.Producers.Analytics;
 using Data.Service.Producers.Categories;
 using Data.Service.Producers.Farms;
 using Data.Service.Producers.Products;
@@ -148,6 +152,9 @@ namespace Web.ProgramService
 
             services.AddScoped<IProductImageRepository, ProductImageRepository>();
             services.AddScoped<IProductImageService, ProductImageService>();
+
+            services.AddScoped<IAnalyticsReadRepository, AnalyticsRepository>();
+            services.AddScoped<IAnalyticsService, AnalyticsService>();
 
             //Qr
             services.AddScoped<IQrCodeService, QrCodeService>();
