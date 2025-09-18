@@ -10,6 +10,7 @@ namespace Data.Interfaces.Implements.Producers
         Task<Producer?> GetByCodeProducer(string codeProducer);
         Task<ContactDto> GetContactProducer(int producerId);
         Task<int> SalesNumberByCode(string codeProducer);
+        Task<string?> GetCodeProducer(int producerId);
 
     }
 }

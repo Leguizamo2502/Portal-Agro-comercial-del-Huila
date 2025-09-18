@@ -3,6 +3,7 @@ using Entity.DTOs.Producer.Producer.Select;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Utilities.Exceptions;
+using Utilities.Helpers.Auth;
 
 namespace Web.Controllers.Implements.Producer.Cuenta
 {
@@ -78,6 +79,41 @@ namespace Web.Controllers.Implements.Producer.Cuenta
                     new { message = "Se produjo un error inesperado al consultar el número de ventas del productor." });
             }
 
+        }
+
+        [HttpGet("get-code")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetCodeProducer()
+        {
+            int? userId = null;
+
+            try
+            {
+                userId = HttpContext.TryGetUserId();
+                if (userId is null)
+                    return Unauthorized(new { message = "No autenticado." });
+
+                var code = await _producerService.GetCodeProducer(userId.Value);
+
+                if (string.IsNullOrWhiteSpace(code))
+                    return NotFound(new { message = $"No se encontró código para el usuario {userId}." });
+
+                return Ok(new { code });
+            }
+            catch (BusinessException be)
+            {
+                _logger.LogWarning(be, "Error de negocio al obtener código de productor para usuario {UserId}", userId);
+                return BadRequest(new { message = be.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error inesperado al obtener código de productor para usuario {UserId}", userId);
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { message = "Se produjo un error inesperado al consultar el código del productor." });
+            }
         }
     }
 }

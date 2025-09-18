@@ -1,5 +1,10 @@
 <h1 class="title top">Resumen</h1>
 <p class="subtext">Vista general de tu desempeño como productor. Usa las tarjetas para navegar a la lista filtrada.</p>
+<app-button
+  [type]="'button'"
+  [text]="'Ver mi perfil'"
+  [redirectTo]="`/home/product/profile/${codeProducer}`"
+></app-button>
 
 <section class="section">
   <header class="section-header">
@@ -9,7 +14,7 @@
       <a [routerLink]="['/account/producer/orders']" [queryParams]="{ status: 'all' }">Ver todos</a>
     </nav>
   </header>
-  <p class="text">Resumen rápido de pedidos totales, confirmados y pendientes.</p>
+  <p class="text">Resumen rápido de pedidos totales y pendientes.</p>
 
   <div class="cont-stat-card d-flex flex-wrap">
     <app-stat-card

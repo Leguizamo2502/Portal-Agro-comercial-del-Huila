@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <Folder Include="DTOs\Producer\Analytics\Enums\" />
-    <Folder Include="DTOs\Producer\Producer\Create\" />
     <Folder Include="Infrastructure\LogService\" />
     <Folder Include="Validation\Validations\Category\" />
   </ItemGroup>

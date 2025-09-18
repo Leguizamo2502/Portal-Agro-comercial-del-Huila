@@ -23,4 +23,8 @@ export class ProducerService {
       `${this.urlBase}/sales-number/${codeProducer}`
     );
   }
+
+  getCodeProducer():Observable<{code:string}>{
+    return this.http.get<{code:string}>(`${this.urlBase}/get-code`)
+  }
 }

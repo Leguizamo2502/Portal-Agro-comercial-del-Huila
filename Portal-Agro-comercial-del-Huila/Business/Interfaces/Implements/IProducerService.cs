@@ -6,5 +6,6 @@ namespace Business.Interfaces.Implements
     {
         Task<ProducerSelectDto?> GetByCodeProducer(string codeProducer);
         Task<int> SalesNumberByCode(string codeProducer);
+        Task<string?> GetCodeProducer(int userId);
     }
 }

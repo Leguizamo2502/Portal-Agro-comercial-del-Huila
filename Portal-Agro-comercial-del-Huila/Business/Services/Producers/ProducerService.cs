@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Business.Interfaces.Implements;
+﻿using Business.Interfaces.Implements;
 using Data.Interfaces.Implements.Producers;
 using Entity.DTOs.Producer.Producer.Select;
-using Entity.DTOs.Products.Select;
 using MapsterMapper;
 using Microsoft.Extensions.Logging;
 using Utilities.Exceptions;
@@ -43,6 +37,17 @@ namespace Business.Services.Producers
             }
         }
 
+        public async Task<string?> GetCodeProducer(int userId)
+        {
+            
+                var producerId =await _producerRepository.GetIdProducer(userId);
+                if (producerId == null) 
+                    throw new BusinessException($"No se encontró el productor asociado al usuario con ID {userId}.");
+                var code = await _producerRepository.GetCodeProducer(producerId.Value);
+                return code;
+            
+        }
+
         public Task<int> SalesNumberByCode(string codeProducer)
         {
             var count = _producerRepository.SalesNumberByCode(codeProducer);
@@ -50,5 +55,8 @@ namespace Business.Services.Producers
                 throw new BusinessException($"No se encontró el productor con código {codeProducer}.");
             return count;
         }
+
+
+
     }
 }

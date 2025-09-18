@@ -8,11 +8,14 @@ import { OrderService } from '../../../products/services/order/order.service';
 import { AnalyticService } from '../../../../shared/services/analytics/analytic.service';
 import { forkJoin, catchError, of, finalize } from 'rxjs';
 import { RouterLink } from '@angular/router';
+import { OrderListItemModel } from '../../../products/models/order/order.model';
+import { ProducerService } from '../../../../shared/services/producer/producer.service';
+import { ButtonComponent } from "../../../../shared/components/button/button.component";
 
 @Component({
   selector: 'app-summary',
   standalone: true,
-  imports: [CommonModule, StatCardComponent, BaseChartDirective,RouterLink],
+  imports: [CommonModule, StatCardComponent, BaseChartDirective, RouterLink, ButtonComponent],
   templateUrl: './summary.component.html',
   styleUrl: './summary.component.css',
 })
@@ -20,12 +23,17 @@ export class SummaryComponent implements OnInit {
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
   private orderService = inject(OrderService);
   private analyticService = inject(AnalyticService);
+  private producerService = inject(ProducerService);
+
+  orderListAll : OrderListItemModel[] = [];
 
   // Stat-cards
   totalOrders = 0;
   pendingOrders = 0;
   // confirmedOrders = 0;
   loading = true;
+
+  codeProducer?: string
 
   // Carga de la gráfica
   chartLoading = true;
@@ -35,6 +43,17 @@ export class SummaryComponent implements OnInit {
   ngOnInit(): void {
     this.loadSummary();
     this.loadTopProductsChart();
+    this.loadProducer();
+  }
+
+
+
+  private loadProducer(){
+    this.producerService.getCodeProducer().subscribe((data)=>{
+      this.codeProducer = data.code;
+      console.log(this.codeProducer);
+      
+    })
   }
 
   private loadSummary() {
@@ -48,9 +67,13 @@ export class SummaryComponent implements OnInit {
     })
       .pipe(finalize(() => (this.loading = false)))
       .subscribe(({ all, pending }) => {
+        this.orderListAll = all;
         this.totalOrders = all.length;
         this.pendingOrders = pending.length;
-        // this.confirmedOrders = this.totalOrders - this.pendingOrders;
+      
+        
+    
+        
       });
   }
 
@@ -115,15 +138,6 @@ export class SummaryComponent implements OnInit {
             (i) => i.completedOrders
           );
 
-          // Si en el futuro quieres otro dataset con unidades o ingresos, añade datasets:
-          // {
-          //   label: 'Unidades',
-          //   data: items.map(i => i.totalUnits)
-          // }
-          // {
-          //   label: 'Ingresos',
-          //   data: items.map(i => i.totalRevenue)
-          // }
         }
 
         // Forzar redibujo cuando se cambian referencias de data/labels

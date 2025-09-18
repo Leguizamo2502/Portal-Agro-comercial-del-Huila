@@ -184,6 +184,7 @@ namespace Entity.Infrastructure.Context
 
         //Producer
         public DbSet<Producer> Producers { get; set; }
+        public DbSet<ProducerSocialLink> ProducerSocialLinks { get; set; }
         public DbSet<Farm> Farms { get; set; }
         public DbSet<FarmImage> FarmImages { get; set; }
 

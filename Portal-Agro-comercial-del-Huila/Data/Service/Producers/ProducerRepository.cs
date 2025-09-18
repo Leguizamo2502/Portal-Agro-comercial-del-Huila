@@ -24,6 +24,14 @@ namespace Data.Service.Producers
                 .FirstOrDefaultAsync(p => p.Code == codeProducer);
         }
 
+        public async Task<string?> GetCodeProducer(int producerId)
+        {
+            return await _dbSet
+                .Where(p => p.Id == producerId)
+                .Select(p => p.Code)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<int?> GetIdProducer(int userId)
         {
             return await _dbSet
