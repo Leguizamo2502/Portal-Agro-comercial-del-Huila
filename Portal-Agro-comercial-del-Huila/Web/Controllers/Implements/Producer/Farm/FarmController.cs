@@ -28,8 +28,8 @@ namespace Web.Controllers.Implements.Producer.Farm
         }
 
 
-        [HttpPost]
-        [Route("registrar/producer")]
+        [HttpPost("registrar/producer")]
+        [Consumes("multipart/form-data")]
         [ProducesResponseType(typeof(string), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]

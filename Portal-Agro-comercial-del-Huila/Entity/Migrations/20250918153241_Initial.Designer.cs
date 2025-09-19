@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Entity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250902120528_inicial")]
-    partial class inicial
+    [Migration("20250918153241_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -940,6 +940,9 @@ namespace Entity.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime?>("AcceptedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
@@ -970,28 +973,15 @@ namespace Entity.Migrations
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("DeliveryFee")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("DeliveryFeeCurrency")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("nvarchar(8)");
-
-                    b.Property<DateTime?>("DeliveryFeeSetAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeliveryNotes")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("PaymentImageUrl")
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
+
+                    b.Property<DateTime?>("PaymentSubmittedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("PaymentUploadedAt")
                         .HasColumnType("datetime2");
@@ -1004,6 +994,9 @@ namespace Entity.Migrations
 
                     b.Property<int>("ProducerIdSnapshot")
                         .HasColumnType("int");
+
+                    b.Property<string>("ProducerNotes")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -1056,9 +1049,13 @@ namespace Entity.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CityId");
+
                     b.HasIndex("ProductId");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("Status", "AutoCloseAt", "Active", "IsDeleted");
 
                     b.ToTable("Orders");
                 });
@@ -1364,7 +1361,7 @@ namespace Entity.Migrations
                             Code = "M3QPD6Y8ZR",
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Hola vendo papa",
-                            IsDeleted = true,
+                            IsDeleted = false,
                             QrUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1756782308/qr_png_e6xgom.png",
                             UserId = 3
                         },
@@ -1375,10 +1372,46 @@ namespace Entity.Migrations
                             Code = "AB7KX92TQF",
                             CreateAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Hola vendo papa modo admin",
-                            IsDeleted = true,
+                            IsDeleted = false,
                             QrUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1756782308/qr_png_e6xgom.png",
                             UserId = 1
                         });
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.ProducerSocialLink", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Network")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProducerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProducerId", "Network")
+                        .IsUnique();
+
+                    b.ToTable("ProducerSocialLinks", (string)null);
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.ProductFarm", b =>
@@ -1765,6 +1798,9 @@ namespace Entity.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("ShippingIncluded")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
@@ -1797,6 +1833,7 @@ namespace Entity.Migrations
                             Price = 30000m,
                             ProducerId = 1,
                             Production = "300 lb cada tres meses",
+                            ShippingIncluded = false,
                             Status = true,
                             Stock = 250,
                             Unit = "lb"
@@ -1813,6 +1850,7 @@ namespace Entity.Migrations
                             Price = 35000m,
                             ProducerId = 1,
                             Production = "200 lb por trimestre",
+                            ShippingIncluded = false,
                             Status = true,
                             Stock = 180,
                             Unit = "lb"
@@ -1829,6 +1867,7 @@ namespace Entity.Migrations
                             Price = 32000m,
                             ProducerId = 1,
                             Production = "150 lb cada mes",
+                            ShippingIncluded = false,
                             Status = true,
                             Stock = 120,
                             Unit = "lb"
@@ -1845,6 +1884,7 @@ namespace Entity.Migrations
                             Price = 34000m,
                             ProducerId = 1,
                             Production = "180 lb bimestral",
+                            ShippingIncluded = false,
                             Status = true,
                             Stock = 210,
                             Unit = "lb"
@@ -1861,6 +1901,7 @@ namespace Entity.Migrations
                             Price = 30000m,
                             ProducerId = 1,
                             Production = "220 lb trimestral",
+                            ShippingIncluded = false,
                             Status = true,
                             Stock = 190,
                             Unit = "lb"
@@ -1877,6 +1918,7 @@ namespace Entity.Migrations
                             Price = 31000m,
                             ProducerId = 1,
                             Production = "250 lb trimestral",
+                            ShippingIncluded = false,
                             Status = true,
                             Stock = 170,
                             Unit = "lb"
@@ -1893,6 +1935,7 @@ namespace Entity.Migrations
                             Price = 36000m,
                             ProducerId = 1,
                             Production = "300 lb cada 2 meses",
+                            ShippingIncluded = false,
                             Status = true,
                             Stock = 260,
                             Unit = "lb"
@@ -1909,6 +1952,7 @@ namespace Entity.Migrations
                             Price = 37000m,
                             ProducerId = 1,
                             Production = "280 lb trimestral",
+                            ShippingIncluded = false,
                             Status = true,
                             Stock = 250,
                             Unit = "lb"
@@ -1925,6 +1969,7 @@ namespace Entity.Migrations
                             Price = 33000m,
                             ProducerId = 1,
                             Production = "230 lb bimestral",
+                            ShippingIncluded = false,
                             Status = true,
                             Stock = 200,
                             Unit = "lb"
@@ -1941,6 +1986,7 @@ namespace Entity.Migrations
                             Price = 30000m,
                             ProducerId = 1,
                             Production = "180 lb mensual",
+                            ShippingIncluded = false,
                             Status = true,
                             Stock = 160,
                             Unit = "lb"
@@ -1957,6 +2003,7 @@ namespace Entity.Migrations
                             Price = 38000m,
                             ProducerId = 1,
                             Production = "150 lb cada tres meses",
+                            ShippingIncluded = false,
                             Status = true,
                             Stock = 130,
                             Unit = "lb"
@@ -1973,6 +2020,7 @@ namespace Entity.Migrations
                             Price = 31000m,
                             ProducerId = 1,
                             Production = "200 lb cada 2 meses",
+                            ShippingIncluded = false,
                             Status = true,
                             Stock = 140,
                             Unit = "lb"
@@ -1989,6 +2037,7 @@ namespace Entity.Migrations
                             Price = 30500m,
                             ProducerId = 1,
                             Production = "160 lb mensual",
+                            ShippingIncluded = false,
                             Status = true,
                             Stock = 150,
                             Unit = "lb"
@@ -2005,6 +2054,7 @@ namespace Entity.Migrations
                             Price = 34000m,
                             ProducerId = 1,
                             Production = "190 lb bimestral",
+                            ShippingIncluded = false,
                             Status = true,
                             Stock = 175,
                             Unit = "lb"
@@ -2021,6 +2071,7 @@ namespace Entity.Migrations
                             Price = 33000m,
                             ProducerId = 1,
                             Production = "210 lb trimestral",
+                            ShippingIncluded = false,
                             Status = true,
                             Stock = 160,
                             Unit = "lb"
@@ -2037,6 +2088,7 @@ namespace Entity.Migrations
                             Price = 37000m,
                             ProducerId = 1,
                             Production = "280 lb bimestral",
+                            ShippingIncluded = false,
                             Status = true,
                             Stock = 210,
                             Unit = "lb"
@@ -2053,6 +2105,7 @@ namespace Entity.Migrations
                             Price = 32000m,
                             ProducerId = 1,
                             Production = "190 lb mensual",
+                            ShippingIncluded = false,
                             Status = true,
                             Stock = 160,
                             Unit = "lb"
@@ -2069,6 +2122,7 @@ namespace Entity.Migrations
                             Price = 31000m,
                             ProducerId = 1,
                             Production = "220 lb cada 3 meses",
+                            ShippingIncluded = false,
                             Status = true,
                             Stock = 180,
                             Unit = "lb"
@@ -2085,6 +2139,7 @@ namespace Entity.Migrations
                             Price = 35000m,
                             ProducerId = 1,
                             Production = "270 lb trimestral",
+                            ShippingIncluded = false,
                             Status = true,
                             Stock = 200,
                             Unit = "lb"
@@ -2101,6 +2156,7 @@ namespace Entity.Migrations
                             Price = 35500m,
                             ProducerId = 1,
                             Production = "160 lb mensual",
+                            ShippingIncluded = false,
                             Status = true,
                             Stock = 190,
                             Unit = "lb"
@@ -2117,6 +2173,7 @@ namespace Entity.Migrations
                             Price = 39000m,
                             ProducerId = 1,
                             Production = "240 lb trimestral",
+                            ShippingIncluded = false,
                             Status = true,
                             Stock = 150,
                             Unit = "lb"
@@ -2133,6 +2190,7 @@ namespace Entity.Migrations
                             Price = 40000m,
                             ProducerId = 1,
                             Production = "300 lb cada 2 meses",
+                            ShippingIncluded = false,
                             Status = true,
                             Stock = 220,
                             Unit = "lb"
@@ -3567,17 +3625,25 @@ namespace Entity.Migrations
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Orders.Order", b =>
                 {
-                    b.HasOne("Entity.Domain.Models.Implements.Producers.Products.Product", "Product")
+                    b.HasOne("Entity.Domain.Models.Implements.Location.City", "City")
                         .WithMany()
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Entity.Domain.Models.Implements.Producers.Products.Product", "Product")
+                        .WithMany("Orders")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Entity.Domain.Models.Implements.Auth.User", "User")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("City");
 
                     b.Navigation("Product");
 
@@ -3642,6 +3708,17 @@ namespace Entity.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.ProducerSocialLink", b =>
+                {
+                    b.HasOne("Entity.Domain.Models.Implements.Producers.Producer", "Producer")
+                        .WithMany("SocialLinks")
+                        .HasForeignKey("ProducerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Producer");
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.ProductFarm", b =>
@@ -3778,6 +3855,8 @@ namespace Entity.Migrations
                 {
                     b.Navigation("Favorites");
 
+                    b.Navigation("Orders");
+
                     b.Navigation("Producer");
 
                     b.Navigation("Reviews");
@@ -3809,6 +3888,8 @@ namespace Entity.Migrations
                     b.Navigation("Farms");
 
                     b.Navigation("Products");
+
+                    b.Navigation("SocialLinks");
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.Products.Category", b =>
@@ -3821,6 +3902,8 @@ namespace Entity.Migrations
             modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.Products.Product", b =>
                 {
                     b.Navigation("Favorites");
+
+                    b.Navigation("Orders");
 
                     b.Navigation("ProductFarms");
 

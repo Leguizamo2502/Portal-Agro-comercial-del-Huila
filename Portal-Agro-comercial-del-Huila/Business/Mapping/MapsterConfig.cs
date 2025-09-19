@@ -78,7 +78,8 @@ namespace Business.Mapping
 
 
             //FarmWith PRoducer a producer y famr
-            config.NewConfig<ProducerWithFarmRegisterDto, Producer>();
+            config.NewConfig<ProducerWithFarmRegisterDto, Producer>()
+                .Ignore(dest => dest.SocialLinks);
             config.NewConfig<ProducerWithFarmRegisterDto, Farm>().Ignore(des => des.FarmImages);
             config.NewConfig<ProducerWithFarmRegisterDto, FarmRegisterDto>();
 

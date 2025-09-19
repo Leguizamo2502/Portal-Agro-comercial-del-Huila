@@ -14,6 +14,18 @@ export interface FarmSelectModel {
   images: FarmImageSelectModel[];
 }
 
+export enum SocialNetwork {
+  Website = 0,
+  Facebook = 1,
+  Instagram = 2,
+  Whatsapp = 3,
+  X = 4
+}
+
+export interface ProducerSocialCreateModel {
+  network: SocialNetwork;   // numérico
+  url: string;
+}
 export interface FarmImageSelectModel {
   id: number;
   fileName: string;
@@ -32,6 +44,8 @@ export interface FarmWithProducerRegisterModel {
 
   images: File[];
   cityId: number;
+
+   socialLinks?: ProducerSocialCreateModel[];
 }
 
 export interface FarmRegisterModel {

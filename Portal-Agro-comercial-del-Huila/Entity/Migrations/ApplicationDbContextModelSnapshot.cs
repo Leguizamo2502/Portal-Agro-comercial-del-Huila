@@ -1375,6 +1375,42 @@ namespace Entity.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.ProducerSocialLink", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Network")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProducerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProducerId", "Network")
+                        .IsUnique();
+
+                    b.ToTable("ProducerSocialLinks", (string)null);
+                });
+
             modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.ProductFarm", b =>
                 {
                     b.Property<int>("Id")
@@ -3671,6 +3707,17 @@ namespace Entity.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.ProducerSocialLink", b =>
+                {
+                    b.HasOne("Entity.Domain.Models.Implements.Producers.Producer", "Producer")
+                        .WithMany("SocialLinks")
+                        .HasForeignKey("ProducerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Producer");
+                });
+
             modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.ProductFarm", b =>
                 {
                     b.HasOne("Entity.Domain.Models.Implements.Producers.Farm", "Farm")
@@ -3838,6 +3885,8 @@ namespace Entity.Migrations
                     b.Navigation("Farms");
 
                     b.Navigation("Products");
+
+                    b.Navigation("SocialLinks");
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.Products.Category", b =>

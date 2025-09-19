@@ -161,6 +161,35 @@ namespace Business.Services.Producers.Farms
                 await _producerRepository.AddAsync(producer);
                 await _context.SaveChangesAsync();   // necesitas el Id del producer
 
+                // 1.1) Crear redes sociales (opcional)
+                if (dto.SocialLinks != null && dto.SocialLinks.Count > 0)
+                {
+                    // Valida duplicados por Network en el payload
+                    var duplicated = dto.SocialLinks
+                        .GroupBy(x => x.Network)
+                        .FirstOrDefault(g => g.Count() > 1);
+                    if (duplicated != null)
+                        throw new BusinessException($"Red social duplicada: {duplicated.Key}");
+
+                    // Normaliza y crea entidades
+                    var links = dto.SocialLinks
+                        .Select(sl =>
+                        {
+                            var url = Urls.NormalizeUrl(sl.Network, sl.Url);
+                            return new ProducerSocialLink
+                            {
+                                ProducerId = producer.Id,
+                                Network = sl.Network,
+                                Url = url
+                            };
+                        })
+                        .ToList();
+
+                    // Si usas índice único (ProducerId, Network) esto no debería violarse ya por el check arriba
+                    await _context.Set<ProducerSocialLink>().AddRangeAsync(links);
+                    await _context.SaveChangesAsync();
+                }
+
                 // 2) Asignar rol de productor (dentro de la misma transacción)
                 await _rolUserRepository.AsignateRolProducer(user);
                 await _context.SaveChangesAsync();

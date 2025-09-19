@@ -22,7 +22,9 @@ export class FarmService {
   }
 
   /** Obtener fincas de prodcutor por code */
-  public getFarmByCodeProducer(codeProducer: string): Observable<FarmSelectModel[]> {
+  public getFarmByCodeProducer(
+    codeProducer: string
+  ): Observable<FarmSelectModel[]> {
     return this.http.get<FarmSelectModel[]>(
       `${this.urlBase}/by-producerCode/${codeProducer}`
     );
@@ -68,6 +70,7 @@ export class FarmService {
   /**
    * Construcción de FormData compatible con ASP.NET Core
    */
+  // services/farm/farm.service.ts
   private buildFormData(
     dto: FarmRegisterModel | FarmWithProducerRegisterModel | FarmUpdateModel
   ): FormData {
@@ -90,6 +93,14 @@ export class FarmService {
 
     if (dto.images?.length) {
       dto.images.forEach((file) => data.append('images', file, file.name));
+    }
+
+    // NUEVO: bind nativo para listas en [FromForm]
+    if ('socialLinks' in dto && dto.socialLinks?.length) {
+      dto.socialLinks.forEach((sl, i) => {
+        data.append(`socialLinks[${i}].network`, String(sl.network));
+        data.append(`socialLinks[${i}].url`, sl.url);
+      });
     }
 
     if ('imagesToDelete' in dto && dto.imagesToDelete?.length) {
