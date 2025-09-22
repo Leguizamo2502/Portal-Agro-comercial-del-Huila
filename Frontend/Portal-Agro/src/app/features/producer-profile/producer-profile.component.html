@@ -60,6 +60,28 @@
       <p class="text-secondary">{{ producer?.description }}</p>
     </section>
 
+    <section class="my-4" *ngIf="producer?.networks?.length">
+      <h5 class="title">Redes sociales</h5>
+      <div class="d-flex flex-wrap gap-2">
+        <a
+          *ngFor="let n of producer?.networks;"
+          class="chip-link"
+          [href]="n.url"
+          target="_blank"
+          rel="noopener"
+          matTooltip="{{ n.url }}"
+          matTooltipPosition="above"
+        >
+          <mat-chip>
+            <mat-icon class="me-1">{{
+              n.network | socialNetworkIcon
+            }}</mat-icon>
+            {{ n.network | socialNetworkLabel }}
+          </mat-chip>
+        </a>
+      </div>
+    </section>
+
     <section class="my-4">
       <h5 class="mb-3 title">Fincas</h5>
       <app-container-card-productor [items]="famrs" [type]="'farm'">

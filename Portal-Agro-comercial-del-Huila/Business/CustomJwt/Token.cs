@@ -40,45 +40,6 @@ namespace Business.CustomJwt
 
             EnsureSigningKeyStrength(_jwtSettings.Key);
         }
-        //public async Task<string> GenerateToken(LoginUserDto dto)
-        //{
-        //    dto.Password = EncriptePassword.EncripteSHA256(dto.Password);
-        //    var user =  await _userData.LoginUser(dto);
-        //    var roles = await GetRolesUserAsync(user.Id);
-
-
-        //    var userClaims = new List<Claim>
-        //    {
-        //        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-        //        new Claim(ClaimTypes.Email, dto.Email!)
-        //    };
-
-        //    // Agregar roles al token   
-        //    foreach (var role in roles)
-        //    {
-        //        userClaims.Add(new Claim(ClaimTypes.Role, role));
-        //    }
-
-
-
-        //    var SecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:key"]!));
-        //    //var credentials = new SigningCredentials(SecurityKey, SecurityAlgorithms.HmacSha256Signature);
-        //    var credentials = new SigningCredentials(SecurityKey, SecurityAlgorithms.HmacSha256);
-
-
-        //    //  Crear detalles del Token
-        //    var jwtConfig = new JwtSecurityToken
-        //    (
-        //        claims: userClaims,
-        //        expires: DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:exp"])),
-        //        signingCredentials: credentials
-
-        //    );
-
-        //    return new JwtSecurityTokenHandler().WriteToken(jwtConfig);
-
-
-        //}
 
 
         public async Task<IEnumerable<string>> GetRolesUserAsync(int idUser)

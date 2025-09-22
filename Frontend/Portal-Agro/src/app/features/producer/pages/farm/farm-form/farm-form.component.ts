@@ -31,8 +31,6 @@ import {
   FarmUpdateModel,
   FarmWithProducerRegisterModel,
   FarmRegisterModel,
-  SocialNetwork,
-  ProducerSocialCreateModel,
 } from '../../../../../shared/models/farm/farm.model';
 import {
   DepartmentModel,
@@ -53,6 +51,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { catchError, finalize, of, take } from 'rxjs';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { AuthState } from '../../../../../Core/services/auth/auth.state';
+import { SocialNetwork, ProducerSocialCreateModel } from '../../../../../shared/models/producer/producer.model';
 
 //
 // ---- Validadores utilitarios (alineados con FluentValidation del backend) ----

@@ -110,7 +110,8 @@ namespace Business.Mapping
             config.NewConfig<Producer, ProducerSelectDto>()
                 .Map(dest => dest.FullName, src => $"{src.User.Person.FirstName} {src.User.Person.LastName}")
                 .Map(dest => dest.Email, src => src.User.Email)
-                .Map(dest => dest.PhoneNumber, src => src.User.Person.PhoneNumber);
+                .Map(dest => dest.PhoneNumber, src => src.User.Person.PhoneNumber)
+                .Map(dest => dest.Networks, src => src.SocialLinks);
                 
 
 

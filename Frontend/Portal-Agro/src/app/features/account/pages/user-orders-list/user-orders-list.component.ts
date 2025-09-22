@@ -11,7 +11,7 @@ import {
 import { OrderService } from '../../../products/services/order/order.service';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
-import { StatusTranslatePipe } from '../../../../shared/pipes/statusTranslate/status-translate.pipe';
+import { StatusTranslatePipe } from '../../../../shared/pipes/StatusTranslatePipe/status-translate-pipe.pipe';
 
 @Component({
   selector: 'app-user-orders-list',

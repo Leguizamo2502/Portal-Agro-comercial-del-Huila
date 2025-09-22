@@ -14,7 +14,7 @@ namespace Entity.Domain.Models.Implements.Auth.Token
         public string CsrfCookieName { get; set; } = "XSRF-TOKEN";
         public string Path { get; set; } = "/";
         public string? Domain { get; set; } = null;
-        public bool Secure { get; set; } = true;
-        public SameSiteMode SameSite { get; set; } = SameSiteMode.None;
+        public bool Secure { get; set; } = false; //tru
+        public SameSiteMode SameSite { get; set; } = SameSiteMode.Lax; //none
     }
 }

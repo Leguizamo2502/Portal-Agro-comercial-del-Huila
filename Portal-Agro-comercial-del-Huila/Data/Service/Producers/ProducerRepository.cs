@@ -21,6 +21,7 @@ namespace Data.Service.Producers
             return await _dbSet
                 .Include(p => p.User)
                     .ThenInclude(u => u.Person)
+                .Include(p => p.SocialLinks)
                 .FirstOrDefaultAsync(p => p.Code == codeProducer);
         }
 

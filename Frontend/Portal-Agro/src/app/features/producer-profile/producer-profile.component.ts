@@ -15,6 +15,8 @@ import { ProductSelectModel } from '../../shared/models/product/product.model';
 import { FarmSelectModel } from './../../shared/models/farm/farm.model';
 import { ProducerSelectModel } from '../../shared/models/producer/producer.model';
 import { ContainerCardProductorComponent } from "../../shared/components/cards/container-card-productor/container-card-productor.component";
+import { SocialNetworkIconPipe } from "../../shared/pipes/social-network-icon/social-network-icon.pipe";
+import { SocialNetworkLabelPipe } from "../../shared/pipes/social-network-label/social-network-label.pipe";
 
 @Component({
   selector: 'app-producer-profile',
@@ -24,8 +26,10 @@ import { ContainerCardProductorComponent } from "../../shared/components/cards/c
     ContainerCardProductorComponent,
     MatChipsModule,
     MatTooltipModule,
-    MatIconModule
-  ],
+    MatIconModule,
+    SocialNetworkIconPipe,
+    SocialNetworkLabelPipe
+],
   templateUrl: './producer-profile.component.html',
   styleUrls: ['./producer-profile.component.css'],
 })
@@ -39,7 +43,6 @@ export class ProducerProfileComponent implements OnInit {
   famrs: FarmSelectModel[] = [];
   producer?: ProducerSelectModel;
 
-  // Hazlo público para template si lo deseas; no hay motivo para private aquí
   saleNumber = 0;
 
   code: string = '';
@@ -57,6 +60,7 @@ export class ProducerProfileComponent implements OnInit {
   loadproducer() {
     this.producerService.getByCodeProducer(this.code).subscribe((data) => {
       this.producer = data;
+      
     });
   }
 
@@ -79,9 +83,7 @@ export class ProducerProfileComponent implements OnInit {
     });
   }
 
-  /** Umbrales de confianza.
-   * Ajusta a tu realidad: p. ej., >= 50 alto, >= 10 medio, < 10 bajo.
-   */
+  
   trustLevelClass(n: number): string {
     if (n >= 50) return 'trust-high';
     if (n >= 10) return 'trust-mid';

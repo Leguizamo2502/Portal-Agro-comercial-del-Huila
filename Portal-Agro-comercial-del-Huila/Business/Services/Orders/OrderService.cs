@@ -202,6 +202,8 @@ namespace Business.Services.Orders
             order.Status = OrderStatus.AcceptedAwaitingPayment;
             order.AcceptedAt = now;
             order.AutoCloseAt = now.AddHours(_paymentUploadDeadlineHours);
+            //order.AutoCloseAt = now.AddMinutes(1);
+
 
             await using var tx = await _db.Database.BeginTransactionAsync();
             try
