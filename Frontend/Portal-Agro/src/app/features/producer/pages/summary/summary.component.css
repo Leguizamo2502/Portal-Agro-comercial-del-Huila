@@ -55,3 +55,9 @@
   margin-top: 0.5rem;
   color: #6b7280;
 }
+
+.btns{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}

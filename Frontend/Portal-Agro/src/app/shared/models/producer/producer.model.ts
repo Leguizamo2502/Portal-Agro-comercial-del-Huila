@@ -28,3 +28,8 @@ export interface ProducerSocialSelectModel {
   url: string;
 }
 
+export interface ProducerUpdateModel {
+  description: string;                    
+  socialLinks?: ProducerSocialCreateModel[];   
+}
+

@@ -24,7 +24,8 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              { "input": "node_modules/leaflet/dist/images", "glob": "**/*", "output": "leaflet" }
             ],
             "styles": [
               "@angular/material/prebuilt-themes/azure-blue.css",
@@ -93,7 +94,8 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              { "input": "node_modules/leaflet/dist/images", "glob": "**/*", "output": "leaflet" }
             ],
             "styles": [
               "@angular/material/prebuilt-themes/azure-blue.css",

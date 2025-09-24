@@ -69,5 +69,17 @@ namespace Data.Service.Producers
                 .Where(o => o.Product.Producer.Code == codeProducer && o.Status == OrderStatus.Completed)
                 .CountAsync();
         }
+
+        public async Task<Producer?> GetByIdWithSocialLinksAsync(int id)
+        {
+            return await _dbSet
+                .Include(p=>p.SocialLinks)
+                .FirstOrDefaultAsync(p=>p.Id == id && !p.IsDeleted);
+        }
+
+        public void RemoveRange<T>(IEnumerable<T> entities) where T : class
+        {
+            _context.Set<T>().RemoveRange(entities);
+        }
     }
 }

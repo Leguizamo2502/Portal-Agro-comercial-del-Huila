@@ -11,6 +11,8 @@ namespace Data.Interfaces.Implements.Producers
         Task<ContactDto> GetContactProducer(int producerId);
         Task<int> SalesNumberByCode(string codeProducer);
         Task<string?> GetCodeProducer(int producerId);
+        Task<Producer?> GetByIdWithSocialLinksAsync(int id);
+        void RemoveRange<T>(IEnumerable<T> entities) where T : class;
 
     }
 }

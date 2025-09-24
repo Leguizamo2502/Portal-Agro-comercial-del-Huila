@@ -7,16 +7,16 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 
-import { ProductService } from '../../shared/services/product/product.service';
-import { FarmService } from '../../shared/services/farm/farm.service';
-import { ProducerService } from '../../shared/services/producer/producer.service';
+import { ProductService } from '../../../../shared/services/product/product.service';
+import { FarmService } from '../../../../shared/services/farm/farm.service';
+import { ProducerService } from '../../../../shared/services/producer/producer.service';
 
-import { ProductSelectModel } from '../../shared/models/product/product.model';
-import { FarmSelectModel } from './../../shared/models/farm/farm.model';
-import { ProducerSelectModel } from '../../shared/models/producer/producer.model';
-import { ContainerCardProductorComponent } from "../../shared/components/cards/container-card-productor/container-card-productor.component";
-import { SocialNetworkIconPipe } from "../../shared/pipes/social-network-icon/social-network-icon.pipe";
-import { SocialNetworkLabelPipe } from "../../shared/pipes/social-network-label/social-network-label.pipe";
+import { ProductSelectModel } from '../../../../shared/models/product/product.model';
+import { FarmSelectModel } from '../../../../shared/models/farm/farm.model';
+import { ProducerSelectModel } from '../../../../shared/models/producer/producer.model';
+import { ContainerCardProductorComponent } from "../../../../shared/components/cards/container-card-productor/container-card-productor.component";
+import { SocialNetworkIconPipe } from "../../../../shared/pipes/social-network-icon/social-network-icon.pipe";
+import { SocialNetworkLabelPipe } from "../../../../shared/pipes/social-network-label/social-network-label.pipe";
 
 @Component({
   selector: 'app-producer-profile',
@@ -27,8 +27,7 @@ import { SocialNetworkLabelPipe } from "../../shared/pipes/social-network-label/
     MatChipsModule,
     MatTooltipModule,
     MatIconModule,
-    SocialNetworkIconPipe,
-    SocialNetworkLabelPipe
+    SocialNetworkIconPipe
 ],
   templateUrl: './producer-profile.component.html',
   styleUrls: ['./producer-profile.component.css'],

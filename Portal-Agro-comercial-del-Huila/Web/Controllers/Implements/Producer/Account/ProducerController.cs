@@ -1,5 +1,6 @@
 ﻿using Business.Interfaces.Implements;
 using Entity.DTOs.Producer.Producer.Select;
+using Entity.DTOs.Producer.Producer.Update;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Utilities.Exceptions;
@@ -113,6 +114,46 @@ namespace Web.Controllers.Implements.Producer.Cuenta
                 _logger.LogError(ex, "Error inesperado al obtener código de productor para usuario {UserId}", userId);
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     new { message = "Se produjo un error inesperado al consultar el código del productor." });
+            }
+        }
+
+        [HttpPut("profile")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateProfile([FromBody] ProducerUpdateDto dto)
+        {
+            int? userId = null;
+
+            try
+            {
+                userId = HttpContext.TryGetUserId();
+                if (userId is null)
+                    return Unauthorized(new { message = "No autenticado." });
+                var updated = await _producerService.UpdateProfileAsync(userId.Value, dto);
+
+                if (!updated)
+                {
+                   
+                    _logger.LogWarning("UpdateProfileAsync no aplicó cambios. UserId={UserId}", userId);
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { message = "No se aplicaron cambios en la actualización." });
+                }
+
+                return NoContent();
+            }
+            catch (BusinessException be)
+            {
+                _logger.LogWarning(be, "Error de negocio al actualizar perfil. Detalle: {Message}", be.Message);
+                return BadRequest(new { message = be.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error inesperado al actualizar perfil de productor.");
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { message = "Se produjo un error inesperado al actualizar el perfil." });
             }
         }
     }

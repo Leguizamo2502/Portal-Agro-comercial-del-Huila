@@ -11,6 +11,10 @@ import { RouterLink } from '@angular/router';
 import { OrderListItemModel } from '../../../products/models/order/order.model';
 import { ProducerService } from '../../../../shared/services/producer/producer.service';
 import { ButtonComponent } from "../../../../shared/components/button/button.component";
+import { MatDialog } from '@angular/material/dialog';
+import Swal from 'sweetalert2';
+import { ProducerUpdateModel } from '../../../../shared/models/producer/producer.model';
+import { ProfileDialogComponent } from '../../components/profile-dialog/profile-dialog.component';
 
 @Component({
   selector: 'app-summary',
@@ -24,6 +28,7 @@ export class SummaryComponent implements OnInit {
   private orderService = inject(OrderService);
   private analyticService = inject(AnalyticService);
   private producerService = inject(ProducerService);
+  private dialog = inject(MatDialog);
 
   orderListAll : OrderListItemModel[] = [];
 
@@ -70,12 +75,43 @@ export class SummaryComponent implements OnInit {
         this.orderListAll = all;
         this.totalOrders = all.length;
         this.pendingOrders = pending.length;
-      
-        
-    
-        
+
       });
   }
+
+  updateProfile() {
+  if (!this.codeProducer) {
+    Swal.fire('Atención', 'Aún no se cargó tu código de productor.', 'warning');
+    return;
+  }
+
+  // Traer datos actuales para preload del modal
+  this.producerService.getByCodeProducer(this.codeProducer).subscribe({
+    next: (producer) => {
+      const ref = this.dialog.open(ProfileDialogComponent, {
+        width: '720px',
+        data: { producer }
+      });
+
+      ref.afterClosed().subscribe((payload?: ProducerUpdateModel) => {
+        if (!payload) return;
+
+        this.producerService.updateProfile(payload).subscribe({
+          next: () => {
+            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Perfil actualizado', showConfirmButton: false, timer: 1500 });
+          },
+          error: (err) => {
+            const msg = err?.error?.message || 'No se pudo actualizar el perfil';
+            Swal.fire('Error', msg, 'error');
+          }
+        });
+      });
+    },
+    error: () => {
+      Swal.fire('Error', 'No se pudo cargar tu perfil actual.', 'error');
+    }
+  });
+}
 
   // ====== Gráfica dinámica (Top productos por pedidos completados) ======
 
