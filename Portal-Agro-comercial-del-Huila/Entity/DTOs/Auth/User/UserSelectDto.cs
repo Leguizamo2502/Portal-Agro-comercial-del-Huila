@@ -13,6 +13,7 @@ namespace Entity.DTOs.Auth.User
         public string CityName { get; set; }
         public bool Active { get; set; }
         public int CityId { get; set; }
+        public int DepartmentId { get; set; }
         public IEnumerable<string> Roles { get; set; } = [];
     }
 }

@@ -65,7 +65,7 @@ namespace Entity.Infrastructure.Context
             {
                 e.Property(x => x.UnitPriceSnapshot).HasPrecision(18, 2);
                 e.Property(x => x.Subtotal).HasPrecision(18, 2);
-                e.Property(x => x.DeliveryFee).HasPrecision(18, 2);
+                //e.Property(x => x.DeliveryFee).HasPrecision(18, 2);
                 e.Property(x => x.Total).HasPrecision(18, 2);
 
                 // RowVersion (concurrencia optimista)
@@ -73,13 +73,13 @@ namespace Entity.Infrastructure.Context
 
                 // (Opcional) longitudes sugeridas para strings
                 e.Property(x => x.ProductNameSnapshot).HasMaxLength(200);
-                e.Property(x => x.DeliveryFeeCurrency).HasMaxLength(8);
+                //e.Property(x => x.DeliveryFeeCurrency).HasMaxLength(8);
                 e.Property(x => x.RecipientName).HasMaxLength(100);
                 e.Property(x => x.ContactPhone).HasMaxLength(30);
                 e.Property(x => x.AddressLine1).HasMaxLength(200);
                 e.Property(x => x.AddressLine2).HasMaxLength(200);
                 e.Property(x => x.AdditionalNotes).HasMaxLength(500);
-                e.Property(x => x.DeliveryNotes).HasMaxLength(500);
+                //e.Property(x => x.DeliveryNotes).HasMaxLength(500);
                 e.Property(x => x.PaymentImageUrl).HasMaxLength(512);
             });
 

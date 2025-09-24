@@ -7,6 +7,7 @@ using Data.Interfaces.Implements.Auth;
 using Data.Repository;
 using Entity.Domain.Models.Implements.Auth;
 using Entity.DTOs.Auth;
+using Entity.DTOs.Order.Select;
 using Entity.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -60,15 +61,33 @@ namespace Data.Service.Auth
         {
             return await _dbSet
                 .Include(u => u.Person)
-                .FirstOrDefaultAsync(u=>u.Id == userId);
+                    .ThenInclude(p => p.City)
+                        .ThenInclude(c => c.Department)
+                .FirstOrDefaultAsync(u => u.Id == userId);
         }
 
         public override async Task<IEnumerable<User>> GetAllAsync()
         {
             return await _dbSet
                 .Include(u => u.Person)
-                .ThenInclude(p=>p.City)
+                .ThenInclude(p => p.City)
                 .ToListAsync();
+        }
+
+        public async Task<ContactDto> GetContactUser(int userId)
+        {
+            var u = await _dbSet
+                .AsNoTracking()
+                .Include(u => u.Person)
+                .FirstOrDefaultAsync(u => u.Id == userId && !u.IsDeleted);
+            if (u is null)
+                throw new InvalidOperationException($"No se encontró el usuario con ID {userId}.");
+            return new ContactDto
+            {
+                FirstName = u.Person.FirstName,
+                Email = u.Email,
+                LastName = u.Person.LastName,
+            };
         }
     }
  

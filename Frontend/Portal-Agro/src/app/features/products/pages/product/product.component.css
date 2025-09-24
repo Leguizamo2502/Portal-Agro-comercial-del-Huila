@@ -19,3 +19,4 @@
 
 /* Espaciado paginador */
 mat-paginator { margin-top: .5rem; }
+.search { width: 320px; max-width: 40vw; }

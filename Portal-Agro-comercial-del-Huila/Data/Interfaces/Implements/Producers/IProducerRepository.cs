@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Data.Interfaces.IRepository;
+﻿using Data.Interfaces.IRepository;
 using Entity.Domain.Models.Implements.Producers;
+using Entity.DTOs.Order.Select;
 
 namespace Data.Interfaces.Implements.Producers
 {
@@ -12,5 +8,7 @@ namespace Data.Interfaces.Implements.Producers
     {
         Task<int?> GetIdProducer(int userId);
         Task<Producer?> GetByCodeProducer(string codeProducer);
+        Task<ContactDto> GetContactProducer(int producerId);
+
     }
 }

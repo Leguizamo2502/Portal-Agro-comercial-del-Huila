@@ -4,26 +4,37 @@ import { ProductService } from '../../../../shared/services/product/product.serv
 import { ProductSelectModel } from '../../../../shared/models/product/product.model';
 import { CarruselComponent } from '../../../../shared/components/carrusel/carrusel.component';
 import { ContainerCardComponent } from "../../../../shared/components/cards/container-card/container-card.component";
+import { ButtonComponent } from '../../../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, CarruselComponent, ContainerCardComponent,],
+  imports: [CommonModule, CarruselComponent, ContainerCardComponent,ButtonComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
   private productService = inject(ProductService);
   products: ProductSelectModel[] = [];
+  productFeatured:ProductSelectModel[] = [];
 
   ngOnInit(): void {
     this.loadProduct();
+    this.loadProductFeatured();
   }
 
   loadProduct() {
-    this.productService.getAllHome().subscribe(data => {
+    this.productService.getAllHome(15).subscribe(data => {
       this.products = data;
-      console.log('HomeComponent - productos cargados:', this.products);
+      // console.log('HomeComponent - productos cargados:', this.products);
     });
+  }
+  
+  loadProductFeatured(){
+    this.productService.getFeatured().subscribe((data)=>{
+      this.productFeatured = data;
+      console.log(data);
+      
+    })
   }
 }

@@ -59,29 +59,12 @@ public class ProductReadService : IProductReadService
         }
     }
 
-    public async Task<IEnumerable<ProductSelectDto>> GetAllForUserAsync(int userId)
-    {
-        try
-        {
-            var entities = await _productRepo.GetAllAsync();
-            var favoriteIds = (await _favoriteRepo.GetFavoriteProductIdsByUserAsync(userId)).ToHashSet();
-            var dtos = _mapper.Map<List<ProductSelectDto>>(entities);
-            foreach (var dto in dtos) dto.IsFavorite = favoriteIds.Contains(dto.Id);
-            return dtos;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error al obtener productos para el usuario {UserId}", userId);
-            throw new BusinessException("Error al obtener productos para el usuario.", ex);
-        }
-    }
-
-    public async Task<IEnumerable<ProductSelectDto>> GetAllHomeAsync(int? userId)
+    public async Task<IEnumerable<ProductSelectDto>> GetAllHomeAsync(int? userId,int? limit)
     {
         try
         {
             // Trae todos los productos con tu BaseQuery/Includes habituales
-            var products = await _productRepo.GetAllAsync();
+            var products = await _productRepo.GetAllWithLimitAsync(limit);
             var dtos = _mapper.Map<List<ProductSelectDto>>(products);
 
             // Invitado: siempre false
@@ -183,4 +166,31 @@ public class ProductReadService : IProductReadService
             throw new BusinessException("Error al obtener productos por categoría.", ex);
         }
     }
+
+
+    public async Task<IEnumerable<ProductSelectDto>> GetFeaturedAsync(int? userId, int limit)
+    {
+        try
+        {
+            var products = await _productRepo.GetFeaturedAsync(limit);
+            var dtos = _mapper.Map<List<ProductSelectDto>>(products);
+
+            if (userId is null)
+            {
+                foreach (var d in dtos) d.IsFavorite = false;
+                return dtos;
+            }
+
+            var favIds = (await _favoriteRepo.GetFavoriteProductIdsByUserAsync(userId.Value)).ToHashSet();
+            foreach (var d in dtos) d.IsFavorite = favIds.Contains(d.Id);
+
+            return dtos;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error al obtener productos destacados");
+            throw new BusinessException("Error al obtener productos destacados.", ex);
+        }
+    }
+
 }

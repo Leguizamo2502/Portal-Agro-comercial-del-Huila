@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Data.Interfaces.Implements.Producers.Products;
+﻿using Data.Interfaces.Implements.Producers.Products;
 using Data.Repository;
-using Entity.Domain.Models.Implements.Producers;
+using Entity.Domain.Enums;
 using Entity.Domain.Models.Implements.Producers.Products;
 using Entity.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +22,7 @@ namespace Data.Service.Producers.Products
                 .AsNoTracking()
                 .Where(p => !p.IsDeleted)
                 .Include(p => p.Category)
+                .Include(p => p.Producer)
                 .Include(p => p.ProductImages.Where(pi => !pi.IsDeleted))
                 .Include(p => p.ProductFarms)
                     .ThenInclude(pf => pf.Farm)
@@ -91,6 +88,22 @@ namespace Data.Service.Producers.Products
 
         public override async Task<IEnumerable<Product>> GetAllAsync()
         {
+            return await BaseQuery()
+                .OrderByDescending(p => p.CreateAt)
+                .ThenByDescending(p => p.Id)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetAllWithLimitAsync(int? limit)
+        {
+            if (limit.HasValue && limit.Value > 0)
+            {
+                return await BaseQuery()
+                    .OrderByDescending(p => p.CreateAt)
+                    .ThenByDescending(p => p.Id)
+                    .Take(limit.Value)
+                    .ToListAsync();
+            }
             return await BaseQuery()
                 .OrderByDescending(p => p.CreateAt)
                 .ThenByDescending(p => p.Id)
@@ -181,5 +194,22 @@ namespace Data.Service.Producers.Products
                 .Where(p => !p.IsDeleted && p.Producer.Code == producerCode)
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<Product>> GetFeaturedAsync(int limit)
+        {
+            if (limit <= 0) limit = 10;
+
+            return await BaseQuery()
+                // 1) Prioriza los que tengan al menos 1 completado (true > false)
+                .OrderByDescending(p => p.Orders.Any(o => !o.IsDeleted && o.Status == OrderStatus.Completed))
+                // 2) Dentro de ellos, más completados primero
+                .ThenByDescending(p => p.Orders.Count(o => !o.IsDeleted && o.Status == OrderStatus.Completed))
+                // 3) Fallback/desempate: más recientes
+                .ThenByDescending(p => p.CreateAt)
+                .Take(limit)
+                .ToListAsync();
+        }
+
+
     }
 }

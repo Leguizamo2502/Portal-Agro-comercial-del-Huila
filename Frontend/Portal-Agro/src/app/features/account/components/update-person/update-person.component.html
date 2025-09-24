@@ -2,6 +2,7 @@
   <h2 class="titleForm">{{ title }}</h2>
 
   <form (ngSubmit)="save()" [formGroup]="form" class="form-container">
+
     <!-- Nombres -->
     <div class="form-field">
       <mat-form-field appearance="outline" class="custom-mat-field">
@@ -22,18 +23,8 @@
       </mat-form-field>
     </div>
 
-    <!-- Dirección -->
-    <div class="form-field">
-      <mat-form-field appearance="outline" class="custom-mat-field">
-        <mat-label>Dirección</mat-label>
-        <input matInput formControlName="address" placeholder="Ingresa tu dirección">
-        <mat-error *ngIf="f.address.hasError('required')">Este campo es obligatorio</mat-error>
-        <mat-error *ngIf="f.address.hasError('minlength')">Mínimo 4 caracteres</mat-error>
-      </mat-form-field>
-    </div>
-
     <!-- Teléfono -->
-    <div class="form-field">
+     <div class="form-field">
       <mat-form-field appearance="outline" class="custom-mat-field">
         <mat-label>Teléfono</mat-label>
         <input matInput formControlName="phoneNumber" placeholder="Solo dígitos" inputmode="numeric">
@@ -42,15 +33,40 @@
       </mat-form-field>
     </div>
 
-    <!-- Email -->
-    <!-- <div class="form-field">
+   
+
+   
+
+    <!-- Departamento y Ciudad en una sola fila -->
+    <div class="row-2cols">
       <mat-form-field appearance="outline" class="custom-mat-field">
-        <mat-label>Email</mat-label>
-        <input matInput formControlName="email" placeholder="correo@dominio.com">
-        <mat-error *ngIf="f.email.hasError('required')">Este campo es obligatorio</mat-error>
-        <mat-error *ngIf="f.email.hasError('email')">Email no válido</mat-error>
+        <mat-label>Departamento</mat-label>
+        <mat-select formControlName="departmentId" [disabled]="isLoadingDepartments">
+          <mat-option *ngFor="let d of departments" [value]="d.id">{{ d.name }}</mat-option>
+        </mat-select>
+        <mat-hint *ngIf="isLoadingDepartments">Cargando departamentos...</mat-hint>
+        <mat-error *ngIf="f.departmentId.hasError('required')">Selecciona un departamento</mat-error>
       </mat-form-field>
-    </div> -->
+
+      <mat-form-field appearance="outline" class="custom-mat-field">
+        <mat-label>Ciudad</mat-label>
+        <mat-select formControlName="cityId" [disabled]="isLoadingCities || f.cityId.disabled">
+          <mat-option *ngFor="let c of cities" [value]="c.id">{{ c.name }}</mat-option>
+        </mat-select>
+        <mat-hint *ngIf="isLoadingCities">Cargando ciudades...</mat-hint>
+        <mat-error *ngIf="f.cityId.hasError('required')">Selecciona una ciudad</mat-error>
+      </mat-form-field>
+    </div>
+
+     <!-- Dirección -->
+    <div class="form-field">
+      <mat-form-field appearance="outline" class="custom-mat-field">
+        <mat-label>Dirección</mat-label>
+        <input matInput formControlName="address" placeholder="Ingresa tu dirección">
+        <mat-error *ngIf="f.address.hasError('required')">Este campo es obligatorio</mat-error>
+        <mat-error *ngIf="f.address.hasError('minlength')">Mínimo 4 caracteres</mat-error>
+      </mat-form-field>
+    </div>
 
     <!-- Botones -->
     <div class="form-actions cont-botones">

@@ -1,26 +1,22 @@
 import { Routes } from '@angular/router';
-
-// Páginas sin layout:
+import { authGuard } from './Core/guards/auth/guest.guard';
 import { ForbiddenComponent } from './Core/page/forbidden/forbidden.component';
-
-// Layout:
-import { MainLayoutComponent } from './shared/components/layouts/main-layout/main-layout.component';
-
-// “Showcase”/demos (si quieres que usen layout, van como hijos del layout):
-import { ButtonComponent } from './shared/components/button/button.component';
-import { NavbarVerticalComponent } from './shared/components/navs/navbar-vertical/navbar-vertical.component';
-import { NavbarBuenoComponent } from './shared/components/navs/navbar-bueno/navbar-bueno.component';
-import { CarruselComponent } from './shared/components/carrusel/carrusel.component';
-import { CardComponent } from './shared/components/cards/card/card.component';
-import { ProductDetailComponent } from './shared/components/product-detail/product-detail.component';
-import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
 import { NotFoundComponent } from './Core/page/not-found/not-found.component';
-import { authGuard, guestGuard } from './Core/guards/auth/guest.guard';
 import { FormChangePasswordComponent } from './features/account/components/form-change-password/form-change-password.component';
+import { FarmDetailComponent } from './features/farm-detail/farm-detail.component';
 import { ProducerProfileComponent } from './features/producer-profile/producer-profile.component';
 import { SummaryComponent } from './features/producer/pages/summary/summary.component';
-import { FarmDetailComponent } from './features/farm-detail/farm-detail.component';
+
+import { ProductDetailComponent } from './features/products/pages/product-detail/product-detail.component';
+import { ButtonComponent } from './shared/components/button/button.component';
+import { CardComponent } from './shared/components/cards/card/card.component';
+import { CarruselComponent } from './shared/components/carrusel/carrusel.component';
+import { DashboardComponent } from './shared/components/dashboard/dashboard.component';
+import { MainLayoutComponent } from './shared/components/layouts/main-layout/main-layout.component';
+import { NavbarBuenoComponent } from './shared/components/navs/navbar-bueno/navbar-bueno.component';
 import { ContainerCardProductorComponent } from './shared/components/cards/container-card-productor/container-card-productor.component';
+
+
 
 export const routes: Routes = [
   // Redirección inicial
@@ -62,7 +58,6 @@ export const routes: Routes = [
       { path: 'product-detail', component: ProductDetailComponent },
       { path: 'card', component: CardComponent },
       { path: 'boton', component: ButtonComponent },
-      { path: 'navbar-vertical', component: NavbarVerticalComponent },
       { path: 'navbar-bueno', component: NavbarBuenoComponent },
       { path: 'carrusel', component: CarruselComponent },
       { path: 'change', component: FormChangePasswordComponent },

@@ -1,19 +1,25 @@
-﻿// Entity/DTOs/Validations/Orders/OrderAcceptDtoValidator.cs
+﻿// Entity.Validations/Orders/OrderAcceptDtoValidator.cs
 using Entity.DTOs.Order.Create;
 using FluentValidation;
+using System;
 
-namespace Entity.DTOs.Validations.Orders
+public class OrderAcceptDtoValidator : AbstractValidator<OrderAcceptDto>
 {
-    public class OrderAcceptDtoValidator : AbstractValidator<OrderAcceptDto>
+    public OrderAcceptDtoValidator()
     {
-        public OrderAcceptDtoValidator()
-        {
-            RuleFor(x => x.DeliveryFee)
-                .GreaterThanOrEqualTo(0m).WithMessage("El envío no puede ser negativo.")
-                .LessThanOrEqualTo(200_000m).WithMessage("El envío excede el límite permitido.");
+        RuleFor(x => x.Notes)
+            .MaximumLength(300)
+            .When(x => !string.IsNullOrWhiteSpace(x.Notes));
 
-            RuleFor(x => x.DeliveryNotes)
-                .MaximumLength(500);
-        }
+        RuleFor(x => x.RowVersion)
+            .NotEmpty()
+            .Must(IsBase64).WithMessage("RowVersion inválido.");
+    }
+
+    private static bool IsBase64(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value)) return false;
+        try { Convert.FromBase64String(value); return true; }
+        catch { return false; }
     }
 }

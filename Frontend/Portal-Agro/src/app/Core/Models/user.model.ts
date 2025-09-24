@@ -6,6 +6,7 @@ export interface UserSelectModel{
     phoneNumber:    string;
     email:          string;
     cityId:         number;
+    departmentId: number;
     cityName:       string;
     active:         boolean;
     roles:          string[];
@@ -16,6 +17,7 @@ export interface UserSelectModel{
 export interface PersonUpdateModel{
     firstName:       string;
     lastName:       string;
+    cityId: number;
 
     // identification: string;
     address:        string;

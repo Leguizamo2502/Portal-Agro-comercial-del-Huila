@@ -13,6 +13,7 @@ export interface ProductSelectModel {
   production: string;
   stock: number;
   status: boolean;
+  shippingIncluded : boolean;
   categoryId: number;
   categoryName: string;
   images: ProductImageSelectModel[];
@@ -29,12 +30,7 @@ export interface ProductSelectModel {
 
   isFavorite: boolean;
 
-  // mockups opcionales
-  // orders?: number;
-  // categories?: string[];
-  // moreInfo?: string;
-  // location?: string;
-  // reviews?: ReviewModel[];
+  producerCode: string;  
 }
 
 export interface ProductImageSelectModel {
@@ -52,6 +48,7 @@ export interface ProductRegisterModel {
   unit: string;
   production: string;
   stock: number;
+  shippingIncluded : boolean;
   status: boolean;
   categoryId: number;
   images?: File[];
@@ -66,6 +63,7 @@ export interface ProductUpdateModel {
   unit: string;
   production: string;
   stock: number;
+  shippingIncluded : boolean;
   status: boolean;
   categoryId: number;
   images?: File[];

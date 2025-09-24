@@ -2,8 +2,36 @@
 <div class="container py-3">
   <h1 class="title">Productos Disponibles</h1>
 
-  <div class="bg-white rounded-3 shadow-sm mb-2 d-flex flex-column flex-md-row
-              align-items-center justify-content gap-2 header-compact">
+  <div
+    class="bg-white rounded-3 shadow-sm mb-2 d-flex flex-column flex-md-row align-items-center justify-content gap-2 header-compact"
+  >
+    <!-- Búsqueda -->
+    <div class="top">
+      <mat-form-field appearance="outline" class="search">
+        <mat-label>Buscar productos</mat-label>
+        <input
+          matInput
+          [formControl]="searchCtrl"
+          placeholder="Nombre del producto o productor"
+        />
+        <button
+          *ngIf="searchCtrl.value"
+          matSuffix
+          mat-icon-button
+          aria-label="Limpiar"
+          (click)="searchCtrl.setValue('')"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <!-- Botón limpiar filtros -->
+    <!-- <button mat-stroked-button color="primary" (click)="clearFilter()">
+      <mat-icon>filter_alt_off</mat-icon>
+      Limpiar
+    </button> -->
 
     <!-- Breadcrumb / título -->
     <div class="header-text">
@@ -12,16 +40,26 @@
 
     <!-- Selector de categorías + limpiar -->
     <div class="d-flex align-items-center gap-2 controls">
-      <mat-form-field appearance="outline" class="select" subscriptSizing="dynamic">
+      <mat-form-field
+        appearance="outline"
+        class="select"
+        subscriptSizing="dynamic"
+      >
         <mat-label>Selecciona una categoría</mat-label>
         <mat-select
           [formControl]="categoryCtrl"
           (selectionChange)="onSelectCategory($event.value)"
-          [disabled]="isLoadingCategories || atLeaf">
-          <mat-option *ngFor="let c of categories; trackBy: trackById" [value]="c.id">
+        >
+          <mat-option
+            *ngFor="let c of categories; trackBy: trackById"
+            [value]="c.id"
+          >
             <div class="d-flex">
               <span>{{ c.name }}</span>
-              <mat-icon *ngIf="c.hasChildren" fontIcon="chevron_right"></mat-icon>
+              <mat-icon
+                *ngIf="c.hasChildren"
+                fontIcon="chevron_right"
+              ></mat-icon>
             </div>
           </mat-option>
         </mat-select>
@@ -33,45 +71,65 @@
         (click)="clearFilter()"
         [disabled]="!breadcrumb.length"
         aria-label="Limpiar filtro"
-        [icon]="'refresh'">
+        [icon]="'refresh'"
+      >
       </app-button>
     </div>
 
     <!-- Migas -->
     <div class="d-flex flex-wrap breadcrumb-wrap">
-      <mat-chip class="chip-link" (click)="clearFilter()" selected disableRipple>
+      <mat-chip
+        class="chip-link"
+        (click)="clearFilter()"
+        selected
+        disableRipple
+      >
         Todas
       </mat-chip>
 
-      <ng-container *ngFor="let crumb of breadcrumb; let i = index; trackBy: trackById">
+      <ng-container
+        *ngFor="let crumb of breadcrumb; let i = index; trackBy: trackById"
+      >
         <mat-icon fontIcon="chevron_right" class="crumb-sep"></mat-icon>
 
-        <mat-chip *ngIf="i < breadcrumb.length - 1; else lastCrumb"
-                  class="chip-link"
-                  (click)="onBreadcrumbClick(i)"
-                  disableRipple>
+        <mat-chip
+          *ngIf="i < breadcrumb.length - 1; else lastCrumb"
+          class="chip-link"
+          (click)="onBreadcrumbClick(i)"
+          disableRipple
+        >
           {{ crumb.name }}
         </mat-chip>
 
         <ng-template #lastCrumb>
-          <mat-chip color="primary" selected disableRipple>{{ crumb.name }}</mat-chip>
+          <mat-chip color="primary" selected disableRipple>{{
+            crumb.name
+          }}</mat-chip>
         </ng-template>
       </ng-container>
     </div>
   </div>
 
   <!-- Loading -->
-  <mat-progress-bar *ngIf="isLoadingProducts" mode="indeterminate" class="mb-3"></mat-progress-bar>
+  <mat-progress-bar
+    *ngIf="isLoadingProducts"
+    mode="indeterminate"
+    class="mb-3"
+  ></mat-progress-bar>
 
   <!-- Resultados -->
   <div class="bg-white p-3 rounded-3 shadow-sm">
     <app-container-card-flex
       [items]="pagedProducts"
       [type]="'product'"
-      [showFavorite]="true">
+      [showFavorite]="true"
+    >
     </app-container-card-flex>
 
-    <div *ngIf="!isLoadingProducts && products?.length === 0" class="text-center text-muted py-4">
+    <div
+      *ngIf="!isLoadingProducts && products?.length === 0"
+      class="text-center text-muted py-4"
+    >
       <mat-icon fontIcon="inventory_2" class="mb-2"></mat-icon>
       <div>Sin productos para esta categoría.</div>
     </div>
@@ -84,7 +142,8 @@
       [pageSize]="pageSize"
       [pageSizeOptions]="pageSizeOptions"
       [showFirstLastButtons]="true"
-      (page)="onPageChange($event)">
+      (page)="onPageChange($event)"
+    >
     </mat-paginator>
   </div>
 </div>

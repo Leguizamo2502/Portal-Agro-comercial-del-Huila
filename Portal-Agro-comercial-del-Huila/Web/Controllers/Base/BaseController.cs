@@ -36,12 +36,7 @@ namespace Web.Controllers.Base
                 return StatusCode(500, new { message = "Error interno del servidor." });
             }
 
-            //var result = await DeleteAsync(id, deleteType);
-
-            //if (!result)
-            //    return NotFound(new { message = "No se pudo eliminar el recurso." });
-
-            //return Ok(new { message = $"Eliminación {deleteType} realizada correctamente." });
+          
         }
 
         [HttpGet("{id}")]
@@ -110,7 +105,7 @@ namespace Web.Controllers.Base
 
                 identifiableDto.Id = id;
                 var updated = await UpdateAsync(id, dto);
-                if (updated == null)
+                if (!updated)
                     return NotFound(new { message = $"No se encontró el recurso con ID {id} para actualizar." });
 
                 return Ok(new { message = "Elemento actualizado exitosamente." });

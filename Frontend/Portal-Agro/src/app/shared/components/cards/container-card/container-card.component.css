@@ -1,24 +1,23 @@
 /* contenedor general */
 .product-section {
-  background-color: #f9f6f1;
+  background-color:#fff;
   border-radius: 8px;
   padding: 16px;
   max-width: 1400px;
   margin: 0 auto;
   box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-  height: 100vh;
   box-sizing: content-box;
 }
 
 /* título */
-.section-title {
+/* .section-title {
   font-size: 20px;
   font-weight: bold;
   color: #6d4c41;
   margin-bottom: 8px;
   border-bottom: 1px solid #ddd;
   padding-bottom: 4px;
-}
+} */
 
 /* carrusel horizontal */
 .product-container {
