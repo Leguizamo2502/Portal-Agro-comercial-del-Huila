@@ -87,3 +87,13 @@ button[mat-icon-button] {
   background: transparent !important;
   box-shadow: none !important;
 }
+
+.producer-socials .header-row {
+  display: flex; align-items: center; justify-content: space-between; margin: 8px 0 4px;
+}
+.social-row {
+  display: grid; grid-template-columns: 1fr 2fr auto; gap: 12px; align-items: center; margin-bottom: 8px;
+}
+.w-40 { width: 100%; }
+.w-60 { width: 100%; }
+.muted.small { color: #6b7280; font-size: 12px; }

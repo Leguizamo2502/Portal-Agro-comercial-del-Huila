@@ -1,70 +1,99 @@
 <h1 class="title top">Resumen</h1>
+<p class="subtext">
+  Vista general de tu desempeño como productor. Usa las tarjetas para navegar a
+  la lista filtrada.
+</p>
 
-<div class="cont-stat-card d-flex flex-wrap">
-  <!-- <app-stat-card [text]="'Pedidos Pendientes'"></app-stat-card>
-        <app-stat-card [text]="'Pedidos Completado'" [icon]="'check_circle'"></app-stat-card> -->
-  <!-- <app-stat-card
-    icon="hourglass_empty"
-    text="Pedidos pendientes"
-    color="warning"
-    [clickable]="true"
-    [to]="['/account/producer/orders']"
-    [queryParams]="{ status: 'pending' }"
-  >
-  </app-stat-card> -->
+<div class="btns">
+  <app-button
+    [type]="'button'"
+    [text]="'Ver mi perfil'"
+    [redirectTo]="`/home/product/profile/${codeProducer}`"
+  ></app-button>
 
-  <!-- Completados -> pestaña 'all' o 'completed' si luego filtras -->
-  <!-- <app-stat-card
-    icon="check_circle"
-    text="Pedidos completados"
-    color="success"
-    [clickable]="true"
-    [to]="['/account/producer/orders']"
-    [queryParams]="{ status: 'all' }"
-  >
-  </app-stat-card> -->
-  <app-stat-card
-    icon="inventory_2"
-    text="Total pedidos"
-    [count]="totalOrders"
-    color="info"
-    [loading]="loading"
-    [to]="['/account/orders']"
-    [queryParams]="{ status: '' }">
-    
-  </app-stat-card>
-
-  <app-stat-card
-    icon="check_circle"
-    text="Confirmados"
-    [count]="confirmedOrders"
-    color="success"
-    [loading]="loading">
-  </app-stat-card>
-
-  <app-stat-card
-    icon="hourglass_empty"
-    text="Pendientes"
-    [count]="pendingOrders"
-    color="warning"
-    [loading]="loading"
-    [clickable]="true"
-    [to]="['/account/producer/orders']"
-    [queryParams]="{ status: 'pending' }">
-  </app-stat-card>
-  
+  <app-button
+    [type]="'button'"
+    [text]="'Actualizar mi perfil'"
+    (clicked)="updateProfile()"
+  ></app-button>
 </div>
 
-<div class="row mt-4">
-  <div class="col-md-8 col-sm-10">
-    <div class="chart-container">
-      <canvas
-        baseChart
-        [data]="barChartData"
-        [options]="barChartOptions"
-        [type]="'bar'"
+<section class="section">
+  <header class="section-header">
+    <h2 class="subtitle">Estado de los pedidos</h2>
+    <nav class="actions">
+      <a
+        [routerLink]="['/account/producer/orders']"
+        [queryParams]="{ status: 'pending' }"
+        >Ver pendientes</a
       >
-      </canvas>
+      <a
+        [routerLink]="['/account/producer/orders']"
+        [queryParams]="{ status: 'all' }"
+        >Ver todos</a
+      >
+    </nav>
+  </header>
+  <p class="text">Resumen rápido de pedidos totales y pendientes.</p>
+
+  <div class="cont-stat-card d-flex flex-wrap">
+    <app-stat-card
+      icon="inventory_2"
+      text="Total pedidos"
+      [count]="totalOrders"
+      color="info"
+      [loading]="loading"
+      [clickable]="true"
+      [to]="['/account/producer/orders']"
+      [queryParams]="{ status: 'all' }"
+    >
+    </app-stat-card>
+
+    <!-- <app-stat-card
+      icon="check_circle"
+      text="Confirmados"
+      [count]="confirmedOrders"
+      color="success"
+      [loading]="loading"
+      [clickable]="true"
+      [to]="['/account/producer/orders']"
+      [queryParams]="{ status: 'all' }">
+    </app-stat-card> -->
+
+    <app-stat-card
+      icon="hourglass_empty"
+      text="Pendientes"
+      [count]="pendingOrders"
+      color="warning"
+      [loading]="loading"
+      [clickable]="true"
+      [to]="['/account/producer/orders']"
+      [queryParams]="{ status: 'pending' }"
+    >
+    </app-stat-card>
+  </div>
+</section>
+
+<section class="section">
+  <header class="section-header">
+    <h2 class="subtitle">Productos más vendidos</h2>
+  </header>
+  <p class="text">
+    Productos con mayor número de pedidos completados. Útil para priorizar
+    inventario y promoción.
+  </p>
+
+  <div class="row mt-4">
+    <div class="col-md-8 col-sm-10">
+      <div class="chart-container">
+        <canvas
+          baseChart
+          [data]="barChartData"
+          [options]="barChartOptions"
+          [type]="'bar'"
+        >
+        </canvas>
+      </div>
     </div>
   </div>
-</div>
+</section>

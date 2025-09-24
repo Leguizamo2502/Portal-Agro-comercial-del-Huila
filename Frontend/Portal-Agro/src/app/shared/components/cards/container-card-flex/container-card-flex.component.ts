@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProductSelectModel } from '../../../models/product/product.model';
+import { ProductSelectModel, StockUpdateModel } from '../../../models/product/product.model';
 import { FarmSelectModel } from '../../../models/farm/farm.model';
 import { CardComponent } from '../card/card.component';
 import { CardFarmComponent } from '../card-farm/card-farm.component';
@@ -32,6 +32,7 @@ export class ContainerCardFlexComponent {
   @Output() editFarm = new EventEmitter<FarmSelectModel>();
   @Output() deleteFarm = new EventEmitter<FarmSelectModel>();
   @Output() toggleFavorite = new EventEmitter<ProductSelectModel>(); // solo product
+  @Output() editStock = new EventEmitter<StockUpdateModel>();
 
   trackById = (_: number, it: Item) => (it as any).id;
 
@@ -39,6 +40,8 @@ export class ContainerCardFlexComponent {
   isProduct(it: Item): it is ProductSelectModel {
     return (it as ProductSelectModel).price !== undefined;
   }
+
+  
 
   isFarm(it: Item): it is FarmSelectModel {
     return (it as FarmSelectModel).hectares !== undefined;

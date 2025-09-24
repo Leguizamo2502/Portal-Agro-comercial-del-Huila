@@ -78,7 +78,8 @@ namespace Business.Mapping
 
 
             //FarmWith PRoducer a producer y famr
-            config.NewConfig<ProducerWithFarmRegisterDto, Producer>();
+            config.NewConfig<ProducerWithFarmRegisterDto, Producer>()
+                .Ignore(dest => dest.SocialLinks);
             config.NewConfig<ProducerWithFarmRegisterDto, Farm>().Ignore(des => des.FarmImages);
             config.NewConfig<ProducerWithFarmRegisterDto, FarmRegisterDto>();
 
@@ -109,7 +110,8 @@ namespace Business.Mapping
             config.NewConfig<Producer, ProducerSelectDto>()
                 .Map(dest => dest.FullName, src => $"{src.User.Person.FirstName} {src.User.Person.LastName}")
                 .Map(dest => dest.Email, src => src.User.Email)
-                .Map(dest => dest.PhoneNumber, src => src.User.Person.PhoneNumber);
+                .Map(dest => dest.PhoneNumber, src => src.User.Person.PhoneNumber)
+                .Map(dest => dest.Networks, src => src.SocialLinks);
                 
 
 

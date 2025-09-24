@@ -282,9 +282,37 @@ namespace Web.Controllers.Implements.Producer.Products
             }
         }
 
+        [HttpPatch("stock")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateStock([FromBody] UpdateStockDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
+            try
+            {
+                var success = await _productService.UpdateStockAsync(dto);
 
+                if (success)
+                    return Ok(new { IsSucces = true, message = "Stock actualizado correctamente." });
 
+                return NotFound(new { IsSucces = false, message = $"No se encontró el producto con id {dto.ProductId}." });
+            }
+            catch (BusinessException bex)
+            {
+                _logger.LogWarning(bex, "Error de negocio al actualizar stock para ProductId {ProductId}", dto.ProductId);
+                return BadRequest(new { IsSucces = false, message = bex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error inesperado al actualizar stock para ProductId {ProductId}", dto.ProductId);
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { IsSucces = false, message = "Se produjo un error inesperado al actualizar el stock." });
+            }
+        }
 
     }
 }

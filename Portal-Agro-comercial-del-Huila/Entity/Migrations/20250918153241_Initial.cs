@@ -386,6 +386,30 @@ namespace Entity.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ProducerSocialLinks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProducerId = table.Column<int>(type: "int", nullable: false),
+                    Network = table.Column<int>(type: "int", nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: false),
+                    CreateAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    Active = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProducerSocialLinks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProducerSocialLinks_Producers_ProducerId",
+                        column: x => x.ProducerId,
+                        principalTable: "Producers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -1086,6 +1110,12 @@ namespace Entity.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProducerSocialLinks_ProducerId_Network",
+                table: "ProducerSocialLinks",
+                columns: new[] { "ProducerId", "Network" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ProductFarms_FarmId",
                 table: "ProductFarms",
                 column: "FarmId");
@@ -1172,6 +1202,9 @@ namespace Entity.Migrations
 
             migrationBuilder.DropTable(
                 name: "PasswordResetCodes");
+
+            migrationBuilder.DropTable(
+                name: "ProducerSocialLinks");
 
             migrationBuilder.DropTable(
                 name: "ProductFarms");

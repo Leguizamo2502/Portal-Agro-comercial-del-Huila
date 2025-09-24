@@ -1,5 +1,7 @@
 ﻿using Data.Interfaces.Implements.Producers;
 using Data.Repository;
+using Entity.Domain.Enums;
+using Entity.Domain.Models.Implements.Orders;
 using Entity.Domain.Models.Implements.Producers;
 using Entity.Domain.Models.Implements.Producers.Products;
 using Entity.DTOs.Order.Select;
@@ -19,7 +21,16 @@ namespace Data.Service.Producers
             return await _dbSet
                 .Include(p => p.User)
                     .ThenInclude(u => u.Person)
+                .Include(p => p.SocialLinks)
                 .FirstOrDefaultAsync(p => p.Code == codeProducer);
+        }
+
+        public async Task<string?> GetCodeProducer(int producerId)
+        {
+            return await _dbSet
+                .Where(p => p.Id == producerId)
+                .Select(p => p.Code)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<int?> GetIdProducer(int userId)
@@ -51,6 +62,24 @@ namespace Data.Service.Producers
 
         }
 
+        public async Task<int> SalesNumberByCode(string codeProducer)
+        {
+            return await _context.Set<Order>()
+                .AsNoTracking()
+                .Where(o => o.Product.Producer.Code == codeProducer && o.Status == OrderStatus.Completed)
+                .CountAsync();
+        }
 
+        public async Task<Producer?> GetByIdWithSocialLinksAsync(int id)
+        {
+            return await _dbSet
+                .Include(p=>p.SocialLinks)
+                .FirstOrDefaultAsync(p=>p.Id == id && !p.IsDeleted);
+        }
+
+        public void RemoveRange<T>(IEnumerable<T> entities) where T : class
+        {
+            _context.Set<T>().RemoveRange(entities);
+        }
     }
 }

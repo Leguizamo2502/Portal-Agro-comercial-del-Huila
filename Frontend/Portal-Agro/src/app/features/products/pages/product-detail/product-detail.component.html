@@ -77,6 +77,10 @@
             <div class="text">{{ product.unit }}</div>
           </div>
           <div class="mb-1 subtitle">
+            Stock:
+            <div class="text">{{ product.stock }}</div>
+          </div>
+          <div class="mb-1 subtitle">
             Precio:
             <div class="text">
               {{ product.price | currency : "COP" : "symbol" }}
@@ -96,7 +100,7 @@
             [type]="'button'"
             [icon]="'shopping_cart'"
             (click)="openCreateOrder()"
-            [disabled]="loadingProduct || (product.stock ?? 0) <= 0"
+            [disabled]="loadingProduct || product.stock <= 0"
           >
           </app-button>
         </div>

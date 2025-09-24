@@ -7,6 +7,7 @@ import {
   ProductSelectModel,
   ProductUpdateModel,
   ApiOk,
+  StockUpdateModel,
 } from './../../models/product/product.model';
 
 @Injectable({ providedIn: 'root' })
@@ -57,8 +58,8 @@ export class ProductService {
   /** Obtener fincas de prodcutor por code */
   public getProductByCodeProducer(
     codeProducer: string
-  ): Observable<ProductSelectModel> {
-    return this.http.get<ProductSelectModel>(
+  ): Observable<ProductSelectModel[]> {
+    return this.http.get<ProductSelectModel[]>(
       `${this.urlBase}/by-producerCode/${codeProducer}`
     );
   }
@@ -82,6 +83,10 @@ export class ProductService {
     if (!dto.id) throw new Error('ID del producto es obligatorio');
     const fd = this.buildFormData(dto);
     return this.http.put<ApiOk>(`${this.urlBase}/${dto.id}`, fd);
+  }
+
+  updateStock(dto: StockUpdateModel): Observable<ApiOk> {
+    return this.http.patch<ApiOk>(`${this.urlBase}/stock`, dto);
   }
 
   /**

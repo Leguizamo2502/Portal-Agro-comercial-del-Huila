@@ -151,15 +151,44 @@ namespace Business.Services.Producers.Farms
             try
             {
                 // 1) Crear Productor
-                // Usa Mapster para mantener consistencia con tu método nuevo
+        
                 var producer = dto.Adapt<Producer>();
-                producer.Id = 0;                     // asegurar nuevo
-                producer.UserId = user.Id;           // evita tracking raro con navigation
-                producer.User = null;                // no adjuntar la entidad user al grafo
+                producer.Id = 0;                    
+                producer.UserId = user.Id;           
+                producer.User = null;  
                 producer.Code = CodeGenerator.Generate(10);
 
                 await _producerRepository.AddAsync(producer);
-                await _context.SaveChangesAsync();   // necesitas el Id del producer
+                await _context.SaveChangesAsync();   
+
+                // 1.1) Crear redes sociales
+                if (dto.SocialLinks != null && dto.SocialLinks.Count > 0)
+                {
+
+                    var duplicated = dto.SocialLinks
+                        .GroupBy(x => x.Network)
+                        .FirstOrDefault(g => g.Count() > 1);
+                    if (duplicated != null)
+                        throw new BusinessException($"Red social duplicada: {duplicated.Key}");
+
+                    // Normaliza y crea entidades
+                    var links = dto.SocialLinks
+                        .Select(sl =>
+                        {
+                            var url = Urls.NormalizeUrl(sl.Network, sl.Url);
+                            return new ProducerSocialLink
+                            {
+                                ProducerId = producer.Id,
+                                Network = sl.Network,
+                                Url = url
+                            };
+                        })
+                        .ToList();
+
+
+                    await _context.Set<ProducerSocialLink>().AddRangeAsync(links);
+                    await _context.SaveChangesAsync();
+                }
 
                 // 2) Asignar rol de productor (dentro de la misma transacción)
                 await _rolUserRepository.AsignateRolProducer(user);
@@ -167,11 +196,11 @@ namespace Business.Services.Producers.Farms
 
                 // 3) Crear Finca (sin imágenes todavía)
                 var farm = dto.Adapt<Farm>();
-                farm.Id = 0;                         // asegurar nuevo
+                farm.Id = 0;                       
                 farm.ProducerId = producer.Id;
 
                 await _farmRepository.AddAsync(farm);
-                await _context.SaveChangesAsync();   // necesitas el Id de la finca
+                await _context.SaveChangesAsync();  
 
                 // 4) Subir y mapear imágenes reutilizando tu rutina nueva
                 var images = await UploadAndMapImagesAsync(dto.Images, farm.Id);
@@ -184,8 +213,7 @@ namespace Business.Services.Producers.Farms
                 // 5) Commit
                 await transaction.CommitAsync();
 
-                // 5.1) === QR: generar PNG con QRCoder, subir a Cloudinary y guardar URL ===
-                //     (fuera de la transacción; si falla, NO rompemos el flujo)
+                // 5.1) === QR: generar PNG con QRCoder
                 try
                 {
                     var baseUrl = (_configuration["PublicBaseUrl"] ?? string.Empty).TrimEnd('/');
@@ -195,14 +223,14 @@ namespace Business.Services.Producers.Farms
                     }
                     else
                     {
-                        var qrTargetUrl = $"{baseUrl}/p/{producer.Code}";
+                        var qrTargetUrl = $"{baseUrl}/home/product/profile/{producer.Code}";
                         var pngBytes = _qr.GeneratePng(qrTargetUrl);
 
-                        var folder = $"producers/{producer.Id}"; // quedará producers/{id}/qr_png
+                        var folder = $"producers/{producer.Id}";
                         var upload = await _cloudinaryService.UploadBytesAsync(
                             data: pngBytes,
                             folder: folder,
-                            publicId: "qr_png",                         // public_id ESTABLE → permite regenerar
+                            publicId: "qr_png",                       
                             fileNameWithExtension: $"qr_{producer.Code}.png",
                             contentType: "image/png",
                             overwrite: true
@@ -217,7 +245,7 @@ namespace Business.Services.Producers.Farms
                 {
                     _logger.LogWarning(ex, "Falló generación/subida de QR para productor {ProducerId}", producer.Id);
                 }
-                // 5.1) === fin QR ===
+
 
                 // 6) DTO de salida consistente con CreateFarmAsync
                 var result = farm.Adapt<FarmSelectDto>();

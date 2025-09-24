@@ -48,6 +48,7 @@ export interface OrderListItemModel {
   // OJO: el backend envía "CreateAt" => JSON "createAt"
   createAt: string; // ISO
   paymentImageUrl?: string | null;
+  
 }
 
 export interface OrderDetailModel {

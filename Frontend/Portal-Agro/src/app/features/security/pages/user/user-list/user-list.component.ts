@@ -21,7 +21,7 @@ export class UserListComponent implements OnInit {
   }
 
   columns = [
-  { key: 'fullName', label: 'Nombre completo' },
+  { key: 'firstName', label: 'Nombre completo' },
   { key: 'identification', label: 'Identificación' },
   { key: 'email', label: 'Correo electrónico' },
   { key: 'phoneNumber', label: 'Teléfono' },

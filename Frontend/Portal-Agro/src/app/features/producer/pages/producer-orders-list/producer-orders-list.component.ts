@@ -6,7 +6,7 @@ import { OrderListItemModel } from '../../../products/models/order/order.model';
 import { OrderService } from '../../../products/services/order/order.service';
 import { MatIconModule } from "@angular/material/icon";
 import { CommonModule } from '@angular/common';
-import { StatusTranslatePipe } from "../../../../shared/pipes/statusTranslate/status-translate.pipe";
+import { StatusTranslatePipe } from '../../../../shared/pipes/StatusTranslatePipe/status-translate-pipe.pipe';
 
 @Component({
   selector: 'app-producer-orders-list',

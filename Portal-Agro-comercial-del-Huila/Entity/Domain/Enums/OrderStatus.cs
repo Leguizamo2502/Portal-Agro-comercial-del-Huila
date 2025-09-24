@@ -4,7 +4,7 @@
     {
         PendingReview = 0,                 // creada, sin comprobante; esperando decisión del productor
         AcceptedAwaitingPayment = 1,       // aceptada por el productor; comprador debe subir comprobante
-        PaymentSubmitted = 2,              // comprador subió comprobante (sin verificación bancaria)
+        PaymentSubmitted = 2,              // comprador subió comprobante 
         Preparing = 3,                     // productor alista
         Dispatched = 4,                    // productor despacha (sin carrier externo)
         DeliveredPendingBuyerConfirm = 5,  // productor marcó entregado con evidencia; falta confirmación del comprador
