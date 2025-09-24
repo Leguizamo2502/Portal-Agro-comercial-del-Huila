@@ -104,4 +104,7 @@ app.UseAuthorization();
 // ?? 4. Finalmente, los controladores
 app.MapControllers();
 
+// ? MIGRACIONES MULTI-DB EN ARRANQUE
+MigrationManager.MigrateAllDatabases(app.Services, builder.Configuration);
+
 app.Run();

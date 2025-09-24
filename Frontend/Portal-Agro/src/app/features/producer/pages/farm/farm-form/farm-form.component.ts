@@ -41,7 +41,7 @@ import { LocationService } from '../../../../../shared/services/location/locatio
 
 // Leaflet
 import * as L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+// import 'leaflet/dist/leaflet.css';
 import { ButtonComponent } from '../../../../../shared/components/button/button.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -56,6 +56,7 @@ import {
   SocialNetwork,
   ProducerSocialCreateModel,
 } from '../../../../../shared/models/producer/producer.model';
+
 
 //
 // ---- Validadores utilitarios (alineados con FluentValidation del backend) ----
@@ -383,8 +384,8 @@ export class FarmFormComponent implements OnInit, OnDestroy {
       this.setMarker(lat, lng, true);
       return;
     }
-    delete (L.Icon.Default.prototype as any)._getIconUrl;
 
+    
     L.Icon.Default.mergeOptions({
       iconRetinaUrl: 'leaflet/marker-icon-2x.png',
       iconUrl: 'leaflet/marker-icon.png',

@@ -186,14 +186,12 @@ namespace Business.Services.Orders
 
             if (order.IsDeleted || !order.Active)
                 throw new BusinessException("La orden no está disponible.");
-
             if (order.ProducerIdSnapshot != producerId)
                 throw new BusinessException("No está autorizado para aceptar esta orden.");
-
             if (order.Status != OrderStatus.PendingReview)
                 throw new BusinessException("Solo se pueden aceptar órdenes en estado pendiente.");
 
-            // Concurrencia de la orden
+            // Concurrencia
             order.RowVersion = Convert.FromBase64String(dto.RowVersion);
 
             var now = DateTime.UtcNow;
@@ -202,34 +200,38 @@ namespace Business.Services.Orders
             order.Status = OrderStatus.AcceptedAwaitingPayment;
             order.AcceptedAt = now;
             order.AutoCloseAt = now.AddHours(_paymentUploadDeadlineHours);
-            //order.AutoCloseAt = now.AddMinutes(1);
 
+            var strategy = _db.Database.CreateExecutionStrategy();
 
-            await using var tx = await _db.Database.BeginTransactionAsync();
-            try
+            await strategy.ExecuteAsync(async () =>
             {
-                var ok = await _productRepository.TryDecrementStockAsync(order.ProductId, order.QuantityRequested);
-                if (!ok)
-                    throw new BusinessException("Stock insuficiente o concurrencia detectada. Refresca e inténtalo de nuevo.");
+                await using var tx = await _db.Database.BeginTransactionAsync();
+                try
+                {
+                    // 1) Intentar descontar stock (mismo DbContext/conn/tx)
+                    var ok = await _productRepository.TryDecrementStockAsync(order.ProductId, order.QuantityRequested);
+                    if (!ok)
+                        throw new BusinessException("Stock insuficiente o concurrencia detectada. Refresca e inténtalo de nuevo.");
 
-                // 2) Persistir orden
-                await _orderRepository.UpdateOrderAsync(order);
-                await _db.SaveChangesAsync();
+                    // 2) Persistir la orden
+                    await _orderRepository.UpdateOrderAsync(order);
+                    await _db.SaveChangesAsync();
 
-                await tx.CommitAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                await tx.RollbackAsync();
-                throw new BusinessException("La orden fue modificada por otro usuario. Refresca y vuelve a intentar.");
-            }
-            catch
-            {
-                await tx.RollbackAsync();
-                throw;
-            }
+                    await tx.CommitAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    await tx.RollbackAsync();
+                    throw new BusinessException("La orden fue modificada por otro usuario. Refresca y vuelve a intentar.");
+                }
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
+            });
 
-            // 3) Notificar (best-effort, fuera de la transacción)
+            // Notificación fuera de la strategy/tx
             var user = await _userRepository.GetContactUser(order.UserId)
                       ?? throw new BusinessException("No se pudo obtener el contacto del usuario.");
 
@@ -252,64 +254,76 @@ namespace Business.Services.Orders
 
             if (order.IsDeleted || !order.Active)
                 throw new BusinessException("La orden no está disponible.");
-
             if (order.UserId != userId)
                 throw new BusinessException("No está autorizado para subir el comprobante de esta orden.");
-
             if (order.Status != OrderStatus.AcceptedAwaitingPayment)
                 throw new BusinessException("Solo se puede subir comprobante cuando la orden está aceptada y pendiente de pago.");
-
             if (order.AutoCloseAt.HasValue && DateTime.UtcNow > order.AutoCloseAt.Value)
                 throw new BusinessException("El plazo para subir el comprobante expiró.");
-
+            if (dto.PaymentImage == null || dto.PaymentImage.Length == 0)
+                throw new BusinessException("Debes adjuntar el comprobante de pago.");
 
             // Concurrencia
             order.RowVersion = Convert.FromBase64String(dto.RowVersion);
 
-            // Validación básica del archivo (puedes endurecer con tamaño/extensión/ MIME)
-            if (dto.PaymentImage == null || dto.PaymentImage.Length == 0)
-                throw new BusinessException("Debes adjuntar el comprobante de pago.");
-
-            var now = DateTime.UtcNow;
+            // === 1) IO externo: subir a Cloudinary FUERA de strategy/tx ===
             string? uploadedPublicId = null;
+            string? uploadedUrl = null;
+            var now = DateTime.UtcNow;
 
-            await using var tx = await _db.Database.BeginTransactionAsync();
             try
             {
                 var upload = await _cloudinaryService.UploadOrderPaymentImageAsync(dto.PaymentImage, order.Id);
-                // aplica url y marca de tiempo
-                order.PaymentImageUrl = upload?.SecureUrl?.AbsoluteUri
-                    ?? throw new BusinessException("No se pudo obtener la URL del comprobante.");
-
                 uploadedPublicId = upload?.PublicId;
-                order.PaymentUploadedAt = now;
-                order.PaymentSubmittedAt = now;
+                uploadedUrl = upload?.SecureUrl?.AbsoluteUri
+                              ?? throw new BusinessException("No se pudo obtener la URL del comprobante.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Fallo al subir comprobante (OrderId {OrderId})", order.Id);
+                throw new BusinessException("No se pudo subir el comprobante. Intenta nuevamente.");
+            }
 
-                // Avanza estado
-                order.Status = OrderStatus.PaymentSubmitted;
+            // === 2) Persistencia: strategy + transacción DENTRO ===
+            var strategy = _db.Database.CreateExecutionStrategy();
+            try
+            {
+                await strategy.ExecuteAsync(async () =>
+                {
+                    await using var tx = await _db.Database.BeginTransactionAsync();
+                    try
+                    {
+                        order.PaymentImageUrl = uploadedUrl;
+                        order.PaymentUploadedAt = now;
+                        order.PaymentSubmittedAt = now;
 
-                // Evita que el job de expiración la cierre por tiempo
-                order.AutoCloseAt = null;
+                        order.Status = OrderStatus.PaymentSubmitted;
+                        order.AutoCloseAt = null; // evita cierre automático
 
-                await _orderRepository.UpdateOrderAsync(order);
-                await _db.SaveChangesAsync();
-                await tx.CommitAsync();
+                        await _orderRepository.UpdateOrderAsync(order);
+                        await _db.SaveChangesAsync();
+
+                        await tx.CommitAsync();
+                    }
+                    catch
+                    {
+                        await tx.RollbackAsync();
+                        throw;
+                    }
+                });
             }
             catch (DbUpdateConcurrencyException)
             {
-                await tx.RollbackAsync();
-                // limpiar upload si fue necesario
                 await DeleteUploadedReceiptIfNeededAsync(uploadedPublicId);
                 throw new BusinessException("La orden fue modificada por otro usuario. Refresca y vuelve a intentar.");
             }
             catch
             {
-                await tx.RollbackAsync();
                 await DeleteUploadedReceiptIfNeededAsync(uploadedPublicId);
                 throw;
             }
 
-            // Notificar al productor (best-effort)
+            // === 3) Notificar (best-effort, fuera de strategy/tx) ===
             try
             {
                 var producer = await _producerRepository.GetContactProducer(order.ProducerIdSnapshot)

@@ -17,8 +17,7 @@ namespace Data.Interfaces.Implements.Auth
         Task<User?> GetByEmailAsync(string email);
         Task<User> LoginUser(LoginUserDto loginDto);
         Task<ContactDto> GetContactUser(int userId);
-
-
+        Task<bool> ExistsByDocumentAsync(string identification);
 
 
     }

@@ -113,9 +113,11 @@ namespace Business.Services.AuthService
         {
             try
             {
-                // Validar que el correo no esté registrado
                 if (await _userData.ExistsByEmailAsync(dto.Email))
                     throw new Exception("Correo ya registrado");
+
+                if (await _userData.ExistsByDocumentAsync(dto.Identification))
+                    throw new Exception("Ya existe una persona con este numero de identificacion");
 
                 var validPassword = BusinessValidationHelper.IsValidPassword(dto.Password);
                 if (!validPassword)
@@ -124,21 +126,16 @@ namespace Business.Services.AuthService
                 }
 
 
-                // Mapear DTO a entidades
                 var person = _mapper.Map<Person>(dto);
                 var user = _mapper.Map<User>(dto);
 
-                // Encriptar contraseña
                 user.Password = EncriptePassword.EncripteSHA256(user.Password);
 
-                // Asignar relación
+              
                 user.Person = person;
                 
-
-                // Guardar usuario
                 await _userData.AddAsync(user);
 
-                // Asignar rol por defecto
                 await _rolUserData.AsignateRolDefault(user);
 
                 // Recuperar el usuario con sus relaciones para el mapeo correcto
