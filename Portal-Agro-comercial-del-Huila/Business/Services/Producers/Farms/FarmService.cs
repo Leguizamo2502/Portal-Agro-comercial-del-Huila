@@ -95,6 +95,20 @@ namespace Business.Services.Producers.Farms
             }
         }
 
+        public async Task<FarmSelectDto?> GetByCodeAsync(string code)
+        {
+            try
+            {
+
+                var entity = await _farmRepository.GetByCode(code);
+                return entity == null ? default : _mapper.Map<FarmSelectDto>(entity);
+            }
+            catch (Exception ex)
+            {
+                throw new BusinessException($"Error al obtener la finca con codigo {code}.", ex);
+            }
+        }
+
         public override async Task<bool> DeleteAsync(int id)
         {
             var entity = await _farmRepository.GetByIdAsync(id);
@@ -231,6 +245,7 @@ namespace Business.Services.Producers.Farms
                     // 3) Crear Finca (sin imágenes todavía)
                     farm = dto.Adapt<Farm>();
                     farm!.Id = 0;
+                    farm.Code = CodeGenerator.Generate();
                     farm.ProducerId = producer!.Id;
 
                     await _farmRepository.AddAsync(farm);
@@ -308,6 +323,7 @@ namespace Business.Services.Producers.Farms
                      ?? throw new BusinessException("El usuario no está registrado como productor.");
 
             var entity = dto.Adapt<Farm>();
+            entity.Code = CodeGenerator.Generate();
             entity.ProducerId = pid;
 
             var strategy = _context.Database.CreateExecutionStrategy();

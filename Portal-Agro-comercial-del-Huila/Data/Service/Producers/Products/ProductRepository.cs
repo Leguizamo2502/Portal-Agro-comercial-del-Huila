@@ -243,5 +243,20 @@ namespace Data.Service.Producers.Products
             }
         }
 
+        public async Task<Product?> GetByCode(string code)
+        {
+            var product = await BaseQuery()
+               .FirstOrDefaultAsync(p => p.Code == code);
+
+            if (product != null)
+            {
+                // Por si acaso, reforzamos el filtro de imágenes no borradas
+                product.ProductImages = product.ProductImages
+                    .Where(pi => !pi.IsDeleted)
+                    .ToList();
+            }
+
+            return product;
+        }
     }
 }

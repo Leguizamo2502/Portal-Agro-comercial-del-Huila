@@ -17,6 +17,7 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Utilities.Custom.Code;
 using Utilities.Exceptions;
 using Utilities.Helpers.Business;
 
@@ -148,6 +149,7 @@ namespace Business.Services.Producers.Products
                 try
                 {
                     var entity = dto.Adapt<Product>();
+                    entity.Code = CodeGenerator.Generate(12);
                     entity.ProducerId = pid;
                     entity.Active = true;
                     entity.IsDeleted = false;

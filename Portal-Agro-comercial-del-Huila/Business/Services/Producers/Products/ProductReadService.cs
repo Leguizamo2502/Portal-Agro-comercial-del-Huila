@@ -59,6 +59,20 @@ public class ProductReadService : IProductReadService
         }
     }
 
+    public async Task<ProductSelectDto?> GetByCodeAsync(string code)
+    {
+        try
+        {
+            var entity = await _productRepo.GetByCode(code);
+            return entity is null ? null : _mapper.Map<ProductSelectDto>(entity);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error al obtener el producto con codigo {Code}", code);
+            throw new BusinessException($"Error al obtener el producto con codigo {code}.", ex);
+        }
+    }
+
     public async Task<IEnumerable<ProductSelectDto>> GetAllHomeAsync(int? userId,int? limit)
     {
         try

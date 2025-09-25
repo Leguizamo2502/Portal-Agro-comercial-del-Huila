@@ -1,7 +1,8 @@
-﻿using System;
-using Entity.Domain.Models.Implements.Producers; // Farm está en este namespace
+﻿using Entity.Domain.Models.Implements.Producers; // Farm está en este namespace
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using Utilities.Helpers.Code;
 
 namespace Entity.Infrastructure.DataInit.Producers.Farms
 {
@@ -20,6 +21,7 @@ namespace Entity.Infrastructure.DataInit.Producers.Farms
                     Altitude = 1600,
                     Latitude = 1200.0,
                     Longitude = 600.0,
+                    Code = "FARM-A1B2C3",
                     ProducerId = 1,
                     CityId = 33,
                     IsDeleted = false,
@@ -34,6 +36,7 @@ namespace Entity.Infrastructure.DataInit.Producers.Farms
                     Altitude = 1600,
                     Latitude = 1200.0,
                     Longitude = 600.0,
+                    Code = "FARM-D4E5F6",
                     ProducerId = 1,
                     CityId = 33,
                     IsDeleted = false,
@@ -48,6 +51,7 @@ namespace Entity.Infrastructure.DataInit.Producers.Farms
                     Altitude = 1600,
                     Latitude = 1200.0,
                     Longitude = 600.0,
+                    Code = "FARM-G7H8I9",
                     ProducerId = 1,
                     CityId = 33,
                     IsDeleted = false,
@@ -62,6 +66,7 @@ namespace Entity.Infrastructure.DataInit.Producers.Farms
                     Altitude = 1600,
                     Latitude = 1200.0,
                     Longitude = 600.0,
+                    Code = "FARM-J1K2L3",
                     ProducerId = 1,
                     CityId = 33,
                     IsDeleted = false,
@@ -76,6 +81,7 @@ namespace Entity.Infrastructure.DataInit.Producers.Farms
                     Altitude = 1600,
                     Latitude = 1200.0,
                     Longitude = 600.0,
+                    Code = "FARM-M4N5O6",
                     ProducerId = 2,
                     CityId = 33,
                     IsDeleted = false,
