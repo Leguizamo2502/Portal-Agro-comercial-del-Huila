@@ -55,7 +55,7 @@ export const ACCOUNT_ROUTES: Routes = [
         data:{roles:['Consumer']},
         component: UserOrdersListComponent
       },
-      {path:'orders/:id',
+      {path:'orders/:code',
         title:'Ordenes',
         canMatch:[roleMatchGuard],
         data:{roles:['Consumer']},

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Entity.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250918153241_Initial")]
+    [Migration("20250925142932_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -965,6 +965,10 @@ namespace Entity.Migrations
                     b.Property<int>("CityId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ContactPhone")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -1116,6 +1120,10 @@ namespace Entity.Migrations
                     b.Property<int>("CityId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
@@ -1153,6 +1161,7 @@ namespace Entity.Migrations
                             Active = true,
                             Altitude = 1600.0,
                             CityId = 33,
+                            Code = "FARM-A1B2C3",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Hectares = 4.0,
                             IsDeleted = false,
@@ -1167,6 +1176,7 @@ namespace Entity.Migrations
                             Active = true,
                             Altitude = 1600.0,
                             CityId = 33,
+                            Code = "FARM-D4E5F6",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Hectares = 4.0,
                             IsDeleted = false,
@@ -1181,6 +1191,7 @@ namespace Entity.Migrations
                             Active = true,
                             Altitude = 1600.0,
                             CityId = 33,
+                            Code = "FARM-G7H8I9",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Hectares = 4.0,
                             IsDeleted = false,
@@ -1195,6 +1206,7 @@ namespace Entity.Migrations
                             Active = true,
                             Altitude = 1600.0,
                             CityId = 33,
+                            Code = "FARM-J1K2L3",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Hectares = 4.0,
                             IsDeleted = false,
@@ -1209,6 +1221,7 @@ namespace Entity.Migrations
                             Active = true,
                             Altitude = 1600.0,
                             CityId = 33,
+                            Code = "FARM-M4N5O6",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Hectares = 4.0,
                             IsDeleted = false,
@@ -1773,6 +1786,10 @@ namespace Entity.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreateAt")
                         .HasColumnType("datetime2");
 
@@ -1826,6 +1843,7 @@ namespace Entity.Migrations
                             Id = 1,
                             Active = true,
                             CategoryId = 8,
+                            Code = "A7K2Q8M3ZB",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Cafe con el mejor sabor del campo",
                             IsDeleted = false,
@@ -1843,6 +1861,7 @@ namespace Entity.Migrations
                             Id = 2,
                             Active = true,
                             CategoryId = 8,
+                            Code = "H9DN5W4R2J",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Cultivado sin químicos, sabor intenso",
                             IsDeleted = false,
@@ -1860,6 +1879,7 @@ namespace Entity.Migrations
                             Id = 3,
                             Active = true,
                             CategoryId = 8,
+                            Code = "K3M7P1X6TY",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Tueste medio con notas frutales",
                             IsDeleted = false,
@@ -1877,6 +1897,7 @@ namespace Entity.Migrations
                             Id = 4,
                             Active = true,
                             CategoryId = 8,
+                            Code = "Q2Z8N7L4VF",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Grano seleccionado de alta montaña",
                             IsDeleted = false,
@@ -1894,6 +1915,7 @@ namespace Entity.Migrations
                             Id = 5,
                             Active = true,
                             CategoryId = 8,
+                            Code = "M8R3C6J9PA",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Cosechado a mano en clima fresco",
                             IsDeleted = false,
@@ -1911,6 +1933,7 @@ namespace Entity.Migrations
                             Id = 6,
                             Active = true,
                             CategoryId = 8,
+                            Code = "T5Y1H7K3UE",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Sabor balanceado, aroma suave",
                             IsDeleted = false,
@@ -1928,6 +1951,7 @@ namespace Entity.Migrations
                             Id = 7,
                             Active = true,
                             CategoryId = 8,
+                            Code = "V4B9Q2M6LX",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Mezcla selecta de granos",
                             IsDeleted = false,
@@ -1945,6 +1969,7 @@ namespace Entity.Migrations
                             Id = 8,
                             Active = true,
                             CategoryId = 8,
+                            Code = "Z6F1D8R3NW",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Cultivo en altitudes extremas",
                             IsDeleted = false,
@@ -1962,6 +1987,7 @@ namespace Entity.Migrations
                             Id = 9,
                             Active = true,
                             CategoryId = 8,
+                            Code = "N2X7C5Q1JG",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Mezcla con notas cítricas",
                             IsDeleted = false,
@@ -1979,6 +2005,7 @@ namespace Entity.Migrations
                             Id = 10,
                             Active = true,
                             CategoryId = 8,
+                            Code = "R8M2T5K9WY",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Tueste natural, suave al paladar",
                             IsDeleted = false,
@@ -1996,6 +2023,7 @@ namespace Entity.Migrations
                             Id = 11,
                             Active = true,
                             CategoryId = 8,
+                            Code = "L7P3V9H2QX",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Grano seleccionado manualmente",
                             IsDeleted = false,
@@ -2013,6 +2041,7 @@ namespace Entity.Migrations
                             Id = 12,
                             Active = true,
                             CategoryId = 8,
+                            Code = "C9J4N1Z7TR",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Cultivo bajo sombra natural",
                             IsDeleted = false,
@@ -2030,6 +2059,7 @@ namespace Entity.Migrations
                             Id = 13,
                             Active = true,
                             CategoryId = 8,
+                            Code = "X3Q8L6M2DP",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Grano joven de excelente aroma",
                             IsDeleted = false,
@@ -2047,6 +2077,7 @@ namespace Entity.Migrations
                             Id = 14,
                             Active = true,
                             CategoryId = 8,
+                            Code = "J5H2K9T4VE",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Tueste lento en horno de barro",
                             IsDeleted = false,
@@ -2064,6 +2095,7 @@ namespace Entity.Migrations
                             Id = 15,
                             Active = true,
                             CategoryId = 9,
+                            Code = "P6M1X8Q3LR",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Mezcla suave con aroma a chocolate",
                             IsDeleted = false,
@@ -2081,6 +2113,7 @@ namespace Entity.Migrations
                             Id = 16,
                             Active = true,
                             CategoryId = 8,
+                            Code = "D2V9R5N7QH",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Sabor intenso con notas amaderadas",
                             IsDeleted = false,
@@ -2098,6 +2131,7 @@ namespace Entity.Migrations
                             Id = 17,
                             Active = true,
                             CategoryId = 8,
+                            Code = "U1K7P3Z8MW",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Proceso húmedo tradicional",
                             IsDeleted = false,
@@ -2115,6 +2149,7 @@ namespace Entity.Migrations
                             Id = 18,
                             Active = true,
                             CategoryId = 8,
+                            Code = "F4T9L2H6QY",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Secado al sol directamente",
                             IsDeleted = false,
@@ -2132,6 +2167,7 @@ namespace Entity.Migrations
                             Id = 19,
                             Active = true,
                             CategoryId = 8,
+                            Code = "S8N3D7V1KJ",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Granos cultivados a 1600msnm",
                             IsDeleted = false,
@@ -2149,6 +2185,7 @@ namespace Entity.Migrations
                             Id = 20,
                             Active = true,
                             CategoryId = 8,
+                            Code = "Y2Q6M9P4TX",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Versión fuerte ideal para espresso",
                             IsDeleted = false,
@@ -2166,6 +2203,7 @@ namespace Entity.Migrations
                             Id = 21,
                             Active = true,
                             CategoryId = 9,
+                            Code = "G9L2R5X1NV",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Mezcla gourmet café y cacao",
                             IsDeleted = false,
@@ -2183,6 +2221,7 @@ namespace Entity.Migrations
                             Id = 22,
                             Active = true,
                             CategoryId = 8,
+                            Code = "W3H8Q2M7LC",
                             CreateAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Selección premium para exportación",
                             IsDeleted = false,

@@ -23,7 +23,7 @@ export class UserOrderDetailComponent implements OnInit {
   private router = inject(Router);
   private ordersSrv = inject(OrderService);
 
-  id!: number;
+  code!: string;
   loading = true;
   confirming = false;
   detail?: OrderDetailModel;
@@ -36,8 +36,8 @@ export class UserOrderDetailComponent implements OnInit {
   readonly MAX_FILE_BYTES = this.MAX_FILE_MB * 1024 * 1024;
 
   ngOnInit(): void {
-    this.id = Number(this.route.snapshot.paramMap.get('id'));
-    if (!this.id) {
+    this.code = String(this.route.snapshot.paramMap.get('code'));
+    if (!this.code) {
       this.router.navigateByUrl('/account/orders');
       return;
     }
@@ -47,7 +47,7 @@ export class UserOrderDetailComponent implements OnInit {
   async load(): Promise<void> {
     this.loading = true;
     try {
-      this.detail = await firstValueFrom(this.ordersSrv.getDetailForUser(this.id));
+      this.detail = await firstValueFrom(this.ordersSrv.getDetailForUser(this.code));
     } catch (err: any) {
       Swal.fire('Error', err?.error?.message ?? 'No se pudo cargar el pedido.', 'error');
       this.detail = undefined;
@@ -133,7 +133,7 @@ export class UserOrderDetailComponent implements OnInit {
     this.confirming = true;
     const body: OrderConfirmRequest = { answer, rowVersion: this.detail.rowVersion };
 
-    this.ordersSrv.confirmReceived(this.id, body).subscribe({
+    this.ordersSrv.confirmReceived(this.code, body).subscribe({
       next: async () => {
         await Swal.fire(
           'Hecho',
@@ -167,7 +167,7 @@ export class UserOrderDetailComponent implements OnInit {
     });
     if (!ask.isConfirmed) return;
 
-    this.ordersSrv.cancelByUser(this.id, this.detail.rowVersion).subscribe({
+    this.ordersSrv.cancelByUser(this.code, this.detail.rowVersion).subscribe({
       next: async () => {
         await Swal.fire('Hecho', 'Pedido cancelado.', 'success');
         this.load();
@@ -211,7 +211,7 @@ export class UserOrderDetailComponent implements OnInit {
       didOpen: () => Swal.showLoading(),
     });
 
-    this.ordersSrv.uploadPayment(this.id, req).subscribe({
+    this.ordersSrv.uploadPayment(this.code, req).subscribe({
       next: async () => {
         Swal.close();
         await Swal.fire('Hecho', 'Comprobante subido.', 'success');

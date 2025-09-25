@@ -4,6 +4,8 @@ namespace Entity.DTOs.Order.Select
 {
     public class OrderDetailDto : BaseDto
     {
+
+        public string Code { get; set; }
         // Producto / snapshots
         public int ProductId { get; set; }
         public string ProductName { get; set; } = null!;

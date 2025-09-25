@@ -14,6 +14,7 @@ import {
   RowVersionOnly,
   UploadPaymentRequest,
 } from '../../models/order/order.model';
+import { MatColumnDef } from '@angular/material/table';
 
 @Injectable({ providedIn: 'root' })
 export class OrderService {
@@ -26,11 +27,11 @@ export class OrderService {
   }
 
   // ========== SUBIR COMPROBANTE ==========
-  uploadPayment(id: number, req: UploadPaymentRequest): Observable<any> {
+  uploadPayment(code : string, req: UploadPaymentRequest): Observable<any> {
     const fd = new FormData();
     fd.append('RowVersion', req.rowVersion);
     fd.append('PaymentImage', req.paymentImage, req.paymentImage.name);
-    return this.http.post<any>(`${this.urlBase}/${id}/payment`, fd);
+    return this.http.post<any>(`${this.urlBase}/${code}/payment`, fd);
   }
 
   // ========== LISTADOS / DETALLES ==========
@@ -43,9 +44,9 @@ export class OrderService {
     return this.http.get<OrderListItemModel[]>(`${this.urlBase}/pending`);
   }
 
-  getDetailForProducer(id: number): Observable<OrderDetailModel> {
+  getDetailForProducer(code : string): Observable<OrderDetailModel> {
     return this.http.get<OrderDetailModel>(
-      `${this.urlBase}/${id}/for-producer`
+      `${this.urlBase}/${code}/for-producer`
     );
   }
 
@@ -54,51 +55,51 @@ export class OrderService {
     return this.http.get<OrderListItemModel[]>(`${this.urlBase}/mine`);
   }
 
-  getDetailForUser(id: number): Observable<OrderDetailModel> {
-    return this.http.get<OrderDetailModel>(`${this.urlBase}/${id}/for-user`);
+  getDetailForUser(code: string): Observable<OrderDetailModel> {
+    return this.http.get<OrderDetailModel>(`${this.urlBase}/${code}/for-user`);
   }
 
   // ========== ACCIONES DEL CLIENTE ==========
-  confirmReceived(id: number, body: OrderConfirmRequest) {
-    return this.http.post<any>(`${this.urlBase}/${id}/confirm-received`, body);
+  confirmReceived(code : string, body: OrderConfirmRequest) {
+    return this.http.post<any>(`${this.urlBase}/${code}/confirm-received`, body);
   }
 
-  cancelByUser(id: number, rowVersion: string) {
+  cancelByUser(code : string, rowVersion: string) {
     return this.http.post<any>(
-      `${this.urlBase}/${id}/cancel`,
+      `${this.urlBase}/${code}/cancel`,
       JSON.stringify(rowVersion),
       { headers: { 'Content-Type': 'application/json' } }
     );
   }
 
   // ========== ACCIONES DEL PRODUCTOR ==========
-  acceptOrder(id: number, dto: OrderAcceptRequest): Observable<any> {
-    return this.http.post<any>(`${this.urlBase}/${id}/accept`, dto);
+  acceptOrder(code : string, dto: OrderAcceptRequest): Observable<any> {
+    return this.http.post<any>(`${this.urlBase}/${code}/accept`, dto);
   }
 
-  rejectOrder(id: number, dto: OrderRejectRequest): Observable<any> {
-    return this.http.post<any>(`${this.urlBase}/${id}/reject`, dto);
+  rejectOrder(code : string, dto: OrderRejectRequest): Observable<any> {
+    return this.http.post<any>(`${this.urlBase}/${code}/reject`, dto);
   }
 
-  markPreparing(id: number, rowVersion: string): Observable<any> {
+  markPreparing(code : string, rowVersion: string): Observable<any> {
     return this.http.post<any>(
-      `${this.urlBase}/${id}/preparing`,
+      `${this.urlBase}/${code}/preparing`,
       JSON.stringify(rowVersion),
       { headers: { 'Content-Type': 'application/json' } }
     );
   }
 
-  markDispatched(id: number, rowVersion: string): Observable<any> {
+  markDispatched(code : string, rowVersion: string): Observable<any> {
     return this.http.post<any>(
-      `${this.urlBase}/${id}/dispatched`,
+      `${this.urlBase}/${code}/dispatched`,
       JSON.stringify(rowVersion),
       { headers: { 'Content-Type': 'application/json' } }
     );
   }
 
-  markDelivered(id: number, rowVersion: string): Observable<any> {
+  markDelivered(code : string, rowVersion: string): Observable<any> {
     return this.http.post<any>(
-      `${this.urlBase}/${id}/delivered`,
+      `${this.urlBase}/${code}/delivered`,
       JSON.stringify(rowVersion),
       { headers: { 'Content-Type': 'application/json' } }
     );

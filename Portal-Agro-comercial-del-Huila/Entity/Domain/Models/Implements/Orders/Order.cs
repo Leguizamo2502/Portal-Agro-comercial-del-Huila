@@ -11,7 +11,7 @@ namespace Entity.Domain.Models.Implements.Orders
     {
         //Seguridad
         public string Code { get; set; } = default!;   // opaco, único
-        public long OrderNumber { get; set; }
+        //public long OrderNumber { get; set; }
         // Relaciones
         public int UserId { get; set; }
         public int ProductId { get; set; }

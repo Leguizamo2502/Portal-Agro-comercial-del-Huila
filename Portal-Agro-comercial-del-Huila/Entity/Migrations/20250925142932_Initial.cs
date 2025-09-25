@@ -358,6 +358,7 @@ namespace Entity.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Hectares = table.Column<double>(type: "float", nullable: false),
                     Altitude = table.Column<double>(type: "float", nullable: false),
                     Latitude = table.Column<double>(type: "float", nullable: false),
@@ -417,6 +418,7 @@ namespace Entity.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     Unit = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Production = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -506,6 +508,7 @@ namespace Entity.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     ProducerIdSnapshot = table.Column<int>(type: "int", nullable: false),
@@ -923,43 +926,43 @@ namespace Entity.Migrations
 
             migrationBuilder.InsertData(
                 table: "Farms",
-                columns: new[] { "Id", "Active", "Altitude", "CityId", "CreateAt", "Hectares", "IsDeleted", "Latitude", "Longitude", "Name", "ProducerId" },
+                columns: new[] { "Id", "Active", "Altitude", "CityId", "Code", "CreateAt", "Hectares", "IsDeleted", "Latitude", "Longitude", "Name", "ProducerId" },
                 values: new object[,]
                 {
-                    { 1, true, 1600.0, 33, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 4.0, false, 1200.0, 600.0, "Finca el Jardin", 1 },
-                    { 2, true, 1600.0, 33, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 4.0, false, 1200.0, 600.0, "Finca el Mirador", 1 },
-                    { 3, true, 1600.0, 33, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 4.0, false, 1200.0, 600.0, "Finca los Alpes", 1 },
-                    { 4, true, 1600.0, 33, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 4.0, false, 1200.0, 600.0, "Finca los Lulos", 1 },
-                    { 5, true, 1600.0, 33, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 4.0, false, 1200.0, 600.0, "Finca los Primos", 2 }
+                    { 1, true, 1600.0, 33, "FARM-A1B2C3", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 4.0, false, 1200.0, 600.0, "Finca el Jardin", 1 },
+                    { 2, true, 1600.0, 33, "FARM-D4E5F6", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 4.0, false, 1200.0, 600.0, "Finca el Mirador", 1 },
+                    { 3, true, 1600.0, 33, "FARM-G7H8I9", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 4.0, false, 1200.0, 600.0, "Finca los Alpes", 1 },
+                    { 4, true, 1600.0, 33, "FARM-J1K2L3", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 4.0, false, 1200.0, 600.0, "Finca los Lulos", 1 },
+                    { 5, true, 1600.0, 33, "FARM-M4N5O6", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 4.0, false, 1200.0, 600.0, "Finca los Primos", 2 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Products",
-                columns: new[] { "Id", "Active", "CategoryId", "CreateAt", "Description", "IsDeleted", "Name", "Price", "ProducerId", "Production", "ShippingIncluded", "Status", "Stock", "Unit" },
+                columns: new[] { "Id", "Active", "CategoryId", "Code", "CreateAt", "Description", "IsDeleted", "Name", "Price", "ProducerId", "Production", "ShippingIncluded", "Status", "Stock", "Unit" },
                 values: new object[,]
                 {
-                    { 1, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cafe con el mejor sabor del campo", false, "Cafe el sabor", 30000m, 1, "300 lb cada tres meses", false, true, 250, "lb" },
-                    { 2, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cultivado sin químicos, sabor intenso", false, "Café Orgánico Premium", 35000m, 1, "200 lb por trimestre", false, true, 180, "lb" },
-                    { 3, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Tueste medio con notas frutales", false, "Café Tostado Suave", 32000m, 1, "150 lb cada mes", false, true, 120, "lb" },
-                    { 4, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Grano seleccionado de alta montaña", false, "Café Grano Oscuro", 34000m, 1, "180 lb bimestral", false, true, 210, "lb" },
-                    { 5, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cosechado a mano en clima fresco", false, "Café El Mirador", 30000m, 1, "220 lb trimestral", false, true, 190, "lb" },
-                    { 6, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Sabor balanceado, aroma suave", false, "Café Clásico de los Andes", 31000m, 1, "250 lb trimestral", false, true, 170, "lb" },
-                    { 7, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Mezcla selecta de granos", false, "Café Supremo", 36000m, 1, "300 lb cada 2 meses", false, true, 260, "lb" },
-                    { 8, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cultivo en altitudes extremas", false, "Café los Alpes", 37000m, 1, "280 lb trimestral", false, true, 250, "lb" },
-                    { 9, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Mezcla con notas cítricas", false, "Café Lulo Blend", 33000m, 1, "230 lb bimestral", false, true, 200, "lb" },
-                    { 10, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Tueste natural, suave al paladar", false, "Café del Bosque", 30000m, 1, "180 lb mensual", false, true, 160, "lb" },
-                    { 11, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Grano seleccionado manualmente", false, "Café Reserva Especial", 38000m, 1, "150 lb cada tres meses", false, true, 130, "lb" },
-                    { 12, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cultivo bajo sombra natural", false, "Café Sierra Verde", 31000m, 1, "200 lb cada 2 meses", false, true, 140, "lb" },
-                    { 13, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Grano joven de excelente aroma", false, "Café del Amanecer", 30500m, 1, "160 lb mensual", false, true, 150, "lb" },
-                    { 14, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Tueste lento en horno de barro", false, "Café Tostado Artesanal", 34000m, 1, "190 lb bimestral", false, true, 175, "lb" },
-                    { 15, true, 9, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Mezcla suave con aroma a chocolate", false, "Café con Cacao", 33000m, 1, "210 lb trimestral", false, true, 160, "lb" },
-                    { 16, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Sabor intenso con notas amaderadas", false, "Café Gourmet del Campo", 37000m, 1, "280 lb bimestral", false, true, 210, "lb" },
-                    { 17, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Proceso húmedo tradicional", false, "Café Lavado", 32000m, 1, "190 lb mensual", false, true, 160, "lb" },
-                    { 18, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Secado al sol directamente", false, "Café Natural", 31000m, 1, "220 lb cada 3 meses", false, true, 180, "lb" },
-                    { 19, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Granos cultivados a 1600msnm", false, "Café de Altura", 35000m, 1, "270 lb trimestral", false, true, 200, "lb" },
-                    { 20, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Versión fuerte ideal para espresso", false, "Café Lulo Espresso", 35500m, 1, "160 lb mensual", false, true, 190, "lb" },
-                    { 21, true, 9, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Mezcla gourmet café y cacao", false, "Café Cacao Fusion", 39000m, 1, "240 lb trimestral", false, true, 150, "lb" },
-                    { 22, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Selección premium para exportación", false, "Café de Exportación", 40000m, 1, "300 lb cada 2 meses", false, true, 220, "lb" }
+                    { 1, true, 8, "A7K2Q8M3ZB", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cafe con el mejor sabor del campo", false, "Cafe el sabor", 30000m, 1, "300 lb cada tres meses", false, true, 250, "lb" },
+                    { 2, true, 8, "H9DN5W4R2J", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cultivado sin químicos, sabor intenso", false, "Café Orgánico Premium", 35000m, 1, "200 lb por trimestre", false, true, 180, "lb" },
+                    { 3, true, 8, "K3M7P1X6TY", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Tueste medio con notas frutales", false, "Café Tostado Suave", 32000m, 1, "150 lb cada mes", false, true, 120, "lb" },
+                    { 4, true, 8, "Q2Z8N7L4VF", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Grano seleccionado de alta montaña", false, "Café Grano Oscuro", 34000m, 1, "180 lb bimestral", false, true, 210, "lb" },
+                    { 5, true, 8, "M8R3C6J9PA", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cosechado a mano en clima fresco", false, "Café El Mirador", 30000m, 1, "220 lb trimestral", false, true, 190, "lb" },
+                    { 6, true, 8, "T5Y1H7K3UE", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Sabor balanceado, aroma suave", false, "Café Clásico de los Andes", 31000m, 1, "250 lb trimestral", false, true, 170, "lb" },
+                    { 7, true, 8, "V4B9Q2M6LX", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Mezcla selecta de granos", false, "Café Supremo", 36000m, 1, "300 lb cada 2 meses", false, true, 260, "lb" },
+                    { 8, true, 8, "Z6F1D8R3NW", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cultivo en altitudes extremas", false, "Café los Alpes", 37000m, 1, "280 lb trimestral", false, true, 250, "lb" },
+                    { 9, true, 8, "N2X7C5Q1JG", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Mezcla con notas cítricas", false, "Café Lulo Blend", 33000m, 1, "230 lb bimestral", false, true, 200, "lb" },
+                    { 10, true, 8, "R8M2T5K9WY", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Tueste natural, suave al paladar", false, "Café del Bosque", 30000m, 1, "180 lb mensual", false, true, 160, "lb" },
+                    { 11, true, 8, "L7P3V9H2QX", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Grano seleccionado manualmente", false, "Café Reserva Especial", 38000m, 1, "150 lb cada tres meses", false, true, 130, "lb" },
+                    { 12, true, 8, "C9J4N1Z7TR", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cultivo bajo sombra natural", false, "Café Sierra Verde", 31000m, 1, "200 lb cada 2 meses", false, true, 140, "lb" },
+                    { 13, true, 8, "X3Q8L6M2DP", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Grano joven de excelente aroma", false, "Café del Amanecer", 30500m, 1, "160 lb mensual", false, true, 150, "lb" },
+                    { 14, true, 8, "J5H2K9T4VE", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Tueste lento en horno de barro", false, "Café Tostado Artesanal", 34000m, 1, "190 lb bimestral", false, true, 175, "lb" },
+                    { 15, true, 9, "P6M1X8Q3LR", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Mezcla suave con aroma a chocolate", false, "Café con Cacao", 33000m, 1, "210 lb trimestral", false, true, 160, "lb" },
+                    { 16, true, 8, "D2V9R5N7QH", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Sabor intenso con notas amaderadas", false, "Café Gourmet del Campo", 37000m, 1, "280 lb bimestral", false, true, 210, "lb" },
+                    { 17, true, 8, "U1K7P3Z8MW", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Proceso húmedo tradicional", false, "Café Lavado", 32000m, 1, "190 lb mensual", false, true, 160, "lb" },
+                    { 18, true, 8, "F4T9L2H6QY", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Secado al sol directamente", false, "Café Natural", 31000m, 1, "220 lb cada 3 meses", false, true, 180, "lb" },
+                    { 19, true, 8, "S8N3D7V1KJ", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Granos cultivados a 1600msnm", false, "Café de Altura", 35000m, 1, "270 lb trimestral", false, true, 200, "lb" },
+                    { 20, true, 8, "Y2Q6M9P4TX", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Versión fuerte ideal para espresso", false, "Café Lulo Espresso", 35500m, 1, "160 lb mensual", false, true, 190, "lb" },
+                    { 21, true, 9, "G9L2R5X1NV", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Mezcla gourmet café y cacao", false, "Café Cacao Fusion", 39000m, 1, "240 lb trimestral", false, true, 150, "lb" },
+                    { 22, true, 8, "W3H8Q2M7LC", new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Selección premium para exportación", false, "Café de Exportación", 40000m, 1, "300 lb cada 2 meses", false, true, 220, "lb" }
                 });
 
             migrationBuilder.InsertData(

@@ -28,10 +28,10 @@
         </div>
 
         <div class="actions">
-          <app-button text="Ver detalle" color="secondary" (clicked)="view(o.id)"></app-button>
+          <app-button text="Ver detalle" color="secondary" (clicked)="view(o.code)"></app-button>
 
           <!-- Subir comprobante -->
-          <input type="file" accept="image/*" #uploader hidden (change)="onPickPaymentFile(o.id, $event)" />
+          <input type="file" accept="image/*" #uploader hidden (change)="onPickPaymentFile(o.code, $event)" />
           <app-button
             *ngIf="canUploadPayment(o.status)"
             text="Subir comprobante"
@@ -44,7 +44,7 @@
             *ngIf="canCancel(o.status)"
             text="Cancelar"
             color="danger"
-            (clicked)="cancel(o.id)">
+            (clicked)="cancel(o.code)">
           </app-button>
 
           <!-- Confirmar recepción -->
@@ -52,7 +52,7 @@
             *ngIf="canConfirm(o.status)"
             text="Confirmar recepción"
             color="primary"
-            (clicked)="confirm(o.id)">
+            (clicked)="confirm(o.code)">
           </app-button>
         </div>
       </div>

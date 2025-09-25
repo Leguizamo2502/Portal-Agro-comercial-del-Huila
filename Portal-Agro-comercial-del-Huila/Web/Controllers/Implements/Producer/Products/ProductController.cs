@@ -46,14 +46,14 @@ namespace Web.Controllers.Implements.Producer.Products
 
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{code}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
-        public virtual async Task<IActionResult> GetById(int id)
+        public virtual async Task<IActionResult> GetByCode(string code)
         {
             try
             {
-                var result = await _productReadService.GetByIdAsync(id);
+                var result = await _productReadService.GetByCodeAsync(code);
                 return Ok(result);
             }
             catch (Exception ex)

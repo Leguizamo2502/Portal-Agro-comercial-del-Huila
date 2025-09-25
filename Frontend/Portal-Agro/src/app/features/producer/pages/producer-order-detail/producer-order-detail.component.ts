@@ -19,13 +19,13 @@ export class ProducerOrderDetailComponent implements OnInit {
   private router = inject(Router);
   private ordersSrv = inject(OrderService);
 
-  orderId!: number;
+  code!: string;
   detail?: OrderDetailModel;
   loading = true;
 
   ngOnInit(): void {
-    this.orderId = Number(this.route.snapshot.paramMap.get('id'));
-    if (!this.orderId) {
+    this.code = String(this.route.snapshot.paramMap.get('code'));
+    if (!this.code) {
       this.router.navigateByUrl('/account/producer/orders');
       return;
     }
@@ -35,7 +35,7 @@ export class ProducerOrderDetailComponent implements OnInit {
   loadDetail(): void {
     this.loading = true;
     this.ordersSrv
-      .getDetailForProducer(this.orderId)
+      .getDetailForProducer(this.code)
       .pipe(take(1))
       .subscribe({
         next: (d) => {
@@ -124,7 +124,7 @@ export class ProducerOrderDetailComponent implements OnInit {
     if (!isConfirmed) return;
 
     this.ordersSrv
-      .acceptOrder(this.orderId, {
+      .acceptOrder(this.code, {
         notes: notes || undefined,
         rowVersion: this.detail.rowVersion,
       })
@@ -163,7 +163,7 @@ export class ProducerOrderDetailComponent implements OnInit {
     if (!isConfirmed || !reason) return;
 
     this.ordersSrv
-      .rejectOrder(this.orderId, {
+      .rejectOrder(this.code, {
         reason,
         rowVersion: this.detail.rowVersion,
       })
@@ -183,7 +183,7 @@ export class ProducerOrderDetailComponent implements OnInit {
   markPreparing(): void {
     if (!this.detail) return;
     this.ordersSrv
-      .markPreparing(this.orderId, this.detail.rowVersion)
+      .markPreparing(this.code, this.detail.rowVersion)
       .pipe(take(1))
       .subscribe({
         next: async () => {
@@ -198,7 +198,7 @@ export class ProducerOrderDetailComponent implements OnInit {
   markDispatched(): void {
     if (!this.detail) return;
     this.ordersSrv
-      .markDispatched(this.orderId, this.detail.rowVersion)
+      .markDispatched(this.code, this.detail.rowVersion)
       .pipe(take(1))
       .subscribe({
         next: async () => {
@@ -213,7 +213,7 @@ export class ProducerOrderDetailComponent implements OnInit {
   markDelivered(): void {
     if (!this.detail) return;
     this.ordersSrv
-      .markDelivered(this.orderId, this.detail.rowVersion)
+      .markDelivered(this.code, this.detail.rowVersion)
       .pipe(take(1))
       .subscribe({
         next: async () => {

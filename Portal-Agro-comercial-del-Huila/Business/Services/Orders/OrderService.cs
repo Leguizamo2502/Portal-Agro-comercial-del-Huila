@@ -15,6 +15,7 @@ using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Utilities.Custom.Code;
 using Utilities.Exceptions;
 using Utilities.Messaging.Interfaces;
 
@@ -129,6 +130,8 @@ namespace Business.Services.Orders
         }
 
 
+       
+
         /// <summary>
         /// Listar órdenes en disputa de un productor (con snapshot y datos de entrega, sin usuario ni producto completos)
         /// </summary>
@@ -136,12 +139,12 @@ namespace Business.Services.Orders
         /// <param name="orderId"></param>
         /// <returns></returns>
         /// <exception cref="BusinessException"></exception>
-        public async Task<OrderDetailDto> GetOrderDetailForProducerAsync(int userId, int orderId)
+        public async Task<OrderDetailDto> GetOrderDetailForProducerAsync(int userId, string code)
         {
             var producerId = await _producerRepository.GetIdProducer(userId)
                              ?? throw new BusinessException("El usuario no está registrado como productor.");
 
-            var order = await _orderRepository.GetByIdAsync(orderId)
+            var order = await _orderRepository.GetByCode(code)
                        ?? throw new BusinessException("Orden no encontrada.");
 
             if (order.IsDeleted || !order.Active)
@@ -158,12 +161,12 @@ namespace Business.Services.Orders
         /// Listar detalle de una orden para un usuario (con snapshot y datos de entrega, sin usuario ni producto completos)
         /// </summary>
         /// <param name="userId"></param>
-        /// <param name="orderId"></param>
+        /// <param name="code"></param>
         /// <returns></returns>
         /// <exception cref="BusinessException"></exception>
-        public async Task<OrderDetailDto> GetOrderDetailForUserAsync(int userId, int orderId)
+        public async Task<OrderDetailDto> GetOrderDetailForUserAsync(int userId, string code)
         {
-            var order = await _orderRepository.GetByIdAsync(orderId)
+            var order = await _orderRepository.GetByCode(code)
                        ?? throw new BusinessException("Orden no encontrada.");
 
             if (order.IsDeleted || !order.Active)
@@ -176,12 +179,12 @@ namespace Business.Services.Orders
         }
 
 
-        public async Task AcceptOrderAsync(int userId, int orderId, OrderAcceptDto dto)
+        public async Task AcceptOrderAsync(int userId, string code, OrderAcceptDto dto)
         {
             var producerId = await _producerRepository.GetIdProducer(userId)
                              ?? throw new BusinessException("El usuario no está registrado como productor.");
 
-            var order = await _orderRepository.GetByIdAsync(orderId)
+            var order = await _orderRepository.GetByCode(code)
                        ?? throw new BusinessException("Orden no encontrada.");
 
             if (order.IsDeleted || !order.Active)
@@ -247,9 +250,9 @@ namespace Business.Services.Orders
         }
 
 
-        public async Task UploadPaymentAsync(int userId, int orderId, OrderUploadPaymentDto dto)
+        public async Task UploadPaymentAsync(int userId, string code, OrderUploadPaymentDto dto)
         {
-            var order = await _orderRepository.GetByIdAsync(orderId)
+            var order = await _orderRepository.GetByCode(code)
                        ?? throw new BusinessException("Orden no encontrada.");
 
             if (order.IsDeleted || !order.Active)
@@ -345,12 +348,12 @@ namespace Business.Services.Orders
         }
 
 
-        public async Task MarkPreparingAsync(int userId, int orderId, string rowVersionBase64)
+        public async Task MarkPreparingAsync(int userId, string code, string rowVersionBase64)
         {
             var producerId = await _producerRepository.GetIdProducer(userId)
                              ?? throw new BusinessException("El usuario no está registrado como productor.");
 
-            var order = await _orderRepository.GetByIdAsync(orderId)
+            var order = await _orderRepository.GetByCode(code)
                        ?? throw new BusinessException("Orden no encontrada.");
 
             if (order.IsDeleted || !order.Active)
@@ -397,12 +400,12 @@ namespace Business.Services.Orders
             }
         }
 
-        public async Task MarkDispatchedAsync(int userId, int orderId, string rowVersionBase64)
+        public async Task MarkDispatchedAsync(int userId, string code, string rowVersionBase64)
         {
             var producerId = await _producerRepository.GetIdProducer(userId)
                              ?? throw new BusinessException("El usuario no está registrado como productor.");
 
-            var order = await _orderRepository.GetByIdAsync(orderId)
+            var order = await _orderRepository.GetByCode(code)
                        ?? throw new BusinessException("Orden no encontrada.");
 
             if (order.IsDeleted || !order.Active)
@@ -446,12 +449,12 @@ namespace Business.Services.Orders
             }
         }
 
-        public async Task MarkDeliveredAsync(int userId, int orderId, string rowVersionBase64)
+        public async Task MarkDeliveredAsync(int userId, string code, string rowVersionBase64)
         {
             var producerId = await _producerRepository.GetIdProducer(userId)
                              ?? throw new BusinessException("El usuario no está registrado como productor.");
 
-            var order = await _orderRepository.GetByIdAsync(orderId)
+            var order = await _orderRepository.GetByCode(code)
                        ?? throw new BusinessException("Orden no encontrada.");
 
             if (order.IsDeleted || !order.Active)
@@ -504,9 +507,9 @@ namespace Business.Services.Orders
             }
         }
 
-        public async Task CancelByUserAsync(int userId, int orderId, string rowVersionBase64)
+        public async Task CancelByUserAsync(int userId, string code, string rowVersionBase64)
         {
-            var order = await _orderRepository.GetByIdAsync(orderId)
+            var order = await _orderRepository.GetByCode(code)
                        ?? throw new BusinessException("Orden no encontrada.");
 
             if (order.UserId != userId) throw new BusinessException("No autorizado.");
@@ -556,12 +559,12 @@ namespace Business.Services.Orders
         /// <param name="dto"></param>
         /// <returns></returns>
         /// <exception cref="BusinessException"></exception>
-        public async Task RejectOrderAsync(int userId, int orderId, OrderRejectDto dto)
+        public async Task RejectOrderAsync(int userId, string code, OrderRejectDto dto)
         {
             var producerId = await _producerRepository.GetIdProducer(userId)
                              ?? throw new BusinessException("El usuario no está registrado como productor.");
 
-            var order = await _orderRepository.GetByIdAsync(orderId)
+            var order = await _orderRepository.GetByCode(code)
                        ?? throw new BusinessException("Orden no encontrada.");
 
             if (order.IsDeleted || !order.Active)
@@ -613,9 +616,9 @@ namespace Business.Services.Orders
         /// <param name="dto"></param>
         /// <returns></returns>
         /// <exception cref="BusinessException"></exception>
-        public async Task ConfirmOrderAsync(int userId, int orderId, OrderConfirmDto dto)
+        public async Task ConfirmOrderAsync(int userId, string code, OrderConfirmDto dto)
         {
-            var order = await _orderRepository.GetByIdAsync(orderId)
+            var order = await _orderRepository.GetByCode(code)
                        ?? throw new BusinessException("Orden no encontrada.");
 
             if (order.IsDeleted || !order.Active)
@@ -765,6 +768,7 @@ namespace Business.Services.Orders
             {
                 UserId = userId,
                 ProductId = product.Id,
+                Code = CodeGenerator.Generate(),
 
                 // Snapshots del producto (inmutables)
                 ProducerIdSnapshot = product.ProducerId,
