@@ -8,7 +8,6 @@ namespace Entity.Domain.Models.Implements.Producers
     public class Farm : BaseModel
     {
         public string Name { get; set; } = default!;
-        public string Code { get; set; } = default!;
         public double Hectares { get; set; }
         public double Altitude { get; set; }
         public double Latitude { get; set; }

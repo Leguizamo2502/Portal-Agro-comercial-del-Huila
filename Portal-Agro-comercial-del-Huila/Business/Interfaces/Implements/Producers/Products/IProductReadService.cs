@@ -10,6 +10,7 @@ namespace Business.Interfaces.Implements.Producers.Products
     public interface IProductReadService
     {
         Task<IEnumerable<ProductSelectDto>> GetAllAsync();
+        Task<ProductSelectDto?> GetByIdAsync(int id);
         Task<IEnumerable<ProductSelectDto>> GetFavoritesForUserAsync(int userId);
         Task<IEnumerable<ProductSelectDto>> GetByProducerAsync(int userId);
         Task<IEnumerable<ProductSelectDto>> GetAllHomeAsync(int? userId,int? limit);

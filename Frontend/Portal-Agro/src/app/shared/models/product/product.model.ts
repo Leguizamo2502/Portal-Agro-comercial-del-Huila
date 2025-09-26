@@ -6,7 +6,6 @@ export interface ApiOk {
 
 export interface ProductSelectModel {
   id: number;
-  cide : string;
   name: string;
   description: string;
   price: number;

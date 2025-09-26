@@ -44,6 +44,20 @@ public class ProductReadService : IProductReadService
         }
     }
 
+    public async Task<ProductSelectDto?> GetByIdAsync(int id)
+    {
+        try
+        {
+            if (id <= 0) throw new BusinessException("El ID debe ser mayor que cero.");
+            var entity = await _productRepo.GetByIdAsync(id);
+            return entity is null ? null : _mapper.Map<ProductSelectDto>(entity);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error al obtener el producto con ID {Id}", id);
+            throw new BusinessException($"Error al obtener el producto con ID {id}.", ex);
+        }
+    }
 
     public async Task<ProductSelectDto?> GetByCodeAsync(string code)
     {
