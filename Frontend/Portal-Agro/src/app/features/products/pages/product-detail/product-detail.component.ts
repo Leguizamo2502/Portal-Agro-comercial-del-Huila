@@ -113,6 +113,7 @@ export class ProductDetailComponent implements OnInit {
       },
     });
   }
+
   async openCreateOrder(): Promise<void> {
     // console.log("Hola")
     // Requiere login
@@ -166,19 +167,15 @@ export class ProductDetailComponent implements OnInit {
 
       if (res.isSuccess) {
         Swal.fire({
-          toast: true,
-          position: 'bottom-end',
-          timer: 1800,
-          showConfirmButton: false,
           icon: 'success',
-          title: `Pedido #${res.orderId} creado`,
+          title: 'Pedido creado',
+          text: `Tu pedido #${res.orderId} fue creado. Te enviaremos instrucciones por correo cuando el productor lo revise.`,
         });
       } else {
         Swal.fire({
           icon: 'error',
           title: 'No se pudo crear el pedido',
           text: res.message || 'Ocurrió un error al crear el pedido.',
-          confirmButtonText: 'Entendido',
         });
       }
     });
