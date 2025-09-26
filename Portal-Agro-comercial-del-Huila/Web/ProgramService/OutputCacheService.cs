@@ -2,10 +2,10 @@
 {
     public static class OutputCacheService
     {
-        public static IServiceCollection AddOutputCachePolicies(this IServiceCollection services, IConfiguration configuration)
-        { 
+        //public static IServiceCollection AddOutputCachePolicies(this IServiceCollection services, IConfiguration configuration)
+        //{ 
 
 
-        }
+        //}
     }
 }

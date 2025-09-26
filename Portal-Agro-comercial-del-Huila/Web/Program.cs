@@ -67,6 +67,8 @@ builder.Services.Configure<AutoCompleteDeliveredJobOptions>(
 builder.Services.AddHostedService<AutoCompleteDeliveredBackgroundService>();
 
 
+//Cache
+//builder.Services.AddOutputCachePolicies();
 
 
 var app = builder.Build();
@@ -100,6 +102,8 @@ app.UseAuthentication();
 
 // ?? 3. Después autorización
 app.UseAuthorization();
+
+//app.UseOutputCache();
 
 // ?? 4. Finalmente, los controladores
 app.MapControllers();
