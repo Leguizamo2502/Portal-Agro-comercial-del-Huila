@@ -5,7 +5,6 @@ namespace Entity.DTOs.Producer.Farm.Select
     public class FarmSelectDto : BaseDto
     {
         public string Name { get; set; }
-        public string Code { get; set; }
         public double Hectares { get; set; }
         public double Altitude { get; set; }
         public double Latitude { get; set; }
