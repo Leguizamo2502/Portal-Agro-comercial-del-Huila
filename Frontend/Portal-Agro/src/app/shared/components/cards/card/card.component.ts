@@ -45,10 +45,7 @@ export class CardComponent {
     return url && url.trim() ? url : this.placeholder;
   }
 
-  get disabledFavorite(): boolean {
-    return this.fav.isToggling(this.product?.id);
-  }
-
+  
   onImgError(ev: Event) {
     (ev.target as HTMLImageElement).src = this.placeholder;
   }
@@ -74,7 +71,10 @@ export class CardComponent {
       newStock: this.product.stock,
     });
   }
-
+  
+  get disabledFavorite(): boolean {
+    return this.fav.isToggling(this.product?.id);
+  }
   // favorito con UI optimista centralizada
   onFavoriteClick(ev: Event) {
     ev.stopPropagation();

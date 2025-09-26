@@ -67,6 +67,9 @@ export class ProductService {
   getById(id: number): Observable<ProductSelectModel> {
     return this.http.get<ProductSelectModel>(`${this.urlBase}/${id}`);
   }
+  getDetail(id: number): Observable<ProductSelectModel> {
+    return this.http.get<ProductSelectModel>(`${this.urlBase}/detail/${id}`);
+  }
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.urlBase}/${id}`);

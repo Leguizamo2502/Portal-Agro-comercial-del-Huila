@@ -44,6 +44,23 @@
             />
           </div>
         </div>
+        <!-- FAVORITO -->
+        <div *appIfLoggedIn>
+          <button
+            mat-icon-button
+            class="fav-btn"
+            [disabled]="disabledFavorite"
+            (click)="onFavoriteClick($event)"
+            (keydown.enter)="$event.stopPropagation()"
+            (keydown.space)="$event.stopPropagation(); $event.preventDefault()"
+            aria-label="Favorito"
+          >
+            <!-- usa product.isFavorite, NO @Input isFavorite -->
+            <mat-icon
+              [fontIcon]="product.isFavorite ? 'star' : 'star_border'"
+            ></mat-icon>
+          </button>
+        </div>
 
         <!-- Información del producto -->
         <div

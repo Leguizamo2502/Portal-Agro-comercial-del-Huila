@@ -22,11 +22,14 @@ import {
   OrderCreateDialogData,
 } from '../../modals/order-create-dialog/order-create-dialog.component';
 import { CreateOrderResponse } from '../../models/order/order.model';
+import { FavoriteFacadeService } from '../../../../shared/services/favorite/favorite-facade.service';
+import { MatIconModule } from "@angular/material/icon";
+import { IfLoggedInDirective } from '../../../../Core/directives/if-logged-in.directive';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonComponent],
+  imports: [CommonModule, FormsModule, ButtonComponent, MatIconModule,IfLoggedInDirective],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css'],
 })
@@ -37,6 +40,7 @@ export class ProductDetailComponent implements OnInit {
   private reviewService = inject(ReviewService);
   private authState = inject(AuthState);
   private dialog = inject(MatDialog);
+  private fav = inject(FavoriteFacadeService);
 
   // Usuario actual (reactivo)
   me$: Observable<UserMeDto | null> = of(null);
@@ -85,7 +89,7 @@ export class ProductDetailComponent implements OnInit {
 
   private loadProduct(): void {
     this.loadingProduct = true;
-    this.productService.getById(this.productId).subscribe({
+    this.productService.getDetail(this.productId).subscribe({
       next: (data) => {
         this.product = data;
         this.loadingProduct = false;
@@ -180,6 +184,37 @@ export class ProductDetailComponent implements OnInit {
       }
     });
   }
+
+  //favorites
+  get disabledFavorite(): boolean {
+      return this.fav.isToggling(this.product?.id);
+    }
+    // favorito con UI optimista centralizada
+    onFavoriteClick(ev: Event) {
+      ev.stopPropagation();
+      this.fav.toggle(this.product).subscribe({
+        next: (isFav) => {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            timer: 1500,
+            showConfirmButton: false,
+            icon: 'success',
+            title: isFav ? 'Añadido a favoritos' : 'Quitado de favoritos',
+          });
+        },
+        error: () => {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            timer: 2000,
+            showConfirmButton: false,
+            icon: 'error',
+            title: 'No se pudo actualizar el favorito',
+          });
+        },
+      });
+    }
 
   changeMainImage(url: string): void {
     this.selectedImage = url;

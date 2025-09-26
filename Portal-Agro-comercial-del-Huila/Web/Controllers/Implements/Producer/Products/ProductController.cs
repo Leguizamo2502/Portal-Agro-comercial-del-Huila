@@ -4,9 +4,7 @@ using Entity.DTOs.Favorites.Create;
 using Entity.DTOs.Products.Create;
 using Entity.DTOs.Products.Select;
 using Entity.DTOs.Products.Update;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Utilities.Exceptions;
 using Utilities.Helpers.Auth;
 
@@ -197,8 +195,7 @@ namespace Web.Controllers.Implements.Producer.Products
         {
             try
             {
-                int? userId = HttpContext.TryGetUserId();
-                var result = await _productReadService.GetAllHomeAsync(userId,limit);
+                var result = await _productReadService.GetAllHomeAsync(limit);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -208,6 +205,35 @@ namespace Web.Controllers.Implements.Producer.Products
             }
 
         }
+
+        [HttpGet("detail/ {id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public virtual async Task<IActionResult> GetDetail(int id)
+        {
+            try
+            {
+                int? userId = HttpContext.TryGetUserId();
+                var result = await _productReadService.GetDetailProduct(userId, id);
+
+                if (result is null)
+                    return NotFound(new { message = $"Producto con ID {id} no encontrado." });
+
+                return Ok(result);
+            }
+            catch (BusinessException ex)
+            {
+                _logger.LogWarning(ex, "Error de negocio al obtener producto {Id}", id);
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error obteniendo detalle de producto {Id}", id);
+                return StatusCode(500, new { message = "Error interno del servidor." });
+            }
+        }
+
 
         [HttpGet("favorites")]
         [ProducesResponseType(200)]
@@ -271,8 +297,7 @@ namespace Web.Controllers.Implements.Producer.Products
         {
             try
             {
-                int? userId = HttpContext.TryGetUserId();
-                var result = await _productReadService.GetFeaturedAsync(userId, limit);
+                var result = await _productReadService.GetFeaturedAsync(limit);
                 return Ok(result);
             }
             catch (Exception ex)
