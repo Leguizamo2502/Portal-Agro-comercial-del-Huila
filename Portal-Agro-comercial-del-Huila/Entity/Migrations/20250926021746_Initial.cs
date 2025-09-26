@@ -891,16 +891,6 @@ namespace Entity.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Products",
-                columns: new[] { "Id", "Active", "CategoryId", "CreateAt", "Description", "IsDeleted", "Name", "Price", "ProducerId", "Production", "ShippingIncluded", "Status", "Stock", "Unit" },
-                values: new object[] { 15, true, 9, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Mezcla suave con aroma a chocolate", false, "Café con Cacao", 33000m, 15, "210 lb trimestral", false, true, 160, "lb" });
-
-            migrationBuilder.InsertData(
-                table: "ProductImages",
-                columns: new[] { "Id", "Active", "CreateAt", "FileName", "ImageUrl", "IsDeleted", "ProductId", "PublicId" },
-                values: new object[] { 15, true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Imagen_Default.jpg", "https://res.cloudinary.com/djj163sc9/image/upload/v1754488119/REVERDERI-200-G_dj1poi.png", false, 15, "default" });
-
-            migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Active", "CreateAt", "Email", "IsDeleted", "Password", "PersonId" },
                 values: new object[,]
@@ -963,6 +953,7 @@ namespace Entity.Migrations
                     { 12, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cultivo bajo sombra natural", false, "Café Sierra Verde", 31000m, 1, "200 lb cada 2 meses", false, true, 140, "lb" },
                     { 13, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Grano joven de excelente aroma", false, "Café del Amanecer", 30500m, 1, "160 lb mensual", false, true, 150, "lb" },
                     { 14, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Tueste lento en horno de barro", false, "Café Tostado Artesanal", 34000m, 1, "190 lb bimestral", false, true, 175, "lb" },
+                    { 15, true, 9, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Mezcla suave con aroma a chocolate", false, "Café con Cacao", 33000m, 1, "210 lb trimestral", false, true, 160, "lb" },
                     { 16, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Sabor intenso con notas amaderadas", false, "Café Gourmet del Campo", 37000m, 1, "280 lb bimestral", false, true, 210, "lb" },
                     { 17, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Proceso húmedo tradicional", false, "Café Lavado", 32000m, 1, "190 lb mensual", false, true, 160, "lb" },
                     { 18, true, 8, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Secado al sol directamente", false, "Café Natural", 31000m, 1, "220 lb cada 3 meses", false, true, 180, "lb" },
@@ -1032,6 +1023,7 @@ namespace Entity.Migrations
                     { 12, true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Imagen_Default.jpg", "https://res.cloudinary.com/djj163sc9/image/upload/v1754488119/REVERDERI-200-G_dj1poi.png", false, 12, "default" },
                     { 13, true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Imagen_Default.jpg", "https://res.cloudinary.com/djj163sc9/image/upload/v1754488119/REVERDERI-200-G_dj1poi.png", false, 13, "default" },
                     { 14, true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Imagen_Default.jpg", "https://res.cloudinary.com/djj163sc9/image/upload/v1754488119/REVERDERI-200-G_dj1poi.png", false, 14, "default" },
+                    { 15, true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Imagen_Default.jpg", "https://res.cloudinary.com/djj163sc9/image/upload/v1754488119/REVERDERI-200-G_dj1poi.png", false, 15, "default" },
                     { 16, true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Imagen_Default.jpg", "https://res.cloudinary.com/djj163sc9/image/upload/v1754488119/REVERDERI-200-G_dj1poi.png", false, 16, "default" },
                     { 17, true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Imagen_Default.jpg", "https://res.cloudinary.com/djj163sc9/image/upload/v1754488119/REVERDERI-200-G_dj1poi.png", false, 17, "default" },
                     { 18, true, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Imagen_Default.jpg", "https://res.cloudinary.com/djj163sc9/image/upload/v1754488119/REVERDERI-200-G_dj1poi.png", false, 18, "default" },

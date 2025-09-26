@@ -7,6 +7,8 @@ using Business.Interfaces.Implements.Orders.Reviews;
 using Business.Repository;
 using Data.Interfaces.Implements.Auth;
 using Data.Interfaces.Implements.Orders.Reviews;
+using Data.Interfaces.Implements.Producers;
+using Data.Interfaces.Implements.Producers.Products;
 using Data.Interfaces.IRepository;
 using Entity.Domain.Models.Implements.Auth;
 using Entity.Domain.Models.Implements.Orders;
@@ -19,17 +21,23 @@ namespace Business.Services.Orders.Reviews
     public class ReviewService : BusinessGeneric<ReviewCreateDto, ReviewSelectDto, Review>, IReviewService
     {
         private readonly IReviewRepository _reviewRepository;
-        private readonly IUserRepository _userRepository;
-        public ReviewService(IDataGeneric<Review> data, IMapper mapper, IReviewRepository reviewRepository, IUserRepository userRepository) : base(data, mapper)
+        private readonly IProductRepository _productRepo;
+        
+        public ReviewService(IDataGeneric<Review> data, IMapper mapper, IReviewRepository reviewRepository, IProductRepository productRepo) : base(data, mapper)
         {
             _reviewRepository = reviewRepository;
-            _userRepository = userRepository;
+            _productRepo = productRepo;
         }
 
         public async Task<ReviewSelectDto> CreateReviewAsync(ReviewCreateDto dto, int userId)
         {
-            try
-            {
+            
+                var product = await _productRepo.GetByIdSmall(dto.ProductId)
+                    ?? throw new BusinessException("Producto no encontrado.");
+                if (product.Producer != null && product.Producer.UserId == userId)
+                {
+                    throw new BusinessException("No puedes reseñar tus propios productos.");
+                }
                 var entity = new Review
                 {
                     ProductId = dto.ProductId,
@@ -45,12 +53,8 @@ namespace Business.Services.Orders.Reviews
 
                 var result = await _reviewRepository.GetByIdAsync(created.Id);
                 return _mapper.Map<ReviewSelectDto>(result!);
-            }
-            catch (Exception ex)
-            {
-                // Aquí podrías lanzar una excepción custom si ya usas tu capa de Utilities
-                throw new BusinessException("Error al crear la reseña", ex);
-            }
+            
+            
         }
 
         public override async Task<IEnumerable<ReviewSelectDto>> GetAllAsync()

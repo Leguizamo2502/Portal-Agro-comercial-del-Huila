@@ -1,8 +1,7 @@
-﻿using Entity.Domain.Models.Implements.Producers.Products;
+﻿using System;
+using Entity.Domain.Models.Implements.Producers.Products;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using Utilities.Helpers.Code;
 
 namespace Entity.Infrastructure.DataInit.Producers.Products
 {
@@ -27,7 +26,7 @@ namespace Entity.Infrastructure.DataInit.Producers.Products
                 new Product { Id = 12, Name = "Café Sierra Verde", Description = "Cultivo bajo sombra natural", Price = 31000m, Unit = "lb", Production = "200 lb cada 2 meses", Stock = 140, Status = true, CategoryId = 8, ProducerId = 1, IsDeleted = false, Active = true, CreateAt = date },
                 new Product { Id = 13, Name = "Café del Amanecer", Description = "Grano joven de excelente aroma", Price = 30500m, Unit = "lb", Production = "160 lb mensual", Stock = 150, Status = true, CategoryId = 8, ProducerId = 1, IsDeleted = false, Active = true, CreateAt = date },
                 new Product { Id = 14, Name = "Café Tostado Artesanal", Description = "Tueste lento en horno de barro", Price = 34000m, Unit = "lb", Production = "190 lb bimestral", Stock = 175, Status = true, CategoryId = 8, ProducerId = 1, IsDeleted = false, Active = true, CreateAt = date },
-                new Product { Id = 15, Name = "Café con Cacao", Description = "Mezcla suave con aroma a chocolate", Price = 33000m, Unit = "lb", Production = "210 lb trimestral", Stock = 160, Status = true, CategoryId = 9, ProducerId = 15, IsDeleted = false, Active = true, CreateAt = date },
+                new Product { Id = 15, Name = "Café con Cacao", Description = "Mezcla suave con aroma a chocolate", Price = 33000m, Unit = "lb", Production = "210 lb trimestral", Stock = 160, Status = true, CategoryId = 9, ProducerId = 1, IsDeleted = false, Active = true, CreateAt = date },
                 new Product { Id = 16, Name = "Café Gourmet del Campo", Description = "Sabor intenso con notas amaderadas", Price = 37000m, Unit = "lb", Production = "280 lb bimestral", Stock = 210, Status = true, CategoryId = 8, ProducerId = 1, IsDeleted = false, Active = true, CreateAt = date },
                 new Product { Id = 17, Name = "Café Lavado", Description = "Proceso húmedo tradicional", Price = 32000m, Unit = "lb", Production = "190 lb mensual", Stock = 160, Status = true, CategoryId = 8, ProducerId = 1, IsDeleted = false, Active = true, CreateAt = date },
                 new Product { Id = 18, Name = "Café Natural", Description = "Secado al sol directamente", Price = 31000m, Unit = "lb", Production = "220 lb cada 3 meses", Stock = 180, Status = true, CategoryId = 8, ProducerId = 1, IsDeleted = false, Active = true, CreateAt = date },

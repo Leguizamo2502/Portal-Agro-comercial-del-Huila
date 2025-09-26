@@ -52,9 +52,13 @@ export class CardComponent {
   onImgError(ev: Event) {
     (ev.target as HTMLImageElement).src = this.placeholder;
   }
+  // onDetail(item: ProductSelectModel) {
+  //   this.router.navigate(['/home/product', item.id]);
+  // }
   onDetail(item: ProductSelectModel) {
-    this.router.navigate(['/home/product', item.id]);
-  }
+  const encodedId = btoa(String(item.id)); 
+  this.router.navigate(['/home/product', encodedId]);
+}
   onEditClick(ev: Event) {
     ev.stopPropagation();
     this.edit.emit(this.product);

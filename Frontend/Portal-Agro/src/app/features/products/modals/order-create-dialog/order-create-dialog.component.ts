@@ -153,32 +153,43 @@ export class OrderCreateDialogComponent {
 
     Swal.fire({ title: 'Creando pedido...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
-    this.orderSrv
-      .create(dto) // ENVÍA JSON (no FormData)
-      .pipe(
-        take(1),
-        catchError((err) => {
-          const msg = err?.error?.message || err?.message || 'No se pudo crear el pedido.';
-          this.toast(msg, 'error');
-          return of(null);
-        }),
-        finalize(() => (this.isSubmitting = false))
-      )
-      .subscribe((resp) => {
-        Swal.close();
-        if (!resp) return;
+    this.orderSrv.create(dto)
+  .pipe(
+    take(1),
+    catchError((err) => {
+      const msg = err?.error?.message || err?.message || 'No se pudo crear el pedido.';
+      // Mostrar error aquí
+      this.toast(msg, 'error');
+      // Además, propagar un objeto de respuesta falso al padre si quieres que también avise
+      const fallback: CreateOrderResponse = { isSuccess: false, message: msg, };
+      // Cerramos para que el padre pueda decidir si muestra algo más
+      this.dialogRef.close(fallback);
+      return of(null);
+    }),
+    finalize(() => (this.isSubmitting = false))
+  )
+  .subscribe((resp) => {
+    Swal.close();
+    if (!resp) return;
 
-        if (resp.isSuccess) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Pedido creado',
-            text: `Tu pedido #${resp.orderId ?? resp.orderId} fue creado. Te enviaremos instrucciones por correo cuando el productor lo revise.`,
-          });
-          this.dialogRef.close(resp);
-        } else {
-          this.toast('No se pudo crear el pedido.', 'error');
-        }
+    if (resp.isSuccess) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Pedido creado',
+        text: `Tu pedido #${resp.orderId} fue creado. Te enviaremos instrucciones por correo cuando el productor lo revise.`,
       });
+      this.dialogRef.close(resp);
+    } else {
+      // Muestra el mensaje del backend y cierra devolviendo resp
+      Swal.fire({
+        icon: 'error',
+        title: 'No se pudo crear el pedido',
+        text: resp.message || 'Ocurrió un error al crear el pedido.',
+      });
+      this.dialogRef.close(resp);
+    }
+  });
+
   }
 
   close(): void {

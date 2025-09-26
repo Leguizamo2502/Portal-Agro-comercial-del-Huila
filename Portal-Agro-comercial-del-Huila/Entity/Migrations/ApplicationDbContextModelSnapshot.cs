@@ -2070,7 +2070,7 @@ namespace Entity.Migrations
                             IsDeleted = false,
                             Name = "Café con Cacao",
                             Price = 33000m,
-                            ProducerId = 15,
+                            ProducerId = 1,
                             Production = "210 lb trimestral",
                             ShippingIncluded = false,
                             Status = true,

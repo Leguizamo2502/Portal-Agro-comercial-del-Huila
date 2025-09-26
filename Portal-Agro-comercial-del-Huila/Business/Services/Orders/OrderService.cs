@@ -81,7 +81,13 @@ namespace Business.Services.Orders
             // 2) Producto disponible
             var product = await GetAvailableProductAsync(dto.ProductId);
 
-            // (Opcional pero recomendado) Validación de stock si aplica
+            //validacion contra autopedido
+            if (product.Producer != null && product.Producer.UserId == userId)
+            {
+                throw new BusinessException("No puedes comprar tus propios productos.");
+            }
+
+            // Validación de stock si aplica
             if (product.Stock < dto.QuantityRequested)
                 throw new BusinessException("Stock insuficiente para la cantidad solicitada.");
 

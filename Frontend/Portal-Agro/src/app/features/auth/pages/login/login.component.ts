@@ -119,7 +119,7 @@ export class LoginComponent implements OnInit {
             });
             return;
           }
-          this._router.navigateByUrl('/home/inicio');
+          this._router.navigateByUrl('/home');
           Swal.fire({
             icon: 'success',
             title: 'Éxito',

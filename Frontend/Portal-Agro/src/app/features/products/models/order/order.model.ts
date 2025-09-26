@@ -17,8 +17,8 @@ export interface OrderCreateModel {
 
 export interface CreateOrderResponse {
   isSuccess: boolean;
-  message: string;
-  orderId: number;
+  message?: string;
+  orderId?: number;
 }
 
 export type OrderStatus =
