@@ -118,20 +118,6 @@ namespace Data.Service.Producers.Farms
                 .ToListAsync();
         }
 
-        public async Task<Farm?> GetByCode(string code)
-        {
-            var farm = await BaseQuery()
-               .FirstOrDefaultAsync(p => p.Code == code);
-
-            if (farm != null)
-            {
-                // Por si acaso, reforzamos el filtro de imágenes no borradas
-                farm.FarmImages = farm.FarmImages
-                    .Where(pi => !pi.IsDeleted)
-                    .ToList();
-            }
-
-            return farm;
-        }
+        
     }
 }

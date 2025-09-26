@@ -14,7 +14,6 @@ namespace Entity.Domain.Models.Implements.Producers.Products
     {
         public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
-        public string Code { get; set; } = default!;
         public decimal Price { get; set; }
         public string Unit { get; set; } = default!;
         public string Production { get; set; } = default!;

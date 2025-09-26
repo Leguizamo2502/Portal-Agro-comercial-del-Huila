@@ -149,7 +149,6 @@ namespace Business.Services.Producers.Products
                 try
                 {
                     var entity = dto.Adapt<Product>();
-                    entity.Code = CodeGenerator.Generate(12);
                     entity.ProducerId = pid;
                     entity.Active = true;
                     entity.IsDeleted = false;

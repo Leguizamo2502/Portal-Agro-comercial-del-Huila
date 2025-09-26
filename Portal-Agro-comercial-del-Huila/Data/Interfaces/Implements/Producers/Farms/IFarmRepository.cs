@@ -7,7 +7,6 @@ namespace Data.Interfaces.Implements.Producers.Farms
     {
         Task<IEnumerable<Farm>> GetByProducer(int? producerId);
         Task<IEnumerable<Farm>> GetByProducerCode(string producerCode);
-        Task<Farm?> GetByCode(string code);
 
     }
 }

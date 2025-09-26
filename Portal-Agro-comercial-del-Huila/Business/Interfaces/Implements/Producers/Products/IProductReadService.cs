@@ -19,6 +19,5 @@ namespace Business.Interfaces.Implements.Producers.Products
 
         Task<IEnumerable<ProductSelectDto>> GetByCategoryAsync(int categoryId);
         Task<IEnumerable<ProductSelectDto>> GetFeaturedAsync(int? userId, int limit);
-        Task<ProductSelectDto?> GetByCodeAsync(string code);
     }
 }
