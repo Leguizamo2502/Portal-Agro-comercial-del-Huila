@@ -5,6 +5,7 @@ using Entity.DTOs.Products.Create;
 using Entity.DTOs.Products.Select;
 using Entity.DTOs.Products.Update;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using Utilities.Exceptions;
 using Utilities.Helpers.Auth;
 
@@ -29,6 +30,7 @@ namespace Web.Controllers.Implements.Producer.Products
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
+        [OutputCache(PolicyName = "ProductsListPolicy")]
         public virtual async Task<IActionResult> Get()
         {
             try
@@ -47,6 +49,7 @@ namespace Web.Controllers.Implements.Producer.Products
         [HttpGet("{id:int}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
+        [OutputCache(PolicyName = "ProductDetailPolicy")]
         public virtual async Task<IActionResult> GetById(int id)
         {
             try
@@ -83,7 +86,7 @@ namespace Web.Controllers.Implements.Producer.Products
 
 
         [HttpPost("register/product")]
-        public async Task<IActionResult> Register([FromForm] ProductCreateDto dto)
+        public async Task<IActionResult> Register([FromForm] ProductCreateDto dto, [FromServices] IOutputCacheStore cache)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new { IsSuccess = false, Errors = ModelState });
@@ -97,6 +100,8 @@ namespace Web.Controllers.Implements.Producer.Products
                 var newId = await _productService.CreateProductAsync(dto);
                 if (newId <= 0)
                     return BadRequest(new { IsSuccess = false, message = "No se pudo crear el producto." });
+                // Evitar cache obsoleto
+                await cache.EvictByTagAsync("products", default);
 
                 return Ok(new { IsSuccess = true, message = "Producto creado correctamente." });
             }
@@ -117,7 +122,7 @@ namespace Web.Controllers.Implements.Producer.Products
 
         [HttpPut("{id:int}")]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> Update(int id, [FromForm] ProductUpdateDto dto)
+        public async Task<IActionResult> Update(int id, [FromForm] ProductUpdateDto dto, [FromServices] IOutputCacheStore cache)
         {
             if (dto is not BaseDto identifiableDto)
                 return BadRequest(new { IsSuccess = false, message = "El DTO no implementa IHasId." });
@@ -132,6 +137,8 @@ namespace Web.Controllers.Implements.Producer.Products
             {
                 var ok = await _productService.UpdateProductAsync(dto, userId);
                 if (!ok) return BadRequest(new { IsSuccess = false, message = "No se pudo actualizar el producto." });
+
+                await cache.EvictByTagAsync("products", default);
 
                 return Ok(new { IsSuccess = true, message = "Producto actualizado correctamente." });
             }
@@ -152,9 +159,10 @@ namespace Web.Controllers.Implements.Producer.Products
         /// Eliminar lógicamente un Producto (soft delete).
         /// </summary>
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id, [FromServices] IOutputCacheStore cache)
         {
             await _productService.DeleteLogicAsync(id);
+            await cache.EvictByTagAsync("products", default);
             return NoContent();
         }
 
@@ -191,6 +199,7 @@ namespace Web.Controllers.Implements.Producer.Products
         [HttpGet("home")]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
+        [OutputCache(PolicyName = "HomeProductsPolicy")]
         public virtual async Task<IActionResult> GetForUser([FromQuery] int? limit)
         {
             try
@@ -206,7 +215,7 @@ namespace Web.Controllers.Implements.Producer.Products
 
         }
 
-        [HttpGet("detail/ {id}")]
+        [HttpGet("detail/{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
@@ -258,6 +267,7 @@ namespace Web.Controllers.Implements.Producer.Products
         [HttpGet("categories/{categoryId:int}/products")]
         [ProducesResponseType(typeof(IEnumerable<ProductSelectDto>), 200)]
         [ProducesResponseType(500)]
+        [OutputCache(PolicyName = "CategoryProductsPolicy")]
         public async Task<IActionResult> GetProductsByCategory(int categoryId)
         {
             try
@@ -293,6 +303,7 @@ namespace Web.Controllers.Implements.Producer.Products
         [HttpGet("featured")]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
+        [OutputCache(PolicyName = "FeaturedProductsPolicy")]
         public async Task<IActionResult> GetFeatured([FromQuery] int limit = 10)
         {
             try
@@ -312,7 +323,7 @@ namespace Web.Controllers.Implements.Producer.Products
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateStock([FromBody] UpdateStockDto dto)
+        public async Task<IActionResult> UpdateStock([FromBody] UpdateStockDto dto, [FromServices] IOutputCacheStore cache)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -322,7 +333,10 @@ namespace Web.Controllers.Implements.Producer.Products
                 var success = await _productService.UpdateStockAsync(dto);
 
                 if (success)
+                {
+                    await cache.EvictByTagAsync("products", default);
                     return Ok(new { IsSucces = true, message = "Stock actualizado correctamente." });
+                }
 
                 return NotFound(new { IsSucces = false, message = $"No se encontró el producto con id {dto.ProductId}." });
             }

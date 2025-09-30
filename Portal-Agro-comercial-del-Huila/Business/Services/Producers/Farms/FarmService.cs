@@ -420,7 +420,7 @@ namespace Business.Services.Producers.Farms
 
                     // 1.3 Validar cupo para nuevas imágenes con el conteo ACTUAL tras los borrados lógicos
                     var currentCount = (await _farmImageRepository.GetByFarmIdAsync(dto.Id)).Count;
-                    ValidateMaxImages(filesToUpload.Count + currentCount, currentCount);
+                    //ValidateMaxImages(filesToUpload.Count + currentCount, currentCount);
 
                     await _context.SaveChangesAsync();
                     await tx.CommitAsync();

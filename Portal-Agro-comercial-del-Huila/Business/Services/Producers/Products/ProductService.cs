@@ -310,7 +310,7 @@ namespace Business.Services.Producers.Products
                 {
                     // Validar cupo antes de subir
                     var currentCount = (await _productImageRepository.GetByProductIdAsync(dto.Id)).Count;
-                    ValidateMaxImages(filesToUpload.Count + currentCount, currentCount);
+                    //ValidateMaxImages(filesToUpload.Count + currentCount, currentCount);
 
                     // Subida a nube + creación de entidades en memoria
                     newImages = await UploadAndMapImagesAsync(filesToUpload, product.Id);
@@ -334,9 +334,6 @@ namespace Business.Services.Producers.Products
 
             return true;
         }
-
-
-
 
 
         public async Task<bool> AddFavoriteAsync(int userId, int productId)

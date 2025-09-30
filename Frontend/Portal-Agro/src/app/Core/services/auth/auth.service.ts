@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, of, switchMap } from 'rxjs';
 import { environment } from '../../../../environments/environment.development';
@@ -6,6 +6,7 @@ import { LoginModel, LoginResponseModel, UserMeDto } from '../../Models/login.mo
 import { RegisterUserModel } from '../../Models/registeruser.model';
 import { PersonUpdateModel, UserSelectModel } from '../../Models/user.model';
 import { ChangePasswordModel, RecoverPasswordConfirmModel, RecoverPasswordModel } from '../../Models/changePassword.model';
+import { OPTIONAL_AUTH } from '../../interceptors/auth/auth-optional.token';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +31,11 @@ export class AuthService {
 
   GetMe(): Observable<UserMeDto> {
     return this.http.get<UserMeDto>(this.urlBase + 'me');
+  }
+
+  GetMeOptional(): Observable<UserMeDto> {
+    const context = new HttpContext().set(OPTIONAL_AUTH, true);
+    return this.http.get<UserMeDto>(this.urlBase + 'me', { context });
   }
 
   GetDataBasic():Observable<UserSelectModel>{

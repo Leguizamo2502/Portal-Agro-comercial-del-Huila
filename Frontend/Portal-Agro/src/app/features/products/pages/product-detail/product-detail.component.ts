@@ -71,7 +71,7 @@ export class ProductDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.authState.hydrateFromStorage();
-    this.me$ = this.authState.loadMe();
+    this.me$ = this.authState.loadMeOptional();
 
     const encoded = this.route.snapshot.paramMap.get('id');
     if (!encoded) return;
