@@ -14,5 +14,6 @@ namespace Data.Interfaces.Implements.Producers.Products
         Task<IEnumerable<Product>> GetAllWithLimitAsync(int? limit);
         Task<bool> UpdateStock(int productId, int newStock);
         Task<bool> TryDecrementStockAsync(int productId, int quantity);
+        Task<Product?> GetByIdSmall(int id);
     }
 }

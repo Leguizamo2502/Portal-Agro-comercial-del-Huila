@@ -13,6 +13,7 @@ namespace Data.Interfaces.Implements.Producers
         Task<string?> GetCodeProducer(int producerId);
         Task<Producer?> GetByIdWithSocialLinksAsync(int id);
         void RemoveRange<T>(IEnumerable<T> entities) where T : class;
+        Task<double> GetAverageRatingAsync(int producerId);
 
     }
 }

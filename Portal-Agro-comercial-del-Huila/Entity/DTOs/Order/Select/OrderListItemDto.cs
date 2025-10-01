@@ -5,6 +5,7 @@ namespace Entity.DTOs.Order.Select
     public class OrderListItemDto : BaseDto
     {
         public string ProductName { get; set; } = null!;
+        public string Code { get; set; }
         public int QuantityRequested { get; set; }
         public decimal Subtotal { get; set; }
         public decimal Total { get; set; }

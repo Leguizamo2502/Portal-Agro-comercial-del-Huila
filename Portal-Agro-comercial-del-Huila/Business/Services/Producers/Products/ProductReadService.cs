@@ -59,33 +59,49 @@ public class ProductReadService : IProductReadService
         }
     }
 
-    public async Task<IEnumerable<ProductSelectDto>> GetAllHomeAsync(int? userId,int? limit)
+    public async Task<ProductSelectDto?> GetDetailProduct(int? userId,int productId)
+    {
+        try
+        {
+            if (productId <= 0)
+                throw new BusinessException("El ID debe ser mayor que cero.");
+
+            var entity = await _productRepo.GetByIdAsync(productId);
+            if (entity is null) return null;
+
+            var dto = _mapper.Map<ProductSelectDto>(entity);
+
+            if (userId is null)
+            {
+                dto.IsFavorite = false;
+                return dto;
+            }
+
+            var favIds = await _favoriteRepo.GetFavoriteProductIdsByUserAsync(userId.Value);
+            dto.IsFavorite = favIds.Contains(productId);
+
+            return dto;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error al obtener el producto con ID {Id}", productId);
+            throw new BusinessException($"Error al obtener el producto con ID {productId}.", ex);
+        }
+    }
+   
+
+    public async Task<IEnumerable<ProductSelectDto>> GetAllHomeAsync(int? limit)
     {
         try
         {
             // Trae todos los productos con tu BaseQuery/Includes habituales
             var products = await _productRepo.GetAllWithLimitAsync(limit);
-            var dtos = _mapper.Map<List<ProductSelectDto>>(products);
+            return _mapper.Map<List<ProductSelectDto>>(products);
 
-            // Invitado: siempre false
-            if (userId is null)
-            {
-                foreach (var d in dtos) d.IsFavorite = false;
-                return dtos;
-            }
-
-            var ids = dtos.Select(d => d.Id).ToArray();
-            var favIds = await _favoriteRepo.GetFavoriteProductIdsByUserAsync(userId.Value);
-            var favSet = favIds.ToHashSet();
-
-            foreach (var d in dtos)
-                d.IsFavorite = favSet.Contains(d.Id);
-
-            return dtos;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error al obtener Home (userId: {UserId})", userId);
+            _logger.LogError(ex, "Error al obtener Home");
             throw;
         }
     }
@@ -168,23 +184,13 @@ public class ProductReadService : IProductReadService
     }
 
 
-    public async Task<IEnumerable<ProductSelectDto>> GetFeaturedAsync(int? userId, int limit)
+    public async Task<IEnumerable<ProductSelectDto>> GetFeaturedAsync(int limit)
     {
         try
         {
             var products = await _productRepo.GetFeaturedAsync(limit);
-            var dtos = _mapper.Map<List<ProductSelectDto>>(products);
-
-            if (userId is null)
-            {
-                foreach (var d in dtos) d.IsFavorite = false;
-                return dtos;
-            }
-
-            var favIds = (await _favoriteRepo.GetFavoriteProductIdsByUserAsync(userId.Value)).ToHashSet();
-            foreach (var d in dtos) d.IsFavorite = favIds.Contains(d.Id);
-
-            return dtos;
+            return _mapper.Map<List<ProductSelectDto>>(products);
+           
         }
         catch (Exception ex)
         {

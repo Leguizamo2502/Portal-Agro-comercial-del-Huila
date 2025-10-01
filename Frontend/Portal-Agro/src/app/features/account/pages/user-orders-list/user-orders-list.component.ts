@@ -61,8 +61,8 @@ export class UserOrdersListComponent implements OnInit {
       });
   }
 
-  view(id: number): void {
-    this.router.navigate(['/account/orders', id]);
+  view(code : string): void {
+    this.router.navigate(['/account/orders', code]);
   }
 
   /* ======= Guards por estado ======= */
@@ -101,10 +101,10 @@ export class UserOrdersListComponent implements OnInit {
   }
 
   /* ======= Confirmar recepción (Sí/No) ======= */
-  async confirm(id: number): Promise<void> {
+  async confirm(code : string): Promise<void> {
     let detail: OrderDetailModel;
     try {
-      detail = await firstValueFrom(this.ordersSrv.getDetailForUser(id));
+      detail = await firstValueFrom(this.ordersSrv.getDetailForUser(code));
     } catch (err: any) {
       Swal.fire(
         'Error',
@@ -130,7 +130,7 @@ export class UserOrdersListComponent implements OnInit {
       rowVersion: detail.rowVersion,
     };
 
-    this.ordersSrv.confirmReceived(id, body).subscribe({
+    this.ordersSrv.confirmReceived(code, body).subscribe({
       next: async () => {
         await Swal.fire(
           'Hecho',
@@ -149,10 +149,10 @@ export class UserOrdersListComponent implements OnInit {
   }
 
   /* ======= Cancelar pedido (PendingReview) ======= */
-  async cancel(id: number): Promise<void> {
+  async cancel(code : string): Promise<void> {
     let detail: OrderDetailModel;
     try {
-      detail = await firstValueFrom(this.ordersSrv.getDetailForUser(id));
+      detail = await firstValueFrom(this.ordersSrv.getDetailForUser(code));
     } catch (err: any) {
       Swal.fire(
         'Error',
@@ -172,7 +172,7 @@ export class UserOrdersListComponent implements OnInit {
     });
     if (!ask.isConfirmed) return;
 
-    this.ordersSrv.cancelByUser(id, detail.rowVersion).subscribe({
+    this.ordersSrv.cancelByUser(code, detail.rowVersion).subscribe({
       next: async () => {
         await Swal.fire('Hecho', 'Pedido cancelado.', 'success');
         this.load();
@@ -191,7 +191,7 @@ export class UserOrdersListComponent implements OnInit {
     el.click();
   }
 
-  async onPickPaymentFile(id: number, ev: Event) {
+  async onPickPaymentFile(code : string, ev: Event) {
     const input = ev.target as HTMLInputElement;
     const file = input.files?.[0];
     input.value = ''; 
@@ -208,7 +208,7 @@ export class UserOrdersListComponent implements OnInit {
 
     let detail: OrderDetailModel;
     try {
-      detail = await firstValueFrom(this.ordersSrv.getDetailForUser(id));
+      detail = await firstValueFrom(this.ordersSrv.getDetailForUser(code));
     } catch (err: any) {
       Swal.fire('Error', err?.error?.message ?? 'No se pudo cargar el pedido.', 'error');
       return;
@@ -222,7 +222,7 @@ export class UserOrdersListComponent implements OnInit {
       didOpen: () => Swal.showLoading(),
     });
 
-    this.ordersSrv.uploadPayment(id, req).subscribe({
+    this.ordersSrv.uploadPayment(code, req).subscribe({
       next: async () => {
         Swal.close();
         await Swal.fire('Hecho', 'Comprobante subido.', 'success');

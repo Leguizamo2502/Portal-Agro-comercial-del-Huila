@@ -6,6 +6,7 @@ export interface ProducerSelectModel {
   qrUrl: string;
   description: string;
   networks:ProducerSocialSelectModel[]
+  averageRating: number;
   id: number;
 }
 

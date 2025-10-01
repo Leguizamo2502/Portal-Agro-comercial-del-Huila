@@ -9,16 +9,27 @@ import Swal from 'sweetalert2';
 import { UserMeDto } from '../../../../Core/Models/login.model';
 import { AuthState } from '../../../../Core/services/auth/auth.state';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
-import { ProductSelectModel, ReviewSelectModel, ReviewRegisterModel } from '../../../../shared/models/product/product.model';
+import {
+  ProductSelectModel,
+  ReviewSelectModel,
+  ReviewRegisterModel,
+} from '../../../../shared/models/product/product.model';
 import { ProductService } from '../../../../shared/services/product/product.service';
 import { ReviewService } from '../../../../shared/services/review/review.service';
 import { MatDialog } from '@angular/material/dialog';
-import { OrderCreateDialogComponent, OrderCreateDialogData } from '../../modals/order-create-dialog/order-create-dialog.component';
+import {
+  OrderCreateDialogComponent,
+  OrderCreateDialogData,
+} from '../../modals/order-create-dialog/order-create-dialog.component';
+import { CreateOrderResponse } from '../../models/order/order.model';
+import { FavoriteFacadeService } from '../../../../shared/services/favorite/favorite-facade.service';
+import { MatIconModule } from "@angular/material/icon";
+import { IfLoggedInDirective } from '../../../../Core/directives/if-logged-in.directive';
 
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonComponent],
+  imports: [CommonModule, FormsModule, ButtonComponent, MatIconModule,IfLoggedInDirective],
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css'],
 })
@@ -28,7 +39,8 @@ export class ProductDetailComponent implements OnInit {
   private productService = inject(ProductService);
   private reviewService = inject(ReviewService);
   private authState = inject(AuthState);
-  private dialog = inject(MatDialog); 
+  private dialog = inject(MatDialog);
+  private fav = inject(FavoriteFacadeService);
 
   // Usuario actual (reactivo)
   me$: Observable<UserMeDto | null> = of(null);
@@ -49,7 +61,7 @@ export class ProductDetailComponent implements OnInit {
   newReview = '';
   selectedRating = 0;
   stars = Array(5).fill(0);
-  
+
   // Métricas
   averageRating = 0;
   distribution: { star: number; count: number; percentage: number }[] = [];
@@ -58,22 +70,26 @@ export class ProductDetailComponent implements OnInit {
   Math = Math; // para usar Math en template
 
   ngOnInit(): void {
-    // Usuario actual (desde storage y backend)
     this.authState.hydrateFromStorage();
-    this.me$ = this.authState.loadMe();
+    this.me$ = this.authState.loadMeOptional();
 
-    // Id de producto
-    this.productId = Number(this.route.snapshot.paramMap.get('id'));
-    if (!this.productId) return;
+    const encoded = this.route.snapshot.paramMap.get('id');
+    if (!encoded) return;
 
-    // Carga de datos
+    try {
+      this.productId = parseInt(atob(encoded), 10);
+    } catch {
+      console.error('El parámetro no era Base64 válido:', encoded);
+      return;
+    }
+
     this.loadProduct();
     this.loadReviews();
   }
 
   private loadProduct(): void {
     this.loadingProduct = true;
-    this.productService.getById(this.productId).subscribe({
+    this.productService.getDetail(this.productId).subscribe({
       next: (data) => {
         this.product = data;
         this.loadingProduct = false;
@@ -101,6 +117,7 @@ export class ProductDetailComponent implements OnInit {
       },
     });
   }
+
   async openCreateOrder(): Promise<void> {
     // console.log("Hola")
     // Requiere login
@@ -115,7 +132,9 @@ export class ProductDetailComponent implements OnInit {
         cancelButtonText: 'Cancelar',
       });
       if (res.isConfirmed) {
-        this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
+        this.router.navigate(['/auth/login'], {
+          queryParams: { returnUrl: this.router.url },
+        });
       }
       return;
     }
@@ -136,7 +155,9 @@ export class ProductDetailComponent implements OnInit {
       productName: this.product.name,
       unitPrice: this.product.price,
       stock: this.product.stock,
-      shippingNote: this.product.shippingIncluded ? 'Envío gratis' : 'No incluye envío',
+      shippingNote: this.product.shippingIncluded
+        ? 'Envío gratis'
+        : 'No incluye envío',
     };
 
     const ref = this.dialog.open(OrderCreateDialogComponent, {
@@ -145,19 +166,55 @@ export class ProductDetailComponent implements OnInit {
       disableClose: true,
     });
 
-    ref.afterClosed().subscribe((res: { IsSuccess: boolean; OrderId: number } | undefined) => {
-      if (res?.IsSuccess) {
+    ref.afterClosed().subscribe((res: CreateOrderResponse | undefined) => {
+      if (!res) return;
+
+      if (res.isSuccess) {
         Swal.fire({
-          toast: true,
-          position: 'bottom-end',
-          timer: 1800,
-          showConfirmButton: false,
           icon: 'success',
-          title: `Pedido #${res.OrderId} creado`,
+          title: 'Pedido creado',
+          text: `Tu pedido #${res.orderId} fue creado. Te enviaremos instrucciones por correo cuando el productor lo revise.`,
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'No se pudo crear el pedido',
+          text: res.message || 'Ocurrió un error al crear el pedido.',
         });
       }
     });
   }
+
+  //favorites
+  get disabledFavorite(): boolean {
+      return this.fav.isToggling(this.product?.id);
+    }
+    // favorito con UI optimista centralizada
+    onFavoriteClick(ev: Event) {
+      ev.stopPropagation();
+      this.fav.toggle(this.product).subscribe({
+        next: (isFav) => {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            timer: 1500,
+            showConfirmButton: false,
+            icon: 'success',
+            title: isFav ? 'Añadido a favoritos' : 'Quitado de favoritos',
+          });
+        },
+        error: () => {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            timer: 2000,
+            showConfirmButton: false,
+            icon: 'error',
+            title: 'No se pudo actualizar el favorito',
+          });
+        },
+      });
+    }
 
   changeMainImage(url: string): void {
     this.selectedImage = url;
@@ -170,11 +227,11 @@ export class ProductDetailComponent implements OnInit {
   }
 
   onMouseEnter(rating: number) {
-  this.hoverRating = rating;
+    this.hoverRating = rating;
   }
 
   onMouseLeave() {
-  this.hoverRating = 0;
+    this.hoverRating = 0;
   }
 
   submitReview(): void {
@@ -197,7 +254,7 @@ export class ProductDetailComponent implements OnInit {
 
         Swal.fire({
           toast: true,
-          position: 'bottom-end',
+          position: 'top-end',
           timer: 1500,
           showConfirmButton: false,
           icon: 'success',
@@ -256,8 +313,9 @@ export class ProductDetailComponent implements OnInit {
     });
   }
 
-  onDetail(item: ProductSelectModel) { this.router.navigate(['home/product/profile', item.producerCode]); 
-    console.log(item.producerCode);
+  onDetail(item: ProductSelectModel) {
+    this.router.navigate(['home/product/profile', item.producerCode]);
+    // console.log(item.producerCode);
   }
 
   private recomputeStats(): void {

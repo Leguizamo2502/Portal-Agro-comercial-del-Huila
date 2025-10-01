@@ -243,5 +243,22 @@ namespace Data.Service.Producers.Products
             }
         }
 
+        public async Task<Product?> GetByIdSmall(int id)
+        {
+            var product = await _dbSet
+                .Include(p=>p.Producer)
+                    .ThenInclude(pr => pr.User)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (product != null)
+            {
+                // Por si acaso, reforzamos el filtro de imágenes no borradas
+                product.ProductImages = product.ProductImages
+                    .Where(pi => !pi.IsDeleted)
+                    .ToList();
+            }
+
+            return product;
+        }
     }
 }

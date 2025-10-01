@@ -69,13 +69,13 @@ namespace Web.Controllers.Implements.Orders
         }
 
         // GET: api/v1/order/{id}/for-user  (detalle visible para el cliente)
-        [HttpGet("{id:int}/for-user")]
-        public async Task<IActionResult> GetDetailForUser(int id)
+        [HttpGet("{code}/for-user")]
+        public async Task<IActionResult> GetDetailForUser(string code)
         {
             try
             {
                 var userId = HttpContext.GetUserId();
-                var dto = await _orderService.GetOrderDetailForUserAsync(userId, id);
+                var dto = await _orderService.GetOrderDetailForUserAsync(userId, code);
                 return Ok(dto);
             }
             catch (BusinessException ex)
@@ -90,15 +90,15 @@ namespace Web.Controllers.Implements.Orders
         }
 
         // POST: api/v1/order/{id}/payment (subir comprobante)  <<< NUEVO
-        [HttpPost("{id:int}/payment")]
+        [HttpPost("{code}/payment")]
         [Consumes("multipart/form-data")]
         [RequestSizeLimit(10_000_000)] // 10MB, ajusta si quieres
-        public async Task<IActionResult> UploadPayment(int id, [FromForm] OrderUploadPaymentDto dto)
+        public async Task<IActionResult> UploadPayment(string code, [FromForm] OrderUploadPaymentDto dto)
         {
             try
             {
                 var userId = HttpContext.GetUserId();
-                await _orderService.UploadPaymentAsync(userId, id, dto);
+                await _orderService.UploadPaymentAsync(userId, code, dto);
                 return Ok(new { IsSuccess = true, Message = "Comprobante subido." });
             }
             catch (BusinessException ex)
@@ -113,13 +113,13 @@ namespace Web.Controllers.Implements.Orders
         }
 
         // POST: api/v1/order/{id}/confirm-received (Yes/No)
-        [HttpPost("{id:int}/confirm-received")]
-        public async Task<IActionResult> ConfirmReceived(int id, [FromBody] OrderConfirmDto dto)
+        [HttpPost("{code}/confirm-received")]
+        public async Task<IActionResult> ConfirmReceived(string code, [FromBody] OrderConfirmDto dto)
         {
             try
             {
                 var userId = HttpContext.GetUserId();
-                await _orderService.ConfirmOrderAsync(userId, id, dto);
+                await _orderService.ConfirmOrderAsync(userId, code, dto);
                 return Ok(new { IsSuccess = true, Message = "Confirmación registrada." });
             }
             catch (BusinessException ex)
@@ -134,13 +134,13 @@ namespace Web.Controllers.Implements.Orders
         }
 
         // POST: api/v1/order/{id}/cancel (cancelar por cliente si está PendingReview)  <<< NUEVO
-        [HttpPost("{id:int}/cancel")]
-        public async Task<IActionResult> CancelByUser(int id, [FromBody] string rowVersionBase64)
+        [HttpPost("{code}/cancel")]
+        public async Task<IActionResult> CancelByUser(string code, [FromBody] string rowVersionBase64)
         {
             try
             {
                 var userId = HttpContext.GetUserId();
-                await _orderService.CancelByUserAsync(userId, id, rowVersionBase64);
+                await _orderService.CancelByUserAsync(userId, code, rowVersionBase64);
                 return Ok(new { IsSuccess = true, Message = "Orden cancelada." });
             }
             catch (BusinessException ex)
@@ -201,14 +201,14 @@ namespace Web.Controllers.Implements.Orders
         }
 
         // GET: api/v1/order/{id}/for-producer  (detalle para productor dueño)
-        [HttpGet("{id:int}/for-producer")]
+        [HttpGet("{code}/for-producer")]
         [Authorize]
-        public async Task<IActionResult> GetDetailForProducer(int id)
+        public async Task<IActionResult> GetDetailForProducer(string code)
         {
             try
             {
                 var userId = HttpContext.GetUserId();
-                OrderDetailDto dto = await _orderService.GetOrderDetailForProducerAsync(userId, id);
+                OrderDetailDto dto = await _orderService.GetOrderDetailForProducerAsync(userId, code);
                 return Ok(dto);
             }
             catch (BusinessException ex)
@@ -223,14 +223,14 @@ namespace Web.Controllers.Implements.Orders
         }
 
         // POST: api/v1/order/{id}/accept
-        [HttpPost("{id:int}/accept")]
+        [HttpPost("{code}/accept")]
         [Authorize]
-        public async Task<IActionResult> Accept(int id, [FromBody] OrderAcceptDto dto)
+        public async Task<IActionResult> Accept(string code, [FromBody] OrderAcceptDto dto)
         {
             try
             {
                 var userId = HttpContext.GetUserId();
-                await _orderService.AcceptOrderAsync(userId, id, dto);
+                await _orderService.AcceptOrderAsync(userId, code, dto);
                 return Ok(new { IsSuccess = true, Message = "Pedido aceptado." });
             }
             catch (BusinessException ex)
@@ -245,14 +245,14 @@ namespace Web.Controllers.Implements.Orders
         }
 
         // POST: api/v1/order/{id}/reject
-        [HttpPost("{id:int}/reject")]
+        [HttpPost("{code}/reject")]
         [Authorize]
-        public async Task<IActionResult> Reject(int id, [FromBody] OrderRejectDto dto)
+        public async Task<IActionResult> Reject(string code, [FromBody] OrderRejectDto dto)
         {
             try
             {
                 var userId = HttpContext.GetUserId();
-                await _orderService.RejectOrderAsync(userId, id, dto);
+                await _orderService.RejectOrderAsync(userId, code, dto);
                 return Ok(new { IsSuccess = true, Message = "Pedido rechazado." });
             }
             catch (BusinessException ex)
@@ -267,14 +267,14 @@ namespace Web.Controllers.Implements.Orders
         }
 
         // POST: api/v1/order/{id}/preparing    
-        [HttpPost("{id:int}/preparing")]
+        [HttpPost("{code}/preparing")]
         [Authorize]
-        public async Task<IActionResult> MarkPreparing(int id, [FromBody] string rowVersionBase64)
+        public async Task<IActionResult> MarkPreparing(string code, [FromBody] string rowVersionBase64)
         {
             try
             {
                 var userId = HttpContext.GetUserId();
-                await _orderService.MarkPreparingAsync(userId, id, rowVersionBase64);
+                await _orderService.MarkPreparingAsync(userId, code, rowVersionBase64);
                 return Ok(new { IsSuccess = true, Message = "Orden en preparación." });
             }
             catch (BusinessException ex)
@@ -289,14 +289,14 @@ namespace Web.Controllers.Implements.Orders
         }
 
         // POST: api/v1/order/{id}/dispatched
-        [HttpPost("{id:int}/dispatched")]
+        [HttpPost("{code}/dispatched")]
         [Authorize]
-        public async Task<IActionResult> MarkDispatched(int id, [FromBody] string rowVersionBase64)
+        public async Task<IActionResult> MarkDispatched(string code, [FromBody] string rowVersionBase64)
         {
             try
             {
                 var userId = HttpContext.GetUserId();
-                await _orderService.MarkDispatchedAsync(userId, id, rowVersionBase64);
+                await _orderService.MarkDispatchedAsync(userId, code, rowVersionBase64);
                 return Ok(new { IsSuccess = true, Message = "Orden despachada." });
             }
             catch (BusinessException ex)
@@ -311,14 +311,14 @@ namespace Web.Controllers.Implements.Orders
         }
 
         // POST: api/v1/order/{id}/delivered
-        [HttpPost("{id:int}/delivered")]
+        [HttpPost("{code}/delivered")]
         [Authorize]
-        public async Task<IActionResult> MarkDelivered(int id, [FromBody] string rowVersionBase64)
+        public async Task<IActionResult> MarkDelivered(string code, [FromBody] string rowVersionBase64)
         {
             try
             {
                 var userId = HttpContext.GetUserId();
-                await _orderService.MarkDeliveredAsync(userId, id, rowVersionBase64);
+                await _orderService.MarkDeliveredAsync(userId, code, rowVersionBase64);
                 return Ok(new { IsSuccess = true, Message = "Orden entregada (pendiente de confirmación del cliente)." });
             }
             catch (BusinessException ex)

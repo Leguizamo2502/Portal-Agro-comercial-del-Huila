@@ -962,6 +962,10 @@ namespace Entity.Migrations
                     b.Property<int>("CityId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ContactPhone")
                         .IsRequired()
                         .HasMaxLength(30)

@@ -17,6 +17,7 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Utilities.Custom.Code;
 using Utilities.Exceptions;
 using Utilities.Helpers.Business;
 
@@ -58,48 +59,72 @@ namespace Business.Services.Producers.Products
                 return false;
             }
 
-            await using var transaction = await _context.Database.BeginTransactionAsync();
-            try
-            {
-                var images = await _productImageRepository.GetByProductIdAsync(id);
+            // 1) Obtener los publicIds de las imágenes (sin transacción)
+            var imgs = await _productImageRepository.GetByProductIdAsync(id);
+            var publicIds = imgs
+                .Select(i => i.PublicId)
+                .Where(pid => !string.IsNullOrWhiteSpace(pid))
+                .Distinct()
+                .ToList();
 
-                foreach (var image in images)
+            var strategy = _context.Database.CreateExecutionStrategy();
+            bool deleted = false;
+
+            // 2) Unidad reintetable: solo lógica de BD + transacción manual dentro
+            await strategy.ExecuteAsync(async () =>
+            {
+                await using var tx = await _context.Database.BeginTransactionAsync();
+                try
                 {
-                    await _cloudinaryService.DeleteAsync(image.PublicId);
-                    await _productImageRepository.DeleteLogicalByPublicIdAsync(image.PublicId);
+                    foreach (var pid in publicIds)
+                    {
+                        await _productImageRepository.DeleteLogicalByPublicIdAsync(pid);
+                    }
+
+                    deleted = await _productRepository.DeleteLogicAsync(id);
+
+                    await _context.SaveChangesAsync();
+                    await tx.CommitAsync();
                 }
-                await _context.SaveChangesAsync();
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
+            });
 
-                var deleted = await _productRepository.DeleteLogicAsync(id);
-                await _context.SaveChangesAsync();
-
-                if (deleted)
-                    _logger.LogInformation("Producto eliminado con ID {Id}", id);
-                else
-                    _logger.LogError("Error al eliminar eñ producto con ID {Id}", id);
-
-                await transaction.CommitAsync();
-
-                return deleted;
-            }
-            catch (Exception ex)
+            // 3) IO externo fuera de la strategy/tx: eliminar en Cloudinary
+            foreach (var pid in publicIds)
             {
-                _logger.LogError(ex, "Error eliminando eñ producto ID {Id}", id);
-                await transaction.RollbackAsync();
-                throw;
+                try
+                {
+                    await _cloudinaryService.DeleteAsync(pid);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Falló eliminación en Cloudinary para PublicId={PublicId} del producto {ProductId}", pid, id);
+                }
             }
+
+            if (deleted)
+                _logger.LogInformation("Producto eliminado con ID {Id}", id);
+            else
+                _logger.LogError("Error al eliminar el producto con ID {Id}", id);
+
+            return deleted;
         }
+
 
 
         public async Task<int> CreateProductAsync(ProductCreateDto dto)
         {
             ValidateMaxImages(dto.Images?.Count ?? 0);
 
-            // dto.ProducerId viene con el userId; obtenemos el Producer.Id real
+            // Obtener Producer.Id real
             var pid = await _producerRepository.GetIdProducer(dto.ProducerId)
                      ?? throw new BusinessException("El usuario no está registrado como productor.");
 
-            // Validaciones
+            // Validaciones previas (sin transacción)
             var categoryExists = await _context.Category
                 .AnyAsync(c => c.Id == dto.CategoryId && !c.IsDeleted);
             if (!categoryExists)
@@ -114,57 +139,80 @@ namespace Business.Services.Producers.Products
                     throw new BusinessException("Una o más fincas no pertenecen al productor.");
             }
 
-            await using var transaction = await _context.Database.BeginTransactionAsync();
+            var strategy = _context.Database.CreateExecutionStrategy();
+            int productId = 0;
+
+            // Bloque reintetable con transacción manual dentro
+            await strategy.ExecuteAsync(async () =>
+            {
+                await using var tx = await _context.Database.BeginTransactionAsync();
+                try
+                {
+                    var entity = dto.Adapt<Product>();
+                    entity.ProducerId = pid;
+                    entity.Active = true;
+                    entity.IsDeleted = false;
+                    entity.CreateAt = DateTime.UtcNow;
+
+                    await _productRepository.AddAsync(entity);
+                    await _context.SaveChangesAsync();
+                    productId = entity.Id;
+
+                    if (farmIds.Count > 0)
+                    {
+                        var now = DateTime.UtcNow;
+                        var pivots = farmIds.Select(fid => new ProductFarm
+                        {
+                            ProductId = entity.Id,
+                            FarmId = fid,
+                            Active = true,
+                            IsDeleted = false,
+                            CreateAt = now
+                        });
+                        _context.ProductFarms.AddRange(pivots);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    await tx.CommitAsync();
+                }
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
+            });
+
+            // IO externo fuera de la strategy para no duplicar subidas en reintentos
+            List<ProductImage> images = new();
             try
             {
-                var entity = dto.Adapt<Product>();
-                entity.ProducerId = pid;
-                entity.Active = true;
-                entity.IsDeleted = false;
-                entity.CreateAt = DateTime.UtcNow;
+                images = await UploadAndMapImagesAsync(dto.Images, productId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Fallo al subir/mapear imágenes para producto {ProductId}", productId);
+            }
 
-                await _productRepository.AddAsync(entity);
-                await _context.SaveChangesAsync(); // ya tienes entity.Id
-
-                if (farmIds.Count > 0)
-                {
-                    var now = DateTime.UtcNow;
-                    var pivots = farmIds.Select(fid => new ProductFarm
-                    {
-                        ProductId = entity.Id,
-                        FarmId = fid,
-                        Active = true,
-                        IsDeleted = false,
-                        CreateAt = now
-                    });
-                    _context.ProductFarms.AddRange(pivots);
-                    await _context.SaveChangesAsync();
-                }
-
-                var images = await UploadAndMapImagesAsync(dto.Images, entity.Id);
-                if (images.Any())
+            if (images.Any())
+            {
+                // Persistencia de imágenes (op: strategy sin tx manual)
+                await _context.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
                 {
                     await _productImageRepository.AddImages(images);
                     await _context.SaveChangesAsync();
-                }
+                });
+            }
 
-                await transaction.CommitAsync();
-                return entity.Id;
-            }
-            catch
-            {
-                await transaction.RollbackAsync();
-                throw;
-            }
+            return productId;
         }
+
 
         public async Task<bool> UpdateProductAsync(ProductUpdateDto dto, int userId)
         {
-            // Producer del usuario
+            // 1) Validaciones previas (sin transacción)
             var producerId = await _producerRepository.GetIdProducer(userId)
                              ?? throw new BusinessException("El usuario no está registrado como productor.");
 
-            // Cargar producto con tracking
             var product = await _context.Products
                 .Include(p => p.ProductImages)
                 .Include(p => p.ProductFarms)
@@ -174,14 +222,12 @@ namespace Business.Services.Producers.Products
             if (product.ProducerId != producerId)
                 throw new BusinessException("No está autorizado para modificar este producto.");
 
-            // Validaciones
             var categoryExists = await _context.Category
                 .AnyAsync(c => c.Id == dto.CategoryId && !c.IsDeleted);
             if (!categoryExists)
                 throw new BusinessException("Categoría inválida.");
 
             var newFarmIds = (dto.FarmIds ?? new List<int>()).Distinct().ToHashSet();
-
             if (newFarmIds.Count > 0)
             {
                 var validCount = await _context.Farms
@@ -190,69 +236,104 @@ namespace Business.Services.Producers.Products
                     throw new BusinessException("Una o más fincas no pertenecen al productor.");
             }
 
-            await using var tx = await _context.Database.BeginTransactionAsync();
+            // 2) Variables para IO externo (fuera de strategy/tx)
+            //var imagesToDelete = dto.ImagesToDelete?.ToList() ?? new List<int>();
+            var filesToUpload = (dto.Images ?? Enumerable.Empty<IFormFile>()).Where(f => f?.Length > 0).ToList();
+
+            // 3) Bloque reintetable: solo lógica de BD + transacción manual dentro
+            var strategy = _context.Database.CreateExecutionStrategy();
+            await strategy.ExecuteAsync(async () =>
+            {
+                await using var tx = await _context.Database.BeginTransactionAsync();
+                try
+                {
+                    // 3.1) Escalares
+                    dto.Adapt(product);
+
+                    // 3.2) Sincronizar N–M (ProductFarms) con soft delete
+                    var currentActive = product.ProductFarms
+                        .Where(pf => !pf.IsDeleted)
+                        .Select(pf => pf.FarmId)
+                        .ToHashSet();
+
+                    var toAdd = newFarmIds.Except(currentActive).ToList();
+                    var toRemove = currentActive.Except(newFarmIds).ToList();
+
+                    var now = DateTime.UtcNow;
+
+                    if (toAdd.Count > 0)
+                    {
+                        var pivots = toAdd.Select(fid => new ProductFarm
+                        {
+                            ProductId = product.Id,
+                            FarmId = fid,
+                            Active = true,
+                            IsDeleted = false,
+                            CreateAt = now
+                        });
+                        _context.ProductFarms.AddRange(pivots);
+                    }
+
+                    if (toRemove.Count > 0)
+                    {
+                        foreach (var fid in toRemove)
+                        {
+                            var pivot = product.ProductFarms.First(pf => pf.FarmId == fid && !pf.IsDeleted);
+                            pivot.IsDeleted = true;
+                            pivot.Active = false;
+                        }
+                    }
+
+                    // OJO: aquí NO hacemos IO externo (subida/borrado en nube)
+
+                    await _context.SaveChangesAsync();
+                    await tx.CommitAsync();
+                }
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
+            });
+
+            // 4) IO externo fuera (idempotente)
+            List<ProductImage> newImages = new();
             try
             {
-                // Actualizar escalares (Mapster configurado para no tocar navs)
-                dto.Adapt(product);
+                //if (imagesToDelete.Count > 0)
+                //{
+                //    // Si DeleteImagesAsync toca nube, que lo haga aquí (fuera del strategy/tx)
+                //    await DeleteImagesAsync(imagesToDelete);
+                //}
 
-                // Sincronizar N–M (soft delete por índice único filtrado)
-                var currentActive = product.ProductFarms
-                    .Where(pf => !pf.IsDeleted)
-                    .Select(pf => pf.FarmId)
-                    .ToHashSet();
-
-                var toAdd = newFarmIds.Except(currentActive).ToList();
-                var toRemove = currentActive.Except(newFarmIds).ToList();
-
-                var now = DateTime.UtcNow;
-
-                foreach (var fid in toAdd)
+                if (filesToUpload.Count > 0)
                 {
-                    _context.ProductFarms.Add(new ProductFarm
-                    {
-                        ProductId = product.Id,
-                        FarmId = fid,
-                        Active = true,
-                        IsDeleted = false,
-                        CreateAt = now
-                    });
-                }
-
-                foreach (var fid in toRemove)
-                {
-                    var pivot = product.ProductFarms.First(pf => pf.FarmId == fid && !pf.IsDeleted);
-                    pivot.IsDeleted = true;
-                    pivot.Active = false;
-                }
-
-                // Imágenes
-                if (dto.ImagesToDelete?.Any() == true)
-                    await DeleteImagesAsync(dto.ImagesToDelete);
-
-                if (dto.Images?.Any() == true)
-                {
-                    var validFiles = dto.Images.Where(f => f?.Length > 0).ToList();
+                    // Validar cupo antes de subir
                     var currentCount = (await _productImageRepository.GetByProductIdAsync(dto.Id)).Count;
+                    //ValidateMaxImages(filesToUpload.Count + currentCount, currentCount);
 
-                    ValidateMaxImages(validFiles.Count + currentCount, currentCount);
-
-                    var newImages = await UploadAndMapImagesAsync(validFiles, product.Id);
-                    await _productImageRepository.AddImages(newImages);
+                    // Subida a nube + creación de entidades en memoria
+                    newImages = await UploadAndMapImagesAsync(filesToUpload, product.Id);
                 }
-
-                await _context.SaveChangesAsync();
-                await tx.CommitAsync();
-                return true;
             }
-            catch
+            catch (Exception ex)
             {
-                await tx.RollbackAsync();
-                throw;
+                // No rompas la actualización del producto por fallo de IO externo
+                _logger.LogWarning(ex, "Fallo IO externo (imágenes) para producto {ProductId}", product.Id);
             }
+
+            // 5) Persistencia de imágenes (solo BD) bajo strategy, sin tx manual
+            if (newImages.Any())
+            {
+                await _context.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
+                {
+                    await _productImageRepository.AddImages(newImages);
+                    await _context.SaveChangesAsync();
+                });
+            }
+
+            return true;
         }
-
-
 
 
         public async Task<bool> AddFavoriteAsync(int userId, int productId)

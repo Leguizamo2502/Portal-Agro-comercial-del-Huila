@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { FavoriteFacadeService } from '../../../services/favorite/favorite-facade.service';
 import { IfLoggedInDirective } from '../../../../Core/directives/if-logged-in.directive';
 import Swal from 'sweetalert2';
+import { SkeletonComponent } from '../../loadings/skeleton/skeleton.component';
 
 @Component({
   selector: 'app-card',
@@ -21,6 +22,7 @@ import Swal from 'sweetalert2';
     MatButtonModule,
     MatIconModule,
     IfLoggedInDirective,
+    SkeletonComponent,
   ],
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.css'],
@@ -29,9 +31,10 @@ export class CardComponent {
   private fav = inject(FavoriteFacadeService);
   router = inject(Router);
 
-  @Input({ required: true }) product!: ProductSelectModel;
+  @Input() product!: ProductSelectModel;
   @Input() showActions = false;
   @Input() showFavorite = false;
+  @Input() loading = false;
 
   // (mantén los outputs si los usas para otras acciones)
   @Output() edit = new EventEmitter<ProductSelectModel>();
@@ -45,35 +48,43 @@ export class CardComponent {
     return url && url.trim() ? url : this.placeholder;
   }
 
-  get disabledFavorite(): boolean {
-    return this.fav.isToggling(this.product?.id);
-  }
-
   onImgError(ev: Event) {
     (ev.target as HTMLImageElement).src = this.placeholder;
   }
+  // onDetail(item: ProductSelectModel) {
+  //   this.router.navigate(['/home/product', item.id]);
+  // }
   onDetail(item: ProductSelectModel) {
-    this.router.navigate(['/home/product', item.id]);
+    if (this.loading) return;
+    const encodedId = btoa(String(item.id));
+    this.router.navigate(['/home/product', encodedId]);
   }
   onEditClick(ev: Event) {
     ev.stopPropagation();
+    if (this.loading) return; 
     this.edit.emit(this.product);
   }
   onDeleteClick(ev: Event) {
     ev.stopPropagation();
+    if (this.loading) return; 
     this.delete.emit(this.product);
   }
   onEditStockClick(ev: Event) {
     ev.stopPropagation();
+    if (this.loading) return; 
     this.editStack.emit({
       productId: this.product.id,
       newStock: this.product.stock,
     });
   }
 
+  get disabledFavorite(): boolean {
+    return this.loading || this.fav.isToggling(this.product?.id);
+  }
   // favorito con UI optimista centralizada
   onFavoriteClick(ev: Event) {
     ev.stopPropagation();
+    if (this.loading) return;
     this.fav.toggle(this.product).subscribe({
       next: (isFav) => {
         Swal.fire({

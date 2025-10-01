@@ -91,5 +91,14 @@ namespace Data.Service.Orders
                .OrderByDescending(o => o.CreateAt)
                .ToListAsync();
         }
+
+        public async Task<Order?> GetByCode(string code)
+        {
+            return await _dbSet
+                .AsNoTracking()
+                .Include(o => o.City)
+                    .ThenInclude(c => c.Department)
+                .FirstOrDefaultAsync(o => o.IsDeleted == false && o.Active == true && o.Code == code);
+        }
     }
 }

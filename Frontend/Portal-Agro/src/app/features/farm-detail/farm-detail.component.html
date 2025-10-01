@@ -1,4 +1,4 @@
-<app-button
+<!-- <app-button
   [type]="'button'"
   [color]="'primary'"
   [text]="'Volver'"
@@ -7,35 +7,31 @@
   class="detail-header to-overlay">
 </app-button>
 
-<!-- Estado: cargando -->
 <div *ngIf="loadingFarm" class="container my-5">
   <p class="text-muted">Cargando finca…</p>
 </div>
 
-<!-- Estado: error -->
 <div *ngIf="!loadingFarm && errorMsg" class="container my-5">
   <p class="text-danger">{{ errorMsg }}</p>
 </div>
 
-<!-- Estado: datos OK -->
 <div *ngIf="!loadingFarm && !errorMsg && farm as f" class="container my-5">
   <div class="row justify-content-center">
     <div class="col-lg-10">
 
-      <!-- CONTENEDOR ÚNICO BLANCO -->
       <div class="farm-card shadow-sm">
-        <!-- Encabezado -->
+
         <div class="farm-header px-4 pt-3 pb-2">
           <h2 class="farm-title mb-1">{{ f.name }}</h2>
           <div class="farm-subtitle text-muted">{{ f.cityName }}, {{ f.departmentName }}</div>
         </div>
 
-        <!-- Contenido -->
+
         <div class="farm-content px-4 pb-4">
-          <!-- 1) GALERÍA (idéntica a tu código) -->
+
           <div class="d-flex flex-wrap gap-4 justify-content-around w-100">
             <div class="content-image-product d-flex gap-4">
-              <!-- Miniaturas -->
+
               <div *ngIf="f.images?.length" class="d-flex flex-column gap-2 thumbnails">
                 <img
                   *ngFor="let img of f.images; trackBy: trackByImage"
@@ -46,7 +42,7 @@
                 />
               </div>
 
-              <!-- Imagen principal -->
+
               <div class="flex-fill d-flex align-items-center justify-content-center main-image" style="max-width: 400px;">
                 <img
                   [src]="mainImage"
@@ -57,7 +53,6 @@
             </div>
           </div>
 
-          <!-- 2) Mapa full width -->
           <div class="row g-4 mt-3 w-100">
             <div class="col-12">
               <div class="map-wrapper border rounded shadow-sm">
@@ -75,7 +70,7 @@
               </div>
             </div>
 
-            <!-- 3) Ficha de información debajo del mapa -->
+
             <div class="col-12">
               <div class="info-card border rounded shadow-sm p-3">
                 <div class="info-grid">
@@ -112,12 +107,12 @@
               </div>
             </div>
           </div>
-          <!-- /Mapa + Info -->
+
         </div>
-        <!-- /Contenido -->
+
       </div>
-      <!-- /CONTENEDOR ÚNICO BLANCO -->
+
 
     </div>
   </div>
-</div>
+</div> -->

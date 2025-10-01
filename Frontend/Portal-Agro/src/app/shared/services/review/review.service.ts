@@ -13,6 +13,7 @@ export class ReviewService {
   private baseUrl = environment.apiUrl + 'Review';
 
   constructor() { }
+  
   getReviewByProduct(productId:number):Observable<ReviewSelectModel[]> {
     return this.http.get<ReviewSelectModel[]>(`${this.baseUrl}/by-product/${productId}`);
   }

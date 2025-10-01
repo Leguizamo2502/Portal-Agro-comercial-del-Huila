@@ -1,6 +1,42 @@
 services:
-  web:
-    image: ${DOCKER_REGISTRY-}web
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    ports: ["1433:1433"]
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Admin123.
+    volumes:
+      - sql_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U SA -P $$SA_PASSWORD -Q \"SELECT 1\" || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 20s
+
+  backend:
     build:
       context: .
-      dockerfile: Web/Dockerfile
+      dockerfile: Portal-Agro-comercial-del-Huila/Web/Dockerfile
+    container_name: backend
+    ports: ["8080:8080"]
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__SqlServer=Server=sqlserver,1433;Database=PortalAgro;User Id=sa;Password=Admin123.;Encrypt=False;TrustServerCertificate=True
+      - MIGRATE_SQLSERVER=true
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./Frontend/Portal-Agro
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports: ["4300:80"]
+    depends_on:
+      - backend
+
+volumes:
+  sql_data:

@@ -5,21 +5,30 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
-EXPOSE 8081
+#EXPOSE 8081
 
 
 # Esta fase se usa para compilar el proyecto de servicio
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Web/Web.csproj", "Web/"]
-COPY ["Business/Business.csproj", "Business/"]
-COPY ["Custom/Custom.csproj", "Custom/"]
-COPY ["Data/Data.csproj", "Data/"]
-COPY ["Entity/Entity.csproj", "Entity/"]
-COPY ["Utilities/Utilities.csproj", "Utilities/"]
-RUN dotnet restore "./Web/Web.csproj"
+
+COPY Portal-Agro-comercial-del-Huila/Web/Web.csproj Web/
+COPY Portal-Agro-comercial-del-Huila/Business/Business.csproj Business/
+COPY Portal-Agro-comercial-del-Huila/Custom/Custom.csproj Custom/
+COPY Portal-Agro-comercial-del-Huila/Data/Data.csproj Data/
+COPY Portal-Agro-comercial-del-Huila/Entity/Entity.csproj Entity/
+COPY Portal-Agro-comercial-del-Huila/Utilities/Utilities.csproj Utilities/
+#COPY Portal-Agro-comercial-del-Huila/Portal-Agro.sln .
 COPY . .
+
+
+RUN dotnet restore "./Web/Web.csproj"
+
+# Copiar resto del código
+COPY Portal-Agro-comercial-del-Huila/ .
+
+
 WORKDIR "/src/Web"
 RUN dotnet build "./Web.csproj" -c $BUILD_CONFIGURATION -o /app/build
 

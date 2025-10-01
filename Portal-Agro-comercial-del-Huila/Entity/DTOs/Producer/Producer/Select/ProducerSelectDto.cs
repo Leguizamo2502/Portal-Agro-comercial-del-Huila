@@ -10,6 +10,7 @@ namespace Entity.DTOs.Producer.Producer.Select
         public string Email { get; set; }
         public string? QrUrl { get; set; }
         public string Description { get; set; }
+        public double AverageRating { get; set; }
         public List<ProducerSocialReadDto> Networks { get; set; } = new();
 
     }

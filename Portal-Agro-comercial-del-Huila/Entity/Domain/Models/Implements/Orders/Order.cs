@@ -9,6 +9,9 @@ namespace Entity.Domain.Models.Implements.Orders
 {
     public class Order : BaseModel
     {
+        //Seguridad
+        public string Code { get; set; } = default!;   // opaco, único
+        //public long OrderNumber { get; set; }
         // Relaciones
         public int UserId { get; set; }
         public int ProductId { get; set; }

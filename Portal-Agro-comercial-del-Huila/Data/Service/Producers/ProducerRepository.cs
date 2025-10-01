@@ -79,7 +79,18 @@ namespace Data.Service.Producers
 
         public void RemoveRange<T>(IEnumerable<T> entities) where T : class
         {
-            _context.Set<T>().RemoveRange(entities);
+             _context.Set<T>().RemoveRange(entities);
         }
+
+        public async Task<double> GetAverageRatingAsync(int producerId)
+        {
+            return await _context.Products
+                .Where(p => p.ProducerId == producerId)           
+                .SelectMany(p => p.Reviews)                       
+                .AverageAsync(r => (double?)r.Rating)             
+                ?? 0;                                            
+        }
+
+
     }
 }

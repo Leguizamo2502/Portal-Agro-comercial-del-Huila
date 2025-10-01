@@ -17,8 +17,8 @@ export interface OrderCreateModel {
 
 export interface CreateOrderResponse {
   isSuccess: boolean;
-  message: string;
-  orderId: number;
+  message?: string;
+  orderId?: number;
 }
 
 export type OrderStatus =
@@ -39,6 +39,7 @@ export type UserReceivedAnswer = 'None' | 'Yes' | 'No';
 
 export interface OrderListItemModel {
   id: number;
+  code: string;
   productName: string;
   quantityRequested: number;
   subtotal: number;
@@ -53,7 +54,7 @@ export interface OrderListItemModel {
 
 export interface OrderDetailModel {
   id: number;
-
+  code: string;
   // Producto / snapshots
   productId: number;
   productName: string;
