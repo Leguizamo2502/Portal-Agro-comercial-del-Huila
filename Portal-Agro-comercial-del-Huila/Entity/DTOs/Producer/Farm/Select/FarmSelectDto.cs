@@ -1,8 +1,9 @@
-﻿namespace Entity.DTOs.Producer.Farm.Select
+﻿using Entity.DTOs.BaseDTO;
+
+namespace Entity.DTOs.Producer.Farm.Select
 {
-    public class FarmSelectDto
+    public class FarmSelectDto : BaseDto
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public double Hectares { get; set; }
         public double Altitude { get; set; }

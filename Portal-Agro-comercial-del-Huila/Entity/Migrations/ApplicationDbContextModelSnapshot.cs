@@ -937,6 +937,9 @@ namespace Entity.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime?>("AcceptedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
@@ -959,6 +962,10 @@ namespace Entity.Migrations
                     b.Property<int>("CityId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ContactPhone")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -973,6 +980,9 @@ namespace Entity.Migrations
                     b.Property<string>("PaymentImageUrl")
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
+
+                    b.Property<DateTime?>("PaymentSubmittedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("PaymentUploadedAt")
                         .HasColumnType("datetime2");
@@ -1040,9 +1050,13 @@ namespace Entity.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CityId");
+
                     b.HasIndex("ProductId");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("Status", "AutoCloseAt", "Active", "IsDeleted");
 
                     b.ToTable("Orders");
                 });
@@ -1363,6 +1377,42 @@ namespace Entity.Migrations
                             QrUrl = "https://res.cloudinary.com/djj163sc9/image/upload/v1756782308/qr_png_e6xgom.png",
                             UserId = 1
                         });
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.ProducerSocialLink", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Network")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProducerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProducerId", "Network")
+                        .IsUnique();
+
+                    b.ToTable("ProducerSocialLinks", (string)null);
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.ProductFarm", b =>
@@ -3576,17 +3626,25 @@ namespace Entity.Migrations
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Orders.Order", b =>
                 {
+                    b.HasOne("Entity.Domain.Models.Implements.Location.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Entity.Domain.Models.Implements.Producers.Products.Product", "Product")
                         .WithMany("Orders")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Entity.Domain.Models.Implements.Auth.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("City");
 
                     b.Navigation("Product");
 
@@ -3651,6 +3709,17 @@ namespace Entity.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.ProducerSocialLink", b =>
+                {
+                    b.HasOne("Entity.Domain.Models.Implements.Producers.Producer", "Producer")
+                        .WithMany("SocialLinks")
+                        .HasForeignKey("ProducerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Producer");
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.ProductFarm", b =>
@@ -3820,6 +3889,8 @@ namespace Entity.Migrations
                     b.Navigation("Farms");
 
                     b.Navigation("Products");
+
+                    b.Navigation("SocialLinks");
                 });
 
             modelBuilder.Entity("Entity.Domain.Models.Implements.Producers.Products.Category", b =>

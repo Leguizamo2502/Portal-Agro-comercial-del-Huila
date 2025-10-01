@@ -10,6 +10,7 @@ namespace Data.Interfaces.Implements.Orders
         Task<IEnumerable<Order>> GetPendingOrdersByProducerAsync(int producerId);
         // IOrderRepository
         Task<IEnumerable<Order>> GetOrdersByUserAsync(int userId);
+        Task<Order?> GetByCode(string code);
 
     }
 }

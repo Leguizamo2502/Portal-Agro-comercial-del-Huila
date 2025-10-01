@@ -1,26 +1,40 @@
 <!-- src/app/features/producer/orders/producer-orders-list.component.html -->
 <div class="page">
   <div class="header">
-    <h2>Pedidos</h2>
+    <div class="title-wrap">
+      <h2>Pedidos</h2>
+      <span class="badge">{{ items.length || 0 }}</span>
+    </div>
 
     <div class="filters">
       <button
+        type="button"
         class="chip"
         [class.active]="statusFilter === 'pending'"
+        [attr.aria-pressed]="statusFilter === 'pending'"
         (click)="goFilter('pending')">
         <mat-icon>hourglass_empty</mat-icon>
         Pendientes
+        <span class="count" *ngIf="statusFilter==='pending'">{{ items.length || 0 }}</span>
       </button>
 
       <button
+        type="button"
         class="chip"
         [class.active]="statusFilter === 'all'"
+        [attr.aria-pressed]="statusFilter === 'all'"
         (click)="goFilter('all')">
         <mat-icon>list_alt</mat-icon>
         Todos
+        <span class="count" *ngIf="statusFilter==='all'">{{ items.length || 0 }}</span>
       </button>
     </div>
   </div>
+
+  <p class="hint">
+    Estás viendo: <strong>{{ statusFilter === 'pending' ? 'Pendientes' : 'Todos' }}</strong>. 
+    Cambia el filtro con los botones superiores.
+  </p>
 
   <!-- Loading -->
   <div class="skeleton" *ngIf="isLoading">
@@ -41,26 +55,14 @@
       </div>
 
       <div class="card-body">
-        <div class="row">
-          <div>Fecha:</div>
-          <div>{{ o.createdAt| date : "mediumDate" : "" : "es-CO"}}</div>
-        </div>
-        <div class="row">
-          <div>Cantidad:</div>
-          <div>{{ o.quantityRequested }}</div>
-        </div>
-        <div class="row">
-          <div>Subtotal:</div>
-          <div>{{ asCurrency(o.subtotal) }}</div>
-        </div>
-        <div class="row total">
-          <div>Total:</div>
-          <div>{{ asCurrency(o.total) }}</div>
-        </div>
+        <div class="row"><div>Fecha:</div><div>{{ o.createAt | date : 'mediumDate' : '' : 'es-CO' }}</div></div>
+        <div class="row"><div>Cantidad:</div><div>{{ o.quantityRequested }}</div></div>
+        <div class="row"><div>Subtotal:</div><div>{{ asCurrency(o.subtotal) }}</div></div>
+        <div class="row total"><div>Total:</div><div>{{ asCurrency(o.total) }}</div></div>
       </div>
 
       <div class="card-actions">
-        <a class="link" [routerLink]="['/account/producer/orders', o.id]" [queryParams]="{ view: 'for-producer' }">
+        <a class="link" [routerLink]="['/account/producer/orders', o.code]" [queryParams]="{ view: 'for-producer' }">
           Ver detalle
         </a>
       </div>
@@ -70,7 +72,8 @@
   <ng-template #emptyTpl>
     <div class="empty">
       <mat-icon>inbox</mat-icon>
-      <p>No hay pedidos para mostrar.</p>
+      <p>No hay pedidos para mostrar con el filtro seleccionado.</p>
+      <a class="link" (click)="goFilter('all')">Ver todos los pedidos</a>
     </div>
   </ng-template>
 </div>

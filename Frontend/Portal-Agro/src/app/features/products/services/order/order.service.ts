@@ -1,58 +1,107 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { environment } from '../../../../../environments/environment.development';
 import { Observable } from 'rxjs';
-import { OrderCreateModel, CreateOrderResponse, OrderAcceptRequest, OrderConfirmRequest, OrderDetailModel, OrderListItemModel, OrderRejectRequest } from '../../models/order/order.model';
+import { environment } from '../../../../../environments/environment.development';
 
-@Injectable({
-  providedIn: 'root'
-})
+import {
+  CreateOrderResponse,
+  OrderAcceptRequest,
+  OrderConfirmRequest,
+  OrderDetailModel,
+  OrderListItemModel,
+  OrderRejectRequest,
+  OrderCreateModel,
+  RowVersionOnly,
+  UploadPaymentRequest,
+} from '../../models/order/order.model';
+import { MatColumnDef } from '@angular/material/table';
+
+@Injectable({ providedIn: 'root' })
 export class OrderService {
+  private http = inject(HttpClient);
+  private urlBase = environment.apiUrl + 'Order';
 
-   private http = inject(HttpClient);
-  private urlBase = environment.apiUrl + 'Order'; 
-
+  // ========== CREAR ORDEN (sin comprobante) ==========
   create(dto: OrderCreateModel): Observable<CreateOrderResponse> {
-    const fd = new FormData();
-    fd.append('ProductId', String(dto.productId));
-    fd.append('QuantityRequested', String(dto.quantityRequested));
-    fd.append('CityId', String(dto.cityId));
-    fd.append('PaymentImage', dto.paymentImage, dto.paymentImage.name);
-    fd.append('RecipientName', dto.recipientName.trim());
-    fd.append('ContactPhone', dto.contactPhone.trim());
-    fd.append('AddressLine1', dto.addressLine1.trim());
-    if (dto.addressLine2)    fd.append('AddressLine2', dto.addressLine2.trim());
-    if (dto.additionalNotes) fd.append('AdditionalNotes', dto.additionalNotes.trim());
-    return this.http.post<CreateOrderResponse>(this.urlBase, fd);
+    return this.http.post<CreateOrderResponse>(this.urlBase, dto);
   }
 
-  // Producer
+  // ========== SUBIR COMPROBANTE ==========
+  uploadPayment(code : string, req: UploadPaymentRequest): Observable<any> {
+    const fd = new FormData();
+    fd.append('RowVersion', req.rowVersion);
+    fd.append('PaymentImage', req.paymentImage, req.paymentImage.name);
+    return this.http.post<any>(`${this.urlBase}/${code}/payment`, fd);
+  }
+
+  // ========== LISTADOS / DETALLES ==========
+  // Productor
   getProducerOrders(): Observable<OrderListItemModel[]> {
     return this.http.get<OrderListItemModel[]>(this.urlBase);
   }
+
   getProducerPendingOrders(): Observable<OrderListItemModel[]> {
     return this.http.get<OrderListItemModel[]>(`${this.urlBase}/pending`);
   }
-  getDetailForProducer(id: number): Observable<OrderDetailModel> {
-    return this.http.get<OrderDetailModel>(`${this.urlBase}/${id}/for-producer`);
+
+  getDetailForProducer(code : string): Observable<OrderDetailModel> {
+    return this.http.get<OrderDetailModel>(
+      `${this.urlBase}/${code}/for-producer`
+    );
   }
 
-  // User
+  // Cliente
   getMine(): Observable<OrderListItemModel[]> {
     return this.http.get<OrderListItemModel[]>(`${this.urlBase}/mine`);
   }
-  getDetailForUser(id: number): Observable<OrderDetailModel> {
-    return this.http.get<OrderDetailModel>(`${this.urlBase}/${id}/for-user`);
-  }
-  confirmReceived(id: number, body: OrderConfirmRequest): Observable<any> {
-    return this.http.post<any>(`${this.urlBase}/${id}/confirm-received`, body);
+
+  getDetailForUser(code: string): Observable<OrderDetailModel> {
+    return this.http.get<OrderDetailModel>(`${this.urlBase}/${code}/for-user`);
   }
 
-  // Producer actions
-  acceptOrder(id: number, dto: OrderAcceptRequest): Observable<void> {
-    return this.http.post<void>(`${this.urlBase}/${id}/accept`, dto);
+  // ========== ACCIONES DEL CLIENTE ==========
+  confirmReceived(code : string, body: OrderConfirmRequest) {
+    return this.http.post<any>(`${this.urlBase}/${code}/confirm-received`, body);
   }
-  rejectOrder(id: number, dto: OrderRejectRequest): Observable<void> {
-    return this.http.post<void>(`${this.urlBase}/${id}/reject`, dto);
+
+  cancelByUser(code : string, rowVersion: string) {
+    return this.http.post<any>(
+      `${this.urlBase}/${code}/cancel`,
+      JSON.stringify(rowVersion),
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
+  // ========== ACCIONES DEL PRODUCTOR ==========
+  acceptOrder(code : string, dto: OrderAcceptRequest): Observable<any> {
+    return this.http.post<any>(`${this.urlBase}/${code}/accept`, dto);
+  }
+
+  rejectOrder(code : string, dto: OrderRejectRequest): Observable<any> {
+    return this.http.post<any>(`${this.urlBase}/${code}/reject`, dto);
+  }
+
+  markPreparing(code : string, rowVersion: string): Observable<any> {
+    return this.http.post<any>(
+      `${this.urlBase}/${code}/preparing`,
+      JSON.stringify(rowVersion),
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
+  markDispatched(code : string, rowVersion: string): Observable<any> {
+    return this.http.post<any>(
+      `${this.urlBase}/${code}/dispatched`,
+      JSON.stringify(rowVersion),
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+  }
+
+  markDelivered(code : string, rowVersion: string): Observable<any> {
+    return this.http.post<any>(
+      `${this.urlBase}/${code}/delivered`,
+      JSON.stringify(rowVersion),
+      { headers: { 'Content-Type': 'application/json' } }
+    );
   }
 }

@@ -1,10 +1,12 @@
+using Business.Services.BackgroundServices.Implements;
+using Business.Services.BackgroundServices.Options;
 using CloudinaryDotNet;
 using Entity.Domain.Models.Implements.Auth.Token;
-using Web.ProgramService;
+using Entity.Validation.Service;
+using Entity.Validations.interfaces;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using Entity.Validations.interfaces;
-using Entity.Validation.Service;
+using Web.ProgramService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,10 +48,27 @@ builder.Services.AddSingleton(cloudinary);
 //Services
 builder.Services.AddApplicationServices();
 
+
+
 //Database
 builder.Services.AddDatabase(builder.Configuration);
 
+//Background Services
+// Options
+builder.Services.Configure<ExpireAwaitingPaymentJobOptions>(
+    builder.Configuration.GetSection("Orders:ExpireAwaitingPaymentJob"));
 
+// BackgroundService
+builder.Services.AddHostedService<ExpireAwaitingPaymentBackgroundService>();
+
+builder.Services.Configure<AutoCompleteDeliveredJobOptions>(
+    builder.Configuration.GetSection("Orders:AutoCompleteDeliveredJob"));
+
+builder.Services.AddHostedService<AutoCompleteDeliveredBackgroundService>();
+
+
+//Cache
+builder.Services.AddOutputCachePolicies();
 
 
 var app = builder.Build();
@@ -84,7 +103,16 @@ app.UseAuthentication();
 // ?? 3. Después autorización
 app.UseAuthorization();
 
+<<<<<<< HEAD
 // ?? 4. Finalmente, los controladores 
+=======
+//cache
+app.UseOutputCache();
+// ?? 4. Finalmente, los controladores
+>>>>>>> fcfa30a8d964ccc030f2cb263560f21d68a43be7
 app.MapControllers();
+
+// ? MIGRACIONES MULTI-DB EN ARRANQUE
+MigrationManager.MigrateAllDatabases(app.Services, builder.Configuration);
 
 app.Run();

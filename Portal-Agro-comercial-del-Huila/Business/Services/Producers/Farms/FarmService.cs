@@ -15,6 +15,7 @@ using Entity.Infrastructure.Context;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Utilities.Custom.Code;
@@ -94,46 +95,75 @@ namespace Business.Services.Producers.Farms
             }
         }
 
+       
+
         public override async Task<bool> DeleteAsync(int id)
         {
             var entity = await _farmRepository.GetByIdAsync(id);
             if (entity == null)
             {
-                _logger.LogWarning("Intento de eliminar un producto inexistente con ID {Id}", id);
+                _logger.LogWarning("Intento de eliminar una finca inexistente con ID {Id}", id);
                 return false;
             }
 
-            await using var transaction = await _context.Database.BeginTransactionAsync();
-            try
-            {
-                var images = await _farmImageRepository.GetByFarmIdAsync(id);
+            // 1) Obtener publicIds (sin transacción)
+            var imgs = await _farmImageRepository.GetByFarmIdAsync(id);
+            var publicIds = imgs
+                .Select(i => i.PublicId)
+                .Where(pid => !string.IsNullOrWhiteSpace(pid))
+                .Distinct()
+                .ToList();
 
-                foreach (var image in images)
+            var strategy = _context.Database.CreateExecutionStrategy();
+            bool deleted = false;
+
+            // 2) Unidad reintetable: solo BD + transacción manual dentro
+            await strategy.ExecuteAsync(async () =>
+            {
+                await using var tx = await _context.Database.BeginTransactionAsync();
+                try
                 {
-                    await _cloudinaryService.DeleteAsync(image.PublicId);
-                    await _farmImageRepository.DeleteLogicalByPublicIdAsync(image.PublicId);
+                    // Borrado lógico de imágenes en BD
+                    foreach (var pid in publicIds)
+                    {
+                        await _farmImageRepository.DeleteLogicalByPublicIdAsync(pid);
+                    }
+
+                    // Borrado lógico de la finca
+                    deleted = await _farmRepository.DeleteLogicAsync(id);
+
+                    await _context.SaveChangesAsync();
+                    await tx.CommitAsync();
                 }
-                await _context.SaveChangesAsync();
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
+            });
 
-                var deleted = await _farmRepository.DeleteLogicAsync(id);
-                await _context.SaveChangesAsync();
-
-                if (deleted)
-                    _logger.LogInformation("Finca eliminada con ID {Id}", id);
-                else
-                    _logger.LogError("Error al eliminar la finca con ID {Id}", id);
-
-                await transaction.CommitAsync();
-
-                return deleted;
-            }
-            catch (Exception ex)
+            // 3) IO externo fuera de strategy/tx: eliminar en Cloudinary
+            foreach (var pid in publicIds)
             {
-                _logger.LogError(ex, "Error eliminando la finca ID {Id}", id);
-                await transaction.RollbackAsync();
-                throw;
+                try
+                {
+                    await _cloudinaryService.DeleteAsync(pid);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex,
+                        "Falló eliminación en Cloudinary para PublicId={PublicId} de la finca {FarmId}", pid, id);
+                }
             }
+
+            if (deleted)
+                _logger.LogInformation("Finca eliminada con ID {Id}", id);
+            else
+                _logger.LogError("Error al eliminar la finca con ID {Id}", id);
+
+            return deleted;
         }
+
 
         public async Task<FarmSelectDto> RegisterWithProducer(ProducerWithFarmRegisterDto dto, int userId)
         {
@@ -144,49 +174,97 @@ namespace Business.Services.Producers.Farms
             if (user.Producer != null)
                 throw new BusinessException("El usuario ya es productor");
 
-            // Reutiliza la misma regla que en CreateFarmAsync
             ValidateMaxImages(dto.Images?.Count ?? 0);
 
-            await using var transaction = await _context.Database.BeginTransactionAsync();
+            // Variables que necesitaremos fuera del bloque reintetable
+            Producer? producer = null;
+            Farm? farm = null;
+            List<FarmImage>? images = null;
+
+            var strategy = _context.Database.CreateExecutionStrategy();
+
+            // 1) Ejecutar todo como unidad reintetable (transacción incluida)
+            var result = await strategy.ExecuteAsync(async () =>
+            {
+                await using var transaction = await _context.Database.BeginTransactionAsync();
+
+                try
+                {
+                    // 1. Crear Productor
+                    producer = dto.Adapt<Producer>();
+                    producer!.Id = 0;
+                    producer.UserId = user.Id;
+                    producer.User = null;
+                    producer.Code = CodeGenerator.Generate(10);
+
+                    await _producerRepository.AddAsync(producer);
+                    await _context.SaveChangesAsync();
+
+                    // 1.1 Redes sociales
+                    if (dto.SocialLinks != null && dto.SocialLinks.Count > 0)
+                    {
+                        var duplicated = dto.SocialLinks
+                            .GroupBy(x => x.Network)
+                            .FirstOrDefault(g => g.Count() > 1);
+                        if (duplicated != null)
+                            throw new BusinessException($"Red social duplicada: {duplicated.Key}");
+
+                        var links = dto.SocialLinks
+                            .Select(sl =>
+                            {
+                                var url = Urls.NormalizeUrl(sl.Network, sl.Url);
+                                return new ProducerSocialLink
+                                {
+                                    ProducerId = producer!.Id,
+                                    Network = sl.Network,
+                                    Url = url
+                                };
+                            })
+                            .ToList();
+
+                        await _context.Set<ProducerSocialLink>().AddRangeAsync(links);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    // 2) Rol de productor
+                    await _rolUserRepository.AsignateRolProducer(user);
+                    await _context.SaveChangesAsync();
+
+                    // 3) Crear Finca (sin imágenes todavía)
+                    farm = dto.Adapt<Farm>();
+                    farm!.Id = 0;
+                    farm.ProducerId = producer!.Id;
+
+                    await _farmRepository.AddAsync(farm);
+                    await _context.SaveChangesAsync();
+
+                    // 4) Subir y mapear imágenes
+                    images = await UploadAndMapImagesAsync(dto.Images, farm.Id);
+                    if (images.Any())
+                    {
+                        await _farmImageRepository.AddImages(images);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    // 5) Commit
+                    await transaction.CommitAsync();
+
+                    // 6) DTO de salida coherente
+                    var dtoOut = farm.Adapt<FarmSelectDto>();
+                    dtoOut.Images = (images ?? new List<FarmImage>()).Adapt<List<FarmImageSelectDto>>();
+                    return dtoOut;
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            });
+
+            // 7) Generación/subida de QR fuera de la strategy (para no reintentar IO externo)
             try
             {
-                // 1) Crear Productor
-                // Usa Mapster para mantener consistencia con tu método nuevo
-                var producer = dto.Adapt<Producer>();
-                producer.Id = 0;                     // asegurar nuevo
-                producer.UserId = user.Id;           // evita tracking raro con navigation
-                producer.User = null;                // no adjuntar la entidad user al grafo
-                producer.Code = CodeGenerator.Generate(10);
-
-                await _producerRepository.AddAsync(producer);
-                await _context.SaveChangesAsync();   // necesitas el Id del producer
-
-                // 2) Asignar rol de productor (dentro de la misma transacción)
-                await _rolUserRepository.AsignateRolProducer(user);
-                await _context.SaveChangesAsync();
-
-                // 3) Crear Finca (sin imágenes todavía)
-                var farm = dto.Adapt<Farm>();
-                farm.Id = 0;                         // asegurar nuevo
-                farm.ProducerId = producer.Id;
-
-                await _farmRepository.AddAsync(farm);
-                await _context.SaveChangesAsync();   // necesitas el Id de la finca
-
-                // 4) Subir y mapear imágenes reutilizando tu rutina nueva
-                var images = await UploadAndMapImagesAsync(dto.Images, farm.Id);
-                if (images.Any())
-                {
-                    await _farmImageRepository.AddImages(images);
-                    await _context.SaveChangesAsync();
-                }
-
-                // 5) Commit
-                await transaction.CommitAsync();
-
-                // 5.1) === QR: generar PNG con QRCoder, subir a Cloudinary y guardar URL ===
-                //     (fuera de la transacción; si falla, NO rompemos el flujo)
-                try
+                if (producer != null)
                 {
                     var baseUrl = (_configuration["PublicBaseUrl"] ?? string.Empty).TrimEnd('/');
                     if (string.IsNullOrWhiteSpace(baseUrl))
@@ -195,14 +273,14 @@ namespace Business.Services.Producers.Farms
                     }
                     else
                     {
-                        var qrTargetUrl = $"{baseUrl}/p/{producer.Code}";
+                        var qrTargetUrl = $"{baseUrl}/home/product/profile/{producer.Code}";
                         var pngBytes = _qr.GeneratePng(qrTargetUrl);
 
-                        var folder = $"producers/{producer.Id}"; // quedará producers/{id}/qr_png
+                        var folder = $"producers/{producer.Id}";
                         var upload = await _cloudinaryService.UploadBytesAsync(
                             data: pngBytes,
                             folder: folder,
-                            publicId: "qr_png",                         // public_id ESTABLE → permite regenerar
+                            publicId: "qr_png",
                             fileNameWithExtension: $"qr_{producer.Code}.png",
                             contentType: "image/png",
                             overwrite: true
@@ -213,60 +291,73 @@ namespace Business.Services.Producers.Farms
                         await _context.SaveChangesAsync();
                     }
                 }
-                catch (Exception ex)
-                {
-                    _logger.LogWarning(ex, "Falló generación/subida de QR para productor {ProducerId}", producer.Id);
-                }
-                // 5.1) === fin QR ===
-
-                // 6) DTO de salida consistente con CreateFarmAsync
-                var result = farm.Adapt<FarmSelectDto>();
-                result.Images = images.Adapt<List<FarmImageSelectDto>>();
-                return result;
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
-                _logger.LogError(ex, "Error registrando productor y finca");
-                throw new BusinessException("Error al registrar la finca con el productor", ex);
+                _logger.LogWarning(ex, "Falló generación/subida de QR para productor {ProducerId}", producer?.Id);
+                // No romper el flujo principal por fallo del QR
             }
+
+            return result;
         }
+
 
         public async Task<FarmRegisterDto> CreateFarmAsync(FarmRegisterDto dto)
         {
             ValidateMaxImages(dto.Images?.Count ?? 0);
+
             var pid = await _producerRepository.GetIdProducer(dto.ProducerId)
                      ?? throw new BusinessException("El usuario no está registrado como productor.");
+
             var entity = dto.Adapt<Farm>();
             entity.ProducerId = pid;
 
-            await using var transaction = await _context.Database.BeginTransactionAsync();
+            var strategy = _context.Database.CreateExecutionStrategy();
+
+            // 1) Crear la finca dentro de la strategy + transacción manual
+            await strategy.ExecuteAsync(async () =>
+            {
+                await using var tx = await _context.Database.BeginTransactionAsync();
+                try
+                {
+                    await _farmRepository.AddAsync(entity);
+                    await _context.SaveChangesAsync(); // entity.Id ya disponible
+
+                    await tx.CommitAsync();
+                }
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
+            });
+
+            // 2) IO externo: subir imágenes fuera del bloque reintetable
+            List<FarmImage> images = new();
             try
             {
-
-                await _farmRepository.AddAsync(entity);
-                await _context.SaveChangesAsync();
-
-                var images = await UploadAndMapImagesAsync(dto.Images, entity.Id);
-                if (images.Any())
-                {
-                    await _farmImageRepository.AddImages(images);
-                    await _context.SaveChangesAsync();
-                }
-
-                await transaction.CommitAsync();
-
-                var result = entity.Adapt<FarmRegisterDto>();
-                //result.Images = images.Adapt<List<FarmImageSelectDto>>();
-                return result;
+                images = await UploadAndMapImagesAsync(dto.Images, entity.Id);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error creando producto");
-                await transaction.RollbackAsync();
-                throw;
+                _logger.LogWarning(ex, "Fallo al subir/mapear imágenes para la finca {FarmId}", entity.Id);
             }
+
+            // 3) Persistir metadatos de imágenes (solo BD) bajo strategy, sin transacción manual
+            if (images.Any())
+            {
+                await _context.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
+                {
+                    await _farmImageRepository.AddImages(images);
+                    await _context.SaveChangesAsync();
+                });
+            }
+
+            // 4) Resultado
+            var result = entity.Adapt<FarmRegisterDto>();
+            return result;
         }
+
 
         public async Task<IEnumerable<FarmSelectDto>> GetByProducer(int userId)
         {
@@ -302,41 +393,87 @@ namespace Business.Services.Producers.Farms
         public async Task<FarmSelectDto> UpdateFarmAsync(FarmUpdateDto dto)
         {
             var entity = await _farmRepository.GetByIdAsync(dto.Id)
-                ?? throw new Exception($"Product No se encontró el producto {dto.Id}");
+                ?? throw new BusinessException($"Finca no encontrada: {dto.Id}");
 
-            await using var transaction = await _context.Database.BeginTransactionAsync();
-            try
+            // Preparar datos de IO externo
+            var imagesToDelete = dto.ImagesToDelete?.Where(x => !string.IsNullOrWhiteSpace(x)).ToList() ?? new List<string>();
+            var filesToUpload = (dto.Images ?? Enumerable.Empty<IFormFile>()).Where(f => f?.Length > 0).ToList();
+
+            var strategy = _context.Database.CreateExecutionStrategy();
+
+            // ===== 1) Solo BD (strategy + tx manual DENTRO). Sin IO externo. =====
+            await strategy.ExecuteAsync(async () =>
             {
-                dto.Adapt(entity);
-
-                await _farmRepository.UpdateAsync(entity);
-
-                if (dto.ImagesToDelete?.Any() == true)
-                    await DeleteImagesAsync(dto.ImagesToDelete);
-
-                if (dto.Images?.Any() == true)
+                await using var tx = await _context.Database.BeginTransactionAsync();
+                try
                 {
-                    var validFiles = dto.Images.Where(f => f?.Length > 0).ToList();
+                    // 1.1 Escalares
+                    dto.Adapt(entity);
+                    await _farmRepository.UpdateAsync(entity);
 
+                    // 1.2 Borrado lógico de imágenes (NO Cloudinary aquí)
+                    if (imagesToDelete.Count > 0)
+                    {
+                        foreach (var pid in imagesToDelete)
+                            await _farmImageRepository.DeleteLogicalByPublicIdAsync(pid);
+                    }
+
+                    // 1.3 Validar cupo para nuevas imágenes con el conteo ACTUAL tras los borrados lógicos
                     var currentCount = (await _farmImageRepository.GetByFarmIdAsync(dto.Id)).Count;
-                    ValidateMaxImages(validFiles.Count + currentCount, currentCount);
+                    //ValidateMaxImages(filesToUpload.Count + currentCount, currentCount);
 
-                    var newImages = await UploadAndMapImagesAsync(validFiles, entity.Id);
-                    await _farmImageRepository.AddImages(newImages);
+                    await _context.SaveChangesAsync();
+                    await tx.CommitAsync();
                 }
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
+            });
 
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
-
-                return (await _farmRepository.GetByIdAsync(dto.Id))!.Adapt<FarmSelectDto>();
-            }
-            catch (Exception ex)
+            // ===== 2) IO externo FUERA (subida a Cloudinary) =====
+            List<FarmImage> newImages = new();
+            if (filesToUpload.Count > 0)
             {
-                _logger.LogError(ex, "Error actualizando finca ID {Id}", dto.Id);
-                await transaction.RollbackAsync();
-                throw;
+                try
+                {
+                    newImages = await UploadAndMapImagesAsync(filesToUpload, entity.Id); // sube a Cloudinary y crea entidades en memoria
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Fallo de subida de imágenes para finca {FarmId}", entity.Id);
+                }
             }
+
+            // ===== 3) Persistir metadatos de nuevas imágenes (solo BD), sin tx manual =====
+            if (newImages.Any())
+            {
+                await _context.Database.CreateExecutionStrategy().ExecuteAsync(async () =>
+                {
+                    await _farmImageRepository.AddImages(newImages);
+                    await _context.SaveChangesAsync();
+                });
+            }
+
+            // ===== 4) Borrar en Cloudinary (no romper si falla) =====
+            if (imagesToDelete.Count > 0)
+            {
+                foreach (var pid in imagesToDelete)
+                {
+                    try { await _cloudinaryService.DeleteAsync(pid); }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Falló eliminación en Cloudinary para PublicId={PublicId} (FarmId={FarmId})", pid, entity.Id);
+                    }
+                }
+            }
+
+            // ===== 5) Devolver estado actualizado =====
+            var updated = await _farmRepository.GetByIdAsync(dto.Id);
+            return updated!.Adapt<FarmSelectDto>();
         }
+
 
         #region Helpers
         private async Task<List<FarmImage>> UploadAndMapImagesAsync(IEnumerable<IFormFile>? files, int farmId)

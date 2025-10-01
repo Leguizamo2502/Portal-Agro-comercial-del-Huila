@@ -1,12 +1,12 @@
 // city-create.component.ts
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
 import { CityFormComponent } from '../city-form/city-form.component';
 import { CityRegisterModel } from '../../../models/city/city.model';
 import { CityService } from '../../../services/city/city.service';
 import { DepartmentService } from '../../../services/department/department.service';
 import { DepartmentSelectModel } from '../../../models/department/department.model';
+import Swal from 'sweetalert2';
 
 // lo que emite el form (sin id)
 type CityPayload = { name: string; DepartmentId: number };

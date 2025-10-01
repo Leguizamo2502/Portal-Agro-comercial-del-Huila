@@ -49,6 +49,11 @@ namespace Data.Service.Auth
             return await _dbSet.AnyAsync(u => u.Email == email && u.IsDeleted == false);
         }
 
+        public async Task<bool> ExistsByDocumentAsync(string identification)
+        {
+            return await _dbSet.AnyAsync(u=>u.Person.Identification == identification);
+        }
+
         public async Task<User?> GetByEmailAsync(string email)
         {
             return await _dbSet
@@ -89,6 +94,7 @@ namespace Data.Service.Auth
                 LastName = u.Person.LastName,
             };
         }
+
     }
  
 }

@@ -7,6 +7,7 @@
 
     namespace Entity.Domain.Models.Implements.Auth.Token
     {
+<<<<<<< HEAD
         public class CookieSettings
         {
             public string AccessTokenName { get; set; } = "access_token";
@@ -17,4 +18,13 @@
             public bool Secure { get; set; } = false;
             public SameSiteMode SameSite { get; set; } = SameSiteMode.Lax;
         }
+=======
+        public string AccessTokenName { get; set; } = "access_token";
+        public string RefreshTokenName { get; set; } = "refresh_token";
+        public string CsrfCookieName { get; set; } = "XSRF-TOKEN";
+        public string Path { get; set; } = "/";
+        public string? Domain { get; set; } = null;
+        public bool Secure { get; set; } = true; //true
+        public SameSiteMode SameSite { get; set; } = SameSiteMode.None; //none
+>>>>>>> fcfa30a8d964ccc030f2cb263560f21d68a43be7
     }

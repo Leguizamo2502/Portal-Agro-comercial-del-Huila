@@ -1,0 +1,96 @@
+/* ---------- Tarjeta / imágenes ---------- */
+.card {
+  border-radius: 1rem;
+}
+
+.farm-card, .product-card {
+  width: 12rem;
+  transition: transform 0.2s ease;
+}
+
+.farm-card:hover, .product-card:hover {
+  transform: translateY(-1px);
+}
+
+.farm-card img,
+.product-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+.img-profile {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* ---------- Contenedor principal ---------- */
+.profile-container {
+  max-width: 70rem;
+  margin: 0 auto;
+}
+
+/* ---------- Métricas (Material Chip) ---------- */
+/* Forzamos un contenedor flex centrado para el chip */
+.metrics {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: .25rem;
+  margin-bottom: .25rem;
+}
+
+/* Estética del chip */
+.metrics .mat-mdc-standard-chip {
+  font-weight: 600;
+  border-radius: 9999px; /* pill */
+  padding: 6px 10px;
+}
+
+/* Colores por confianza */
+.trust-low {
+  background: #fff3cd;      /* amarillo suave */
+  color: #8a6d3b;
+  border: 1px solid #ffe69c;
+}
+
+.trust-mid {
+  background: #e7f5ff;      /* azul suave */
+  color: #0c5460;
+  border: 1px solid #cfe8ff;
+}
+
+.trust-high {
+  background: #e8f5e9;      /* verde suave */
+  color: #1b5e20;
+  border: 1px solid #c8e6c9;
+}
+
+/* ---------- Banda secundaria (.saleNumber) ---------- */
+/* Corrige border, padding y width; centra con flex y auto-margin */
+.saleNumber{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  padding: .5rem .75rem;
+  background-color: #e8f5e9;   /* igual a trust-high */
+  color: #1b5e20;
+  border: 1px solid #c8e6c9;
+  border-radius: 9999px;
+  width: fit-content;          /* el contenido define el ancho */
+  margin: .5rem auto 0;        /* centra horizontalmente */
+  font-weight: 600;
+}
+
+/* Ajuste visual del icono en línea */
+.saleNumber mat-icon,
+.metrics mat-icon {
+  font-size: 20px;
+  line-height: 1;
+  vertical-align: middle;
+}

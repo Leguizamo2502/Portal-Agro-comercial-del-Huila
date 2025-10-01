@@ -1,3 +1,5 @@
+import { ProducerSocialCreateModel } from "../producer/producer.model";
+
 export interface FarmSelectModel {
   id: number;
   name: string;
@@ -13,6 +15,7 @@ export interface FarmSelectModel {
   producerId:number
   images: FarmImageSelectModel[];
 }
+
 
 export interface FarmImageSelectModel {
   id: number;
@@ -32,6 +35,8 @@ export interface FarmWithProducerRegisterModel {
 
   images: File[];
   cityId: number;
+
+   socialLinks?: ProducerSocialCreateModel[];
 }
 
 export interface FarmRegisterModel {

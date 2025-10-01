@@ -13,7 +13,9 @@ using Entity.Infrastructure.Context;
 using Mapster;
 using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Utilities.Custom.Code;
 using Utilities.Exceptions;
 using Utilities.Messaging.Interfaces;
 
@@ -30,6 +32,8 @@ namespace Business.Services.Orders
         private readonly IOrderEmailService _orderEmailService;
         private readonly IUserRepository _userRepository;
         private readonly ApplicationDbContext _db;
+        private readonly int _paymentUploadDeadlineHours;
+        private readonly int _deliveredConfirmDeadlineHours;
 
         public OrderService(
             IMapper mapper,
@@ -40,7 +44,9 @@ namespace Business.Services.Orders
             ApplicationDbContext db,
             IOrderEmailService orderEmailService,
             IUserRepository userRepository,
-            IProducerRepository producerRepository)
+            IProducerRepository producerRepository,
+            IConfiguration cfg)
+
 
         {
             _mapper = mapper;
@@ -52,56 +58,59 @@ namespace Business.Services.Orders
             _userRepository = userRepository;
             _db = db;
             _producerRepository = producerRepository;
+            var hours = cfg.GetValue<int>("Orders:PaymentUploadDeadlineHours", 24);
+            _paymentUploadDeadlineHours = Math.Clamp(hours, 1, 168);
+            var hours2 = cfg.GetValue<int>("Orders:DeliveredConfirmDeadlineHours", 48);
+            _deliveredConfirmDeadlineHours = Math.Clamp(hours2, 1, 336);
+
         }
 
+        /// <summary>
+        /// Creacion de orden sin comprobante
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        /// <exception cref="BusinessException"></exception>
         public async Task<int> CreateOrderAsync(int userId, OrderCreateDto dto)
         {
-            // 1) normalizar y validar DTO (evita basura/espacios)
-            NormalizeCreateDto(dto);     // ← normaliza primero
-            ValidateCreateDto(dto);      // ← valida después
+            // 1) Normalizar y validar (sin PaymentImage)
+            NormalizeCreateDto(dto);
+            ValidateCreateDto(dto);
 
-            // 2) producto disponible
+            // 2) Producto disponible
             var product = await GetAvailableProductAsync(dto.ProductId);
 
-            // 3) construir entidad de orden
+            //validacion contra autopedido
+            if (product.Producer != null && product.Producer.UserId == userId)
+            {
+                throw new BusinessException("No puedes comprar tus propios productos.");
+            }
+
+            // Validación de stock si aplica
+            if (product.Stock < dto.QuantityRequested)
+                throw new BusinessException("Stock insuficiente para la cantidad solicitada.");
+
+            // 3) Construcción de la entidad (snapshots + totales + estado inicial)
             var now = DateTime.UtcNow;
             var order = BuildOrderEntity(userId, dto, product, now);
 
-            string? uploadedPublicId = null;
+            // 4) Persistencia (sin uploads/Cloudinary en esta fase)
+            await _orderRepository.AddAsync(order);
+            await _db.SaveChangesAsync();
 
-            // 4) persistir + subir comprobante en transacción
-            await using var tx = await _db.Database.BeginTransactionAsync();
-            try
-            {
-                await _orderRepository.AddAsync(order);
-                await _db.SaveChangesAsync();
-
-                var upload = await _cloudinaryService.UploadOrderPaymentImageAsync(dto.PaymentImage, order.Id);
-                ApplyPaymentReceipt(order, upload, now, out uploadedPublicId);
-
-                await _orderRepository.UpdateOrderAsync(order);
-                await _db.SaveChangesAsync();
-
-                await tx.CommitAsync();
-            }
-            catch (BusinessException)
-            {
-                await tx.RollbackAsync();
-                await DeleteUploadedReceiptIfNeededAsync(uploadedPublicId);
-                throw;
-            }
-            catch
-            {
-                await tx.RollbackAsync();
-                await DeleteUploadedReceiptIfNeededAsync(uploadedPublicId);
-                throw new BusinessException("No se pudo crear la orden. Intenta de nuevo.");
-            }
-
-            // 5) correos (fuera de la transacción; nunca deben tumbar la creación)
+            // 5) Notificaciones (best-effort; no deben romper el flujo)
             await SendOrderCreatedEmailsSafelyAsync(order);
 
             return order.Id;
         }
+
+        /// <summary>
+        /// Listar órdenes de un productor (con snapshot y datos de entrega, sin usuario ni producto completos)
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="BusinessException"></exception>
         public async Task<IEnumerable<OrderListItemDto>> GetOrdersByProducerAsync(int userId)
         {
             var producerId = await _producerRepository.GetIdProducer(userId)
@@ -111,7 +120,12 @@ namespace Business.Services.Orders
             return _mapper.Map<IEnumerable<OrderListItemDto>>(entities);
         }
 
-
+        /// <summary>
+        /// Listar órdenes pendientes de revisión de un productor (con snapshot y datos de entrega, sin usuario ni producto completos)
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="BusinessException"></exception>
         public async Task<IEnumerable<OrderListItemDto>> GetPendingOrdersByProducerAsync(int userId)
         {
             var producerId = await _producerRepository.GetIdProducer(userId)
@@ -122,13 +136,21 @@ namespace Business.Services.Orders
         }
 
 
+       
 
-        public async Task<OrderDetailDto> GetOrderDetailForProducerAsync(int userId, int orderId)
+        /// <summary>
+        /// Listar órdenes en disputa de un productor (con snapshot y datos de entrega, sin usuario ni producto completos)
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        /// <exception cref="BusinessException"></exception>
+        public async Task<OrderDetailDto> GetOrderDetailForProducerAsync(int userId, string code)
         {
             var producerId = await _producerRepository.GetIdProducer(userId)
                              ?? throw new BusinessException("El usuario no está registrado como productor.");
 
-            var order = await _orderRepository.GetByIdAsync(orderId)
+            var order = await _orderRepository.GetByCode(code)
                        ?? throw new BusinessException("Orden no encontrada.");
 
             if (order.IsDeleted || !order.Active)
@@ -140,9 +162,17 @@ namespace Business.Services.Orders
             return _mapper.Map<OrderDetailDto>(order);
         }
 
-        public async Task<OrderDetailDto> GetOrderDetailForUserAsync(int userId, int orderId)
+
+        /// <summary>
+        /// Listar detalle de una orden para un usuario (con snapshot y datos de entrega, sin usuario ni producto completos)
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        /// <exception cref="BusinessException"></exception>
+        public async Task<OrderDetailDto> GetOrderDetailForUserAsync(int userId, string code)
         {
-            var order = await _orderRepository.GetByIdAsync(orderId)
+            var order = await _orderRepository.GetByCode(code)
                        ?? throw new BusinessException("Orden no encontrada.");
 
             if (order.IsDeleted || !order.Active)
@@ -154,50 +184,221 @@ namespace Business.Services.Orders
             return _mapper.Map<OrderDetailDto>(order);
         }
 
-        public async Task AcceptOrderAsync(int userId, int orderId, OrderAcceptDto dto)
+
+        public async Task AcceptOrderAsync(int userId, string code, OrderAcceptDto dto)
         {
             var producerId = await _producerRepository.GetIdProducer(userId)
                              ?? throw new BusinessException("El usuario no está registrado como productor.");
 
-            var order = await _orderRepository.GetByIdAsync(orderId)
+            var order = await _orderRepository.GetByCode(code)
+                       ?? throw new BusinessException("Orden no encontrada.");
+
+            if (order.IsDeleted || !order.Active)
+                throw new BusinessException("La orden no está disponible.");
+            if (order.ProducerIdSnapshot != producerId)
+                throw new BusinessException("No está autorizado para aceptar esta orden.");
+            if (order.Status != OrderStatus.PendingReview)
+                throw new BusinessException("Solo se pueden aceptar órdenes en estado pendiente.");
+
+            // Concurrencia
+            order.RowVersion = Convert.FromBase64String(dto.RowVersion);
+
+            var now = DateTime.UtcNow;
+            order.ProducerNotes = string.IsNullOrWhiteSpace(dto.Notes) ? null : dto.Notes.Trim();
+            order.ProducerDecisionAt = now;
+            order.Status = OrderStatus.AcceptedAwaitingPayment;
+            order.AcceptedAt = now;
+            order.AutoCloseAt = now.AddHours(_paymentUploadDeadlineHours);
+
+            var strategy = _db.Database.CreateExecutionStrategy();
+
+            await strategy.ExecuteAsync(async () =>
+            {
+                await using var tx = await _db.Database.BeginTransactionAsync();
+                try
+                {
+                    // 1) Intentar descontar stock (mismo DbContext/conn/tx)
+                    var ok = await _productRepository.TryDecrementStockAsync(order.ProductId, order.QuantityRequested);
+                    if (!ok)
+                        throw new BusinessException("Stock insuficiente o concurrencia detectada. Refresca e inténtalo de nuevo.");
+
+                    // 2) Persistir la orden
+                    await _orderRepository.UpdateOrderAsync(order);
+                    await _db.SaveChangesAsync();
+
+                    await tx.CommitAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    await tx.RollbackAsync();
+                    throw new BusinessException("La orden fue modificada por otro usuario. Refresca y vuelve a intentar.");
+                }
+                catch
+                {
+                    await tx.RollbackAsync();
+                    throw;
+                }
+            });
+
+            // Notificación fuera de la strategy/tx
+            var user = await _userRepository.GetContactUser(order.UserId)
+                      ?? throw new BusinessException("No se pudo obtener el contacto del usuario.");
+
+            await _orderEmailService.SendOrderAcceptedAwaitingPaymentToCustomer(
+                emailReceptor: user.Email,
+                orderId: order.Id,
+                productName: order.ProductNameSnapshot,
+                quantityRequested: order.QuantityRequested,
+                total: order.Total,
+                acceptedAtUtc: order.AcceptedAt!.Value,
+                paymentDeadlineUtc: order.AutoCloseAt!.Value
+            );
+        }
+
+
+        public async Task UploadPaymentAsync(int userId, string code, OrderUploadPaymentDto dto)
+        {
+            var order = await _orderRepository.GetByCode(code)
+                       ?? throw new BusinessException("Orden no encontrada.");
+
+            if (order.IsDeleted || !order.Active)
+                throw new BusinessException("La orden no está disponible.");
+            if (order.UserId != userId)
+                throw new BusinessException("No está autorizado para subir el comprobante de esta orden.");
+            if (order.Status != OrderStatus.AcceptedAwaitingPayment)
+                throw new BusinessException("Solo se puede subir comprobante cuando la orden está aceptada y pendiente de pago.");
+            if (order.AutoCloseAt.HasValue && DateTime.UtcNow > order.AutoCloseAt.Value)
+                throw new BusinessException("El plazo para subir el comprobante expiró.");
+            if (dto.PaymentImage == null || dto.PaymentImage.Length == 0)
+                throw new BusinessException("Debes adjuntar el comprobante de pago.");
+
+            // Concurrencia
+            order.RowVersion = Convert.FromBase64String(dto.RowVersion);
+
+            // === 1) IO externo: subir a Cloudinary FUERA de strategy/tx ===
+            string? uploadedPublicId = null;
+            string? uploadedUrl = null;
+            var now = DateTime.UtcNow;
+
+            try
+            {
+                var upload = await _cloudinaryService.UploadOrderPaymentImageAsync(dto.PaymentImage, order.Id);
+                uploadedPublicId = upload?.PublicId;
+                uploadedUrl = upload?.SecureUrl?.AbsoluteUri
+                              ?? throw new BusinessException("No se pudo obtener la URL del comprobante.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Fallo al subir comprobante (OrderId {OrderId})", order.Id);
+                throw new BusinessException("No se pudo subir el comprobante. Intenta nuevamente.");
+            }
+
+            // === 2) Persistencia: strategy + transacción DENTRO ===
+            var strategy = _db.Database.CreateExecutionStrategy();
+            try
+            {
+                await strategy.ExecuteAsync(async () =>
+                {
+                    await using var tx = await _db.Database.BeginTransactionAsync();
+                    try
+                    {
+                        order.PaymentImageUrl = uploadedUrl;
+                        order.PaymentUploadedAt = now;
+                        order.PaymentSubmittedAt = now;
+
+                        order.Status = OrderStatus.PaymentSubmitted;
+                        order.AutoCloseAt = null; // evita cierre automático
+
+                        await _orderRepository.UpdateOrderAsync(order);
+                        await _db.SaveChangesAsync();
+
+                        await tx.CommitAsync();
+                    }
+                    catch
+                    {
+                        await tx.RollbackAsync();
+                        throw;
+                    }
+                });
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                await DeleteUploadedReceiptIfNeededAsync(uploadedPublicId);
+                throw new BusinessException("La orden fue modificada por otro usuario. Refresca y vuelve a intentar.");
+            }
+            catch
+            {
+                await DeleteUploadedReceiptIfNeededAsync(uploadedPublicId);
+                throw;
+            }
+
+            // === 3) Notificar (best-effort, fuera de strategy/tx) ===
+            try
+            {
+                var producer = await _producerRepository.GetContactProducer(order.ProducerIdSnapshot)
+                               ?? throw new BusinessException("No se pudo obtener el contacto del productor.");
+
+                await _orderEmailService.SendPaymentSubmittedToProducer(
+                    emailReceptor: producer.Email,
+                    orderId: order.Id,
+                    productName: order.ProductNameSnapshot,
+                    quantityRequested: order.QuantityRequested,
+                    total: order.Total,
+                    uploadedAtUtc: order.PaymentUploadedAt!.Value
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed sending 'payment submitted' email (OrderId {OrderId})", order.Id);
+            }
+        }
+
+
+        public async Task MarkPreparingAsync(int userId, string code, string rowVersionBase64)
+        {
+            var producerId = await _producerRepository.GetIdProducer(userId)
+                             ?? throw new BusinessException("El usuario no está registrado como productor.");
+
+            var order = await _orderRepository.GetByCode(code)
                        ?? throw new BusinessException("Orden no encontrada.");
 
             if (order.IsDeleted || !order.Active)
                 throw new BusinessException("La orden no está disponible.");
 
             if (order.ProducerIdSnapshot != producerId)
-                throw new BusinessException("No está autorizado para aceptar esta orden.");
+                throw new BusinessException("No está autorizado para actualizar esta orden.");
 
-            if (order.Status != OrderStatus.PendingReview)
-                throw new BusinessException("Solo se pueden aceptar órdenes en estado pendiente.");
+            if (order.Status != OrderStatus.PaymentSubmitted)
+                throw new BusinessException("Solo se puede pasar a 'Preparando' desde 'Pago enviado'.");
 
-            if (string.IsNullOrWhiteSpace(order.PaymentImageUrl))
-                throw new BusinessException("No se puede aceptar sin comprobante de pago.");
+            // Concurrencia
+            order.RowVersion = Convert.FromBase64String(rowVersionBase64);
 
-            // Concurrencia: RowVersion desde request (Base64 → byte[])
-            order.RowVersion = Convert.FromBase64String(dto.RowVersion);
-
-            // Aplicar aceptación (sin costos de envío)
-            order.ProducerNotes = string.IsNullOrWhiteSpace(dto.Notes) ? null : dto.Notes.Trim();
-            order.ProducerDecisionAt = DateTime.UtcNow;
-            order.Status = OrderStatus.AcceptedAwaitingUser;
+            // Transición
+            order.Status = OrderStatus.Preparing;
 
             try
             {
                 await _orderRepository.UpdateOrderAsync(order);
                 await _db.SaveChangesAsync();
 
-                var user = await _userRepository.GetContactUser(order.UserId)
-                    ?? throw new BusinessException("No se pudo obtener el contacto del usuario.");
-
-                await _orderEmailService.SendOrderAcceptedToCustomer(
-                    emailReceptor: user.Email,
-                    orderId: order.Id,
-                    productName: order.ProductNameSnapshot,
-                    quantityRequested: order.QuantityRequested,
-                    total: order.Total,
-                    decisionAtUtc: order.ProducerDecisionAt!.Value
-                );
+                try
+                {
+                    var user = await _userRepository.GetContactUser(order.UserId)
+                              ?? throw new BusinessException("No se pudo obtener el contacto del usuario.");
+                    await _orderEmailService.SendOrderPreparingToCustomer(
+                        emailReceptor: user.Email,
+                        orderId: order.Id,
+                        productName: order.ProductNameSnapshot,
+                        quantityRequested: order.QuantityRequested,
+                        total: order.Total,
+                        preparingAtUtc: DateTime.UtcNow
+                    );
+                }
+                catch (Exception exMail)
+                {
+                    _logger.LogError(exMail, "Error enviando email 'preparación' (OrderId {OrderId})", order.Id);
+                }
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -205,12 +406,171 @@ namespace Business.Services.Orders
             }
         }
 
-        public async Task RejectOrderAsync(int userId, int orderId, OrderRejectDto dto)
+        public async Task MarkDispatchedAsync(int userId, string code, string rowVersionBase64)
         {
             var producerId = await _producerRepository.GetIdProducer(userId)
                              ?? throw new BusinessException("El usuario no está registrado como productor.");
 
-            var order = await _orderRepository.GetByIdAsync(orderId)
+            var order = await _orderRepository.GetByCode(code)
+                       ?? throw new BusinessException("Orden no encontrada.");
+
+            if (order.IsDeleted || !order.Active)
+                throw new BusinessException("La orden no está disponible.");
+
+            if (order.ProducerIdSnapshot != producerId)
+                throw new BusinessException("No está autorizado para actualizar esta orden.");
+
+            if (order.Status != OrderStatus.Preparing)
+                throw new BusinessException("Solo se puede pasar a 'Despachado' desde 'Preparando'.");
+
+            order.RowVersion = Convert.FromBase64String(rowVersionBase64);
+            order.Status = OrderStatus.Dispatched;
+
+            try
+            {
+                await _orderRepository.UpdateOrderAsync(order);
+                await _db.SaveChangesAsync();
+
+                try
+                {
+                    var user = await _userRepository.GetContactUser(order.UserId)
+                              ?? throw new BusinessException("No se pudo obtener el contacto del usuario.");
+                    await _orderEmailService.SendOrderDispatchedToCustomer(
+                        emailReceptor: user.Email,
+                        orderId: order.Id,
+                        productName: order.ProductNameSnapshot,
+                        quantityRequested: order.QuantityRequested,
+                        total: order.Total,
+                        dispatchedAtUtc: DateTime.UtcNow
+                    );
+                }
+                catch (Exception exMail)
+                {
+                    _logger.LogError(exMail, "Error enviando email 'despachado' (OrderId {OrderId})", order.Id);
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new BusinessException("La orden fue modificada por otro usuario. Refresca y vuelve a intentar.");
+            }
+        }
+
+        public async Task MarkDeliveredAsync(int userId, string code, string rowVersionBase64)
+        {
+            var producerId = await _producerRepository.GetIdProducer(userId)
+                             ?? throw new BusinessException("El usuario no está registrado como productor.");
+
+            var order = await _orderRepository.GetByCode(code)
+                       ?? throw new BusinessException("Orden no encontrada.");
+
+            if (order.IsDeleted || !order.Active)
+                throw new BusinessException("La orden no está disponible.");
+
+            if (order.ProducerIdSnapshot != producerId)
+                throw new BusinessException("No está autorizado para actualizar esta orden.");
+
+            if (order.Status != OrderStatus.Dispatched)
+                throw new BusinessException("Solo se puede marcar 'Entregado (pendiente de confirmación)' desde 'Despachado'.");
+
+            order.RowVersion = Convert.FromBase64String(rowVersionBase64);
+
+            // Transición + habilitar confirmación del comprador
+            var now = DateTime.UtcNow;
+            order.Status = OrderStatus.DeliveredPendingBuyerConfirm;
+            order.UserConfirmEnabledAt = now;
+            order.AutoCloseAt = now.AddHours(_deliveredConfirmDeadlineHours);
+
+            // Nota: si más adelante quieres autocerrar tras N horas sin confirmación,
+            // puedes reutilizar AutoCloseAt aquí y crear otro BackgroundService para completarla.
+            // order.AutoCloseAt = now.AddHours(cfgHorasAutoCierreEntrega);
+
+            try
+            {
+                await _orderRepository.UpdateOrderAsync(order);
+                await _db.SaveChangesAsync();
+
+                try
+                {
+                    var user = await _userRepository.GetContactUser(order.UserId)
+                              ?? throw new BusinessException("No se pudo obtener el contacto del usuario.");
+                    await _orderEmailService.SendOrderDeliveredToCustomer(
+                        emailReceptor: user.Email,
+                        orderId: order.Id,
+                        productName: order.ProductNameSnapshot,
+                        quantityRequested: order.QuantityRequested,
+                        total: order.Total,
+                        deliveredAtUtc: DateTime.UtcNow
+                    );
+                }
+                catch (Exception exMail)
+                {
+                    _logger.LogError(exMail, "Error enviando email 'entregado-pendiente-confirmación' (OrderId {OrderId})", order.Id);
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new BusinessException("La orden fue modificada por otro usuario. Refresca y vuelve a intentar.");
+            }
+        }
+
+        public async Task CancelByUserAsync(int userId, string code, string rowVersionBase64)
+        {
+            var order = await _orderRepository.GetByCode(code)
+                       ?? throw new BusinessException("Orden no encontrada.");
+
+            if (order.UserId != userId) throw new BusinessException("No autorizado.");
+            if (order.Status != OrderStatus.PendingReview)
+                throw new BusinessException("Solo se puede cancelar antes de que el productor decida.");
+
+            order.RowVersion = Convert.FromBase64String(rowVersionBase64);
+            order.Status = OrderStatus.CancelledByUser;
+            order.AutoCloseAt = null;
+
+            try
+            {
+                await _orderRepository.UpdateOrderAsync(order);
+                await _db.SaveChangesAsync();
+                try
+                {
+                    var producer = await _producerRepository.GetContactProducer(order.ProducerIdSnapshot)
+                                   ?? throw new BusinessException("No se pudo obtener el contacto del productor.");
+                    await _orderEmailService.SendOrderCancelledByUserToProducer(
+                        emailReceptor: producer.Email,
+                        orderId: order.Id,
+                        productName: order.ProductNameSnapshot,
+                        quantityRequested: order.QuantityRequested,
+                        cancelledAtUtc: DateTime.UtcNow
+                    );
+                }
+                catch (Exception exMail)
+                {
+                    _logger.LogError(exMail, "Error enviando email 'cancelado por cliente' (OrderId {OrderId})", order.Id);
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new BusinessException("La orden fue modificada por otro usuario. Refresca y vuelve a intentar.");
+            }
+        }
+
+
+
+
+
+        /// <summary>
+        /// Rechzar orden
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="orderId"></param>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        /// <exception cref="BusinessException"></exception>
+        public async Task RejectOrderAsync(int userId, string code, OrderRejectDto dto)
+        {
+            var producerId = await _producerRepository.GetIdProducer(userId)
+                             ?? throw new BusinessException("El usuario no está registrado como productor.");
+
+            var order = await _orderRepository.GetByCode(code)
                        ?? throw new BusinessException("Orden no encontrada.");
 
             if (order.IsDeleted || !order.Active)
@@ -253,9 +613,18 @@ namespace Business.Services.Orders
             }
         }
 
-        public async Task ConfirmOrderAsync(int userId, int orderId, OrderConfirmDto dto)
+
+        /// <summary>
+        /// Confirmar orden
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="orderId"></param>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        /// <exception cref="BusinessException"></exception>
+        public async Task ConfirmOrderAsync(int userId, string code, OrderConfirmDto dto)
         {
-            var order = await _orderRepository.GetByIdAsync(orderId)
+            var order = await _orderRepository.GetByCode(code)
                        ?? throw new BusinessException("Orden no encontrada.");
 
             if (order.IsDeleted || !order.Active)
@@ -264,8 +633,8 @@ namespace Business.Services.Orders
             if (order.UserId != userId)
                 throw new BusinessException("No está autorizado para confirmar esta orden.");
 
-            if (order.Status != OrderStatus.AcceptedAwaitingUser)
-                throw new BusinessException("Solo se pueden confirmar órdenes aceptadas por el productor.");
+            if (order.Status != OrderStatus.DeliveredPendingBuyerConfirm)
+                throw new BusinessException("Solo se pueden confirmar órdenes que el productor marcó como entregadas.");
 
             var decisionAt = order.ProducerDecisionAt
                              ?? throw new BusinessException("Orden inválida: falta la fecha de decisión del productor.");
@@ -316,6 +685,20 @@ namespace Business.Services.Orders
                         total: order.Total,
                         completedAtUtc: order.UserReceivedAt!.Value
                     );
+
+                    // Nuevo: correo al cliente
+                    var user = await _userRepository.GetContactUser(order.UserId)
+                              ?? throw new BusinessException("No se pudo obtener el contacto del usuario.");
+
+                    await _orderEmailService.SendOrderCompletedToCustomer(
+                        emailReceptor: user.Email,
+                        orderId: order.Id,
+                        productName: order.ProductNameSnapshot,
+                        quantityRequested: order.QuantityRequested,
+                        total: order.Total,
+                        completedAtUtc: order.UserReceivedAt!.Value,
+                        autoCompleted: false
+                    );
                 }
                 else if (order.Status == OrderStatus.Disputed) // answer == "no"
                 {
@@ -353,7 +736,6 @@ namespace Business.Services.Orders
         // Normaliza campos de entrada (espacios, nulls)
         private static void NormalizeCreateDto(OrderCreateDto dto)
         {
-            // Comentario: deja los strings en un formato coherente para validar y persistir
             dto.RecipientName = dto.RecipientName?.Trim() ?? string.Empty;
             dto.ContactPhone = dto.ContactPhone?.Trim() ?? string.Empty;
             dto.AddressLine1 = dto.AddressLine1?.Trim() ?? string.Empty;
@@ -364,17 +746,18 @@ namespace Business.Services.Orders
         // Valida reglas básicas de creación
         private static void ValidateCreateDto(OrderCreateDto dto)
         {
-            // Comentario: validaciones de negocio mínimas para crear una orden
             if (dto is null) throw new ArgumentNullException(nameof(dto));
+            if (dto.ProductId <= 0) throw new BusinessException("Producto inválido.");
             if (dto.QuantityRequested <= 0) throw new BusinessException("La cantidad solicitada debe ser mayor a cero.");
-            if (dto.PaymentImage is null) throw new BusinessException("Debes adjuntar el comprobante de pago.");
+            if (string.IsNullOrWhiteSpace(dto.RecipientName)) throw new BusinessException("El nombre del destinatario es obligatorio.");
+            if (string.IsNullOrWhiteSpace(dto.ContactPhone)) throw new BusinessException("El teléfono de contacto es obligatorio.");
             if (string.IsNullOrWhiteSpace(dto.AddressLine1)) throw new BusinessException("La dirección es obligatoria.");
+            if (dto.CityId <= 0) throw new BusinessException("La ciudad es obligatoria.");
         }
 
         // Obtiene un producto activo/no eliminado (sino, lanza BusinessException)
         private async Task<Product> GetAvailableProductAsync(int productId)
         {
-            // Comentario: garantiza que el producto existe y está disponible
             var product = await _productRepository.GetByIdAsync(productId)
                           ?? throw new BusinessException("Producto no encontrado.");
 
@@ -387,23 +770,23 @@ namespace Business.Services.Orders
         // Construye la entidad Order completa (sin envío: Total = Subtotal)
         private static Order BuildOrderEntity(int userId, OrderCreateDto dto, Product product, DateTime now)
         {
-            // Comentario: arma la orden con snapshots para inmutabilidad
             return new Order
             {
                 UserId = userId,
                 ProductId = product.Id,
+                Code = CodeGenerator.Generate(),
 
-                // Snapshots del producto
+                // Snapshots del producto (inmutables)
                 ProducerIdSnapshot = product.ProducerId,
                 ProductNameSnapshot = product.Name,
                 UnitPriceSnapshot = product.Price,
 
-                // Cantidad y totales (sin envío)
+                // Cantidad y totales (sin envío: Total = Subtotal)
                 QuantityRequested = dto.QuantityRequested,
                 Subtotal = product.Price * dto.QuantityRequested,
                 Total = product.Price * dto.QuantityRequested,
 
-                // Estado inicial
+                // Estado inicial del nuevo flujo
                 Status = OrderStatus.PendingReview,
 
                 // Datos de entrega
@@ -414,7 +797,7 @@ namespace Business.Services.Orders
                 CityId = dto.CityId,
                 AdditionalNotes = dto.AdditionalNotes,
 
-                // Metadatos
+                // Metadatos base
                 CreateAt = now,
                 Active = true,
                 IsDeleted = false
@@ -494,6 +877,9 @@ namespace Business.Services.Orders
                 _logger.LogError(ex, "Failed sending 'order created' emails (OrderId {OrderId})", order.Id);
             }
         }
+
+       
+
 
 
     }

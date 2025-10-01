@@ -1,7 +1,8 @@
-﻿using System;
-using Entity.Domain.Models.Implements.Producers; // Farm está en este namespace
+﻿using Entity.Domain.Models.Implements.Producers; // Farm está en este namespace
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using Utilities.Helpers.Code;
 
 namespace Entity.Infrastructure.DataInit.Producers.Farms
 {

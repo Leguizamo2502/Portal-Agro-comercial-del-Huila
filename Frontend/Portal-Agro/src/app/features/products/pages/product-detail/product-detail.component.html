@@ -44,6 +44,23 @@
             />
           </div>
         </div>
+        <!-- FAVORITO -->
+        <div *appIfLoggedIn>
+          <button
+            mat-icon-button
+            class="fav-btn"
+            [disabled]="disabledFavorite"
+            (click)="onFavoriteClick($event)"
+            (keydown.enter)="$event.stopPropagation()"
+            (keydown.space)="$event.stopPropagation(); $event.preventDefault()"
+            aria-label="Favorito"
+          >
+            <!-- usa product.isFavorite, NO @Input isFavorite -->
+            <mat-icon
+              [fontIcon]="product.isFavorite ? 'star' : 'star_border'"
+            ></mat-icon>
+          </button>
+        </div>
 
         <!-- Información del producto -->
         <div
@@ -77,6 +94,10 @@
             <div class="text">{{ product.unit }}</div>
           </div>
           <div class="mb-1 subtitle">
+            Stock:
+            <div class="text">{{ product.stock }}</div>
+          </div>
+          <div class="mb-1 subtitle">
             Precio:
             <div class="text">
               {{ product.price | currency : "COP" : "symbol" }}
@@ -96,7 +117,7 @@
             [type]="'button'"
             [icon]="'shopping_cart'"
             (click)="openCreateOrder()"
-            [disabled]="loadingProduct || (product.stock ?? 0) <= 0"
+            [disabled]="loadingProduct || product.stock <= 0"
           >
           </app-button>
         </div>

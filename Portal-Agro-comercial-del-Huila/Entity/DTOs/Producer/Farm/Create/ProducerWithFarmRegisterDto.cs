@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Entity.DTOs.Producer.Producer.Create;
+using Microsoft.AspNetCore.Http;
 
 namespace Entity.DTOs.Producer.Farm.Create
 {
     public class ProducerWithFarmRegisterDto
     {
-        
-        public string Description { get; set; } 
+        //producer
+        public string Description { get; set; }
+        public List<ProducerSocialCreateDto>? SocialLinks { get; set; }
 
-        
+        //farm
         public string Name { get; set; }
         public double Hectares { get; set; }
         public double Altitude { get; set; }

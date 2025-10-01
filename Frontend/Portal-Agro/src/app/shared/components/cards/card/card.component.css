@@ -5,7 +5,7 @@
   flex-direction: column;
   height: 100%;
   height: 300px;
-  
+
   flex: 1 1 250px;
   width: 13rem;
   border: 1px solid #e0e0e0;
@@ -67,7 +67,7 @@
   height: 100%;
   object-fit: contain;
   display: block;
-  transition: transform 0.3s ease; 
+  transition: transform 0.3s ease;
 }
 
 /* 4) Título: evita el truncado agresivo y permite 2 líneas */
@@ -144,5 +144,24 @@
   }
   .price {
     font-size: 16px;
+  }
+
+  /* Evita hover/animaciones durante loading */
+  .product-card.loading,
+  .product-card.loading * {
+    cursor: default !important;
+    pointer-events: none;
+  }
+
+  .product-card.loading .card-image {
+    transform: none !important;
+  }
+
+  /* Separadores rápidos para placeholders */
+  .mb-2 {
+    margin-bottom: 0.5rem;
+  }
+  .mb-3 {
+    margin-bottom: 0.75rem;
   }
 }

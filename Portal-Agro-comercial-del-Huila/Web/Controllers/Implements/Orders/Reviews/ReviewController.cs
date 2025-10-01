@@ -55,7 +55,7 @@ namespace Web.Controllers.Implements.Orders.Reviews
                 var result = await _service.CreateReviewAsync(dto, userId);
                 return Ok(result);
             }
-            catch (ValidationException ex)
+            catch (BusinessException ex)
             {
                 _logger.LogWarning(ex, "Validación fallida al agregar");
                 return BadRequest(new { IsSucces = false, message = ex.Message });

@@ -13,8 +13,16 @@ import { FavoriteService } from '../../../services/favorite/favorite.service';
 export class ContainerCardComponent {
   @Input() title = 'Últimos Agregados';
   @Input() showHeader = true;
-  @Input() showFavorite = true; // <- define si el card muestra el botón
+  @Input() showFavorite = false; 
   @Input({ required: true }) products: ProductSelectModel[] = [];
 
+  //loading
+  @Input() loading = false;
+  @Input() skeletonCount = 6;
+
   trackById = (_: number, p: ProductSelectModel) => p.id;
+
+  get skeletons(): number[] {
+    return Array.from({ length: this.skeletonCount });
+  }
 }

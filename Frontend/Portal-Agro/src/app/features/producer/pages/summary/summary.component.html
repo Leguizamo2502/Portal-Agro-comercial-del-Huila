@@ -1,8 +1,21 @@
+<<<<<<< HEAD
 
+=======
+<h1 class="title top">Resumen</h1>
+<p class="subtext">
+  Vista general de tu desempeño como productor. Usa las tarjetas para navegar a
+  la lista filtrada.
+</p>
+>>>>>>> fcfa30a8d964ccc030f2cb263560f21d68a43be7
 
-<div class="container">
-    <h1 class="title">Resumen</h1>
+<div class="btns">
+  <app-button
+    [type]="'button'"
+    [text]="'Ver mi perfil'"
+    [redirectTo]="`/home/product/profile/${codeProducer}`"
+  ></app-button>
 
+<<<<<<< HEAD
 <h1 class="title top">Resumen</h1>
 
 
@@ -29,18 +42,91 @@
     [queryParams]="{ status: 'all' }"
   >
   </app-stat-card>
+=======
+  <app-button
+    [type]="'button'"
+    [text]="'Actualizar mi perfil'"
+    (clicked)="updateProfile()"
+  ></app-button>
+>>>>>>> fcfa30a8d964ccc030f2cb263560f21d68a43be7
 </div>
 
-<div class="row mt-4">
-  <div class="col-md-6 col-sm-8">
-    <div class="chart-container">
-      <canvas
-        baseChart
-        [data]="barChartData"
-        [options]="barChartOptions"
-        [type]="'bar'"
+<section class="section">
+  <header class="section-header">
+    <h2 class="subtitle">Estado de los pedidos</h2>
+    <nav class="actions">
+      <a
+        [routerLink]="['/account/producer/orders']"
+        [queryParams]="{ status: 'pending' }"
+        >Ver pendientes</a
       >
-      </canvas>
+      <a
+        [routerLink]="['/account/producer/orders']"
+        [queryParams]="{ status: 'all' }"
+        >Ver todos</a
+      >
+    </nav>
+  </header>
+  <p class="text">Resumen rápido de pedidos totales y pendientes.</p>
+
+  <div class="cont-stat-card d-flex flex-wrap">
+    <app-stat-card
+      icon="inventory_2"
+      text="Total pedidos"
+      [count]="totalOrders"
+      color="info"
+      [loading]="loading"
+      [clickable]="true"
+      [to]="['/account/producer/orders']"
+      [queryParams]="{ status: 'all' }"
+    >
+    </app-stat-card>
+
+    <!-- <app-stat-card
+      icon="check_circle"
+      text="Confirmados"
+      [count]="confirmedOrders"
+      color="success"
+      [loading]="loading"
+      [clickable]="true"
+      [to]="['/account/producer/orders']"
+      [queryParams]="{ status: 'all' }">
+    </app-stat-card> -->
+
+    <app-stat-card
+      icon="hourglass_empty"
+      text="Pendientes"
+      [count]="pendingOrders"
+      color="warning"
+      [loading]="loading"
+      [clickable]="true"
+      [to]="['/account/producer/orders']"
+      [queryParams]="{ status: 'pending' }"
+    >
+    </app-stat-card>
+  </div>
+</section>
+
+<section class="section">
+  <header class="section-header">
+    <h2 class="subtitle">Productos más vendidos</h2>
+  </header>
+  <p class="text">
+    Productos con mayor número de pedidos completados. Útil para priorizar
+    inventario y promoción.
+  </p>
+
+  <div class="row mt-4">
+    <div class="col-md-8 col-sm-10">
+      <div class="chart-container">
+        <canvas
+          baseChart
+          [data]="barChartData"
+          [options]="barChartOptions"
+          [type]="'bar'"
+        >
+        </canvas>
+      </div>
     </div>
   </div>
-</div>
+</section>

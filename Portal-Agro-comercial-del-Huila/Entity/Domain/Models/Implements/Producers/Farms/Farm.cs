@@ -2,7 +2,6 @@
 using Entity.Domain.Models.Base;
 using Entity.Domain.Models.Implements.Location;
 using Entity.Domain.Models.Implements.Producers.Farms;
-using Entity.Domain.Models.Implements.Producers.Products;
 
 namespace Entity.Domain.Models.Implements.Producers
 {

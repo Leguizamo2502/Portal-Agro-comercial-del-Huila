@@ -34,9 +34,9 @@ import { finalize, switchMap, take } from 'rxjs/operators';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent implements OnInit{
+export class LoginComponent implements OnInit {
   ngOnInit(): void {
-    console.log("holalogin")
+    console.log('holalogin');
   }
   public fb = inject(FormBuilder);
   private _servicio = inject(AuthService);
@@ -83,56 +83,56 @@ export class LoginComponent implements OnInit{
   }
 
   login() {
-  if (this.formLogin.invalid || this.loading) return;
+    if (this.formLogin.invalid || this.loading) return;
 
-  const objeto: LoginModel = {
-    email: this.formLogin.value.email!,
-    password: this.formLogin.value.password!,
-  };
+    const objeto: LoginModel = {
+      email: this.formLogin.value.email!,
+      password: this.formLogin.value.password!,
+    };
 
-  this.loading = true;
+    this.loading = true;
 
-  // Muestra alerta con spinner
-  Swal.fire({
-    title: 'Iniciando sesión...',
-    text: 'Por favor espera',
-    allowOutsideClick: false,
-    didOpen: () => {
-      Swal.showLoading();
-    },
-  });
-
-  this._servicio
-    .Login(objeto)
-    .pipe(
-      take(1),
-      switchMap(() => this._authState.loadMe()),
-      finalize(() => (this.loading = false))
-    )
-    .subscribe({
-      next: (me) => {
-        if (!me) {
-          Swal.fire({
-            icon: 'error',
-            title: 'No se pudo cargar tu sesión',
-            text: 'Intenta nuevamente.',
-          });
-          return;
-        }
-        this._router.navigateByUrl('/home/inicio');
-        Swal.fire({
-          icon: 'success',
-          title: 'Éxito',
-          text: 'Inicio de sesión exitoso.',
-        });
-      },
-      error: (err) => {
-        const msg =
-          err?.status === 401
-            ? 'Credenciales inválidas.'
-            : err?.error?.message || 'No se pudo iniciar sesión.';
-        Swal.fire({ icon: 'error', title: 'Oops...', text: msg });
+    // Muestra alerta con spinner
+    Swal.fire({
+      title: 'Iniciando sesión...',
+      text: 'Por favor espera',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
       },
     });
-}
+
+    this._servicio
+      .Login(objeto)
+      .pipe(
+        take(1),
+        switchMap(() => this._authState.loadMe()),
+        finalize(() => (this.loading = false))
+      )
+      .subscribe({
+        next: (me) => {
+          if (!me) {
+            Swal.fire({
+              icon: 'error',
+              title: 'No se pudo cargar tu sesión',
+              text: 'Intenta nuevamente.',
+            });
+            return;
+          }
+          this._router.navigateByUrl('/home');
+          Swal.fire({
+            icon: 'success',
+            title: 'Éxito',
+            text: 'Inicio de sesión exitoso.',
+          });
+        },
+        error: (err) => {
+          const msg =
+            err?.status === 401
+              ? 'Credenciales inválidas.'
+              : err?.error?.message || 'No se pudo iniciar sesión.';
+          Swal.fire({ icon: 'error', title: 'Oops...', text: msg });
+        },
+      });
+  }
 }

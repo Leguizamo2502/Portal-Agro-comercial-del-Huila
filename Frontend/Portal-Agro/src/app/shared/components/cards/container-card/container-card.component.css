@@ -9,15 +9,17 @@
   box-sizing: content-box;
 }
 
-/* título */
-/* .section-title {
-  font-size: 20px;
-  font-weight: bold;
-  color: #6d4c41;
-  margin-bottom: 8px;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 4px;
-} */
+/* container-card.component.css (opcional de apoyo) */
+.product-section .title {
+  margin: 0 0 12px 0;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+.empty-hint {
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
 
 /* carrusel horizontal */
 .product-container {

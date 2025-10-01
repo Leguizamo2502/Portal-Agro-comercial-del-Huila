@@ -210,6 +210,55 @@ namespace Data.Service.Producers.Products
                 .ToListAsync();
         }
 
+        public async Task<bool> UpdateStock(int productId, int newStock)
+        {
+            var entity = await _dbSet.FirstOrDefaultAsync(p => p.Id == productId && !p.IsDeleted);
+            if (entity == null) return false;
+            entity.Stock = newStock;
+            return await _context.SaveChangesAsync() > 0;
+        }
 
+        public async Task<bool> TryDecrementStockAsync(int productId, int quantity)
+        {
+            var product = await _dbSet
+                .Where(p => p.Id == productId && p.Active && !p.IsDeleted)
+                .FirstOrDefaultAsync();
+
+            if (product == null)
+                return false;
+
+            if (product.Stock < quantity)
+                return false; // No hay suficiente stock
+
+            product.Stock -= quantity;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return false;
+            }
+        }
+
+        public async Task<Product?> GetByIdSmall(int id)
+        {
+            var product = await _dbSet
+                .Include(p=>p.Producer)
+                    .ThenInclude(pr => pr.User)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (product != null)
+            {
+                // Por si acaso, reforzamos el filtro de imágenes no borradas
+                product.ProductImages = product.ProductImages
+                    .Where(pi => !pi.IsDeleted)
+                    .ToList();
+            }
+
+            return product;
+        }
     }
 }

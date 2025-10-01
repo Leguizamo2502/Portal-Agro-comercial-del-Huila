@@ -1,47 +1,109 @@
-<!-- card.component.html (cambios clave marcados) -->
-<mat-card class="product-card" role="button" tabindex="0" (click)="onDetail(product)"
-  (keydown.enter)="onDetail(product)" (keydown.space)="onDetail(product); $event.preventDefault()">
-  <!-- FAVORITO -->
+<!-- card.component.html -->
+<mat-card
+  class="product-card"
+  [class.loading]="loading"
+  [attr.aria-busy]="loading"
+  role="group"
+  tabindex="0"
+  (click)="onDetail(product)"
+  (keydown.enter)="onDetail(product)"
+  (keydown.space)="onDetail(product); $event.preventDefault()"
+>
+
+  <!-- Favorito -->
   <div *appIfLoggedIn>
-    <button *ngIf="showFavorite" mat-icon-button class="fav-btn" [disabled]="disabledFavorite"
-      (click)="onFavoriteClick($event)" (keydown.enter)="$event.stopPropagation()"
-      (keydown.space)="$event.stopPropagation(); $event.preventDefault()" aria-label="Favorito">
-      <!-- usa product.isFavorite, NO @Input isFavorite -->
-      <mat-icon [fontIcon]="product.isFavorite ? 'star' : 'star_border'"></mat-icon>
+    <button
+      *ngIf="showFavorite"
+      mat-icon-button
+      class="fav-btn"
+      [disabled]="disabledFavorite"
+      (click)="onFavoriteClick($event)"
+      (keydown.enter)="$event.stopPropagation()"
+      (keydown.space)="$event.stopPropagation(); $event.preventDefault()"
+      aria-label="Favorito"
+    >
+      <ng-container *ngIf="!loading; else favSkeleton">
+        <mat-icon [fontIcon]="product.isFavorite ? 'star' : 'star_border'"></mat-icon>
+      </ng-container>
+      <ng-template #favSkeleton>
+        <app-skeleton [circle]="true" width="20px" height="20px"></app-skeleton>
+      </ng-template>
     </button>
   </div>
 
-
-  <!-- resto igual -->
+  <!-- Imagen -->
   <div class="image-wrap">
-    <img class="card-image" [src]="imageUrl" alt="Imagen del producto" (error)="onImgError($event)" />
+    <ng-container *ngIf="!loading; else imgSkeleton">
+      <img
+        class="card-image"
+        [src]="imageUrl"
+        alt="Imagen del producto"
+        (error)="onImgError($event)"
+      />
+    </ng-container>
+    <ng-template #imgSkeleton>
+      <app-skeleton width="100%" height="100%"></app-skeleton>
+    </ng-template>
   </div>
 
   <mat-card-content class="content">
-    <h3 class="title line-2" [title]="product.name">{{ product.name }}</h3>
+    <!-- Título -->
+    <ng-container *ngIf="!loading; else titleSkeleton">
+      <h3 class="title line-2" [title]="product.name">{{ product.name }}</h3>
+    </ng-container>
+    <ng-template #titleSkeleton>
+      <app-skeleton width="90%" height="20px" class="mb-2"></app-skeleton>
+    </ng-template>
 
-    <p class="info-row">
-      <mat-icon fontIcon="person" color="primary" aria-hidden="true"></mat-icon>
-      {{ product.personName }}
-    </p>
+    <!-- Persona -->
+    <ng-container *ngIf="!loading; else personSkeleton">
+      <p class="info-row">
+        <mat-icon fontIcon="person" aria-hidden="true"></mat-icon>
+        {{ product.personName }}
+      </p>
+    </ng-container>
+    <ng-template #personSkeleton>
+      <app-skeleton width="65%" height="16px" class="mb-2"></app-skeleton>
+    </ng-template>
 
-    <p class="info-row">
-      <mat-icon fontIcon="place" color="primary" aria-hidden="true"></mat-icon>
-      {{ product.cityName }}, {{ product.departmentName }}
-    </p>
+    <!-- Ubicación -->
+    <ng-container *ngIf="!loading; else placeSkeleton">
+      <p class="info-row">
+        <mat-icon fontIcon="place" aria-hidden="true"></mat-icon>
+        {{ product.cityName }}, {{ product.departmentName }}
+      </p>
+    </ng-container>
+    <ng-template #placeSkeleton>
+      <app-skeleton width="80%" height="16px" class="mb-2"></app-skeleton>
+    </ng-template>
 
-    <p class="price">
-      ${{ product.price | number:'1.0-0' }}
-    </p>
+    <!-- Precio -->
+    <ng-container *ngIf="!loading; else priceSkeleton">
+      <p class="price">${{ product.price | number : '1.0-0' }}</p>
+    </ng-container>
+    <ng-template #priceSkeleton>
+      <app-skeleton width="40%" height="18px" class="mb-3"></app-skeleton>
+    </ng-template>
 
-    <div *ngIf="showActions" class="actions">
+    <!-- Acciones -->
+    <div *ngIf="showActions && !loading" class="actions">
       <button mat-icon-button color="primary" (click)="onEditClick($event)" aria-label="Editar producto">
         <mat-icon class="icon-edit">edit</mat-icon>
       </button>
-
+      <button mat-icon-button color="accent" (click)="onEditStockClick($event)" aria-label="Actualizar stock">
+        <mat-icon>inventory_2</mat-icon>
+      </button>
       <button mat-icon-button color="warn" (click)="onDeleteClick($event)" aria-label="Eliminar producto">
         <mat-icon class="icon-delete">delete</mat-icon>
       </button>
     </div>
+
+    <ng-container *ngIf="showActions && loading">
+      <div class="actions">
+        <app-skeleton width="36px" height="36px"></app-skeleton>
+        <app-skeleton width="36px" height="36px"></app-skeleton>
+        <app-skeleton width="36px" height="36px"></app-skeleton>
+      </div>
+    </ng-container>
   </mat-card-content>
 </mat-card>

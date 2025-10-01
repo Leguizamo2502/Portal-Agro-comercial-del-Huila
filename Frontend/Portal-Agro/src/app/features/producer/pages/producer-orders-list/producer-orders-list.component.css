@@ -58,3 +58,12 @@
   padding: 32px; border: 1px dashed #cbd5e1; border-radius: 12px; text-align: center; color: #64748b;
 }
 .empty mat-icon { display: block; margin: 0 auto 6px; color: #94a3b8; }
+
+/* producer-orders-list.component.css (añade estas clases) */
+.title-wrap { display:flex; align-items:center; gap:.5rem; }
+.badge { background:#eef2ff; color:#3730a3; padding:.15rem .5rem; border-radius:999px; font-size:.75rem; }
+.hint { margin:.5rem 0 1rem; color:#6b7280; }
+.filters .chip { display:inline-flex; align-items:center; gap:.35rem; padding:.4rem .7rem; border-radius:999px; border:1px solid #e5e7eb; background:#fff; cursor:pointer; }
+.filters .chip.active { border-color:#2563eb; background:#eff6ff; }
+.filters .chip .count { background:#111827; color:#fff; border-radius:999px; padding:0 .35rem; font-size:.7rem; }
+.empty .link { color:#2563eb; text-decoration:none; }

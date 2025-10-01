@@ -12,7 +12,7 @@ namespace Utilities.Helpers.Auth
             if (claim is null)
                 throw new UnauthorizedAccessException("No se encontró el userId en el token.");
             if (!int.TryParse(claim.Value, out var userId))
-                throw new UnauthorizedAccessException("El userId del token no es válido.");
+                throw new UnauthorizedAccessException("El userId del token no es válido, intenta de nuevo.");
             return userId;
         }
 

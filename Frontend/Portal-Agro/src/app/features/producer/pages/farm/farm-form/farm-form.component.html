@@ -24,6 +24,41 @@
           </mat-form-field>
         </div>
 
+        <div *ngIf="createWithProducer" class="producer-socials">
+  <div class="header-row">
+    <h4>Redes sociales (opcional)</h4>
+    <button mat-stroked-button color="primary" type="button" (click)="addSocialLink()">
+      <mat-icon>add</mat-icon>
+      Añadir red
+    </button>
+  </div>
+
+  <div class="social-row" *ngFor="let sl of socialLinksControls; let i = index" [formGroup]="sl">
+    <mat-form-field appearance="outline" class="w-40">
+      <mat-label>Red</mat-label>
+      <mat-select formControlName="network">
+        <mat-option [value]="SocialNetwork.Website">Website</mat-option>
+        <mat-option [value]="SocialNetwork.Facebook">Facebook</mat-option>
+        <mat-option [value]="SocialNetwork.Instagram">Instagram</mat-option>
+        <mat-option [value]="SocialNetwork.Whatsapp">WhatsApp</mat-option>
+        <mat-option [value]="SocialNetwork.X">X (Twitter)</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-60">
+      <mat-label>URL o usuario</mat-label>
+      <input matInput formControlName="url" maxlength="512" placeholder="https://..., @usuario, +57..."/>
+      <mat-hint align="end">{{ sl.get('url')?.value?.length || 0 }}/512</mat-hint>
+    </mat-form-field>
+
+    <button mat-icon-button color="warn" type="button" (click)="removeSocialLink(i)" matTooltip="Quitar">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+
+  <p class="muted small">Puedes dejar este apartado vacío.</p>
+</div>
+
         <div class="info">
           <h3>{{ isEdit ? 'Editar finca' : 'Nueva finca' }}</h3>
           <span>Complete la información general</span>

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Utilities.Messaging.Implements
+﻿namespace Utilities.Messaging.Implements
 {
     public partial class OrderEmailService
     {

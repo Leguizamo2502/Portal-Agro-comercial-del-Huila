@@ -31,7 +31,7 @@ export const PRODUCER_ROUTES: Routes = [
           ).then((m) => m.ProducerOrdersListComponent),
       },
       {
-        path: 'orders/:id',
+        path: 'orders/:code',
         title: 'Detalle Orden',
         loadComponent: () =>
           import(

@@ -1,6 +1,5 @@
 <div class="form-wrapper-transparent">
   <mat-horizontal-stepper [linear]="true">
-
     <!-- Paso 1: Producto -->
     <mat-step [stepControl]="productGroup">
       <form [formGroup]="productGroup">
@@ -40,10 +39,21 @@
         <div class="row-2">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Cantidad</mat-label>
-            <input matInput type="number" formControlName="quantityRequested" required min="1" [max]="data.stock" />
+            <input
+              matInput
+              type="number"
+              formControlName="quantityRequested"
+              required
+              min="1"
+              [max]="data.stock"
+            />
             <mat-hint>Máximo {{ data.stock }}</mat-hint>
-            <mat-error *ngIf="productGroup.get('quantityRequested')?.hasError('positiveInt')">Debe ser mayor a 0</mat-error>
-            <mat-error *ngIf="productGroup.get('quantityRequested')?.hasError('max')">Excede stock</mat-error>
+            <mat-error *ngIf="productGroup.get('quantityRequested')?.hasError('positiveInt')">
+              Debe ser mayor a 0
+            </mat-error>
+            <mat-error *ngIf="productGroup.get('quantityRequested')?.hasError('max')">
+              Excede stock
+            </mat-error>
           </mat-form-field>
 
           <div class="totals-box">
@@ -122,40 +132,12 @@
 
         <div class="actions space-between">
           <app-button text="Anterior" color="secondary" [stepperAction]="'previous'"></app-button>
-          <app-button text="Siguiente" color="primary" [disabled]="deliveryGroup.invalid" [stepperAction]="'next'">
-          </app-button>
-        </div>
-      </form>
-    </mat-step>
-
-    <!-- Paso 3: Comprobante -->
-    <mat-step [stepControl]="paymentGroup">
-      <form [formGroup]="paymentGroup">
-        <ng-template matStepLabel>Comprobante</ng-template>
-
-        <div class="info">
-          <h3>Comprobante de pago</h3>
-          <span>Formatos: JPG, PNG, WEBP · Máx {{ MAX_FILE_MB }} MB</span>
-        </div>
-
-        <div class="drop-zone" [class.dragover]="false" (click)="fileInput.click()">
-          <mat-icon>cloud_upload</mat-icon>
-          <p>Haz clic para seleccionar una imagen</p>
-          <small>El archivo se enviará como multipart/form-data</small>
-          <input #fileInput type="file" accept="image/*" hidden (change)="onFilePicked(fileInput.files)" />
-        </div>
-
-        <div class="preview" *ngIf="paymentPreview">
-          <img [src]="paymentPreview" alt="Comprobante" />
-          <button mat-icon-button color="warn" class="remove-btn" (click)="removeFile()">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
-
-        <div class="actions space-between">
-          <app-button text="Anterior" color="secondary" [stepperAction]="'previous'"></app-button>
-          <app-button text="Crear pedido" color="primary"
-                      [disabled]="isSubmitting || paymentGroup.invalid" (clicked)="submit()">
+          <app-button
+            text="Crear pedido"
+            color="primary"
+            [disabled]="isSubmitting || deliveryGroup.invalid"
+            (clicked)="submit()"
+          >
           </app-button>
         </div>
       </form>

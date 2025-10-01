@@ -56,20 +56,13 @@
       </div>
       <ul class="submenu" *ngIf="openSubmenus['security'] && isOpen">
         <li><a (click)="navigateTo('security/user')" [class.active]="activePath === 'security/user'">Usuarios</a></li>
-        <li><a (click)="navigateTo('security/permission')" [class.active]="activePath === 'security/permission'">Permisos</a></li>
-        <li><a (click)="navigateTo('security/form')" [class.active]="activePath === 'security/form'">Formularios</a></li>  
+        <!-- <li><a (click)="navigateTo('security/permission')" [class.active]="activePath === 'security/permission'">Permisos</a></li> -->
+        <!-- <li><a (click)="navigateTo('security/form')" [class.active]="activePath === 'security/form'">Formularios</a></li> -->
         <li><a (click)="navigateTo('security/rol')" [class.active]="activePath === 'security/role'">Roles</a></li>
-        <li><a (click)="navigateTo('security/module')" [class.active]="activePath === 'security/module'">Modulos</a></li>
+        <!-- <li><a (click)="navigateTo('security/module')" [class.active]="activePath === 'security/module'">Modulos</a></li> -->
         <li><a (click)="navigateTo('security/rolUser')" [class.active]="activePath === 'security/rolUser'">Roles y Usuarios</a></li>
-        <li><a (click)="navigateTo('security/formModule')" [class.active]="activePath === 'security/formModule'">Modulos y Formularios</a></li>
-        <li><a (click)="navigateTo('security/rolFormPermission')" [class.active]="activePath === 'security/rolFormPermission'">Roles, Formularios y Permisos</a></li>
-
-
-
-
-
-
-
+        <!-- <li><a (click)="navigateTo('security/formModule')" [class.active]="activePath === 'security/formModule'">Modulos y Formularios</a></li> -->
+        <!-- <li><a (click)="navigateTo('security/rolFormPermission')" [class.active]="activePath === 'security/rolFormPermission'">Roles, Formularios y Permisos</a></li> -->
       </ul>
     </li>
 
