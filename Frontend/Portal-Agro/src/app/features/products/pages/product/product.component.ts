@@ -184,7 +184,7 @@ export class ProductComponent implements OnInit {
   });
 }
 
- private loadChildren(parentId: number): void {
+private loadChildren(parentId: number): void {
   this.isLoadingCategories = true;
   this.updateCategoryControlState();
 

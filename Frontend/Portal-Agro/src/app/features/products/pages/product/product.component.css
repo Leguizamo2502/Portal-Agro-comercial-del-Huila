@@ -20,3 +20,22 @@
 /* Espaciado paginador */
 mat-paginator { margin-top: .5rem; }
 .search { width: 320px; max-width: 40vw; }
+
+/* Contenedor principal del paginator */
+::ng-deep .mat-mdc-paginator {
+  background-color: #1e1e2f; /* Fondo personalizado */
+  color: #ffffff;
+  border-radius: 10px;
+  padding: 8px 16px;
+  font-family: 'Poppins', sans-serif;
+}
+
+::ng-deep .mat-mdc-paginator-page-size {
+  color: #ffffff;
+}
+
+
+::ng-deep .mat-mdc-paginator-range-label {
+  font-weight: bold;
+  color: #1b5e20;
+}

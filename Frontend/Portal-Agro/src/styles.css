@@ -1,6 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
 /* @import "leaflet/dist/leaflet.css"; */
 
+/* guia para los usuarios */
+@import "driver.js/dist/driver.css";
+
+.driver-popover-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.driver-popover-description {
+  font-size: 14px;
+  color: #555;
+}
+
+.driver-overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+
+
+
+
 
 html,
 body {
