@@ -14,9 +14,9 @@ import { ProducerService } from '../../../../shared/services/producer/producer.s
 import { ProductSelectModel } from '../../../../shared/models/product/product.model';
 import { FarmSelectModel } from '../../../../shared/models/farm/farm.model';
 import { ProducerSelectModel } from '../../../../shared/models/producer/producer.model';
-import { ContainerCardProductorComponent } from "../../../../shared/components/cards/container-card-productor/container-card-productor.component";
-import { SocialNetworkIconPipe } from "../../../../shared/pipes/social-network-icon/social-network-icon.pipe";
-import { SocialNetworkLabelPipe } from "../../../../shared/pipes/social-network-label/social-network-label.pipe";
+import { ContainerCardProductorComponent } from '../../../../shared/components/cards/container-card-productor/container-card-productor.component';
+import { SocialNetworkIconPipe } from '../../../../shared/pipes/social-network-icon/social-network-icon.pipe';
+import { SocialNetworkLabelPipe } from '../../../../shared/pipes/social-network-label/social-network-label.pipe';
 
 @Component({
   selector: 'app-producer-profile',
@@ -27,8 +27,8 @@ import { SocialNetworkLabelPipe } from "../../../../shared/pipes/social-network-
     MatChipsModule,
     MatTooltipModule,
     MatIconModule,
-    SocialNetworkIconPipe
-],
+    SocialNetworkIconPipe,
+  ],
   templateUrl: './producer-profile.component.html',
   styleUrls: ['./producer-profile.component.css'],
 })
@@ -59,14 +59,15 @@ export class ProducerProfileComponent implements OnInit {
   loadproducer() {
     this.producerService.getByCodeProducer(this.code).subscribe((data) => {
       this.producer = data;
-      
     });
   }
 
   loadProduct() {
-    this.productService.getProductByCodeProducer(this.code).subscribe((data) => {
-      this.products = data;
-    });
+    this.productService
+      .getProductByCodeProducer(this.code)
+      .subscribe((data) => {
+        this.products = data;
+      });
   }
 
   loadFarm() {
@@ -82,7 +83,6 @@ export class ProducerProfileComponent implements OnInit {
     });
   }
 
-  
   trustLevelClass(n: number): string {
     if (n >= 50) return 'trust-high';
     if (n >= 10) return 'trust-mid';
@@ -92,11 +92,32 @@ export class ProducerProfileComponent implements OnInit {
   /** Formateo compacto (1.2k, 3.4M). Fallback si Intl no soporta compact. */
   compact(n: number): string {
     try {
-      return new Intl.NumberFormat('es-CO', { notation: 'compact', maximumFractionDigits: 1 }).format(n);
+      return new Intl.NumberFormat('es-CO', {
+        notation: 'compact',
+        maximumFractionDigits: 1,
+      }).format(n);
     } catch {
-      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
+      if (n >= 1_000_000)
+        return (n / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
       if (n >= 1_000) return (n / 1_000).toFixed(1).replace(/\.0$/, '') + 'k';
       return String(n);
     }
+  }
+
+  get avg(): number {
+    return this.producer?.averageRating ?? 0;
+  }
+
+  /** 1..5: retorna el icono adecuado según el promedio (★, ☆ y medio) */
+  iconForStar(pos: number): string {
+    const v = this.avg;
+    if (v >= pos) return 'star'; // llena
+    if (v >= pos - 0.5) return 'star_half'; // media
+    return 'star_border'; // vacía
+  }
+
+  /** 1 decimal, ej. 4.2 */
+  formatAvg(): string {
+    return this.avg.toFixed(1);
   }
 }

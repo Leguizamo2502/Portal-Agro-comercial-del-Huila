@@ -16,5 +16,13 @@ export class ContainerCardComponent {
   @Input() showFavorite = true; // <- define si el card muestra el botón
   @Input({ required: true }) products: ProductSelectModel[] = [];
 
+  //loading
+  @Input() loading = false;
+  @Input() skeletonCount = 6;
+
   trackById = (_: number, p: ProductSelectModel) => p.id;
+
+  get skeletons(): number[] {
+    return Array.from({ length: this.skeletonCount });
+  }
 }

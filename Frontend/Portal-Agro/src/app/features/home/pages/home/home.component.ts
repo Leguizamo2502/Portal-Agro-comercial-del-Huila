@@ -5,6 +5,7 @@ import { ProductSelectModel } from '../../../../shared/models/product/product.mo
 import { CarruselComponent } from '../../../../shared/components/carrusel/carrusel.component';
 import { ContainerCardComponent } from "../../../../shared/components/cards/container-card/container-card.component";
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -18,23 +19,30 @@ export class HomeComponent implements OnInit {
   products: ProductSelectModel[] = [];
   productFeatured:ProductSelectModel[] = [];
 
+  //loading
+  loadingProducts = true;
+  loadingFeatured = true;
+
   ngOnInit(): void {
     this.loadProduct();
     this.loadProductFeatured();
   }
 
   loadProduct() {
-    this.productService.getAllHome(15).subscribe(data => {
-      this.products = data;
-      // console.log('HomeComponent - productos cargados:', this.products);
-    });
+    this.loadingProducts = true;
+    this.productService.getAllHome(15)
+      .pipe(finalize(() => this.loadingProducts = false))
+      .subscribe(data => {
+        this.products = data ?? [];
+      });
   }
   
-  loadProductFeatured(){
-    this.productService.getFeatured().subscribe((data)=>{
-      this.productFeatured = data;
-      console.log(data);
-      
-    })
+  loadProductFeatured() {
+    this.loadingFeatured = true;
+    this.productService.getFeatured()
+      .pipe(finalize(() => this.loadingFeatured = false))
+      .subscribe(data => {
+        this.productFeatured = data ?? [];
+      });
   }
 }

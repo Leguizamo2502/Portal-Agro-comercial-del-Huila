@@ -30,14 +30,21 @@ namespace Business.Services.Producers
         {
             try
             {
-                //if (id <= 0) throw new BusinessException("El ID debe ser mayor que cero.");
                 var entity = await _producerRepository.GetByCodeProducer(codeProducer);
-                return entity is null ? null : _mapper.Map<ProducerSelectDto>(entity);
+
+                if (entity is null)
+                    return null;
+
+                var dto = _mapper.Map<ProducerSelectDto>(entity);
+
+                dto.AverageRating = await _producerRepository.GetAverageRatingAsync(entity.Id);
+
+                return dto;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener el producto con ID {Id}", codeProducer);
-                throw new BusinessException($"Error al obtener el producto con ID {codeProducer}.", ex);
+                _logger.LogError(ex, "Error al obtener el productor con code {Code}", codeProducer);
+                throw new BusinessException($"Error al obtener el productor con code {codeProducer}.", ex);
             }
         }
 

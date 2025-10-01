@@ -315,7 +315,7 @@ export class ProductDetailComponent implements OnInit {
 
   onDetail(item: ProductSelectModel) {
     this.router.navigate(['home/product/profile', item.producerCode]);
-    console.log(item.producerCode);
+    // console.log(item.producerCode);
   }
 
   private recomputeStats(): void {

@@ -1,0 +1,26 @@
+/* shared/components/skeleton/skeleton.component.css */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #e5e7eb;            /* gris base */
+  border-radius: 8px;
+}
+.skeleton.circle {
+  border-radius: 50%;
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.55),
+    transparent
+  );
+  animation: shimmer 1.25s infinite;
+}
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}

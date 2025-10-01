@@ -25,6 +25,7 @@
 
           <!-- Indicadores de confianza -->
           <div class="metrics">
+            <!-- Ya existente -->
             <mat-chip
               [ngClass]="trustLevelClass(saleNumber)"
               matTooltip="Pedidos que llegaron a estado Completado. Un mayor número sugiere cumplimiento y confiabilidad."
@@ -33,6 +34,18 @@
               <mat-icon class="me-1">verified</mat-icon>
               Pedidos completados: {{ compact(saleNumber) }}
             </mat-chip>
+
+            <!-- NUEVO: promedio de calificación -->
+            <mat-chip
+              class="ms-2"
+              matTooltip="Promedio de calificación de los productos de este productor."
+              matTooltipPosition="above"
+            >
+              <mat-icon class="me-1">star</mat-icon>
+              {{ formatAvg() }} / 5
+            </mat-chip>
+
+            
           </div>
         </div>
 
@@ -64,7 +77,7 @@
       <h5 class="title">Redes sociales</h5>
       <div class="d-flex flex-wrap gap-2">
         <a
-          *ngFor="let n of producer?.networks;"
+          *ngFor="let n of producer?.networks"
           class="chip-link"
           [href]="n.url"
           target="_blank"
@@ -93,23 +106,5 @@
       <app-container-card-productor [items]="products" [type]="'product'">
       </app-container-card-productor>
     </section>
-
-    <!-- FINCAS 
-    <section class="my-4">
-      <h5 class="mb-3 title">Fincas</h5>
-      <div class="d-flex flex-nowrap gap-4 overflow-x-auto justify-content-start justify-content-md-center">
-        <app-card-farm *ngFor="let farm of famrs" [farm]="farm"></app-card-farm>
-      </div>
-    </section>-->
-
-    <!-- PRODUCTOS (ahora con contenedor + carrusel de cards) ¿
-    <section class="my-4">
-      <app-container-card
-        [title]="'Productos Disponibles'"
-        [showHeader]="true"
-        [products]="products">
-      </app-container-card>
-    </section>
--->
   </div>
 </div>
