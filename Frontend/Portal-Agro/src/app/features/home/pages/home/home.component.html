@@ -1,6 +1,7 @@
-<app-carrusel></app-carrusel>
+<app-carrusel id="carrusel"></app-carrusel>
 
 <app-container-card
+  id="ultimosAgregados"
   [title]="'Últimos Agregados'"
   [showHeader]="true"
   [loading]="loadingProducts"
@@ -9,10 +10,20 @@
 </app-container-card>
 
 <app-container-card
+  id="productosDestacados"
   [title]="'Productos Destacados'"
   [showHeader]="true"
   [loading]="loadingFeatured"
   [skeletonCount]="6"
   [products]="productFeatured">
 </app-container-card>
-<app-button class="d-flex  justify-content-center mt-3" [text]="'Explorar Productos'" [type]="'button'" [redirectTo]="'/home/product'"></app-button>
+
+<app-button class="d-flex justify-content-center mt-3"
+  id="explorarBtn"
+  [text]="'Explorar Productos'"
+  [type]="'button'"
+  [redirectTo]="'/home/product'">
+</app-button>
+
+<!-- botón manual para lanzar el tour -->
+<button class="tour-btn" (click)="startHomeTour()">Iniciar Tour</button>
