@@ -1,30 +1,67 @@
 <div class="container-xxl px-3">
-  <div class="row g-4">
-    <div
-      class="col-12 col-sm-6 col-md-4 col-lg-3"
-      *ngFor="let it of items; trackBy: trackById"
-    >
-      <!-- PRODUCTS -->
-      <app-card
-        *ngIf="isProduct(it)"
-        [product]="it"
-        [showActions]="showActions"
-        [showFavorite]="showFavorite"
-        (edit)="editProduct.emit(it)"
-        (delete)="deleteProduct.emit(it)"
-        (editStack)="editStock.emit({productId:it.id, newStock:it.stock})"
-      >
-      </app-card>
 
-      <!-- FARMS -->
-      <app-card-farm
-        *ngIf="isFarm(it)"
-        [farm]="it"
-        [showActions]="showActions"
-        (edit)="editFarm.emit(it)"
-        (delete)="deleteFarm.emit(it)"
+    
+  <ng-container *ngIf="!loading; else skeletonGrid">
+    <div class="row g-4">
+      <div
+        class="col-12 col-sm-6 col-md-4 col-lg-3"
+        *ngFor="let it of items; trackBy: trackById"
       >
-      </app-card-farm>
+        <!-- PRODUCTS -->
+        <app-card
+          *ngIf="isProduct(it)"
+          [product]="it"
+          [showActions]="showActions"
+          [showFavorite]="showFavorite"
+          (edit)="editProduct.emit(it)"
+          (delete)="deleteProduct.emit(it)"
+          (editStack)="editStock.emit({ productId: it.id, newStock: it.stock })"
+        >
+        </app-card>
+
+        <!-- FARMS -->
+        <app-card-farm
+          *ngIf="isFarm(it)"
+          [farm]="it"
+          [showActions]="showActions"
+          (edit)="editFarm.emit(it)"
+          (delete)="deleteFarm.emit(it)"
+        >
+        </app-card-farm>
+      </div>
     </div>
-  </div>
+
+    
+  </ng-container>
+
+  <!-- Skeletons mientras carga -->
+  <ng-template #skeletonGrid>
+    <div class="row g-4" aria-busy="true">
+      <div
+        class="col-12 col-sm-6 col-md-4 col-lg-3"
+        *ngFor="let _ of skeletons; index as i"
+      >
+        <!-- Para PRODUCT: usa el propio Card en modo loading -->
+        <app-card
+          *ngIf="type === 'product'; else farmSkeleton"
+          [loading]="true"
+          [showActions]="false"
+          [showFavorite]="showFavorite"
+        >
+        </app-card>
+
+        <!-- Para FARM: placeholder genérico (si tu CardFarm aún no tiene skeleton) -->
+        <ng-template #farmSkeleton>
+          <div class="farm-skeleton">
+            <div class="sk sk-img"></div>
+            <div class="p-3">
+              <div class="sk sk-line w-75"></div>
+              <div class="sk sk-line w-50 mt-2"></div>
+              <div class="sk sk-line w-25 mt-2"></div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </ng-template>
 </div>

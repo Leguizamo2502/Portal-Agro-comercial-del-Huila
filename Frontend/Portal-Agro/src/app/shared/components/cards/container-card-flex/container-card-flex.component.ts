@@ -34,6 +34,14 @@ export class ContainerCardFlexComponent {
   @Output() toggleFavorite = new EventEmitter<ProductSelectModel>(); // solo product
   @Output() editStock = new EventEmitter<StockUpdateModel>();
 
+   //loading
+  @Input() loading = false;
+  @Input() skeletonCount = 6;
+
+  get skeletons(): number[] {
+    return Array.from({ length: this.skeletonCount });
+  }
+
   trackById = (_: number, it: Item) => (it as any).id;
 
   // Helpers de tipado

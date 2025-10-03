@@ -29,4 +29,9 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Modulos\Bussiness\Auth\" />
+    <Folder Include="Modulos\Data\Auth\" />
+  </ItemGroup>
+
 </Project>
