@@ -19,7 +19,72 @@
   background-color: rgba(0, 0, 0, 0.7);
 }
 
+.tour-btn{
+  border:none;
+  font-size: 1.2rem;
+  background-color: #19641d;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: white;
+}
 
+.tour-btn:hover{
+  background-color: #189b1f;
+}
+/* Estilo general para el popover */
+.driver-popover {
+  font-family: 'Arial', sans-serif;
+  border-radius: 12px;
+  background: #02ca06;
+  color: #333;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+/* Estilo solo para el paso del carrusel */
+.driver-carrusel-popover {
+  background: linear-gradient(135deg, #ff9800, #ff5722);
+  color: white;
+  padding: 15px;
+  border-radius: 12px;
+}
+
+/* Estilos de los títulos */
+.driver-popover-title {
+  margin-bottom: 24px;
+  color: #1e4620;             /* verde oscuro */
+  font-size: 1.5rem;
+  font-weight: 600;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 8px;
+}
+
+/* Estilos de la descripción */
+.driver-popover-description {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #4b5563;             /* gris medio */
+  margin-bottom: 16px;
+  font-weight: 400;
+}
+
+/* Estilos para los botones */
+.driver-popover-footer button {
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 14px;
+}
+.driver-popover-footer button:nth-child(1) {
+  background: #e0e0e0;
+  color: #333;
+}
+.driver-popover-footer button:nth-child(2) {
+  background-color: #28a745;
+  color: white;
+}
 
 
 

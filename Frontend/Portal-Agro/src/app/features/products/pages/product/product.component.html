@@ -2,11 +2,10 @@
 <div class="container py-3">
   <h1 class="title">Productos Disponibles</h1>
 
-  <div
-    class="bg-white rounded-3 shadow-sm mb-2 d-flex flex-column flex-md-row align-items-center justify-content gap-2 header-compact"
+  <div class="bg-white rounded-3 shadow-sm mb-2 d-flex flex-column flex-md-row align-items-center justify-content gap-2 header-compact"
   >
     <!-- Búsqueda -->
-    <div class="top">
+    <div class="top" id="filtros">
       <mat-form-field appearance="outline" class="search">
         <mat-label>Buscar productos</mat-label>
         <input
@@ -39,7 +38,7 @@
     </div>
 
     <!-- Selector de categorías + limpiar -->
-    <div class="d-flex align-items-center gap-2 controls">
+    <div class="d-flex align-items-center gap-2 controls" id="categoria-select">
       <mat-form-field
         appearance="outline"
         class="select"
@@ -77,7 +76,7 @@
     </div>
 
     <!-- Migas -->
-    <div class="d-flex flex-wrap breadcrumb-wrap">
+    <div  class="d-flex flex-wrap breadcrumb-wrap">
       <mat-chip
         class="chip-link"
         (click)="clearFilter()"
@@ -118,7 +117,7 @@
   ></mat-progress-bar>
 
   <!-- Resultados -->
-  <div class="bg-white p-3 rounded-3 shadow-sm">
+  <div class="bg-white p-3 rounded-3 shadow-sm" id="listaProductos">
     <app-container-card-flex
       [items]="pagedProducts"
       [type]="'product'"
@@ -135,7 +134,7 @@
     </div>
 
     <!-- Paginador: mostrar solo si hay más que pageSize -->
-    <mat-paginator
+    <mat-paginator id="pagination"
       *ngIf="products!.length > pageSize"
       [length]="products.length || 0"
       [pageIndex]="pageIndex"

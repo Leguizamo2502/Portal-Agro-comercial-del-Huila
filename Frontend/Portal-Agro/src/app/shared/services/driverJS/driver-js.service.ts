@@ -13,7 +13,11 @@ export class DriverJsService {
       animate: true,
       overlayOpacity: 0.6,
       allowClose: true,
-      steps
+      steps,
+
+      nextBtnText: 'Siguiente',
+      prevBtnText: 'Anterior',
+      doneBtnText: 'Finalizar'
     });
 
     driverObj.drive();
