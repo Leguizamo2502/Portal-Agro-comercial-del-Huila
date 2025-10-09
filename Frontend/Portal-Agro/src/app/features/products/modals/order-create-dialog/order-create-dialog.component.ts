@@ -22,7 +22,7 @@ export interface OrderCreateDialogData {
   shippingNote: string; // 'Envío gratis' | 'No incluye envío'
 }
 
-// ===== Validadores utilitarios (alineados al backend) =====
+
 const positiveInt = (label: string): ValidatorFn => (c: AbstractControl): ValidationErrors | null => {
   const n = Number(c.value);
   if (!Number.isInteger(n) || n <= 0) return { positiveInt: `${label} debe ser mayor a 0.` };
@@ -42,10 +42,29 @@ const requiredTrimmed = (label: string): ValidatorFn => (c: AbstractControl): Va
   return null;
 };
 
-const phoneBasic = (label: string): ValidatorFn => (c: AbstractControl): ValidationErrors | null => {
-  const v = (c.value ?? '').toString().trim();
-  if (!v) return { required: `${label} es obligatorio.` };
-  if (!/^[0-9 +()\-]{7,20}$/.test(v)) return { pattern: `${label} no es válido.` };
+const minLetters = (min: number, label: string): ValidatorFn => (c: AbstractControl): ValidationErrors | null => {
+  const raw = (c.value ?? '').toString();
+  // Extrae letras Unicode (incluye tildes y ñ)
+  const letters = raw.match(/\p{L}/gu) ?? [];
+  if (letters.length < min) return { minLetters: `${label} debe tener al menos ${min} letras.` };
+  return null;
+};
+
+
+const minAlnum = (min: number, label: string): ValidatorFn => (c: AbstractControl): ValidationErrors | null => {
+  const raw = (c.value ?? '').toString();
+  const alnum = raw.match(/[\p{L}\p{N}]/gu) ?? [];
+  if (alnum.length < min) return { minAlnum: `${label} debe tener al menos ${min} caracteres válidos.` };
+  return null;
+};
+
+
+const phoneCoMobile = (label: string): ValidatorFn => (c: AbstractControl): ValidationErrors | null => {
+  const raw = (c.value ?? '').toString();
+  const digits = raw.replace(/\D+/g, ''); // deja solo dígitos
+  if (digits.length === 0) return { required: `${label} es obligatorio.` };
+  if (digits.length !== 10) return { phoneCo: `${label} debe tener 10 dígitos.` };
+  if (!digits.startsWith('3')) return { phoneCo: `${label} debe iniciar con 3.` };
   return null;
 };
 
@@ -80,21 +99,39 @@ export class OrderCreateDialogComponent {
   }
 
   // ---------- Init Forms ----------
-  private initForms(): void {
-    this.productGroup = this.fb.group({
-      quantityRequested: [1, [positiveInt('Cantidad'), maxInt(this.data.stock, 'Cantidad')]],
-    });
+ private initForms(): void {
+  this.productGroup = this.fb.group({
+    quantityRequested: [1, [positiveInt('Cantidad'), maxInt(this.data.stock, 'Cantidad')]],
+  });
 
-    this.deliveryGroup = this.fb.group({
-      recipientName: ['', [requiredTrimmed('Nombre del destinatario')]],
-      contactPhone: ['', [phoneBasic('Teléfono de contacto')]],
-      departmentId: [null, [Validators.required]],
-      cityId: [null, [Validators.required, positiveInt('Ciudad')]],
-      addressLine1: ['', [requiredTrimmed('Dirección')]],
-      addressLine2: [''],
-      additionalNotes: [''],
-    });
-  }
+  this.deliveryGroup = this.fb.group({
+    recipientName: [
+      '',
+      [
+        requiredTrimmed('Nombre del destinatario'),
+        minLetters(3, 'Nombre del destinatario'),
+      ],
+    ],
+    contactPhone: [
+      '',
+      [
+        phoneCoMobile('Teléfono de contacto'), 
+      ],
+    ],
+    departmentId: [null, [Validators.required]],
+    cityId: [null, [Validators.required, positiveInt('Ciudad')]],
+    addressLine1: [
+      '',
+      [
+        requiredTrimmed('Dirección'),
+        minAlnum(5, 'Dirección'), 
+      ],
+    ],
+    addressLine2: [''], 
+    additionalNotes: [''], 
+  });
+}
+
 
   // ---------- Catálogos ----------
   private loadDepartments(): void {

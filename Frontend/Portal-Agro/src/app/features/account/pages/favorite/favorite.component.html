@@ -4,6 +4,8 @@
 <app-container-card-flex id='favorite-list'
   [type]="'product'"
   [items]="products"
+  [loading]="loadingProducts"
+  [skeletonCount]="3"
   [showFavorite]="true"
   [showActions]="false">
 </app-container-card-flex>

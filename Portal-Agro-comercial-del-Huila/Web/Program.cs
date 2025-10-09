@@ -1,6 +1,3 @@
-using Business.Services.BackgroundServices.Implements;
-using Business.Services.BackgroundServices.Options;
-using CloudinaryDotNet;
 using Entity.Domain.Models.Implements.Auth.Token;
 using Entity.Validation.Service;
 using Entity.Validations.interfaces;
@@ -25,7 +22,7 @@ builder.Services.AddScoped<IValidatorService, ValidatorService>();
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserDtoValidator>();
 builder.Services.AddFluentValidationAutoValidation();
 
-//Jwt
+//Jwt y cookies
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddCustomCors(builder.Configuration);
 
@@ -33,51 +30,21 @@ builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"))
 builder.Services.Configure<CookieSettings>(builder.Configuration.GetSection("Cookie"));
 
 //Cloudinary
-var cloudinaryConfig = builder.Configuration.GetSection("Cloudinary");
-
-var cloudinary = new Cloudinary(new Account(
-    cloudinaryConfig["CloudName"],
-    cloudinaryConfig["ApiKey"],
-    cloudinaryConfig["ApiSecret"]
-
-));
-
-builder.Services.AddSingleton(cloudinary);
-
+builder.Services.AddCloudinaryServices(builder.Configuration);
 
 //Services
 builder.Services.AddApplicationServices();
-
-
 
 //Database
 builder.Services.AddDatabase(builder.Configuration);
 
 //Background Services
-// Options
-builder.Services.Configure<ExpireAwaitingPaymentJobOptions>(
-    builder.Configuration.GetSection("Orders:ExpireAwaitingPaymentJob"));
-
-// BackgroundService
-builder.Services.AddHostedService<ExpireAwaitingPaymentBackgroundService>();
-
-builder.Services.Configure<AutoCompleteDeliveredJobOptions>(
-    builder.Configuration.GetSection("Orders:AutoCompleteDeliveredJob"));
-
-builder.Services.AddHostedService<AutoCompleteDeliveredBackgroundService>();
-
+builder.Services.AddBackgroundServices(builder.Configuration);  
 
 //Cache
 builder.Services.AddOutputCachePolicies();
 
-
 var app = builder.Build();
-
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseSwagger();
-//    app.UseSwaggerUI();
-//}
 
 // Archivos estáticos
 app.UseStaticFiles();
@@ -90,14 +57,12 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "swagger";
 });
 
-
-
 app.UseHttpsRedirection();
 
-// ?? 1. Primero CORS (para que los headers y cookies se acepten)
+// ?? 1. Primero CORS 
 app.UseCors();
 
-// ?? 2. Luego autenticación (JWT desde cookie)
+// ?? 2. Luego autenticación 
 app.UseAuthentication();
 
 // ?? 3. Después autorización
@@ -108,7 +73,7 @@ app.UseOutputCache();
 // ?? 4. Finalmente, los controladores
 app.MapControllers();
 
-// ? MIGRACIONES MULTI-DB EN ARRANQUE
+// ?? 5. MIGRACIONES EN ARRANQUE
 MigrationManager.MigrateAllDatabases(app.Services, builder.Configuration);
 
 app.Run();
