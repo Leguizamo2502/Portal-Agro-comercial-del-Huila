@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit {
     this.loadingProducts = true;
     this.productService.getAllHome(15)
       .pipe(finalize(() => this.loadingProducts = false))
-      .subscribe(data => {
+      .subscribe(data => {    
         this.products = data ?? [];
       });
   }

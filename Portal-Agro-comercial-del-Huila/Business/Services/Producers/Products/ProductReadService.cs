@@ -94,7 +94,6 @@ public class ProductReadService : IProductReadService
     {
         try
         {
-            // Trae todos los productos con tu BaseQuery/Includes habituales
             var products = await _productRepo.GetAllWithLimitAsync(limit);
             return _mapper.Map<List<ProductSelectDto>>(products);
 

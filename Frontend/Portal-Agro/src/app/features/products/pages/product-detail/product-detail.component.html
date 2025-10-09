@@ -11,7 +11,7 @@
   <div class="row justify-content-center">
     <div class="row gap-4 col-lg-10">
       <!-- Galería -->
-      <div class="d-flex flex-wrap gap-4 justify-content-around">
+      <div class="d-flex flex-wrap gap-4 justify-content-center">
         <div class="content-image-product d-flex gap-4">
           <!-- Miniaturas -->
           <div *ngIf="product.images.length" class="d-flex flex-column gap-2">
@@ -31,7 +31,7 @@
 
           <!-- Imagen principal -->
           <div
-            class="flex-fill d-flex align-items-center justify-content-center"
+            class="d-flex justify-content-center"
             style="max-width: 400px"
           >
             <img
@@ -39,9 +39,7 @@
                 selectedImage ||
                 (product.images.length ? product.images[0].imageUrl : '')
               "
-              class="img-fluid rounded shadow"
-              style="max-height: 350px; object-fit: cover"
-            />
+              class="img-fluid rounded shadow"/>
           </div>
         </div>
         <!-- FAVORITO -->
@@ -56,7 +54,7 @@
             aria-label="Favorito"
           >
             <!-- usa product.isFavorite, NO @Input isFavorite -->
-            <mat-icon
+            <mat-icon class="star-fav"
               [fontIcon]="product.isFavorite ? 'star' : 'star_border'"
             ></mat-icon>
           </button>

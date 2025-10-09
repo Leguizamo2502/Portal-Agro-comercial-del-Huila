@@ -7,19 +7,14 @@
   >
   </app-button>
 
-  <!-- <div class="container-xxl px-3 top">
-    <div class="row g-4">
-      <div class="col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let product of products; trackBy: trackById">
-        <app-card [product]="product" [showActions]="true" (edit)="onEdit($event)"
-          (delete)="onDelete($event)">></app-card>
-      </div>
-    </div>
-  </div> -->
+  
   <div class="top">
     <app-container-card-flex
       [type]="'product'"
       [items]="products"
       [showActions]="true"
+      [loading]="loadingProducts"
+      [skeletonCount]="3"
       (editProduct)="onEdit($event)"
       (deleteProduct)="onDelete($event)"
       (editStock)="onEditStock($event)"
@@ -27,6 +22,7 @@
     </app-container-card-flex>
   </div>
   <div *ngIf="products.length === 0" class="empty">
-    No tienes productos todavía.
+    No tienes productos todavía, crea productos para que puedas recibir pedidos.
   </div>
+  
 </div>

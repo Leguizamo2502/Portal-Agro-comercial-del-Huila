@@ -313,7 +313,8 @@ namespace Web.Controllers.Implements.Auth
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ChangeMyPassword([FromBody] ChangePasswordDto dto)
         {
-            if (!ModelState.IsValid) return ValidationProblem(ModelState);
+            if (!ModelState.IsValid)
+                return BadRequest(new ValidationProblemDetails(ModelState));
 
             var userId = HttpContext.GetUserId();
 
@@ -328,15 +329,14 @@ namespace Web.Controllers.Implements.Auth
             }
             catch (BusinessException ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    new { message = ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    new { message = "Error inesperado." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error inesperado." });
             }
         }
+
 
         [HttpPut("updatePerson")]
         [Authorize]

@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { ContainerCardFlexComponent } from "../../../../../shared/components/cards/container-card-flex/container-card-flex.component";
 import { StockDialogComponent } from '../components/stock-dialog/stock-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-product-list',
@@ -21,8 +22,11 @@ export class ProductListComponent implements OnInit{
   private productService = inject(ProductService);
   private router = inject(Router);
   private dialog = inject(MatDialog);
+
+  loadingProducts = true;
   
   products: ProductSelectModel[] =[];
+
   ngOnInit(): void {
     this.loadProduct();
   }
@@ -30,9 +34,12 @@ export class ProductListComponent implements OnInit{
 
 
   loadProduct(){
-    this.productService.getByProducerId().subscribe((data)=>{
-      this.products = data;
-    })
+    this.loadingProducts = true;
+    this.productService.getByProducerId().pipe(finalize(()=> this.loadingProducts = false))
+    .subscribe(data=>{
+      this.products = data ?? []; 
+    }
+    )
   }
 
   onEdit(p: ProductSelectModel) {

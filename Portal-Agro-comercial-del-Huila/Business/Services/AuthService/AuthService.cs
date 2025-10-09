@@ -38,7 +38,6 @@ namespace Business.Services.AuthService
         {
             try
             {
-                // Validaciones básicas de entrada
                 if (dto is null) throw new ValidationException("Datos inválidos.");
                 if (string.IsNullOrWhiteSpace(dto.CurrentPassword) || string.IsNullOrWhiteSpace(dto.NewPassword))
                     throw new ValidationException("Las contraseñas no pueden estar vacías.");
@@ -125,13 +124,11 @@ namespace Business.Services.AuthService
                     throw new BusinessException("Contraseña no valida");
                 }
 
-
                 var person = _mapper.Map<Person>(dto);
                 var user = _mapper.Map<User>(dto);
 
                 user.Password = EncriptePassword.EncripteSHA256(user.Password);
 
-              
                 user.Person = person;
                 
                 await _userData.AddAsync(user);
@@ -147,7 +144,6 @@ namespace Business.Services.AuthService
             }
             catch (Exception ex)
             {
-                // Aquí puedes loguear el error si tienes logger inyectado
                 throw new BusinessException($"Error en el registro del usuario: {ex.Message}", ex);
             }
         }
@@ -192,8 +188,6 @@ namespace Business.Services.AuthService
             {
                 var person = await _personRepository.GetByUserIdAsync(userId)
                     ?? throw new ValidationException("Usuario no encontrado");
-                //if (await _userData.ExistsByEmailAsync(dto.Email))
-                //    throw new Exception("Correo ya registrado");
 
                 _mapper.Map(dto, person);
 

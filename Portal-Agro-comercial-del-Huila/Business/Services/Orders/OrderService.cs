@@ -74,7 +74,7 @@ namespace Business.Services.Orders
         /// <exception cref="BusinessException"></exception>
         public async Task<int> CreateOrderAsync(int userId, OrderCreateDto dto)
         {
-            // 1) Normalizar y validar (sin PaymentImage)
+            // 1) Normalizar y validar 
             NormalizeCreateDto(dto);
             ValidateCreateDto(dto);
 
@@ -87,19 +87,19 @@ namespace Business.Services.Orders
                 throw new BusinessException("No puedes comprar tus propios productos.");
             }
 
-            // Validación de stock si aplica
+            // Validación de stock 
             if (product.Stock < dto.QuantityRequested)
                 throw new BusinessException("Stock insuficiente para la cantidad solicitada.");
 
-            // 3) Construcción de la entidad (snapshots + totales + estado inicial)
+            // 3) Construcción de la entidad 
             var now = DateTime.UtcNow;
             var order = BuildOrderEntity(userId, dto, product, now);
 
-            // 4) Persistencia (sin uploads/Cloudinary en esta fase)
+            // 4) Persistencia 
             await _orderRepository.AddAsync(order);
             await _db.SaveChangesAsync();
 
-            // 5) Notificaciones (best-effort; no deben romper el flujo)
+            // 5) Notificaciones 
             await SendOrderCreatedEmailsSafelyAsync(order);
 
             return order.Id;

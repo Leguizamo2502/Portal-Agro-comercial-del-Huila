@@ -1,11 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ProductService } from '../../../../shared/services/product/product.service';
 import { ProductSelectModel } from '../../../../shared/models/product/product.model';
-import { FavoriteService } from '../../../../shared/services/favorite/favorite.service';
 import { CommonModule } from '@angular/common';
 import { ContainerCardFlexComponent } from "../../../../shared/components/cards/container-card-flex/container-card-flex.component";
 import { FavoriteFacadeService } from '../../../../shared/services/favorite/favorite-facade.service';
-import { Subject, takeUntil } from 'rxjs';
+import { finalize, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-favorite',
@@ -19,6 +18,8 @@ export class FavoriteComponent implements OnInit {
   private destroy$ = new Subject<void>();
 
   products: ProductSelectModel[] = [];
+
+  loadingProducts = true;
 
   ngOnInit(): void {
     this.loadFavorites();
@@ -39,8 +40,9 @@ export class FavoriteComponent implements OnInit {
   }
 
   private loadFavorites(): void {
-    this.productService.getFavorites().subscribe(data => {
-      // Normaliza el flag por si el backend no lo setea
+    this.loadingProducts = true
+    this.productService.getFavorites().pipe(finalize(()=> this.loadingProducts = false))
+    .subscribe(data => {
       this.products = data.map(p => ({ ...p, isFavorite: true }));
     });
   }
