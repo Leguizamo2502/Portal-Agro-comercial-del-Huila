@@ -1,17 +1,17 @@
-<div *ngIf="product" class="container my-5">
-  <app-button
+<div *ngIf="product" class="container">
+  <!-- <app-button
     [type]="'button'"
     [color]="'primary'"
     [text]="'Volver'"
     [icon]="'arrow_back'"
     [back]="true"
     style="z-index: 10"
-  ></app-button>
+  ></app-button> -->
 
   <div class="row justify-content-center">
     <div class="row gap-4 col-lg-10">
       <!-- Galería -->
-      <div class="d-flex flex-wrap gap-4 justify-content-center">
+      <div class="d-flex gap-4 justify-content-center">
         <div class="content-image-product d-flex gap-4">
           <!-- Miniaturas -->
           <div *ngIf="product.images.length" class="d-flex flex-column gap-2">

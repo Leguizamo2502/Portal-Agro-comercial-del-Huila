@@ -63,7 +63,23 @@ export class NavbarBuenoComponent {
   private tours: Record<string, any[]> = {
     '/home': [
       { element: '#carrusel', popover: { title: 'Carrusel', description: 'Aquí se muestran los banners.', side: 'bottom' as const } },
-      { element: '#ultimosAgregados', popover: { title: 'Últimos Agregados', description: 'Productos agregados recientemente.', side: 'top' as const } }
+      { element: '#ultimosAgregados', popover: { title: 'Últimos Agregados', description: 'Productos agregados recientemente.', side: 'top' as const }},
+      {
+      element: '#productosDestacados',
+      popover: {
+        title: 'Productos Destacados',
+        description: 'Nuestros productos más recomendados.',
+        side: 'top' as const
+      }
+    },
+    {
+      element: '#explorarBtn',
+      popover: {
+        title: 'Explorar Productos',
+        description: 'Haz clic aquí para ir a la página de todos los productos.',
+        side: 'center' as const
+      }
+    }
     ],
     '/home/product': [
     {
@@ -209,7 +225,7 @@ export class NavbarBuenoComponent {
   },
   ],
   '/account/info/changePassword':[
-     {
+  {
     element: '#title-form',
     popover: {
       title: 'Formulario de cambio de contraseña',
@@ -256,7 +272,7 @@ export class NavbarBuenoComponent {
   },
   ],
   '/account/favorite':[
-     {
+  {
     element: '#favorite-title',
     popover: {
       title: 'Sección de favoritos',
@@ -284,7 +300,7 @@ export class NavbarBuenoComponent {
     }
   }
   ],
-  '/account/orders/:code':[
+  '/account/orders/:code': [
     {
     element: '#order-header',
     popover: {
@@ -362,7 +378,11 @@ export class NavbarBuenoComponent {
 
   startTour() {
   const currentRoute = this.router.url.split('?')[0]; // elimina query params
-  const steps = this.tours[currentRoute] || [];
+  let steps = this.tours[currentRoute];
+  if (!steps && currentRoute.startsWith('/account/orders/')) {
+    steps = this.tours['/account/orders/:code'];
+  }
+  steps = steps || [];
   if (steps.length > 0) {
     this.driverService.startTour(steps);
   } else {

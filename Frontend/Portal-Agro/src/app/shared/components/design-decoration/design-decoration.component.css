@@ -1,0 +1,44 @@
+.leaf {
+    width: 120px;
+    height: 120px;
+    background-size: cover;
+    background-position: center;
+    filter: blur(2px);
+    opacity: 0.8;
+    z-index: -1;
+}
+
+
+.leaf:nth-child(even) {
+    background-image: linear-gradient(135deg, #9de09d43, #69b16965),url('/assets/vacas.jpg');
+    
+    mask-image: url('/assets/leaf-decoration.png');
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+
+    -webkit-mask-image: url('/assets/leaf-decoration.png');
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+}
+
+.leaf:nth-child(odd) {
+    background-image:linear-gradient(135deg, #9de09d43, #69b16965),url('/assets/vacas.jpg');
+    
+    mask-image: url('/assets/leaf2.png');
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+
+    -webkit-mask-image: url('/assets/leaf2.png');
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+}
+.leaf:nth-child(odd) {
+    transform: rotate(10deg);
+}
+.leaf:nth-child(even) {
+    transform: rotate(-12deg);
+}
