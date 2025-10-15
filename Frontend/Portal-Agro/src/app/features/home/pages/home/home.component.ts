@@ -8,7 +8,6 @@ import { ButtonComponent } from '../../../../shared/components/button/button.com
 import { finalize } from 'rxjs';
 
 //Guía Driver.js
-import { DriverJsService } from '../../../../shared/services/driverJS/driver-js.service';
 
 @Component({
   selector: 'app-home',
@@ -20,7 +19,6 @@ import { DriverJsService } from '../../../../shared/services/driverJS/driver-js.
 export class HomeComponent implements OnInit {
   
   private productService = inject(ProductService);
-  private driverService = inject(DriverJsService);
 
   products: ProductSelectModel[] = [];
   productFeatured:ProductSelectModel[] = [];
@@ -31,6 +29,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.loadProduct();
     this.loadProductFeatured();
+
   }
 
   loadProduct() {
@@ -49,43 +48,5 @@ export class HomeComponent implements OnInit {
       .subscribe(data => {
         this.productFeatured = data ?? [];
       });
-  }
-  startHomeTour() {
-    const steps = [
-      {
-        element: '#carrusel',
-        popover: {
-          title: 'Carrusel',
-          description: 'Aquí se muestran los banners destacados.',
-          side: 'bottom' as const
-        }
-      },
-      {
-        element: '#ultimosAgregados',
-        popover: {
-          title: 'Últimos Agregados',
-          description: 'Productos que se han agregado recientemente.',
-          side: 'top' as const
-        }
-      },
-      {
-        element: '#productosDestacados',
-        popover: {
-          title: 'Productos Destacados',
-          description: 'Nuestros productos más recomendados.',
-          side: 'top' as const
-        }
-      },
-      {
-        element: '#explorarBtn',
-        popover: {
-          title: 'Explorar Productos',
-          description: 'Haz clic aquí para ir a la página de todos los productos.',
-          side: 'top' as const
-        }
-      }
-    ];
-
-    this.driverService.startTour(steps);
   }
 }

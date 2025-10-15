@@ -1,19 +1,19 @@
 <div class="wrap">
-  <div class="header">
+  <div class="header"id="order-header">
     <!-- <app-button [text]="'Volver'" [icon]="'arrow_back'" [back]="true"></app-button> -->
     <h2 class="title">Detalle del Pedido</h2>
   </div>
 
   <ng-container *ngIf="!loading && detail; else loadingTpl">
-    <div class="card">
-      <div class="card-head">
+    <div class="card"id="order-card" >
+      <div class="card-head" id="order-head">
         <div class="id subtitle">Pedido #{{ detail!.id }}</div>
         <span [class]="statusChip.cls">{{ statusChip.text }}</span>
       </div>
 
       <div class="grid">
         <!-- resumen -->
-        <section>
+        <section id="order-summary">
           <h3 class="title">Resumen</h3>
           <div class="row">
             <div class="subtitle label">Producto</div>
@@ -42,7 +42,7 @@
         </section>
 
         <!-- entrega -->
-        <section>
+        <section id="order-delivery">
           <h3 class="title">Entrega</h3>
           <div class="row">
             <div class="subtitle label">Destinatario</div>
@@ -66,7 +66,7 @@
         </section>
 
         <!-- comprobante -->
-        <section>
+        <section id="order-payment">
           <h3 class="title">Comprobante de Pago</h3>
           <ng-container *ngIf="detail!.paymentImageUrl; else noImg">
             <img class="receipt" [src]="detail!.paymentImageUrl!" alt="Comprobante"
@@ -80,19 +80,19 @@
           <!-- acción subir comprobante (solo AcceptedAwaitingPayment) -->
           <div class="mt" *ngIf="canUploadPayment">
             <input type="file" accept="image/*" #paymentInput hidden (change)="onPickPaymentFile($event)" />
-            <app-button text="Subir comprobante" color="primary" (clicked)="triggerFile(paymentInput)"></app-button>
+            <app-button text="Subir comprobante" color="primary" (clicked)="triggerFile(paymentInput)"data-tour-open></app-button>
             <div class="muted small">Formatos: JPG/PNG/WEBP · Máx {{ MAX_FILE_MB }} MB</div>
           </div>
         </section>
       </div>
 
       <!-- notas/decisión productor -->
-      <div class="producer-block" *ngIf="detail!.producerDecisionAt">
+      <div class="producer-block" *ngIf="detail!.producerDecisionAt" id="order-producer">
         <div class="row">
           <div class="subtitle label">Fecha decisión productor</div>
           <div class="text value">{{ detail!.producerDecisionAt | date:'medium' }}</div>
         </div>
-        <div class="row" *ngIf="detail!.producerNotes">
+        <div class="row" *ngIf="detail!.producerNotes"id="order-producer">
           <div class="subtitle label">Notas del productor</div>
           <div class="text value">{{ detail!.producerNotes }}</div>
         </div>
@@ -103,7 +103,7 @@
       </div>
 
       <!-- acciones -->
-      <div class="actions" *ngIf="canConfirm">
+      <div class="actions" id="order-actions" *ngIf="canConfirm">
         <app-button
           [text]="'No, hubo problema'"
           [color]="'danger'"
@@ -124,7 +124,7 @@
       </div>
 
       <!-- cancelar (solo PendingReview) -->
-      <div class="actions mt" *ngIf="canCancel">
+      <div class="actions mt" id="order-cancel" *ngIf="canCancel" data-tour-open>
         <app-button text="Cancelar pedido" color="danger" (clicked)="cancel()"></app-button>
       </div>
     </div>
