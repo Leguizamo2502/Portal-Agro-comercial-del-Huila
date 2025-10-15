@@ -130,6 +130,7 @@ namespace Web.ProgramService
 
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderReadService, OrderReadService>();
 
             services.AddScoped<IOrderEmailService, OrderEmailService>();
 

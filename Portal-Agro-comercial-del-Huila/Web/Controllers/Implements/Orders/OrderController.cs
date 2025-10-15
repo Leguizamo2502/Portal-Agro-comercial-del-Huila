@@ -15,11 +15,13 @@ namespace Web.Controllers.Implements.Orders
     {
         private readonly ILogger<OrderController> _logger;
         private readonly IOrderService _orderService;
+        private readonly IOrderReadService _orderReadService;
 
-        public OrderController(ILogger<OrderController> logger, IOrderService orderService)
+        public OrderController(ILogger<OrderController> logger, IOrderService orderService, IOrderReadService orderReadService)
         {
             _logger = logger;
             _orderService = orderService;
+            _orderReadService = orderReadService;
         }
 
         // ==================== Cliente (buyer) ====================
@@ -54,7 +56,7 @@ namespace Web.Controllers.Implements.Orders
             try
             {
                 var userId = HttpContext.GetUserId();
-                var result = await _orderService.GetOrdersByUserAsync(userId);
+                var result = await _orderReadService.GetOrdersByUserAsync(userId);
                 return Ok(result);
             }
             catch (BusinessException ex)
@@ -75,7 +77,7 @@ namespace Web.Controllers.Implements.Orders
             try
             {
                 var userId = HttpContext.GetUserId();
-                var dto = await _orderService.GetOrderDetailForUserAsync(userId, code);
+                var dto = await _orderReadService.GetOrderDetailForUserAsync(userId, code);
                 return Ok(dto);
             }
             catch (BusinessException ex)
@@ -164,7 +166,7 @@ namespace Web.Controllers.Implements.Orders
             try
             {
                 var userId = HttpContext.GetUserId();
-                var result = await _orderService.GetOrdersByProducerAsync(userId);
+                var result = await _orderReadService.GetOrdersByProducerAsync(userId);
                 return Ok(result);
             }
             catch (BusinessException ex)
@@ -186,7 +188,7 @@ namespace Web.Controllers.Implements.Orders
             try
             {
                 var userId = HttpContext.GetUserId();
-                IEnumerable<OrderListItemDto> result = await _orderService.GetPendingOrdersByProducerAsync(userId);
+                IEnumerable<OrderListItemDto> result = await _orderReadService.GetPendingOrdersByProducerAsync(userId);
                 return Ok(result);
             }
             catch (BusinessException ex)
@@ -208,7 +210,7 @@ namespace Web.Controllers.Implements.Orders
             try
             {
                 var userId = HttpContext.GetUserId();
-                OrderDetailDto dto = await _orderService.GetOrderDetailForProducerAsync(userId, code);
+                OrderDetailDto dto = await _orderReadService.GetOrderDetailForProducerAsync(userId, code);
                 return Ok(dto);
             }
             catch (BusinessException ex)
