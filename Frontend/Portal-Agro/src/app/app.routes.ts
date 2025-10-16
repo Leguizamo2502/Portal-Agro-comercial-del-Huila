@@ -3,6 +3,7 @@ import { authGuard } from './Core/guards/auth/guest.guard';
 import { ForbiddenComponent } from './Core/page/forbidden/forbidden.component';
 import { NotFoundComponent } from './Core/page/not-found/not-found.component';
 import { MainLayoutComponent } from './shared/components/layouts/main-layout/main-layout.component';
+import { DesignDecorationComponent } from './shared/components/design-decoration/design-decoration.component';
 
 export const routes: Routes = [
   // Redirección inicial
@@ -51,6 +52,7 @@ export const routes: Routes = [
       // { path: 'summary', component: SummaryComponent },
       // { path: 'farm-detail', component: FarmDetailComponent },
       // { path: 'crm', component: ContainerCardProductorComponent }
+      {path: 'test-design', component: DesignDecorationComponent}
     ],
   },
 

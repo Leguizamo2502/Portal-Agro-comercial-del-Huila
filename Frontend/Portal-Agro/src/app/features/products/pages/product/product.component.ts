@@ -99,7 +99,8 @@ export class ProductComponent implements OnInit {
     if (!q) return this.products;
     return this.products.filter((p) => {
       const name = this.normalize(p.name);
-
+      // const desc = this.normalize(p.description || '');
+      // const unit = this.normalize(p.unit || '');
       const producer = this.normalize(p.personName || '');
       return name.includes(q) || producer.includes(q);
     });
@@ -183,7 +184,7 @@ export class ProductComponent implements OnInit {
   });
 }
 
- private loadChildren(parentId: number): void {
+private loadChildren(parentId: number): void {
   this.isLoadingCategories = true;
   this.updateCategoryControlState();
 

@@ -7,6 +7,8 @@ import { ContainerCardComponent } from "../../../../shared/components/cards/cont
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { finalize } from 'rxjs';
 
+//Guía Driver.js
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -15,10 +17,11 @@ import { finalize } from 'rxjs';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  
   private productService = inject(ProductService);
+
   products: ProductSelectModel[] = [];
   productFeatured:ProductSelectModel[] = [];
-
   //loading
   loadingProducts = true;
   loadingFeatured = true;
@@ -26,6 +29,7 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.loadProduct();
     this.loadProductFeatured();
+
   }
 
   loadProduct() {

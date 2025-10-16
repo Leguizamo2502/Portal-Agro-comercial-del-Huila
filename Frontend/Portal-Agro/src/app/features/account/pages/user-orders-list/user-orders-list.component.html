@@ -21,10 +21,10 @@
           </span>
         </div>
 
-        <div class="row2">
-          <div><strong>Cant.:</strong> {{ o.quantityRequested }}</div>
-          <div><strong>Total:</strong> {{ o.total | currency:'COP' }}</div>
-          <div class="muted"><strong>Creado:</strong> {{ o.createAt | date:'medium' }}</div>
+        <div class="d-flex d-flex gap-1 justify-content-between">
+          <div class="d-flex gap-1"><div class="subtitle">Cant.:</div> <div class="text m-0">{{ o.quantityRequested }}</div> </div>
+          <div class="d-flex gap-1"><div class="subtitle">Total:</div> <div class="text m-0">{{ o.total | currency:'COP' }} </div> </div>
+          <div class="muted d-flex gap-1"><div class="subtitle m-0">Creado:</div> <div class="text m-0">{{ o.createAt | date:'medium' }}</div></div>
         </div>
 
         <div class="actions">

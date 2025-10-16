@@ -1,6 +1,6 @@
 <div class="wrapper" *ngIf="!loading && detail; else loadingTpl">
   <div class="header">
-    <h2>Pedido #{{ detail!.id }}</h2>
+    <h2 class="title">Pedido #{{ detail!.id }}</h2>
     <span class="chip" [ngClass]="chipClass(detail!.status)">
       {{ detail!.status | statusTranslate }}
     </span>
@@ -9,45 +9,65 @@
   <div class="grid">
     <!-- Columna izquierda: info -->
     <section class="card">
-      <h3>Resumen</h3>
+      <h3 class="title">Resumen</h3>
       <div class="row">
-        <div><strong>Producto:</strong> {{ detail!.productName }}</div>
-        <div><strong>Cantidad:</strong> {{ detail!.quantityRequested }}</div>
+        <div class="productoS- d-flex gap-1"><div class="subtitle">
+          Producto:
+        </div>
+        <div class="text"> {{ detail!.productName }}</div>
+      </div>
+        <div class="d-flex gap-1"><div class="subtitle">Cantidad:</div>
+        <div class="text">
+          {{ detail!.quantityRequested }}
+        </div>
+        </div>
       </div>
       <div class="row">
-        <div>
-          <strong>Precio unitario:</strong>
-          {{ detail!.unitPrice | currency : "COP" }}
+        <div class="precioUni-co d-flex gap-1">
+          <div class="subtitle ">
+            Precio unitario:
+          </div>
+          <div class="text">
+            {{ detail!.unitPrice | currency : "COP" }}
+          </div>
         </div>
-        <div>
-          <strong>Subtotal:</strong> {{ detail!.subtotal | currency : "COP" }}
+        <div class="subtotal-cop d-flex gap-1">
+          <div class="subtitle ">Subtotal: </div>
+          <div class="text">{{ detail!.subtotal | currency : "COP" }}</div>
         </div>
       </div>
       <div class="row total">
-        <div>
-          <strong>Total:</strong> {{ detail!.total | currency : "COP" }}
+        <div class="d-flex gap-1">
+          <div class="subtitle">Total:</div> 
+          <div class="text">
+
+            {{ detail!.total | currency : "COP" }}
+          </div>
         </div>
       </div>
 
-      <h3 class="mt">Entrega</h3>
+      <h3 class="mt title">Entrega</h3>
       <div class="row">
-        <div><strong>Destinatario:</strong> {{ detail!.recipientName }}</div>
-        <div><strong>Teléfono:</strong> {{ detail!.contactPhone }}</div>
+        <div class="d-flex gap-1"><div class="subtitle">Destinatario:</div> <div class="text">{{ detail!.recipientName }}</div></div>
+        <div class="d-flex gap-1"><div class="subtitle">Teléfono:</div> <div class="text">{{ detail!.contactPhone }}</div></div>
       </div>
       <div class="row">
-        <div class="col-span-2">
-          <strong>Dirección:</strong>
-          {{ detail!.addressLine1 }}
-          <ng-container *ngIf="detail!.addressLine2">, {{ detail!.addressLine2 }}</ng-container>
-          <ng-container *ngIf="detail!.cityName">, {{ detail!.cityName }}</ng-container>
+        <div class="col-span-2 d-flex gap-1">
+          <div class="subtitle">Dirección:</div>
+          <div class="text">
+            {{ detail!.addressLine1 }}
+
+            <ng-container *ngIf="detail!.addressLine2">, {{ detail!.addressLine2 }}</ng-container>
+            <ng-container *ngIf="detail!.cityName">, {{ detail!.cityName }}</ng-container>
+          </div>
         </div>
       </div>
 
-      <h3 class="mt">Tiempos</h3>
+      <h3 class="mt title">Tiempos</h3>
       <div class="row">
-        <div>
-          <strong>Creado:</strong>
-          {{ detail!.createAt | date : "mediumDate" : "" : "es-CO" }}
+        <div class="d-flex gap-1">
+          <div class="subtitle">Creado: </div>
+          <div class="text"> {{ detail!.createAt | date : "mediumDate" : "" : "es-CO" }}</div>
         </div>
         <div *ngIf="detail!.producerDecisionAt">
           <strong>Decisión productor:</strong>
@@ -58,7 +78,7 @@
 
     <!-- Columna derecha: acciones / comprobante -->
     <section class="card actions">
-      <h3>Comprobante</h3>
+      <h3 class="title">Comprobante</h3>
       <div class="receipt" *ngIf="detail!.paymentImageUrl; else noReceipt">
         <img
           [src]="detail!.paymentImageUrl!"
@@ -78,9 +98,15 @@
 
       <!-- Acciones por estado -->
       <div class="btns" *ngIf="canAcceptReject">
-        <app-button text="Rechazar" color="danger" (clicked)="reject()"></app-button>
-        <app-button text="Aceptar" color="primary" (clicked)="accept()"></app-button>
+        <div class="btns-last-Bottom">
+          <div class="d-flex gap-2">
+            <app-button text="Rechazar" color="danger" (clicked)="reject()"></app-button>
+            <app-button text="Aceptar" color="primary" (clicked)="accept()"></app-button>
+          </div>
+          <app-button text="Volver" color="secondary" [back]="true"></app-button>
+        </div>
       </div>
+
 
       <div class="btns" *ngIf="canMarkPreparing">
         <app-button text="Marcar como “Preparando”" color="primary" (clicked)="markPreparing()"></app-button>
@@ -101,9 +127,7 @@
         No hay acciones disponibles para el estado actual.
       </div>
 
-      <div class="mt">
-        <app-button text="Volver" color="secondary" [back]="true"></app-button>
-      </div>
+      
     </section>
   </div>
 </div>

@@ -7,13 +7,15 @@
   color:#2c3e50;
 } */
 .muted {
-  color:#78909C;
-  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .list {
-  display: grid;
-  gap: 12px;
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 .card {
   background:#fff;
@@ -21,7 +23,7 @@
   border-radius:12px;
   padding:14px;
   transition: box-shadow .15s ease, transform .15s ease;
-  width: 30rem;
+  width: 36rem;
 }
 .card:hover {
   box-shadow: 0 4px 14px rgba(0,0,0,.07);

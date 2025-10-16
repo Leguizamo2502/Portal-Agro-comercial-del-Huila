@@ -1,76 +1,76 @@
 <div class="wrap">
-  <div class="header">
-    <app-button [text]="'Volver'" [icon]="'arrow_back'" [back]="true"></app-button>
-    <h2>Detalle de Pedido</h2>
+  <div class="header"id="order-header">
+    <!-- <app-button [text]="'Volver'" [icon]="'arrow_back'" [back]="true"></app-button> -->
+    <h2 class="title">Detalle del Pedido</h2>
   </div>
 
   <ng-container *ngIf="!loading && detail; else loadingTpl">
-    <div class="card">
-      <div class="card-head">
-        <div class="id">Pedido #{{ detail!.id }}</div>
+    <div class="card"id="order-card" >
+      <div class="card-head" id="order-head">
+        <div class="id subtitle">Pedido #{{ detail!.id }}</div>
         <span [class]="statusChip.cls">{{ statusChip.text }}</span>
       </div>
 
       <div class="grid">
         <!-- resumen -->
-        <section>
-          <h3>Resumen</h3>
+        <section id="order-summary">
+          <h3 class="title">Resumen</h3>
           <div class="row">
-            <div class="label">Producto</div>
-            <div class="value">{{ detail!.productName }}</div>
+            <div class="subtitle label">Producto</div>
+            <div class="text value">{{ detail!.productName }}</div>
           </div>
           <div class="row">
-            <div class="label">Precio unitario</div>
-            <div class="value">{{ detail!.unitPrice | currency:'COP' }}</div>
+            <div class="subtitle label">Precio unitario</div>
+            <div class="text value">{{ detail!.unitPrice | currency:'COP' }}</div>
           </div>
           <div class="row">
-            <div class="label">Cantidad</div>
-            <div class="value">{{ detail!.quantityRequested }}</div>
+            <div class="subtitle label">Cantidad</div>
+            <div class="text value">{{ detail!.quantityRequested }}</div>
           </div>
           <div class="row">
-            <div class="label">Subtotal</div>
-            <div class="value strong">{{ detail!.subtotal | currency:'COP' }}</div>
+            <div class="subtitle label">Subtotal</div>
+            <div class="text value">{{ detail!.subtotal | currency:'COP' }}</div>
           </div>
           <div class="row total">
-            <div class="label">Total</div>
-            <div class="value strong">{{ detail!.total | currency:'COP' }}</div>
+            <div class="subtitle label">Total</div>
+            <div class="text value strong">{{ detail!.total | currency:'COP' }}</div>
           </div>
           <div class="row">
-            <div class="label">Creado</div>
-            <div class="value">{{ detail!.createAt | date:'mediumDate':'':'es-CO' }}</div>
+            <div class="subtitle label">Creado</div>
+            <div class="text value">{{ detail!.createAt | date:'mediumDate':'':'es-CO' }}</div>
           </div>
         </section>
 
         <!-- entrega -->
-        <section>
-          <h3>Entrega</h3>
+        <section id="order-delivery">
+          <h3 class="title">Entrega</h3>
           <div class="row">
-            <div class="label">Destinatario</div>
-            <div class="value">{{ detail!.recipientName }}</div>
+            <div class="subtitle label">Destinatario</div>
+            <div class="text value">{{ detail!.recipientName }}</div>
           </div>
           <div class="row">
-            <div class="label">Teléfono</div>
-            <div class="value">{{ detail!.contactPhone }}</div>
+            <div class="subtitle label">Teléfono</div>
+            <div class="text value">{{ detail!.contactPhone }}</div>
           </div>
           <div class="row">
-            <div class="label">Dirección</div>
-            <div class="value">
+            <div class="subtitle label">Dirección</div>
+            <div class="text value">
               {{ detail!.addressLine1 }}
               <ng-container *ngIf="detail!.addressLine2">, {{ detail!.addressLine2 }}</ng-container>
             </div>
           </div>
           <div class="row">
-            <div class="label">Ciudad</div>
-            <div class="value">{{ detail!.cityName || ('#' + detail!.cityId) }}</div>
+            <div class="subtitle label">Ciudad</div>
+            <div class="text value">{{ detail!.cityName || ('#' + detail!.cityId) }}</div>
           </div>
         </section>
 
         <!-- comprobante -->
-        <section>
-          <h3>Comprobante de Pago</h3>
+        <section id="order-payment">
+          <h3 class="title">Comprobante de Pago</h3>
           <ng-container *ngIf="detail!.paymentImageUrl; else noImg">
             <img class="receipt" [src]="detail!.paymentImageUrl!" alt="Comprobante"
-                 (click)="showImage = true" />
+                (click)="showImage = true" />
             <div class="muted">Subido: {{ detail!.paymentUploadedAt | date:'medium' }}</div>
           </ng-container>
           <ng-template #noImg>
@@ -80,30 +80,30 @@
           <!-- acción subir comprobante (solo AcceptedAwaitingPayment) -->
           <div class="mt" *ngIf="canUploadPayment">
             <input type="file" accept="image/*" #paymentInput hidden (change)="onPickPaymentFile($event)" />
-            <app-button text="Subir comprobante" color="primary" (clicked)="triggerFile(paymentInput)"></app-button>
+            <app-button text="Subir comprobante" color="primary" (clicked)="triggerFile(paymentInput)"data-tour-open></app-button>
             <div class="muted small">Formatos: JPG/PNG/WEBP · Máx {{ MAX_FILE_MB }} MB</div>
           </div>
         </section>
       </div>
 
       <!-- notas/decisión productor -->
-      <div class="producer-block" *ngIf="detail!.producerDecisionAt">
+      <div class="producer-block" *ngIf="detail!.producerDecisionAt" id="order-producer">
         <div class="row">
-          <div class="label">Fecha decisión productor</div>
-          <div class="value">{{ detail!.producerDecisionAt | date:'medium' }}</div>
+          <div class="subtitle label">Fecha decisión productor</div>
+          <div class="text value">{{ detail!.producerDecisionAt | date:'medium' }}</div>
         </div>
-        <div class="row" *ngIf="detail!.producerNotes">
-          <div class="label">Notas del productor</div>
-          <div class="value">{{ detail!.producerNotes }}</div>
+        <div class="row" *ngIf="detail!.producerNotes"id="order-producer">
+          <div class="subtitle label">Notas del productor</div>
+          <div class="text value">{{ detail!.producerNotes }}</div>
         </div>
         <div class="row" *ngIf="detail!.producerDecisionReason">
-          <div class="label">Motivo</div>
-          <div class="value">{{ detail!.producerDecisionReason }}</div>
+          <div class="subtitle label">Motivo</div>
+          <div class="text value">{{ detail!.producerDecisionReason }}</div>
         </div>
       </div>
 
       <!-- acciones -->
-      <div class="actions" *ngIf="canConfirm">
+      <div class="actions" id="order-actions" *ngIf="canConfirm">
         <app-button
           [text]="'No, hubo problema'"
           [color]="'danger'"
@@ -124,7 +124,7 @@
       </div>
 
       <!-- cancelar (solo PendingReview) -->
-      <div class="actions mt" *ngIf="canCancel">
+      <div class="actions mt" id="order-cancel" *ngIf="canCancel" data-tour-open>
         <app-button text="Cancelar pedido" color="danger" (clicked)="cancel()"></app-button>
       </div>
     </div>
