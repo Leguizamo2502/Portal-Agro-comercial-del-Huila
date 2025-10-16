@@ -42,8 +42,8 @@ export class FavoriteComponent implements OnInit {
   private loadFavorites(): void {
     this.loadingProducts = true
     this.productService.getFavorites().pipe(finalize(()=> this.loadingProducts = false))
-    .subscribe(data => {
-      this.products = data.map(p => ({ ...p, isFavorite: true }));
+    .subscribe((data) => {
+      this.products = data;
     });
   }
 }
