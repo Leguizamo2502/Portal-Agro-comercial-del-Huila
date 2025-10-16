@@ -11,95 +11,94 @@ import {
   OrderListItemModel,
   OrderRejectRequest,
   OrderCreateModel,
-  RowVersionOnly,
   UploadPaymentRequest,
 } from '../../models/order/order.model';
-import { MatColumnDef } from '@angular/material/table';
 
 @Injectable({ providedIn: 'root' })
 export class OrderService {
   private http = inject(HttpClient);
-  private urlBase = environment.apiUrl + 'Order';
 
-  // ========== CREAR ORDEN (sin comprobante) ==========
+  // Bases según tus nuevos controladores/rutas
+  private urlUser = environment.apiUrl + 'OrderUser';
+  private urlProducer = environment.apiUrl + 'OrderProducer';
+
+  // ========== CREAR ORDEN (Cliente, sin comprobante) ==========
   create(dto: OrderCreateModel): Observable<CreateOrderResponse> {
-    return this.http.post<CreateOrderResponse>(this.urlBase, dto);
+    return this.http.post<CreateOrderResponse>(this.urlUser, dto);
   }
 
-  // ========== SUBIR COMPROBANTE ==========
-  uploadPayment(code : string, req: UploadPaymentRequest): Observable<any> {
+  // ========== SUBIR COMPROBANTE (Cliente) ==========
+  uploadPayment(code: string, req: UploadPaymentRequest): Observable<any> {
     const fd = new FormData();
     fd.append('RowVersion', req.rowVersion);
     fd.append('PaymentImage', req.paymentImage, req.paymentImage.name);
-    return this.http.post<any>(`${this.urlBase}/${code}/payment`, fd);
+    return this.http.post<any>(`${this.urlUser}/${code}/payment`, fd);
   }
 
   // ========== LISTADOS / DETALLES ==========
   // Productor
   getProducerOrders(): Observable<OrderListItemModel[]> {
-    return this.http.get<OrderListItemModel[]>(this.urlBase);
+    return this.http.get<OrderListItemModel[]>(this.urlProducer);
   }
 
   getProducerPendingOrders(): Observable<OrderListItemModel[]> {
-    return this.http.get<OrderListItemModel[]>(`${this.urlBase}/pending`);
+    return this.http.get<OrderListItemModel[]>(`${this.urlProducer}/pending`);
   }
 
-  getDetailForProducer(code : string): Observable<OrderDetailModel> {
-    return this.http.get<OrderDetailModel>(
-      `${this.urlBase}/${code}/for-producer`
-    );
+  getDetailForProducer(code: string): Observable<OrderDetailModel> {
+    return this.http.get<OrderDetailModel>(`${this.urlProducer}/${code}/detail`);
   }
 
   // Cliente
   getMine(): Observable<OrderListItemModel[]> {
-    return this.http.get<OrderListItemModel[]>(`${this.urlBase}/mine`);
+    return this.http.get<OrderListItemModel[]>(`${this.urlUser}/mine`);
   }
 
   getDetailForUser(code: string): Observable<OrderDetailModel> {
-    return this.http.get<OrderDetailModel>(`${this.urlBase}/${code}/for-user`);
+    return this.http.get<OrderDetailModel>(`${this.urlUser}/${code}/detail`);
   }
 
   // ========== ACCIONES DEL CLIENTE ==========
-  confirmReceived(code : string, body: OrderConfirmRequest) {
-    return this.http.post<any>(`${this.urlBase}/${code}/confirm-received`, body);
+  confirmReceived(code: string, body: OrderConfirmRequest): Observable<any> {
+    return this.http.post<any>(`${this.urlUser}/${code}/confirm-received`, body);
   }
 
-  cancelByUser(code : string, rowVersion: string) {
+  cancelByUser(code: string, rowVersion: string): Observable<any> {
     return this.http.post<any>(
-      `${this.urlBase}/${code}/cancel`,
+      `${this.urlUser}/${code}/cancel`,
       JSON.stringify(rowVersion),
       { headers: { 'Content-Type': 'application/json' } }
     );
   }
 
   // ========== ACCIONES DEL PRODUCTOR ==========
-  acceptOrder(code : string, dto: OrderAcceptRequest): Observable<any> {
-    return this.http.post<any>(`${this.urlBase}/${code}/accept`, dto);
+  acceptOrder(code: string, dto: OrderAcceptRequest): Observable<any> {
+    return this.http.post<any>(`${this.urlProducer}/${code}/accept`, dto);
   }
 
-  rejectOrder(code : string, dto: OrderRejectRequest): Observable<any> {
-    return this.http.post<any>(`${this.urlBase}/${code}/reject`, dto);
+  rejectOrder(code: string, dto: OrderRejectRequest): Observable<any> {
+    return this.http.post<any>(`${this.urlProducer}/${code}/reject`, dto);
   }
 
-  markPreparing(code : string, rowVersion: string): Observable<any> {
+  markPreparing(code: string, rowVersion: string): Observable<any> {
     return this.http.post<any>(
-      `${this.urlBase}/${code}/preparing`,
+      `${this.urlProducer}/${code}/preparing`,
       JSON.stringify(rowVersion),
       { headers: { 'Content-Type': 'application/json' } }
     );
   }
 
-  markDispatched(code : string, rowVersion: string): Observable<any> {
+  markDispatched(code: string, rowVersion: string): Observable<any> {
     return this.http.post<any>(
-      `${this.urlBase}/${code}/dispatched`,
+      `${this.urlProducer}/${code}/dispatched`,
       JSON.stringify(rowVersion),
       { headers: { 'Content-Type': 'application/json' } }
     );
   }
 
-  markDelivered(code : string, rowVersion: string): Observable<any> {
+  markDelivered(code: string, rowVersion: string): Observable<any> {
     return this.http.post<any>(
-      `${this.urlBase}/${code}/delivered`,
+      `${this.urlProducer}/${code}/delivered`,
       JSON.stringify(rowVersion),
       { headers: { 'Content-Type': 'application/json' } }
     );
