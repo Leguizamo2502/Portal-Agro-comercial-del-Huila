@@ -1,7 +1,7 @@
-<app-carrusel id="carrusel"></app-carrusel>
+<app-carrusel id="carousel"></app-carrusel>
 
 <app-container-card
-  id="ultimosAgregados"
+  id="latest-additions"
   [title]="'Últimos Agregados'"
   [showHeader]="true"
   [loading]="loadingProducts"
@@ -10,7 +10,7 @@
 </app-container-card>
 
 <app-container-card
-  id="productosDestacados"
+  id="featured-products"
   [title]="'Productos Destacados'"
   [showHeader]="true"
   [loading]="loadingFeatured"
@@ -19,7 +19,7 @@
 </app-container-card>
 
 <app-button class="d-flex justify-content-center mt-3"
-  id="explorarBtn"
+  id="exploreBtn"
   [text]="'Explorar Productos'"
   [type]="'button'"
   [redirectTo]="'/home/product'">

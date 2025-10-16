@@ -5,7 +5,7 @@
   <div class="bg-white rounded-3 shadow-sm mb-2 d-flex flex-column flex-md-row align-items-center justify-content gap-2 header-compact"
   >
     <!-- Búsqueda -->
-    <div class="top" id="filtros">
+    <div class="top" id="filters">
       <mat-form-field appearance="outline" class="search">
         <mat-label>Buscar productos</mat-label>
         <input
@@ -38,7 +38,7 @@
     </div>
 
     <!-- Selector de categorías + limpiar -->
-    <div class="d-flex align-items-center gap-2 controls" id="categoria-select">
+    <div class="d-flex align-items-center gap-2 controls" id="category-select">
       <mat-form-field
         appearance="outline"
         class="select"
@@ -117,7 +117,7 @@
   ></mat-progress-bar>
 
   <!-- Resultados -->
-  <div class="bg-white p-3 rounded-3 shadow-sm" id="listaProductos">
+  <div class="bg-white p-3 rounded-3 shadow-sm" id="List-Products">
     <app-container-card-flex
       [items]="pagedProducts"
       [type]="'product'"
