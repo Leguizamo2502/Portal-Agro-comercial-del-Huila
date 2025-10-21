@@ -1,13 +1,9 @@
-﻿using System.Security.Claims;
-using Business.CustomJwt;
+﻿using Business.CustomJwt;
 using Business.Interfaces.Implements.Auth;
-using Business.Interfaces.Implements.Location;
 using Business.Interfaces.Implements.Security.Mes;
-using Business.Services.AuthService;
 using Entity.Domain.Models.Implements.Auth.Token;
 using Entity.DTOs.Auth;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Utilities.Exceptions;
@@ -194,10 +190,7 @@ namespace Web.Controllers.Implements.Auth
         [HttpGet("me")]
         public async Task<IActionResult> GetCurrentUser()
         {
-            //var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            //if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out var userId))
-            //    return Unauthorized("El token no contiene un Claim 'sub' (NameIdentifier) válido o no es un ID.");
+            
             var userId = HttpContext.GetUserId();
 
 
@@ -214,12 +207,7 @@ namespace Web.Controllers.Implements.Auth
         [HttpGet("DataBasic")]
         public async Task<IActionResult> GetDataBasic()
         {
-            //var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            //if (string.IsNullOrWhiteSpace(userIdClaim)
-            //    || !int.TryParse(userIdClaim, out var userId))
-            //{
-            //    return Unauthorized("Token inválido o Claim 'NameIdentifier' ausente.");
-            //}
+
             var userId = HttpContext.GetUserId();
 
             try
