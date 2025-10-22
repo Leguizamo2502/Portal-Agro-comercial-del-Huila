@@ -11,7 +11,8 @@
   filter: brightness(0.8);
 }
 .highlight {
-  color: #f1c40f;
+  /* color: #f1c40f; */
+  color: #fff;
   font-weight: 700;
 }
 

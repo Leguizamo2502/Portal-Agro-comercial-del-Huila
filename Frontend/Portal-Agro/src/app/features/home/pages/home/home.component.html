@@ -1,26 +1,25 @@
-<app-carrusel id="carousel"></app-carrusel>
+<div class="page-wrapper">
+  <app-carrusel id="carousel"></app-carrusel>
 
-<app-container-card
-  id="latest-additions"
-  [title]="'Últimos Agregados'"
-  [showHeader]="true"
-  [loading]="loadingProducts"
-  [skeletonCount]="6"
-  [products]="products">
-</app-container-card>
-<div
-  class="banner-farming pt-5"
->
-  <app-farming-banner></app-farming-banner>
+  <app-container-card
+    id="latest-additions"
+    [title]="'Últimos Agregados'"
+    [showHeader]="true"
+    [loading]="loadingProducts"
+    [skeletonCount]="6"
+    [products]="products">
+  </app-container-card>
+
+  <div class="banner-farming">
+    <app-farming-banner></app-farming-banner>
+  </div>
+
+  <app-container-card
+    id="featured-products"
+    [title]="'Productos Destacados'"
+    [showHeader]="true"
+    [loading]="loadingFeatured"
+    [skeletonCount]="6"
+    [products]="productFeatured">
+  </app-container-card>
 </div>
-
-<app-container-card
-  id="featured-products"
-  [title]="'Productos Destacados'"
-  [showHeader]="true"
-  [loading]="loadingFeatured"
-  [skeletonCount]="6"
-  [products]="productFeatured">
-</app-container-card>
-
-

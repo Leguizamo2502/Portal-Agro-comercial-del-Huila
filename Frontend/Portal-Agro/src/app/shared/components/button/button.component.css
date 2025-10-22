@@ -23,8 +23,8 @@
 
 /* Primary (verde) */
 .custom-btn.btn-primary {
-  /* background-color: #28a745; */
-  background-color: #145a32;
+  background-color: #28a745;
+  /* background-color: #145a32; */
 }
 .custom-btn.btn-primary:hover:not(:disabled) {
   background-color: #218838;
