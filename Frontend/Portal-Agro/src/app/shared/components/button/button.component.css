@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 10px 16px;
+  padding: 12px 18px;
   border: none;
   border-radius: 6px;
   font-size: 0.95rem;
@@ -23,7 +23,8 @@
 
 /* Primary (verde) */
 .custom-btn.btn-primary {
-  background-color: #28a745;
+  /* background-color: #28a745; */
+  background-color: #145a32;
 }
 .custom-btn.btn-primary:hover:not(:disabled) {
   background-color: #218838;

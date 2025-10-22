@@ -62,28 +62,20 @@ export class NavbarBuenoComponent {
   }
   private tours: Record<string, any[]> = {
     '/home': [
-      { element: '#carrusel', popover: { title: 'Carrusel', description: 'Aquí se muestran los banners.', side: 'bottom' as const } },
-      { element: '#ultimosAgregados', popover: { title: 'Últimos Agregados', description: 'Productos agregados recientemente.', side: 'top' as const }},
+      { element: '#carousel', popover: { title: 'Carrusel', description: 'Aquí se muestran los banners.', side: 'bottom' as const } },
+      { element: '#latest-additions', popover: { title: 'Últimos Agregados', description: 'Productos agregados recientemente.', side: 'top' as const }},
       {
-      element: '#productosDestacados',
+      element: '#featured-products',
       popover: {
         title: 'Productos Destacados',
         description: 'Nuestros productos más recomendados.',
         side: 'top' as const
       }
-    },
-    {
-      element: '#explorarBtn',
-      popover: {
-        title: 'Explorar Productos',
-        description: 'Haz clic aquí para ir a la página de todos los productos.',
-        side: 'center' as const
-      }
     }
     ],
     '/home/product': [
     {
-      element: '#filtros',
+      element: '#filters',
       popover: {
         title: 'Filtros',
         description: 'Usa los filtros para buscar productos por nombre o productor.',
@@ -91,7 +83,7 @@ export class NavbarBuenoComponent {
       }
     },
     {
-      element: '#categoria-select',
+      element: '#category-select',
       popover: {
         title: 'Categorías',
         description: 'Selecciona la categoría de productos que deseas ver.',
@@ -99,7 +91,7 @@ export class NavbarBuenoComponent {
       }
     },
     {
-      element: '#listaProductos',
+      element: '#List-Products',
       popover: {
         title: 'Listado de productos',
         description: 'Aquí aparecen los productos disponibles según tus filtros.',
