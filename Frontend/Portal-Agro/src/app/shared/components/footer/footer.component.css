@@ -1,62 +1,70 @@
-.us{
-    width: 250px;
-}
-.us .subtitle{
-    color: #e0e0e0;
-}
-.location-footer .subtitle{
-    margin: 0;
-    color: #e0e0e0;
-}
-.location-footer .text{
-    margin: 0;
-    color: #e0e0e0;
-}
-.email-footer .subtitle{
-    margin: 0;
-    color: #e0e0e0;
-}
-.email-footer .text{
-    margin: 0;
-    color: #e0e0e0;
-    word-wrap: break-word;
-}
-.banner-h{
-    height: 16vh;
-    width: auto;
-}
 .footer-container {
+    margin-top: 10px;
     width: 100%;
-    background: #2e7d32;
-    color: #fff;
-    overflow-y: hidden;
-    max-height:max-content;
+    background-color: #145a32;
+    color: #ffffff;
+    padding: 1.5rem 0;
+    font-size: 0.95rem;
 }
 
-.footer-content {
-    max-width: 1200px;
-    margin: 0 auto;
-
-}
-
-.banner-h {
-    max-width: 150px;
+.footer-logo {
+    width: 40px;
     height: auto;
 }
 
-@media (max-width: 576px) {
-    .footer-container {
-        display: flex;
+.footer-brand {
+    font-weight: 600;
+    color: #ffffff;
+    font-size: 1rem;
+}
+
+.footer-info p {
+    margin: 0;
+    color: #f1f1f1;
+    font-size: 0.9rem;
+}
+
+.footer-links {
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    cursor: pointer;
+}
+
+.footer-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+    color: #f1c40f;
+}
+
+.divider {
+    color: #ffffff;
+    opacity: 0.6;
+}
+
+.footer-copy {
+    font-size: 0.85rem;
+    color: #e0e0e0;
+}
+
+@media (max-width: 768px) {
+    .footer-content .row {
         flex-direction: column;
         text-align: center;
-        padding-bottom:3rem ;
     }
 
-    .footer-content .row > div {
-        margin-bottom: 1rem;
+    .footer-links {
+        justify-content: center;
     }
 
-    .banner-h {
-        max-width: 120px;
+    .footer-logo {
+        width: 35px;
     }
+}
+html {
+    scroll-behavior: smooth;
 }

@@ -71,14 +71,6 @@ export class NavbarBuenoComponent {
         description: 'Nuestros productos más recomendados.',
         side: 'top' as const
       }
-    },
-    {
-      element: '#exploreBtn',
-      popover: {
-        title: 'Explorar Productos',
-        description: 'Haz clic aquí para ir a la página de todos los productos.',
-        side: 'center' as const
-      }
     }
     ],
     '/home/product': [
