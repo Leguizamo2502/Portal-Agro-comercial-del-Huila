@@ -1,6 +1,6 @@
 /* Barra de navegación personalizada */
 .custom-navbar {
-  background-color: #28a745;
+  background: linear-gradient(90deg, #247d2a 0%, #2e7d32 100%);
   position: sticky;
   top: 0;
   z-index: 1020;

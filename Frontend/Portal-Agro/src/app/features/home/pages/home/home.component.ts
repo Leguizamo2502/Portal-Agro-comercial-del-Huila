@@ -6,13 +6,14 @@ import { CarruselComponent } from '../../../../shared/components/carrusel/carrus
 import { ContainerCardComponent } from "../../../../shared/components/cards/container-card/container-card.component";
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { finalize } from 'rxjs';
+import { FarmingBannerComponent } from "../../../../shared/components/farming-banner/farming-banner.component";
 
 //Guía Driver.js
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, CarruselComponent, ContainerCardComponent,ButtonComponent],
+  imports: [CommonModule, CarruselComponent, ContainerCardComponent, ButtonComponent, FarmingBannerComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
