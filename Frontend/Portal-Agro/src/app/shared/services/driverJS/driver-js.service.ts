@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { driver, DriveStep } from 'driver.js';
-import 'driver.js/dist/driver.css';
 
 @Injectable({
   providedIn: 'root'
