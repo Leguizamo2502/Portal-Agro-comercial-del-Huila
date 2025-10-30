@@ -20,11 +20,6 @@
   color: #ffffff !important;
 }
 
-/* Logo */
-.logo {
-  height: 5vh;
-  width: auto;
-}
 
 /* Estilos de la sección de la marca (logo y título) en escritorio */
 .navbar-brand-section {
@@ -152,4 +147,7 @@
   .custom-navbar .container-fluid {
     padding: 0;
   }
+}
+.tour.btn{
+  font-size: 0.5rem;
 }

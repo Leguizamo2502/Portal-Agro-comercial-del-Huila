@@ -10,6 +10,9 @@
   margin: 0 auto; /* Centrar el contenedor */
 }
 
+#Info-basic{
+  margin:20px;
+}
 .info-title {
   margin-bottom: 24px;
   color: #1e4620;
@@ -49,8 +52,7 @@
 }
 
 .actions-section {
-  margin-top: 32px;
-  padding-top: 24px;
+  margin: 20px;
   border-top: 1px solid #e0e0e0;
 }
 

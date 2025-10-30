@@ -4,12 +4,12 @@
         <div class="d-none d-lg-flex w-100 align-items-center">
             <!-- Logo y título -->
             <div class="navbar-brand-section">
-                <img src="logos/logo.png" alt="" class="logo">
+                <img src="logos/logo.svg" alt="" class="logo">
                 <a class="navbar-brand color-title ms-2" routerLink="/home">Portal Agro-comercial del Huila</a>
             </div>
-            <div class="btn-tuto">
-                    <button class="tour-btn" (click)="startTour()"><i class="bi bi-info-circle"></i></button>
-                </div>
+                <button class="tour-btn" (click)="startTour()" title="Iniciar tour guiado">
+                    <mat-icon>help_outline</mat-icon>
+                </button>
             <!-- Búsqueda centrada -->
             <form class="search-form mx-auto" role="search">
                 <!-- <input class="form-control search-input" type="search" placeholder="Buscar" />
