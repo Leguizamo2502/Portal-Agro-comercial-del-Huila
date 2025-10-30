@@ -1,14 +1,11 @@
 .farming-banner {
-    background-color: #28a745;
     color: #fff;
     position: relative;
     height: 340px;
     overflow: hidden;
     display:flex;
     width: 100%;
-    border-radius: 20px;
 }
-
 .text-content {
     flex: 1;
     min-width: 300px;
