@@ -136,7 +136,7 @@ namespace Web.Controllers.Implements.Producer.Cuenta
 
                 if (!updated)
                 {
-                   
+
                     _logger.LogWarning("UpdateProfileAsync no aplicó cambios. UserId={UserId}", userId);
                     return StatusCode(StatusCodes.Status500InternalServerError,
                         new { message = "No se aplicaron cambios en la actualización." });

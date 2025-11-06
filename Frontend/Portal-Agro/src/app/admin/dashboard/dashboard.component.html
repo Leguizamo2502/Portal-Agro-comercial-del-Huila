@@ -1,0 +1,46 @@
+<div class="dashboard-container">
+  <h1 class="title">Panel del Administrador</h1>
+
+  <!-- KPIs -->
+  <div class="kpi-grid">
+    <mat-card class="kpi-card" *ngFor="let card of [
+      { title: 'Total Productores', value: summary.totalProducers },
+      { title: 'Productores Activos', value: summary.activeProducers },
+      { title: 'Total Pedidos', value: summary.totalOrders },
+      { title: 'Pedidos Pendientes', value: summary.pendingOrders },
+      { title: 'Total Productos', value: summary.totalProducts }
+    ]">
+      <h2>{{ card.title }}</h2>
+      <p>{{ card.value || 0 }}</p>
+    </mat-card>
+  </div>
+
+  <!-- Charts -->
+  <div class="charts-grid">
+    
+    <mat-card>
+      <h3>Pedidos por Mes</h3>
+      <canvas baseChart
+        [data]="barChartData"
+        [options]="barChartOptions"
+        [type]="'bar'">
+      </canvas>
+    </mat-card>
+    <mat-card>
+      <h3>Top Productos</h3>
+      <canvas baseChart
+        [data]="doughnutChartData"
+        [options]="doughnutChartOptions"
+        [type]="'doughnut'">
+      </canvas>
+    </mat-card>
+    <mat-card>
+      <h3>Productores Activos</h3>
+      <canvas baseChart
+        [data]="lineChartData"
+        [options]="lineChartOptions"
+        [type]="'line'">
+      </canvas>
+    </mat-card>
+  </div>
+</div>

@@ -5,6 +5,7 @@ import { NotFoundComponent } from './Core/page/not-found/not-found.component';
 import { MainLayoutComponent } from './shared/components/layouts/main-layout/main-layout.component';
 import { Path } from 'leaflet';
 import { FooterComponent } from './shared/components/footer/footer.component';
+import { DashboardComponent } from './admin/dashboard/dashboard.component';
 
 export const routes: Routes = [
   // Redirección inicial
@@ -53,7 +54,7 @@ export const routes: Routes = [
       // { path: 'summary', component: SummaryComponent },
       // { path: 'farm-detail', component: FarmDetailComponent },
       // { path: 'crm', component: ContainerCardProductorComponent }
-      {path: 'footer', component: FooterComponent}
+      {path: 'dashboard', component: DashboardComponent}
     ],
   },
 
