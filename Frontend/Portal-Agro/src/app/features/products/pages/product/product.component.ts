@@ -112,6 +112,16 @@ export class ProductComponent implements OnInit {
     return this.filteredProducts.slice(start, start + this.pageSize);
   }
 
+  /** Número total de páginas */
+  get totalPages(): number {
+    return Math.ceil(this.filteredProducts.length / this.pageSize);
+  }
+
+  /** Página actual (1-based) */
+  get currentPage(): number {
+    return this.pageIndex + 1;
+  }
+
   // ---------- Productos ----------
   private loadProductsHome(): void {
     this.isLoadingProducts = true;
@@ -127,6 +137,7 @@ export class ProductComponent implements OnInit {
       },
     });
   }
+  
 
   private loadProductsByCategory(categoryId: number): void {
     this.isLoadingProducts = true;
@@ -235,7 +246,7 @@ private loadChildren(parentId: number): void {
   this.loadProductsHome();
 }
 
-  onPageChange(e: PageEvent): void {
+  onPageChange(e: { pageIndex: number; pageSize: number }): void {
     this.pageIndex = e.pageIndex;
     this.pageSize = e.pageSize;
   }

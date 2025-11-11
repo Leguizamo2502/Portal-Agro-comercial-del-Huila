@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
 import Swal from 'sweetalert2';
@@ -10,12 +10,12 @@ import { ButtonComponent } from "../../button/button.component";
 import { IfLoggedOutDirective } from "../../../../Core/directives/if-logged-out.directive";
 import { AuthState } from '../../../../Core/services/auth/auth.state';
 import { DriverJsService } from '../../../services/driverJS/driver-js.service';
-import { DriverTourComponent } from '../../driver-tour/driver-tour.component';
+import { MatTooltipModule, MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-navbar-bueno',
   standalone: true,
-  imports: [RouterLink, MatIcon, CommonModule, IfLoggedInDirective, ButtonComponent, IfLoggedOutDirective],
+  imports: [RouterLink, MatIcon, CommonModule, IfLoggedInDirective, ButtonComponent, IfLoggedOutDirective, MatTooltipModule],
   templateUrl: './navbar-bueno.component.html',
   styleUrls: ['./navbar-bueno.component.css']
 })
@@ -24,8 +24,23 @@ export class NavbarBuenoComponent {
   ath = inject(AuthState);
   router = inject(Router);
   sidebarService = inject(SidebarService);
+  showTooltip = true;
 
   private driverTourService = inject(DriverJsService);
+
+  @ViewChild('tourButton') tooltip!: MatTooltip;
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      if (this.tooltip) {
+        this.tooltip.show();
+        setTimeout(() => {
+          this.tooltip.hide();
+          this.showTooltip = false;
+        }, 5000);
+      }
+    }, 500);
+  }
 
   startTour() {
     this.driverTourService.startTour();

@@ -17,25 +17,89 @@
   text-align: center;
 }
 
-/* Espaciado paginador */
-mat-paginator { margin-top: .5rem; }
-.search { width: 320px; max-width: 40vw; }
-
-/* Contenedor principal del paginator */
-::ng-deep .mat-mdc-paginator {
-  background-color: #1e1e2f; /* Fondo personalizado */
-  color: #ffffff;
-  border-radius: 10px;
-  padding: 8px 16px;
-  font-family: 'Poppins', sans-serif;
-}
-
 ::ng-deep .mat-mdc-paginator-page-size {
-  color: #ffffff;
+  display: none !important;
 }
-
 
 ::ng-deep .mat-mdc-paginator-range-label {
-  font-weight: bold;
-  color: #1b5e20;
+  display: none !important;
+}
+
+::ng-deep .mat-mdc-paginator-range-actions {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+::ng-deep .mat-mdc-paginator-navigation-previous,
+::ng-deep .mat-mdc-paginator-navigation-next {
+  color: #333 !important;
+  background-color: #f5f5f5;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 8px;
+  transition: 0.2s;
+}
+
+::ng-deep .mat-mdc-paginator-navigation-previous:hover,
+::ng-deep .mat-mdc-paginator-navigation-next:hover {
+  background-color: #1cc736;
+  color: white !important;
+}
+
+::ng-deep .mat-mdc-paginator-navigation-first,
+::ng-deep .mat-mdc-paginator-navigation-last {
+  display: none !important;
+}
+
+.paginator-wrapper {
+  position: relative;
+}
+
+.paginator-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px 0;
+}
+
+.nav-btn {
+  background-color: #f5f5f5;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s;
+  color: #333;
+}
+
+.nav-btn:hover:not(:disabled) {
+  background-color: #1cc736;
+  color: white;
+}
+
+.nav-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.custom-page-indicator {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
+
+::ng-deep .mat-mdc-paginator-container {
+  display: none !important;
 }

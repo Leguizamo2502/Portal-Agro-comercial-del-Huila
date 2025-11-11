@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { driver, DriveStep } from 'driver.js';
 import 'driver.js/dist/driver.css';
+import './driver-js-custom.css';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +12,11 @@ export class DriverJsService {
   private openedElements: HTMLElement[] = [];
   private originalStates: Map<HTMLElement, boolean> = new Map();
   private driverInstance: any;
-
+  
   /**
    * JSON centralizado de tours para cada ruta
    */
+  
   private tours: Record<string, DriveStep[]> = {
     '/home': [
       { element: '#carousel', popover: { title: 'Carrusel', description: 'Aquí se muestran los banners.', side: 'bottom' as const } },
@@ -102,6 +104,7 @@ export class DriverJsService {
 
     this.driverInstance = driver({
       showProgress: true,
+      progressText: '{{current}} de {{total}}',
       showButtons: ['next', 'previous', 'close'],
       nextBtnText: 'Siguiente',
       prevBtnText: 'Anterior',

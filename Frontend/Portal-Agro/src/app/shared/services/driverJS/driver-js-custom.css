@@ -1,0 +1,9 @@
+/* Custom styles for Driver.js buttons */
+.driver-popover .driver-popover-next-btn,
+.driver-popover .driver-popover-prev-btn,
+.driver-popover .driver-popover-close-btn {
+  text-shadow: none !important;
+}
+.driver-popover-footer button{
+  text-shadow:none !important;
+}

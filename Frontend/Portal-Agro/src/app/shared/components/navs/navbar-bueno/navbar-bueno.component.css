@@ -149,6 +149,36 @@
     padding: 0;
   }
 }
-.tour.btn{
-  font-size: 0.5rem;
+.tour-btn-tour{
+  border-radius: 50px;
+  width: 24px;
+  height: 24px;
+  padding: 0 !important;
+  overflow: none !important;
+  background-color: transparent;
+  display:flex;
+  border:none;
+}
+.tour-help{
+  color:#ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-navbar,
+.navbar,
+.navbar-brand-section {
+  position: static !important;
+  overflow: visible !important;
+  z-index: auto !important;
+}
+
+.navbar-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+}
+.driver-popover-footer button{
+  text-shadow:none !important;
 }

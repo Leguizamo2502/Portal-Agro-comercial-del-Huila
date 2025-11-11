@@ -7,8 +7,19 @@
                 <img src="logos/logo.svg" alt="" class="logo">
                 <a class="navbar-brand color-title ms-2" routerLink="/home">Portal Agro-comercial del Huila</a>
             </div>
-                <button class="tour-btn" (click)="startTour()" title="Iniciar tour guiado">
-                    <mat-icon>help_outline</mat-icon>
+                <button
+                    class="tour-btn-tour"
+                    >
+                    <mat-icon class="tour-help"
+                    #tourButton="matTooltip"
+                    (click)="startTour()"
+                    matTooltip="Haz clic aquí para iniciar el tour guiado"
+                    matTooltipPosition="above"
+                    [matTooltipShowDelay]="0"
+                    [matTooltipHideDelay]="5000"
+                    [matTooltipDisabled]="!showTooltip"
+                    title="Iniciar tour guiado"
+                    >help_outline</mat-icon>
                 </button>
             <!-- Búsqueda centrada -->
             <form class="search-form mx-auto" role="search">

@@ -134,15 +134,31 @@
     </div>
 
     <!-- Paginador: mostrar solo si hay más que pageSize -->
-    <mat-paginator id="pagination"
-      *ngIf="products!.length > pageSize"
-      [length]="products.length || 0"
-      [pageIndex]="pageIndex"
-      [pageSize]="pageSize"
-      [pageSizeOptions]="pageSizeOptions"
-      [showFirstLastButtons]="true"
-      (page)="onPageChange($event)"
-    >
-    </mat-paginator>
+    <div class="paginator-wrapper" *ngIf="products!.length > pageSize">
+      <div class="paginator-container">
+        <button class="nav-btn prev-btn" [disabled]="pageIndex === 0" (click)="onPageChange({pageIndex: pageIndex - 1, pageSize: pageSize})">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+
+        <div class="custom-page-indicator">
+          Página {{ currentPage }} de {{ totalPages }}
+        </div>
+
+        <button class="nav-btn next-btn" [disabled]="pageIndex >= totalPages - 1" (click)="onPageChange({pageIndex: pageIndex + 1, pageSize: pageSize})">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+
+      <mat-paginator id="pagination"
+        [length]="products.length || 0"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        [showFirstLastButtons]="true"
+        (page)="onPageChange($event)"
+        style="display: none;"
+      >
+      </mat-paginator>
+    </div>
   </div>
 </div>

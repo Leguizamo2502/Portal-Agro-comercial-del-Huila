@@ -1,23 +1,24 @@
 <div class="dashboard-container">
-  <h1 class="title">Panel del Administrador</h1>
+  <h1 class="title"> Panel del Productor</h1>
 
   <!-- KPIs -->
   <div class="kpi-grid">
     <mat-card class="kpi-card" *ngFor="let card of [
-      { title: 'Total Productores', value: summary.totalProducers },
-      { title: 'Productores Activos', value: summary.activeProducers },
-      { title: 'Total Pedidos', value: summary.totalOrders },
-      { title: 'Pedidos Pendientes', value: summary.pendingOrders },
-      { title: 'Total Productos', value: summary.totalProducts }
+      { title: 'Total Productores', value: summary.totalProducers, icon: 'groups' },
+      { title: 'Productores Activos', value: summary.activeProducers, icon: 'eco' },
+      { title: 'Total Pedidos', value: summary.totalOrders, icon: 'shopping_cart' },
+      { title: 'Pedidos Pendientes', value: summary.pendingOrders, icon: 'pending_actions' },
+      { title: 'Total Productos', value: summary.totalProducts, icon: 'inventory' }
     ]">
+      <mat-icon class="kpi-icon">{{ card.icon }}</mat-icon>
       <h2>{{ card.title }}</h2>
       <p>{{ card.value || 0 }}</p>
     </mat-card>
   </div>
 
-  <!-- Charts -->
+
+  <!-- Gráficos -->
   <div class="charts-grid">
-    
     <mat-card>
       <h3>Pedidos por Mes</h3>
       <canvas baseChart
@@ -26,14 +27,16 @@
         [type]="'bar'">
       </canvas>
     </mat-card>
+
     <mat-card>
-      <h3>Top Productos</h3>
+      <h3>Productos Más Vendidos</h3>
       <canvas baseChart
-        [data]="doughnutChartData"
-        [options]="doughnutChartOptions"
-        [type]="'doughnut'">
+        [data]="topProductsChartData"
+        [options]="topProductsChartOptions"
+        [type]="'bar'">
       </canvas>
     </mat-card>
+
     <mat-card>
       <h3>Productores Activos</h3>
       <canvas baseChart
